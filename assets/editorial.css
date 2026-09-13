@@ -1,0 +1,84 @@
+/* The existing black / stone / mint identity, with topic-specific imagery. */
+body.editorial-page { background-image: none; }
+.editorial-page .data-ambient-canvas { display: none; }
+.editorial-page .portfolio-entrance {
+  position: relative; isolation: isolate; overflow: hidden; border-radius: 16px;
+  padding: 64px 44px 38px; margin-top: 28px; min-height: 640px; gap: 40px;
+  background: #eeeee8;
+}
+.editorial-page .portfolio-entrance::before {
+  content: ''; position: absolute; inset: 0; z-index: -2;
+  background: url('/assets/editorial/analysis-desk.png') 70% center / cover no-repeat;
+}
+.editorial-page .portfolio-entrance::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg,rgba(241,241,233,.98) 0%,rgba(241,241,233,.93) 36%,rgba(241,241,233,.22) 77%);
+}
+.editorial-page .portfolio-entrance h1 { font-size: clamp(64px,7.4vw,104px); }
+.editorial-page .portfolio-entrance .hero-object {
+  align-self: end; margin-top: 90px; padding: 24px; min-height: 0; gap: 16px;
+  border-radius: 12px; background: #18231f; box-shadow: none; clip-path: none;
+}
+.editorial-page .portfolio-entrance .hero-object h2 { font-size: 26px; }
+.editorial-page .portfolio-entrance .hero-object .tag { align-self: start; width: fit-content; box-shadow: none; }
+.editorial-page .portfolio-entrance .hero-object .audit-strip { height: 30px; }
+.editorial-page .portfolio-entrance .hero-object .artifact-line { padding-block: 4px; }
+.editorial-page .portfolio-entrance .hero-object .artifact-value { font-size: 23px; }
+.editorial-page .analysis-cards { min-width: 0; }
+.editorial-page .analysis-card { min-width: 0; max-width: 100%; }
+.editorial-page .analysis-card .table-wrap { max-width: 100%; }
+.image-credit { display: block; margin: 10px 0 32px; color: #58625c; font-size: 12px; }
+.editorial-page .project-gallery { gap: 28px; }
+.editorial-page .project-card { padding: 24px; border-radius: 16px; }
+.editorial-page .project-card.wide { grid-column: auto; }
+.project-photo {
+  display: block; overflow: hidden; border-radius: 10px; margin: 4px 0 24px;
+  background: #e3e8df; aspect-ratio: 16 / 9;
+}
+.project-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 300ms ease-out; }
+.project-photo:hover img { transform: scale(1.025); }
+.project-photo:focus-visible { outline: 3px solid #357c59; outline-offset: 5px; }
+.photo-story {
+  margin: 34px 0 64px; display: grid; grid-template-columns: 1.5fr 1fr;
+  background: #18231f; color: #f6f7f1; border-radius: 16px; overflow: hidden;
+}
+.photo-story .story-image { width: 100%; min-height: 300px; height: 100%; max-height: 450px; object-fit: cover; }
+.photo-story figcaption { padding: 36px; display: flex; flex-direction: column; justify-content: center; }
+.photo-story h2 { font-size: clamp(25px,2.5vw,36px); color: #f6f7f1; margin-bottom: 20px; }
+.photo-story p { color: #e0e9df; font-size: 16px; line-height: 1.8; }
+.photo-story small { color: #b6c7bc; font-size: 12px; margin-top: 12px; }
+.project-figure { margin: 48px 0 72px; }
+.diagram-viewport { border-radius: 16px; overflow: auto; background: #e9eee7; }
+.diagram-viewport img { display: block; width: 100%; min-width: 680px; height: auto; }
+.project-figure figcaption { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; padding-top: 18px; }
+.project-figure figcaption strong { font-size: 18px; font-weight: 600; }
+.project-figure figcaption p { margin: 0; color: #53635b; font-size: 14px; line-height: 1.8; }
+.diagram-viewport:focus-visible { outline: 3px solid #357c59; outline-offset: 4px; }
+.editorial-page #skills {
+  padding: 48px; margin-bottom: 56px; border-radius: 16px;
+  background: linear-gradient(90deg,rgba(242,243,236,.98),rgba(242,243,236,.94)),url('/assets/editorial/records-desk.png') center/cover;
+}
+.editorial-page .photo-story + .section { padding-top: 16px; }
+@media (max-width: 800px) {
+  .editorial-page .portfolio-entrance { padding: 40px 26px 26px; min-height: 0; }
+  .editorial-page .portfolio-entrance::after { background: linear-gradient(90deg,rgba(241,241,233,.95),rgba(241,241,233,.66)); }
+  .editorial-page .portfolio-entrance .hero-object { margin-top: 20px; }
+  .photo-story { grid-template-columns: 1fr; margin-block: 28px 44px; }
+  .photo-story .story-image { height: 300px; min-height: 0; }
+  .photo-story figcaption { padding: 28px; }
+  .project-figure figcaption { grid-template-columns: 1fr; gap: 8px; }
+  .editorial-page #skills { padding: 28px; }
+}
+@media (max-width: 480px) {
+  .editorial-page .portfolio-entrance { padding: 28px 22px 22px; margin-top: 16px; }
+  .editorial-page .portfolio-entrance h1 { font-size: clamp(55px,16vw,72px); }
+  .editorial-page .portfolio-entrance::before { background-position: 65% center; }
+  .editorial-page .project-card { padding: 20px; }
+  .photo-story .story-image { height: 225px; }
+  .photo-story figcaption { padding: 24px; }
+  .project-figure { margin-block: 32px 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-photo img { transition: none; }
+  .project-photo:hover img { transform: none; }
+}

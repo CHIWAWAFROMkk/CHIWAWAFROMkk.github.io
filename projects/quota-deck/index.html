@@ -10,8 +10,8 @@
   <meta property="og:url" content="https://chiwawafromkk.github.io/projects/quota-deck/">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/lab.css"><link rel="stylesheet" href="/assets/motion.css">
-</head>
-<body>
+<link rel="stylesheet" href="/assets/editorial.css"></head>
+<body class="editorial-page">
 <a class="skip" href="#main">跳到内容</a>
 <header class="nav-wrap wrap"><nav class="nav" aria-label="主导航"><a class="brand" href="/">何彦钧</a><div class="nav-links"><a href="/#projects">项目</a><a href="https://github.com/CHIWAWAFROMkk/quota-deck">公开源码</a></div></nav></header>
 <main class="wrap" id="main">
@@ -20,11 +20,14 @@
     <div class="actions"><span class="tag">MIT 开源 · 0.3.1</span><a class="button" href="https://github.com/CHIWAWAFROMkk/quota-deck">查看源码与运行方法</a><a href="#scope">当前完成范围</a></div>
     <p>把分散在不同 Agent 和 API 里的额度放到一个桌面入口：先看还能用多少，再展开模型消费倍率，最后按任务给本地 Agent 分工。</p>
   </section>
+<figure class="photo-story"><img class="story-image" src="/assets/editorial/analysis-desk.png" alt="电脑、表格与图纸组成的数据分析工作台" width="1536" height="1024" loading="lazy" decoding="async"><figcaption><h2>把注意力留给任务，把额度放在手边。</h2><p>不同 Agent 的共享额度、模型目录与分工入口集中呈现，让使用判断有清楚的数据来源。</p><small>AI 生成主题配图 · 非实际项目现场或产品截图</small></figcaption></figure>
+
   <section class="section grid">
     <div><h2>从模型列表到使用判断</h2><p>同一个账户余额重复出现在十几个模型下，会让人误以为每个模型都有独立额度。项目把额度池、模型与计费关系分开，保留服务商真实提供的信息。</p></div>
     <div><h3>额度</h3><p>按服务商折叠，共享池只展示一次。Antigravity 显示额度窗口、重置时间和采样消耗速度；WorkBuddy 展示模型消费倍率。</p><h3>模型库</h3><p>收集已连接服务当前返回的模型，支持搜索。模型擅长领域标为本地建议，避免把启发式标签当成官方评测。</p><h3>并行分工</h3><p>同一任务分别交给 Codex 做技术方案、Antigravity 做替代方案、WorkBuddy 做交付结构，等待独立结果并列展示。</p></div>
   </section>
-  <section class="section" id="scope"><h2>连接方式与当前范围</h2>
+  <figure class="project-figure"><div class="diagram-viewport" tabindex="0" aria-label="额度池、模型和任务之间的关系，窄屏可横向查看"><img src="/assets/editorial/quota-pools.svg" alt="共享额度来源与模型选择的结构示意。图中不填入私人余额，不把概念图当成当前运行界面。" width="1100" height="500" loading="lazy" decoding="async"></div><figcaption><strong>额度池、模型和任务之间的关系</strong><p>共享额度来源与模型选择的结构示意。图中不填入私人余额，不把概念图当成当前运行界面。</p></figcaption></figure>
+<section class="section" id="scope"><h2>连接方式与当前范围</h2>
     <div class="table-wrap" tabindex="0" aria-label="连接器范围"><table><thead><tr><th>服务</th><th>数据来源</th><th>当前边界</th></tr></thead><tbody>
       <tr><td>Codex</td><td>本机 CLI：账户窗口、模型列表</td><td>共享额度不虚构模型独立份额</td></tr>
       <tr><td>Antigravity</td><td>本机语言服务器与 CLI</td><td>实验性接口，随客户端版本可能变化；速度按额度池采样</td></tr>

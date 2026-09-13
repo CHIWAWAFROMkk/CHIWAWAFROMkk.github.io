@@ -611,11 +611,11 @@ const pageType = getPageType();
 const ambientCanvas = document.createElement('div');
 ambientCanvas.className = 'data-ambient-canvas';
 ambientCanvas.setAttribute('aria-hidden', 'true');
-ambientCanvas.innerHTML = createMotifs(pageType);
+ambientCanvas.innerHTML = document.body.classList.contains('editorial-page') ? '' : createMotifs(pageType);
 document.body.prepend(ambientCanvas);
 
 // Parallax scrolling for ambient motifs
-if (!reduced.matches) {
+if (!reduced.matches && !document.body.classList.contains('editorial-page')) {
   const motifs = ambientCanvas.querySelectorAll('.ambient-motif');
   window.addEventListener('scroll', () => {
     const y = window.scrollY;
