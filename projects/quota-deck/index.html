@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>QuotaDeck AI 额度显示器 / 何彦钧</title>
+  <meta name="description" content="QuotaDeck：Windows 桌面 AI 额度显示器，连接 Codex、Antigravity、DeepSeek 与 WorkBuddy，展示共享额度、模型消费倍率和本地 Agent 并行分工。MIT 开源。">
+  <link rel="canonical" href="https://chiwawafromkk.github.io/projects/quota-deck/">
+  <meta property="og:title" content="QuotaDeck AI 额度显示器"><meta property="og:type" content="website">
+  <meta property="og:description" content="从分散的额度页面到一个桌面入口：共享额度、模型目录、并行任务。查看源码与当前实现范围。">
+  <meta property="og:url" content="https://chiwawafromkk.github.io/projects/quota-deck/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/lab.css"><link rel="stylesheet" href="/assets/motion.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到内容</a>
+<header class="nav-wrap wrap"><nav class="nav" aria-label="主导航"><a class="brand" href="/">何彦钧</a><div class="nav-links"><a href="/#projects">项目</a><a href="https://github.com/CHIWAWAFROMkk/quota-deck">公开源码</a></div></nav></header>
+<main class="wrap" id="main">
+  <section class="page-title">
+    <h1>QUOTADECK.</h1><p>AI 额度显示器 · Windows 桌面应用</p>
+    <div class="actions"><span class="tag">MIT 开源 · 0.3.1</span><a class="button" href="https://github.com/CHIWAWAFROMkk/quota-deck">查看源码与运行方法</a><a href="#scope">当前完成范围</a></div>
+    <p>把分散在不同 Agent 和 API 里的额度放到一个桌面入口：先看还能用多少，再展开模型消费倍率，最后按任务给本地 Agent 分工。</p>
+  </section>
+  <section class="section grid">
+    <div><h2>从模型列表到使用判断</h2><p>同一个账户余额重复出现在十几个模型下，会让人误以为每个模型都有独立额度。项目把额度池、模型与计费关系分开，保留服务商真实提供的信息。</p></div>
+    <div><h3>额度</h3><p>按服务商折叠，共享池只展示一次。Antigravity 显示额度窗口、重置时间和采样消耗速度；WorkBuddy 展示模型消费倍率。</p><h3>模型库</h3><p>收集已连接服务当前返回的模型，支持搜索。模型擅长领域标为本地建议，避免把启发式标签当成官方评测。</p><h3>并行分工</h3><p>同一任务分别交给 Codex 做技术方案、Antigravity 做替代方案、WorkBuddy 做交付结构，等待独立结果并列展示。</p></div>
+  </section>
+  <section class="section" id="scope"><h2>连接方式与当前范围</h2>
+    <div class="table-wrap" tabindex="0" aria-label="连接器范围"><table><thead><tr><th>服务</th><th>数据来源</th><th>当前边界</th></tr></thead><tbody>
+      <tr><td>Codex</td><td>本机 CLI：账户窗口、模型列表</td><td>共享额度不虚构模型独立份额</td></tr>
+      <tr><td>Antigravity</td><td>本机语言服务器与 CLI</td><td>实验性接口，随客户端版本可能变化；速度按额度池采样</td></tr>
+      <tr><td>DeepSeek API</td><td>官方余额与模型接口</td><td>需要用户自己的 API 密钥；账户余额共享</td></tr>
+      <tr><td>WorkBuddy</td><td>用户保存的官方网页快照</td><td>目前不自动刷新网页；余额和倍率以快照时间为准</td></tr>
+    </tbody></table></div>
+    <p class="meta">目录覆盖连接器返回的模型，不承诺发现任意本地 Agent。第三方名称与商标归各自权利人所有。</p>
+  </section>
+  <section class="section grid"><div><h2>倍率怎样解释</h2><p>以相同计费基准为前提，消费倍率越低，同一余额支持的用量越多。界面用倍率的倒数帮助比较。</p></div><div><h3>计算示例，不是账号实测</h3><p>假设两个模型消费倍率分别为 0.5× 和 1×，相同输入输出条件下，前者的相对可用量是后者的 2 倍。</p><p>这不能换算成精确请求次数；上下文长度、输出长度、缓存与折扣都会改变实际消耗。服务商未公开模型倍率时保留未知。</p></div></section>
+  <section class="section grid"><div><h2>实现与验证</h2><p>Electron 托盘窗口与 Node.js 连接器。读取数据和模型调用放在主进程，界面通过受限桥接请求操作。</p></div><div><h3>已验证</h3><p>8 项自动检查覆盖共享额度映射、结果解析与状态边界；开发机完成了 Codex、Antigravity、WorkBuddy 的短任务并行连通性验证。CI 检查与构建不调用真实账号模型。</p><h3>仍待扩展</h3><p>多轮互审、自动汇总、任意 Agent 自动发现以及模型级精确消耗归因尚未实现。能力建议目前来自名称规则，尚未通过实际基准校准。</p></div></section>
+  <section class="section" id="run"><h2>在自己的电脑运行</h2><p>准备 Windows 11、Node.js 22+ 和 PowerShell 7，按仓库 README 安装并登录所需 CLI。</p><pre>git clone https://github.com/CHIWAWAFROMkk/quota-deck.git
+cd quota-deck
+npm ci
+npm run check
+npm start</pre><p>公开源码和构建包均不包含私人用量快照、登录凭证或 API 密钥。此项目页只介绍功能，不连接访客电脑或读取账号。实际并行任务会消耗所选服务商的额度。</p><div class="actions"><a class="button" href="https://github.com/CHIWAWAFROMkk/quota-deck">源码与配置说明</a><a href="https://github.com/CHIWAWAFROMkk/quota-deck/actions">构建与检查</a><a href="https://github.com/CHIWAWAFROMkk/quota-deck/blob/main/LICENSE">MIT 许可证</a></div></section>
+</main>
+<footer class="footer wrap"><nav class="footer-links" aria-label="页脚导航"><a href="/#projects">返回项目</a><a href="/privacy/">隐私与使用说明</a></nav></footer>
+<script type="module" src="/assets/motion.mjs"></script><script type="module" src="/assets/navigation.mjs"></script>
+</body></html>
