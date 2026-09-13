@@ -158,6 +158,142 @@ if (!reduced.matches && 'IntersectionObserver' in window) {
   });
 }
 
+// 6. Data Ambient Canvas Motifs (Subtle background engineering vectors representing project motifs)
+const ambientCanvas = document.createElement('div');
+ambientCanvas.className = 'data-ambient-canvas';
+ambientCanvas.setAttribute('aria-hidden', 'true');
+ambientCanvas.innerHTML = `
+<div class="ambient-motif motif-schema" data-speed="0.035">
+  <svg viewBox="0 0 340 250" fill="none" stroke-width="1.2">
+    <!-- Relational Schema Network (Campus Delivery SQL) -->
+    <rect x="20" y="20" width="100" height="52" rx="6" fill="#fff" fill-opacity="0.6"/>
+    <text x="30" y="42">ORDERS</text>
+    <line x1="20" y1="50" x2="120" y2="50"/>
+    <text x="30" y="64" font-size="8" fill-opacity="0.7">PK id · total_cents</text>
+
+    <rect x="200" y="20" width="110" height="52" rx="6" fill="#fff" fill-opacity="0.6"/>
+    <text x="210" y="42">STUDENTS</text>
+    <line x1="200" y1="50" x2="310" y2="50"/>
+    <text x="210" y="64" font-size="8" fill-opacity="0.7">PK id · name · dorm</text>
+
+    <rect x="20" y="160" width="110" height="52" rx="6" fill="#fff" fill-opacity="0.6"/>
+    <text x="30" y="182">MERCHANTS</text>
+    <line x1="20" y1="190" x2="130" y2="190"/>
+    <text x="30" y="204" font-size="8" fill-opacity="0.7">PK id · name</text>
+
+    <rect x="200" y="160" width="110" height="52" rx="6" fill="#fff" fill-opacity="0.6"/>
+    <text x="210" y="182">PAYMENTS</text>
+    <line x1="200" y1="190" x2="310" y2="190"/>
+    <text x="210" y="204" font-size="8" fill-opacity="0.7">FK order_id · paid</text>
+
+    <!-- Connectors -->
+    <path d="M 120 46 C 160 46, 160 46, 200 46" class="ambient-flow-line"/>
+    <path d="M 70 72 C 70 110, 70 120, 70 160" class="ambient-flow-line"/>
+    <path d="M 120 186 C 160 186, 160 186, 200 186" class="ambient-flow-line"/>
+    <circle cx="120" cy="46" r="3" fill="currentColor"/>
+    <circle cx="200" cy="46" r="3" fill="currentColor"/>
+    <circle cx="70" cy="160" r="3" fill="currentColor"/>
+  </svg>
+</div>
+
+<div class="ambient-motif motif-curve" data-speed="-0.025">
+  <svg viewBox="0 0 360 220" fill="none" stroke-width="1.2">
+    <!-- Gaussian Distribution & Histogram Ribbon (CSV Lab & Stats) -->
+    <line x1="20" y1="190" x2="340" y2="190"/>
+    <line x1="20" y1="20" x2="20" y2="190"/>
+    <!-- Histogram Bars -->
+    <rect x="45" y="150" width="28" height="40" stroke-dasharray="2 2"/>
+    <rect x="80" y="115" width="28" height="75" stroke-dasharray="2 2"/>
+    <rect x="115" y="65" width="28" height="125" stroke-dasharray="2 2"/>
+    <rect x="150" y="40" width="28" height="150" stroke-dasharray="2 2" fill="currentColor" fill-opacity="0.08"/>
+    <rect x="185" y="70" width="28" height="120" stroke-dasharray="2 2"/>
+    <rect x="220" y="125" width="28" height="65" stroke-dasharray="2 2"/>
+    <rect x="255" y="160" width="28" height="30" stroke-dasharray="2 2"/>
+    <!-- Bell Curve -->
+    <path d="M 25 186 C 90 186, 120 36, 164 36 C 208 36, 240 186, 315 186" stroke-width="2"/>
+    <!-- Axis Labels -->
+    <text x="158" y="24" font-size="9">μ (MEAN)</text>
+    <text x="218" y="204" font-size="8">+1σ</text>
+    <text x="96" y="204" font-size="8">-1σ</text>
+    <line x1="164" y1="36" x2="164" y2="190" stroke-dasharray="3 3"/>
+  </svg>
+</div>
+
+<div class="ambient-motif motif-matrix" data-speed="0.04">
+  <svg viewBox="0 0 290 210" fill="none" stroke-width="1.2">
+    <!-- Data Cleaning Matrix (CSV Lab / Audit Strip) -->
+    <text x="20" y="24">DATA AUDIT · 13 -> 10</text>
+    <g transform="translate(20, 36)">
+      <rect x="0" y="0" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="24" y="0" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="48" y="0" width="18" height="18" rx="3" stroke-dasharray="2 2"/>
+      <rect x="72" y="0" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="96" y="0" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="120" y="0" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.04"/>
+
+      <rect x="0" y="24" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="24" y="24" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="48" y="24" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="72" y="24" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="96" y="24" width="18" height="18" rx="3" stroke-dasharray="2 2"/>
+      <rect x="120" y="24" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+
+      <rect x="0" y="48" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="24" y="48" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.04"/>
+      <rect x="48" y="48" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="72" y="48" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="96" y="48" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+      <rect x="120" y="48" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.15"/>
+
+      <line x1="0" y1="80" x2="160" y2="80"/>
+      <text x="0" y="98" font-size="8">DUP_CHECK: PASS</text>
+      <text x="80" y="98" font-size="8">NULL_AUDIT: PASS</text>
+    </g>
+  </svg>
+</div>
+
+<div class="ambient-motif motif-pipeline" data-speed="-0.02">
+  <svg viewBox="0 0 280 190" fill="none" stroke-width="1.2">
+    <!-- AI Agent Decision & Pipeline Flow (Job Agent / HRIS) -->
+    <text x="20" y="22">AGENT PIPELINE</text>
+    <circle cx="40" cy="65" r="14" fill="currentColor" fill-opacity="0.08"/>
+    <text x="32" y="68" font-size="8">IN</text>
+
+    <path d="M 54 65 L 105 65" class="ambient-flow-line"/>
+
+    <circle cx="120" cy="65" r="15" fill="currentColor" fill-opacity="0.08"/>
+    <text x="108" y="68" font-size="8">RULES</text>
+
+    <path d="M 135 65 C 160 65, 160 40, 185 40"/>
+    <path d="M 135 65 C 160 65, 160 90, 185 90"/>
+
+    <circle cx="200" cy="40" r="14" fill="currentColor" fill-opacity="0.08"/>
+    <text x="190" y="43" font-size="7">SCORE</text>
+
+    <circle cx="200" cy="90" r="14" fill="currentColor" fill-opacity="0.08"/>
+    <text x="188" y="93" font-size="7">AUDIT</text>
+
+    <path d="M 214 40 L 250 40"/>
+    <path d="M 214 90 L 250 90"/>
+    <text x="235" y="32" font-size="8">84/100</text>
+    <text x="235" y="82" font-size="8">PASS</text>
+  </svg>
+</div>
+`;
+document.body.prepend(ambientCanvas);
+
+// Parallax scrolling for ambient motifs
+if (!reduced.matches) {
+  const motifs = ambientCanvas.querySelectorAll('.ambient-motif');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    motifs.forEach(m => {
+      const speed = parseFloat(m.dataset.speed || 0);
+      m.style.transform = `translate3d(0, ${(y * speed).toFixed(1)}px, 0)`;
+    });
+  }, { passive: true });
+}
+
 reduced.addEventListener('change', () => {
   if (reduced.matches) active.forEach(a => a.cancel());
 });
