@@ -38,7 +38,59 @@ OR o.total_cents!=COALESCE(p.amount_cents,0);`},
  {name:'查询计划',note:'复合索引服务于“学生 + 时间”查询；读取 SQLite 实际执行计划。',sql:`EXPLAIN QUERY PLAN
 SELECT id,status,total_cents FROM orders
 WHERE student_id=3 AND created_at>='2024-04-01'
-ORDER BY created_at;`}
+ORDER BY created_at;`},
+ {name:'── 经营分析 ── 总体概况',note:'GMV = 所有支付金额之和；净收入 = GMV − 退款总额；退款率 = 退款笔数 ÷ 总订单数。对应经营分析区块「总体概况」。',sql:`SELECT
+  COUNT(*)                                             AS 总订单数,
+  SUM(o.status='delivered')                           AS 已配送,
+  SUM(o.status='refunded')                            AS 已退款,
+  SUM(o.status='paid')                                AS 待配送,
+  ROUND(SUM(p.amount_cents)/100.0,2)                 AS GMV_元,
+  ROUND(COALESCE(SUM(r.amount_cents),0)/100.0,2)     AS 退款额_元,
+  ROUND((SUM(p.amount_cents)
+        -COALESCE(SUM(r.amount_cents),0))/100.0,2)   AS 净收入_元,
+  ROUND(100.0*SUM(o.status='refunded')/COUNT(*),1)   AS 退款率_百分比
+FROM orders o
+JOIN  payments p ON p.order_id=o.id
+LEFT JOIN refunds  r ON r.order_id=o.id;`},
+ {name:'── 经营分析 ── 菜品 GMV 排行',note:'排除退款单；按历史成交价（unit_price_cents）而非当前菜单价格计算，避免改价影响历史统计。对应「菜品 GMV Top 5」。',sql:`SELECT
+  d.name                                               AS 菜品,
+  m.name                                               AS 商家,
+  SUM(i.quantity)                                      AS 总销量,
+  ROUND(d.price_cents/100.0,2)                        AS 当前单价_元,
+  ROUND(SUM(i.quantity*i.unit_price_cents)/100.0,2)   AS 菜品GMV_元
+FROM order_items i
+JOIN orders    o ON o.id=i.order_id
+JOIN dishes    d ON d.id=i.dish_id
+JOIN merchants m ON m.id=i.merchant_id
+WHERE o.status != 'refunded'
+GROUP BY d.id,d.name,m.name,d.price_cents
+ORDER BY 菜品GMV_元 DESC;`},
+ {name:'── 经营分析 ── 学生消费明细',note:'客单价 = 消费总额 ÷ 下单次数；退款次数 > 1 可作为风控标记阈值。',sql:`SELECT
+  s.name                                               AS 学生,
+  s.dorm                                               AS 宿舍,
+  COUNT(o.id)                                          AS 下单次数,
+  SUM(o.status='refunded')                             AS 退款次数,
+  ROUND(SUM(p.amount_cents)/100.0,2)                  AS 消费总额_元,
+  ROUND(AVG(p.amount_cents)/100.0,2)                  AS 平均客单价_元
+FROM students s
+JOIN orders   o ON o.student_id=s.id
+JOIN payments p ON p.order_id=o.id
+GROUP BY s.id,s.name,s.dorm
+ORDER BY 消费总额_元 DESC;`},
+ {name:'── 经营分析 ── 退款风险识别',note:'退款 ≥ 2 次的学生在本数据集中出现。真实场景应触发人工核查而非直接封号。',sql:`WITH refund_counts AS (
+  SELECT o.student_id, COUNT(*) AS n
+  FROM orders o
+  WHERE o.status='refunded'
+  GROUP BY o.student_id
+)
+SELECT
+  s.name    AS 学生,
+  s.dorm    AS 宿舍,
+  rc.n      AS 退款次数,
+  CASE WHEN rc.n>=2 THEN '⚠ 建议核查' ELSE '正常' END AS 风险标记
+FROM refund_counts rc
+JOIN students s ON s.id=rc.student_id
+ORDER BY rc.n DESC;`}
 ];
 export function rows(db,sql,params=[]){const s=db.prepare(sql);try{s.bind(params);const result=[];while(s.step())result.push(s.getAsObject());return result;}finally{s.free();}}
 function transaction(db,fn){db.run('PRAGMA foreign_keys=ON; BEGIN IMMEDIATE');try{const r=fn();db.run('COMMIT');return r;}catch(e){db.run('ROLLBACK');throw e;}}
