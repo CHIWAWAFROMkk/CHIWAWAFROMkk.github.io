@@ -1,0 +1,2593 @@
+{
+  "title": "Job Agent synthetic replay",
+  "sourceCommit": "a576dd7273c788778d310e02f2147bf2c1ce254d",
+  "sourceRepository": "https://github.com/CHIWAWAFROMkk/personal-job-agent",
+  "sourceHashes": {
+    "src/job_agent/services/local_matcher.py": "c3cb04e8bd74c988ea0e532f630dbf54c1cc04324018b87d132f685cba36a509",
+    "src/job_agent/services/application_pack.py": "8e9836b75a2ba2bcc2fc8ebb56760bd2f510410133d65a90db7508ab91da2588",
+    "tests/helpers.py": "066315919394f35fcaf25d1f07ae81fce2b57f93c7d7f3f6e4cddd6449402ec9"
+  },
+  "engine": "local-baseline",
+  "fixtureDate": "2026-09-12T00:00:00+00:00",
+  "disclaimer": "虚构岗位与候选人，公开版 Python 引擎真实计算的固定条件回放；不是在线大模型，不会投递。",
+  "jd": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。",
+  "scenarios": [
+    {
+      "id": "4-0",
+      "days": 4,
+      "tableauConfirmed": false,
+      "profile": {
+        "schema_version": "1.0",
+        "updated_at": "2026-09-12T00:00:00Z",
+        "person": {
+          "display_name": "示例候选人（虚构）",
+          "legal_name": null,
+          "current_city": null,
+          "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "website": null
+          }
+        },
+        "job_search": {
+          "stage": "实习",
+          "target_roles": [
+            "AI运营",
+            "数据运营"
+          ],
+          "adjacent_roles": [],
+          "target_industries": [],
+          "preferred_locations": [
+            "上海"
+          ],
+          "employment_types": [],
+          "availability": {
+            "earliest_start": null,
+            "days_per_week": 4,
+            "max_days_per_week": null,
+            "duration_months": 6,
+            "max_duration_months": null,
+            "notes": ""
+          },
+          "commute": {
+            "origin": "",
+            "max_one_way_minutes": null,
+            "transport_modes": [],
+            "remote_acceptable": false,
+            "notes": ""
+          },
+          "internship_daily_pay_floor": null,
+          "exclude_outsourcing": true,
+          "must_haves": [],
+          "avoid": [],
+          "notes": ""
+        },
+        "education": [
+          {
+            "id": "edu-undergrad",
+            "institution": "示例大学",
+            "degree": "本科",
+            "major": "信息管理",
+            "start": null,
+            "end": "2027-06",
+            "location": null,
+            "gpa": null,
+            "coursework": [],
+            "status": "documented",
+            "source_ids": [
+              "resume-test"
+            ]
+          }
+        ],
+        "experiences": [
+          {
+            "id": "exp-internship",
+            "kind": "internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "start": null,
+            "end": null,
+            "location": null,
+            "summary": "",
+            "facts": [
+              {
+                "id": "fact-sql-analysis",
+                "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+                "skills": [
+                  "SQL",
+                  "数据分析"
+                ],
+                "tools": [
+                  "SQL",
+                  "Excel"
+                ],
+                "metrics": [],
+                "status": "documented",
+                "source_ids": [
+                  "resume-test"
+                ],
+                "interview_notes": ""
+              },
+              {
+                "id": "fact-pending-tableau",
+                "statement": "独立搭建 Tableau 仪表盘。",
+                "skills": [
+                  "Tableau"
+                ],
+                "tools": [
+                  "Tableau"
+                ],
+                "metrics": [],
+                "status": "needs_confirmation",
+                "source_ids": [],
+                "interview_notes": ""
+              }
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "id": "skill-sql",
+            "name": "SQL",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "source_ids": [
+              "resume-test"
+            ],
+            "status": "documented",
+            "last_used": null
+          },
+          {
+            "id": "skill-tableau-pending",
+            "name": "Tableau",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "source_ids": [],
+            "status": "needs_confirmation",
+            "last_used": null
+          }
+        ],
+        "stories": [],
+        "source_documents": [
+          {
+            "id": "resume-test",
+            "kind": "resume",
+            "original_path": "resume.docx",
+            "sha256": null,
+            "imported_at": "2026-09-12T00:00:00Z",
+            "notes": ""
+          }
+        ]
+      },
+      "match": {
+        "job": {
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "source": "manual",
+          "source_url": null,
+          "location": "上海",
+          "responsibilities": [
+            "负责 AI 产品运营和用户数据分析。"
+          ],
+          "requirements": [
+            {
+              "text": "本科及以上学历",
+              "category": "education",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "本科及以上学历；"
+            },
+            {
+              "text": "每周至少 4 天",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "连续实习 3 个月",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "必须熟练使用 SQL",
+              "category": "tool",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "必须熟练使用 SQL；"
+            },
+            {
+              "text": "Tableau 经验加分",
+              "category": "experience",
+              "importance": "preferred",
+              "hard_gate": false,
+              "jd_evidence": "Tableau 经验加分。"
+            }
+          ],
+          "required_skills": [
+            "SQL"
+          ],
+          "preferred_skills": [
+            "Tableau"
+          ],
+          "tools": [
+            "SQL",
+            "Tableau"
+          ],
+          "industry_experience": [],
+          "education_requirements": [
+            "本科及以上学历"
+          ],
+          "major_requirements": [],
+          "internship_requirements": [
+            "Tableau 经验加分"
+          ],
+          "arrival_requirements": [
+            "每周至少 4 天",
+            "连续实习 3 个月"
+          ],
+          "raw_text": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。"
+        },
+        "score_breakdown": {
+          "role_direction": 20,
+          "skills": 26,
+          "experience": 15,
+          "education": 10,
+          "logistics": 10,
+          "preferences": 3
+        },
+        "overall_score": 84,
+        "recommendation": "recommend",
+        "why_fit": [
+          "岗位方向命中: AI运营",
+          "已确认技能命中: SQL",
+          "找到 1 条与 JD 相关的已确认经历事实。"
+        ],
+        "why_not_fit": [],
+        "advantages": [
+          "[fact-sql-analysis] 使用 SQL 清洗业务数据并输出周度分析。"
+        ],
+        "gaps": [],
+        "hard_gates": [
+          {
+            "requirement": "本科及以上学历",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "已确认学历达到该要求。"
+          },
+          {
+            "requirement": "每周至少 4 天",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "每周保证可到岗 4 天，达到要求。"
+          },
+          {
+            "requirement": "连续实习 3 个月",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "保证可实习 6 个月，达到要求。"
+          },
+          {
+            "requirement": "必须熟练使用 SQL",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "本地规则无法可靠判断，需要人工确认。"
+          }
+        ],
+        "evidence": [
+          {
+            "requirement": "SQL",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          },
+          {
+            "requirement": "Tableau",
+            "status": "gap",
+            "profile_fact_ids": [],
+            "explanation": "Profile 中未找到已确认证据。"
+          }
+        ],
+        "unknowns": [
+          "必须熟练使用 SQL"
+        ],
+        "scoring_version": "phase1-v1",
+        "engine": "local-baseline",
+        "generated_at": "2026-09-12T00:00:00Z"
+      },
+      "pack": {
+        "schema_version": "1.0",
+        "generator": "local-truth-first-v1",
+        "generated_at": "2026-09-12T00:00:00Z",
+        "job": {
+          "job_id": 1,
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "location": "上海",
+          "source_url": null,
+          "match_score": 84,
+          "recommendation": "recommend"
+        },
+        "materials": {
+          "boss_greeting": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，想应聘贵司AI运营实习生。我曾使用 SQL 清洗业务数据并输出周度分析；同时曾使用 SQL 清洗业务数据并输出周度分析。这些经历与岗位的数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长较契合，期待进一步沟通。",
+          "email_subject": "应聘AI运营实习生｜示例候选人（虚构）｜示例大学",
+          "email_body": "您好：\n\n我是示例候选人（虚构），示例大学信息管理专业2027届本科生，现申请示例科技（虚构）的AI运营实习生。\n\n结合 JD，我理解该岗位的重点是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。我的相关经历包括：曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析。以上内容均来自已确认的真实经历，并已在定向简历中按岗位重点呈现。\n\n每周可稳定到岗 4 天；可连续实习至少 6 个月。\n\n感谢您审阅我的申请，期待有机会进一步沟通。\n\n示例候选人（虚构）",
+          "self_introduction_30s": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生。我希望应聘AI运营实习生，过往经历主要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长展开。我曾使用 SQL 清洗业务数据并输出周度分析；也曾使用 SQL 清洗业务数据并输出周度分析。我希望把这些已验证的执行和分析经验迁移到该岗位。",
+          "why_company": "我关注示例科技（虚构），最直接的原因是该岗位把数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长放在同一条工作链路中，既要求扎实执行，也要求用数据和工具推动结果闭环。这与我在示例公司中形成的经验能够衔接，我可以较快进入实际任务，同时继续加深对业务场景的理解。",
+          "why_role": "我选择AI运营实习生，是因为它不只是完成单点事务，而是需要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长持续推进。我已经有可迁移的真实经验：曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析。因此我既能从基础执行切入，也能用数据和复盘意识提高交付质量。",
+          "personal_strengths": [
+            "使用 SQL 清洗业务数据并输出周度分析。"
+          ],
+          "interview_self_introduction_60s": "面试官您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，应聘的是AI运营实习生。我对这个岗位的理解，核心是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。与之最相关的经历有三类：第一，曾使用 SQL 清洗业务数据并输出周度分析；第二，曾使用 SQL 清洗业务数据并输出周度分析；第三，曾使用 SQL 清洗业务数据并输出周度分析。这些经历让我形成了先明确目标、再整理信息和数据、持续跟进问题、最后复盘交付的工作方式。我希望在示例科技（虚构）把这套方法用于真实业务，并对结果负责。",
+          "availability_answer": "每周可稳定到岗 4 天；可连续实习至少 6 个月。"
+        },
+        "evidence": [
+          {
+            "fact_id": "fact-sql-analysis",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+            "status": "documented",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          }
+        ],
+        "review_checklist": [
+          {
+            "category": "hard_gate",
+            "item": "本科及以上学历",
+            "status": "confirmed",
+            "detail": "已确认学历达到该要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "每周至少 4 天",
+            "status": "confirmed",
+            "detail": "每周保证可到岗 4 天，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "连续实习 3 个月",
+            "status": "confirmed",
+            "detail": "保证可实习 6 个月，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "必须熟练使用 SQL",
+            "status": "needs_confirmation",
+            "detail": "本地规则无法可靠判断，需要人工确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "availability",
+            "item": "到岗安排",
+            "status": "confirmed",
+            "detail": "每周可稳定到岗 4 天；可连续实习至少 6 个月。",
+            "blocks_submission": false
+          },
+          {
+            "category": "resume",
+            "item": "岗位定向简历",
+            "status": "needs_confirmation",
+            "detail": "演示未生成定向简历，需要本人审阅。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "薪资要求",
+            "status": "manual_input",
+            "detail": "若申请表要求填写，必须由本人确认，不自动猜测。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "地点与是否接受调剂",
+            "status": "manual_input",
+            "detail": "属于主观选择，必须由本人确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "最终提交申请",
+            "status": "manual_input",
+            "detail": "Agent 只准备材料；点击最终提交前必须由本人确认。",
+            "blocks_submission": true
+          }
+        ],
+        "gaps": [],
+        "resume": {
+          "status": "needs_generation",
+          "content_path": null,
+          "manifest_path": null,
+          "docx_path": null,
+          "pdf_path": null,
+          "fact_ids": [],
+          "qa_verified": false,
+          "note": "演示未生成定向简历，需要本人审阅。"
+        }
+      }
+    },
+    {
+      "id": "4-1",
+      "days": 4,
+      "tableauConfirmed": true,
+      "profile": {
+        "schema_version": "1.0",
+        "updated_at": "2026-09-12T00:00:00Z",
+        "person": {
+          "display_name": "示例候选人（虚构）",
+          "legal_name": null,
+          "current_city": null,
+          "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "website": null
+          }
+        },
+        "job_search": {
+          "stage": "实习",
+          "target_roles": [
+            "AI运营",
+            "数据运营"
+          ],
+          "adjacent_roles": [],
+          "target_industries": [],
+          "preferred_locations": [
+            "上海"
+          ],
+          "employment_types": [],
+          "availability": {
+            "earliest_start": null,
+            "days_per_week": 4,
+            "max_days_per_week": null,
+            "duration_months": 6,
+            "max_duration_months": null,
+            "notes": ""
+          },
+          "commute": {
+            "origin": "",
+            "max_one_way_minutes": null,
+            "transport_modes": [],
+            "remote_acceptable": false,
+            "notes": ""
+          },
+          "internship_daily_pay_floor": null,
+          "exclude_outsourcing": true,
+          "must_haves": [],
+          "avoid": [],
+          "notes": ""
+        },
+        "education": [
+          {
+            "id": "edu-undergrad",
+            "institution": "示例大学",
+            "degree": "本科",
+            "major": "信息管理",
+            "start": null,
+            "end": "2027-06",
+            "location": null,
+            "gpa": null,
+            "coursework": [],
+            "status": "documented",
+            "source_ids": [
+              "resume-test"
+            ]
+          }
+        ],
+        "experiences": [
+          {
+            "id": "exp-internship",
+            "kind": "internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "start": null,
+            "end": null,
+            "location": null,
+            "summary": "",
+            "facts": [
+              {
+                "id": "fact-sql-analysis",
+                "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+                "skills": [
+                  "SQL",
+                  "数据分析"
+                ],
+                "tools": [
+                  "SQL",
+                  "Excel"
+                ],
+                "metrics": [],
+                "status": "documented",
+                "source_ids": [
+                  "resume-test"
+                ],
+                "interview_notes": ""
+              },
+              {
+                "id": "fact-pending-tableau",
+                "statement": "独立搭建 Tableau 仪表盘。",
+                "skills": [
+                  "Tableau"
+                ],
+                "tools": [
+                  "Tableau"
+                ],
+                "metrics": [],
+                "status": "user_confirmed",
+                "source_ids": [],
+                "interview_notes": ""
+              }
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "id": "skill-sql",
+            "name": "SQL",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "source_ids": [
+              "resume-test"
+            ],
+            "status": "documented",
+            "last_used": null
+          },
+          {
+            "id": "skill-tableau-pending",
+            "name": "Tableau",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "source_ids": [],
+            "status": "user_confirmed",
+            "last_used": null
+          }
+        ],
+        "stories": [],
+        "source_documents": [
+          {
+            "id": "resume-test",
+            "kind": "resume",
+            "original_path": "resume.docx",
+            "sha256": null,
+            "imported_at": "2026-09-12T00:00:00Z",
+            "notes": ""
+          }
+        ]
+      },
+      "match": {
+        "job": {
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "source": "manual",
+          "source_url": null,
+          "location": "上海",
+          "responsibilities": [
+            "负责 AI 产品运营和用户数据分析。"
+          ],
+          "requirements": [
+            {
+              "text": "本科及以上学历",
+              "category": "education",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "本科及以上学历；"
+            },
+            {
+              "text": "每周至少 4 天",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "连续实习 3 个月",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "必须熟练使用 SQL",
+              "category": "tool",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "必须熟练使用 SQL；"
+            },
+            {
+              "text": "Tableau 经验加分",
+              "category": "experience",
+              "importance": "preferred",
+              "hard_gate": false,
+              "jd_evidence": "Tableau 经验加分。"
+            }
+          ],
+          "required_skills": [
+            "SQL"
+          ],
+          "preferred_skills": [
+            "Tableau"
+          ],
+          "tools": [
+            "SQL",
+            "Tableau"
+          ],
+          "industry_experience": [],
+          "education_requirements": [
+            "本科及以上学历"
+          ],
+          "major_requirements": [],
+          "internship_requirements": [
+            "Tableau 经验加分"
+          ],
+          "arrival_requirements": [
+            "每周至少 4 天",
+            "连续实习 3 个月"
+          ],
+          "raw_text": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。"
+        },
+        "score_breakdown": {
+          "role_direction": 20,
+          "skills": 30,
+          "experience": 20,
+          "education": 10,
+          "logistics": 4,
+          "preferences": 0
+        },
+        "overall_score": 84,
+        "recommendation": "recommend",
+        "why_fit": [
+          "岗位方向命中: AI运营",
+          "已确认技能命中: SQL",
+          "已确认加分技能命中: Tableau",
+          "找到 2 条与 JD 相关的已确认经历事实。"
+        ],
+        "why_not_fit": [],
+        "advantages": [
+          "[fact-sql-analysis] 使用 SQL 清洗业务数据并输出周度分析。",
+          "[fact-pending-tableau] 独立搭建 Tableau 仪表盘。"
+        ],
+        "gaps": [],
+        "hard_gates": [
+          {
+            "requirement": "本科及以上学历",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "已确认学历达到该要求。"
+          },
+          {
+            "requirement": "每周至少 4 天",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "每周保证可到岗 4 天，达到要求。"
+          },
+          {
+            "requirement": "连续实习 3 个月",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "保证可实习 6 个月，达到要求。"
+          },
+          {
+            "requirement": "必须熟练使用 SQL",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "本地规则无法可靠判断，需要人工确认。"
+          }
+        ],
+        "evidence": [
+          {
+            "requirement": "SQL",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          },
+          {
+            "requirement": "Tableau",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          }
+        ],
+        "unknowns": [
+          "必须熟练使用 SQL"
+        ],
+        "scoring_version": "phase1-v1",
+        "engine": "local-baseline",
+        "generated_at": "2026-09-12T00:00:00Z"
+      },
+      "pack": {
+        "schema_version": "1.0",
+        "generator": "local-truth-first-v1",
+        "generated_at": "2026-09-12T00:00:00Z",
+        "job": {
+          "job_id": 1,
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "location": "上海",
+          "source_url": null,
+          "match_score": 84,
+          "recommendation": "recommend"
+        },
+        "materials": {
+          "boss_greeting": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，想应聘贵司AI运营实习生。我曾使用 SQL 清洗业务数据并输出周度分析；同时曾独立搭建 Tableau 仪表盘。这些经历与岗位的数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长较契合，期待进一步沟通。",
+          "email_subject": "应聘AI运营实习生｜示例候选人（虚构）｜示例大学",
+          "email_body": "您好：\n\n我是示例候选人（虚构），示例大学信息管理专业2027届本科生，现申请示例科技（虚构）的AI运营实习生。\n\n结合 JD，我理解该岗位的重点是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。我的相关经历包括：曾使用 SQL 清洗业务数据并输出周度分析；曾独立搭建 Tableau 仪表盘；曾独立搭建 Tableau 仪表盘。以上内容均来自已确认的真实经历，并已在定向简历中按岗位重点呈现。\n\n每周可稳定到岗 4 天；可连续实习至少 6 个月。\n\n感谢您审阅我的申请，期待有机会进一步沟通。\n\n示例候选人（虚构）",
+          "self_introduction_30s": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生。我希望应聘AI运营实习生，过往经历主要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长展开。我曾使用 SQL 清洗业务数据并输出周度分析；也曾独立搭建 Tableau 仪表盘。我希望把这些已验证的执行和分析经验迁移到该岗位。",
+          "why_company": "我关注示例科技（虚构），最直接的原因是该岗位把数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长放在同一条工作链路中，既要求扎实执行，也要求用数据和工具推动结果闭环。这与我在示例公司中形成的经验能够衔接，我可以较快进入实际任务，同时继续加深对业务场景的理解。",
+          "why_role": "我选择AI运营实习生，是因为它不只是完成单点事务，而是需要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长持续推进。我已经有可迁移的真实经验：曾使用 SQL 清洗业务数据并输出周度分析；曾独立搭建 Tableau 仪表盘。因此我既能从基础执行切入，也能用数据和复盘意识提高交付质量。",
+          "personal_strengths": [
+            "使用 SQL 清洗业务数据并输出周度分析。",
+            "独立搭建 Tableau 仪表盘。"
+          ],
+          "interview_self_introduction_60s": "面试官您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，应聘的是AI运营实习生。我对这个岗位的理解，核心是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。与之最相关的经历有三类：第一，曾使用 SQL 清洗业务数据并输出周度分析；第二，曾独立搭建 Tableau 仪表盘；第三，曾独立搭建 Tableau 仪表盘。这些经历让我形成了先明确目标、再整理信息和数据、持续跟进问题、最后复盘交付的工作方式。我希望在示例科技（虚构）把这套方法用于真实业务，并对结果负责。",
+          "availability_answer": "每周可稳定到岗 4 天；可连续实习至少 6 个月。"
+        },
+        "evidence": [
+          {
+            "fact_id": "fact-sql-analysis",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+            "status": "documented",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          },
+          {
+            "fact_id": "fact-pending-tableau",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "独立搭建 Tableau 仪表盘。",
+            "status": "user_confirmed",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          }
+        ],
+        "review_checklist": [
+          {
+            "category": "hard_gate",
+            "item": "本科及以上学历",
+            "status": "confirmed",
+            "detail": "已确认学历达到该要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "每周至少 4 天",
+            "status": "confirmed",
+            "detail": "每周保证可到岗 4 天，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "连续实习 3 个月",
+            "status": "confirmed",
+            "detail": "保证可实习 6 个月，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "必须熟练使用 SQL",
+            "status": "needs_confirmation",
+            "detail": "本地规则无法可靠判断，需要人工确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "availability",
+            "item": "到岗安排",
+            "status": "confirmed",
+            "detail": "每周可稳定到岗 4 天；可连续实习至少 6 个月。",
+            "blocks_submission": false
+          },
+          {
+            "category": "resume",
+            "item": "岗位定向简历",
+            "status": "needs_confirmation",
+            "detail": "演示未生成定向简历，需要本人审阅。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "薪资要求",
+            "status": "manual_input",
+            "detail": "若申请表要求填写，必须由本人确认，不自动猜测。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "地点与是否接受调剂",
+            "status": "manual_input",
+            "detail": "属于主观选择，必须由本人确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "最终提交申请",
+            "status": "manual_input",
+            "detail": "Agent 只准备材料；点击最终提交前必须由本人确认。",
+            "blocks_submission": true
+          }
+        ],
+        "gaps": [],
+        "resume": {
+          "status": "needs_generation",
+          "content_path": null,
+          "manifest_path": null,
+          "docx_path": null,
+          "pdf_path": null,
+          "fact_ids": [],
+          "qa_verified": false,
+          "note": "演示未生成定向简历，需要本人审阅。"
+        }
+      }
+    },
+    {
+      "id": "3-0",
+      "days": 3,
+      "tableauConfirmed": false,
+      "profile": {
+        "schema_version": "1.0",
+        "updated_at": "2026-09-12T00:00:00Z",
+        "person": {
+          "display_name": "示例候选人（虚构）",
+          "legal_name": null,
+          "current_city": null,
+          "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "website": null
+          }
+        },
+        "job_search": {
+          "stage": "实习",
+          "target_roles": [
+            "AI运营",
+            "数据运营"
+          ],
+          "adjacent_roles": [],
+          "target_industries": [],
+          "preferred_locations": [
+            "上海"
+          ],
+          "employment_types": [],
+          "availability": {
+            "earliest_start": null,
+            "days_per_week": 3,
+            "max_days_per_week": null,
+            "duration_months": 6,
+            "max_duration_months": null,
+            "notes": ""
+          },
+          "commute": {
+            "origin": "",
+            "max_one_way_minutes": null,
+            "transport_modes": [],
+            "remote_acceptable": false,
+            "notes": ""
+          },
+          "internship_daily_pay_floor": null,
+          "exclude_outsourcing": true,
+          "must_haves": [],
+          "avoid": [],
+          "notes": ""
+        },
+        "education": [
+          {
+            "id": "edu-undergrad",
+            "institution": "示例大学",
+            "degree": "本科",
+            "major": "信息管理",
+            "start": null,
+            "end": "2027-06",
+            "location": null,
+            "gpa": null,
+            "coursework": [],
+            "status": "documented",
+            "source_ids": [
+              "resume-test"
+            ]
+          }
+        ],
+        "experiences": [
+          {
+            "id": "exp-internship",
+            "kind": "internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "start": null,
+            "end": null,
+            "location": null,
+            "summary": "",
+            "facts": [
+              {
+                "id": "fact-sql-analysis",
+                "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+                "skills": [
+                  "SQL",
+                  "数据分析"
+                ],
+                "tools": [
+                  "SQL",
+                  "Excel"
+                ],
+                "metrics": [],
+                "status": "documented",
+                "source_ids": [
+                  "resume-test"
+                ],
+                "interview_notes": ""
+              },
+              {
+                "id": "fact-pending-tableau",
+                "statement": "独立搭建 Tableau 仪表盘。",
+                "skills": [
+                  "Tableau"
+                ],
+                "tools": [
+                  "Tableau"
+                ],
+                "metrics": [],
+                "status": "needs_confirmation",
+                "source_ids": [],
+                "interview_notes": ""
+              }
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "id": "skill-sql",
+            "name": "SQL",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "source_ids": [
+              "resume-test"
+            ],
+            "status": "documented",
+            "last_used": null
+          },
+          {
+            "id": "skill-tableau-pending",
+            "name": "Tableau",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "source_ids": [],
+            "status": "needs_confirmation",
+            "last_used": null
+          }
+        ],
+        "stories": [],
+        "source_documents": [
+          {
+            "id": "resume-test",
+            "kind": "resume",
+            "original_path": "resume.docx",
+            "sha256": null,
+            "imported_at": "2026-09-12T00:00:00Z",
+            "notes": ""
+          }
+        ]
+      },
+      "match": {
+        "job": {
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "source": "manual",
+          "source_url": null,
+          "location": "上海",
+          "responsibilities": [
+            "负责 AI 产品运营和用户数据分析。"
+          ],
+          "requirements": [
+            {
+              "text": "本科及以上学历",
+              "category": "education",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "本科及以上学历；"
+            },
+            {
+              "text": "每周至少 4 天",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "连续实习 3 个月",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "必须熟练使用 SQL",
+              "category": "tool",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "必须熟练使用 SQL；"
+            },
+            {
+              "text": "Tableau 经验加分",
+              "category": "experience",
+              "importance": "preferred",
+              "hard_gate": false,
+              "jd_evidence": "Tableau 经验加分。"
+            }
+          ],
+          "required_skills": [
+            "SQL"
+          ],
+          "preferred_skills": [
+            "Tableau"
+          ],
+          "tools": [
+            "SQL",
+            "Tableau"
+          ],
+          "industry_experience": [],
+          "education_requirements": [
+            "本科及以上学历"
+          ],
+          "major_requirements": [],
+          "internship_requirements": [
+            "Tableau 经验加分"
+          ],
+          "arrival_requirements": [
+            "每周至少 4 天",
+            "连续实习 3 个月"
+          ],
+          "raw_text": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。"
+        },
+        "score_breakdown": {
+          "role_direction": 20,
+          "skills": 26,
+          "experience": 13,
+          "education": 0,
+          "logistics": 0,
+          "preferences": 0
+        },
+        "overall_score": 59,
+        "recommendation": "low_priority",
+        "why_fit": [
+          "岗位方向命中: AI运营",
+          "已确认技能命中: SQL",
+          "找到 1 条与 JD 相关的已确认经历事实。"
+        ],
+        "why_not_fit": [
+          "存在未满足的硬性门槛: 每周至少 4 天"
+        ],
+        "advantages": [
+          "[fact-sql-analysis] 使用 SQL 清洗业务数据并输出周度分析。"
+        ],
+        "gaps": [],
+        "hard_gates": [
+          {
+            "requirement": "本科及以上学历",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "已确认学历达到该要求。"
+          },
+          {
+            "requirement": "每周至少 4 天",
+            "status": "fails",
+            "profile_fact_ids": [],
+            "explanation": "每周最多可到岗 3 天，低于要求。"
+          },
+          {
+            "requirement": "连续实习 3 个月",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "保证可实习 6 个月，达到要求。"
+          },
+          {
+            "requirement": "必须熟练使用 SQL",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "本地规则无法可靠判断，需要人工确认。"
+          }
+        ],
+        "evidence": [
+          {
+            "requirement": "SQL",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          },
+          {
+            "requirement": "Tableau",
+            "status": "gap",
+            "profile_fact_ids": [],
+            "explanation": "Profile 中未找到已确认证据。"
+          }
+        ],
+        "unknowns": [
+          "必须熟练使用 SQL"
+        ],
+        "scoring_version": "phase1-v1",
+        "engine": "local-baseline",
+        "generated_at": "2026-09-12T00:00:00Z"
+      },
+      "pack": {
+        "schema_version": "1.0",
+        "generator": "local-truth-first-v1",
+        "generated_at": "2026-09-12T00:00:00Z",
+        "job": {
+          "job_id": 1,
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "location": "上海",
+          "source_url": null,
+          "match_score": 59,
+          "recommendation": "low_priority"
+        },
+        "materials": {
+          "boss_greeting": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，想应聘贵司AI运营实习生。我曾使用 SQL 清洗业务数据并输出周度分析；同时曾使用 SQL 清洗业务数据并输出周度分析。这些经历与岗位的数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长较契合，期待进一步沟通。",
+          "email_subject": "应聘AI运营实习生｜示例候选人（虚构）｜示例大学",
+          "email_body": "您好：\n\n我是示例候选人（虚构），示例大学信息管理专业2027届本科生，现申请示例科技（虚构）的AI运营实习生。\n\n结合 JD，我理解该岗位的重点是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。我的相关经历包括：曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析。以上内容均来自已确认的真实经历，并已在定向简历中按岗位重点呈现。\n\n每周可稳定到岗 3 天；可连续实习至少 6 个月。\n\n感谢您审阅我的申请，期待有机会进一步沟通。\n\n示例候选人（虚构）",
+          "self_introduction_30s": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生。我希望应聘AI运营实习生，过往经历主要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长展开。我曾使用 SQL 清洗业务数据并输出周度分析；也曾使用 SQL 清洗业务数据并输出周度分析。我希望把这些已验证的执行和分析经验迁移到该岗位。",
+          "why_company": "我关注示例科技（虚构），最直接的原因是该岗位把数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长放在同一条工作链路中，既要求扎实执行，也要求用数据和工具推动结果闭环。这与我在示例公司中形成的经验能够衔接，我可以较快进入实际任务，同时继续加深对业务场景的理解。",
+          "why_role": "我选择AI运营实习生，是因为它不只是完成单点事务，而是需要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长持续推进。我已经有可迁移的真实经验：曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析。因此我既能从基础执行切入，也能用数据和复盘意识提高交付质量。",
+          "personal_strengths": [
+            "使用 SQL 清洗业务数据并输出周度分析。"
+          ],
+          "interview_self_introduction_60s": "面试官您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，应聘的是AI运营实习生。我对这个岗位的理解，核心是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。与之最相关的经历有三类：第一，曾使用 SQL 清洗业务数据并输出周度分析；第二，曾使用 SQL 清洗业务数据并输出周度分析；第三，曾使用 SQL 清洗业务数据并输出周度分析。这些经历让我形成了先明确目标、再整理信息和数据、持续跟进问题、最后复盘交付的工作方式。我希望在示例科技（虚构）把这套方法用于真实业务，并对结果负责。",
+          "availability_answer": "每周可稳定到岗 3 天；可连续实习至少 6 个月。"
+        },
+        "evidence": [
+          {
+            "fact_id": "fact-sql-analysis",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+            "status": "documented",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          }
+        ],
+        "review_checklist": [
+          {
+            "category": "hard_gate",
+            "item": "本科及以上学历",
+            "status": "confirmed",
+            "detail": "已确认学历达到该要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "每周至少 4 天",
+            "status": "needs_confirmation",
+            "detail": "每周最多可到岗 3 天，低于要求。",
+            "blocks_submission": true
+          },
+          {
+            "category": "hard_gate",
+            "item": "连续实习 3 个月",
+            "status": "confirmed",
+            "detail": "保证可实习 6 个月，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "必须熟练使用 SQL",
+            "status": "needs_confirmation",
+            "detail": "本地规则无法可靠判断，需要人工确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "availability",
+            "item": "到岗安排",
+            "status": "confirmed",
+            "detail": "每周可稳定到岗 3 天；可连续实习至少 6 个月。",
+            "blocks_submission": false
+          },
+          {
+            "category": "resume",
+            "item": "岗位定向简历",
+            "status": "needs_confirmation",
+            "detail": "演示未生成定向简历，需要本人审阅。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "薪资要求",
+            "status": "manual_input",
+            "detail": "若申请表要求填写，必须由本人确认，不自动猜测。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "地点与是否接受调剂",
+            "status": "manual_input",
+            "detail": "属于主观选择，必须由本人确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "最终提交申请",
+            "status": "manual_input",
+            "detail": "Agent 只准备材料；点击最终提交前必须由本人确认。",
+            "blocks_submission": true
+          }
+        ],
+        "gaps": [],
+        "resume": {
+          "status": "needs_generation",
+          "content_path": null,
+          "manifest_path": null,
+          "docx_path": null,
+          "pdf_path": null,
+          "fact_ids": [],
+          "qa_verified": false,
+          "note": "演示未生成定向简历，需要本人审阅。"
+        }
+      }
+    },
+    {
+      "id": "3-1",
+      "days": 3,
+      "tableauConfirmed": true,
+      "profile": {
+        "schema_version": "1.0",
+        "updated_at": "2026-09-12T00:00:00Z",
+        "person": {
+          "display_name": "示例候选人（虚构）",
+          "legal_name": null,
+          "current_city": null,
+          "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "website": null
+          }
+        },
+        "job_search": {
+          "stage": "实习",
+          "target_roles": [
+            "AI运营",
+            "数据运营"
+          ],
+          "adjacent_roles": [],
+          "target_industries": [],
+          "preferred_locations": [
+            "上海"
+          ],
+          "employment_types": [],
+          "availability": {
+            "earliest_start": null,
+            "days_per_week": 3,
+            "max_days_per_week": null,
+            "duration_months": 6,
+            "max_duration_months": null,
+            "notes": ""
+          },
+          "commute": {
+            "origin": "",
+            "max_one_way_minutes": null,
+            "transport_modes": [],
+            "remote_acceptable": false,
+            "notes": ""
+          },
+          "internship_daily_pay_floor": null,
+          "exclude_outsourcing": true,
+          "must_haves": [],
+          "avoid": [],
+          "notes": ""
+        },
+        "education": [
+          {
+            "id": "edu-undergrad",
+            "institution": "示例大学",
+            "degree": "本科",
+            "major": "信息管理",
+            "start": null,
+            "end": "2027-06",
+            "location": null,
+            "gpa": null,
+            "coursework": [],
+            "status": "documented",
+            "source_ids": [
+              "resume-test"
+            ]
+          }
+        ],
+        "experiences": [
+          {
+            "id": "exp-internship",
+            "kind": "internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "start": null,
+            "end": null,
+            "location": null,
+            "summary": "",
+            "facts": [
+              {
+                "id": "fact-sql-analysis",
+                "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+                "skills": [
+                  "SQL",
+                  "数据分析"
+                ],
+                "tools": [
+                  "SQL",
+                  "Excel"
+                ],
+                "metrics": [],
+                "status": "documented",
+                "source_ids": [
+                  "resume-test"
+                ],
+                "interview_notes": ""
+              },
+              {
+                "id": "fact-pending-tableau",
+                "statement": "独立搭建 Tableau 仪表盘。",
+                "skills": [
+                  "Tableau"
+                ],
+                "tools": [
+                  "Tableau"
+                ],
+                "metrics": [],
+                "status": "user_confirmed",
+                "source_ids": [],
+                "interview_notes": ""
+              }
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "id": "skill-sql",
+            "name": "SQL",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "source_ids": [
+              "resume-test"
+            ],
+            "status": "documented",
+            "last_used": null
+          },
+          {
+            "id": "skill-tableau-pending",
+            "name": "Tableau",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "source_ids": [],
+            "status": "user_confirmed",
+            "last_used": null
+          }
+        ],
+        "stories": [],
+        "source_documents": [
+          {
+            "id": "resume-test",
+            "kind": "resume",
+            "original_path": "resume.docx",
+            "sha256": null,
+            "imported_at": "2026-09-12T00:00:00Z",
+            "notes": ""
+          }
+        ]
+      },
+      "match": {
+        "job": {
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "source": "manual",
+          "source_url": null,
+          "location": "上海",
+          "responsibilities": [
+            "负责 AI 产品运营和用户数据分析。"
+          ],
+          "requirements": [
+            {
+              "text": "本科及以上学历",
+              "category": "education",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "本科及以上学历；"
+            },
+            {
+              "text": "每周至少 4 天",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "连续实习 3 个月",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "必须熟练使用 SQL",
+              "category": "tool",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "必须熟练使用 SQL；"
+            },
+            {
+              "text": "Tableau 经验加分",
+              "category": "experience",
+              "importance": "preferred",
+              "hard_gate": false,
+              "jd_evidence": "Tableau 经验加分。"
+            }
+          ],
+          "required_skills": [
+            "SQL"
+          ],
+          "preferred_skills": [
+            "Tableau"
+          ],
+          "tools": [
+            "SQL",
+            "Tableau"
+          ],
+          "industry_experience": [],
+          "education_requirements": [
+            "本科及以上学历"
+          ],
+          "major_requirements": [],
+          "internship_requirements": [
+            "Tableau 经验加分"
+          ],
+          "arrival_requirements": [
+            "每周至少 4 天",
+            "连续实习 3 个月"
+          ],
+          "raw_text": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。"
+        },
+        "score_breakdown": {
+          "role_direction": 20,
+          "skills": 30,
+          "experience": 9,
+          "education": 0,
+          "logistics": 0,
+          "preferences": 0
+        },
+        "overall_score": 59,
+        "recommendation": "low_priority",
+        "why_fit": [
+          "岗位方向命中: AI运营",
+          "已确认技能命中: SQL",
+          "已确认加分技能命中: Tableau",
+          "找到 2 条与 JD 相关的已确认经历事实。"
+        ],
+        "why_not_fit": [
+          "存在未满足的硬性门槛: 每周至少 4 天"
+        ],
+        "advantages": [
+          "[fact-sql-analysis] 使用 SQL 清洗业务数据并输出周度分析。",
+          "[fact-pending-tableau] 独立搭建 Tableau 仪表盘。"
+        ],
+        "gaps": [],
+        "hard_gates": [
+          {
+            "requirement": "本科及以上学历",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "已确认学历达到该要求。"
+          },
+          {
+            "requirement": "每周至少 4 天",
+            "status": "fails",
+            "profile_fact_ids": [],
+            "explanation": "每周最多可到岗 3 天，低于要求。"
+          },
+          {
+            "requirement": "连续实习 3 个月",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "保证可实习 6 个月，达到要求。"
+          },
+          {
+            "requirement": "必须熟练使用 SQL",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "本地规则无法可靠判断，需要人工确认。"
+          }
+        ],
+        "evidence": [
+          {
+            "requirement": "SQL",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          },
+          {
+            "requirement": "Tableau",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          }
+        ],
+        "unknowns": [
+          "必须熟练使用 SQL"
+        ],
+        "scoring_version": "phase1-v1",
+        "engine": "local-baseline",
+        "generated_at": "2026-09-12T00:00:00Z"
+      },
+      "pack": {
+        "schema_version": "1.0",
+        "generator": "local-truth-first-v1",
+        "generated_at": "2026-09-12T00:00:00Z",
+        "job": {
+          "job_id": 1,
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "location": "上海",
+          "source_url": null,
+          "match_score": 59,
+          "recommendation": "low_priority"
+        },
+        "materials": {
+          "boss_greeting": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，想应聘贵司AI运营实习生。我曾使用 SQL 清洗业务数据并输出周度分析；同时曾独立搭建 Tableau 仪表盘。这些经历与岗位的数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长较契合，期待进一步沟通。",
+          "email_subject": "应聘AI运营实习生｜示例候选人（虚构）｜示例大学",
+          "email_body": "您好：\n\n我是示例候选人（虚构），示例大学信息管理专业2027届本科生，现申请示例科技（虚构）的AI运营实习生。\n\n结合 JD，我理解该岗位的重点是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。我的相关经历包括：曾使用 SQL 清洗业务数据并输出周度分析；曾独立搭建 Tableau 仪表盘；曾独立搭建 Tableau 仪表盘。以上内容均来自已确认的真实经历，并已在定向简历中按岗位重点呈现。\n\n每周可稳定到岗 3 天；可连续实习至少 6 个月。\n\n感谢您审阅我的申请，期待有机会进一步沟通。\n\n示例候选人（虚构）",
+          "self_introduction_30s": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生。我希望应聘AI运营实习生，过往经历主要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长展开。我曾使用 SQL 清洗业务数据并输出周度分析；也曾独立搭建 Tableau 仪表盘。我希望把这些已验证的执行和分析经验迁移到该岗位。",
+          "why_company": "我关注示例科技（虚构），最直接的原因是该岗位把数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长放在同一条工作链路中，既要求扎实执行，也要求用数据和工具推动结果闭环。这与我在示例公司中形成的经验能够衔接，我可以较快进入实际任务，同时继续加深对业务场景的理解。",
+          "why_role": "我选择AI运营实习生，是因为它不只是完成单点事务，而是需要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长持续推进。我已经有可迁移的真实经验：曾使用 SQL 清洗业务数据并输出周度分析；曾独立搭建 Tableau 仪表盘。因此我既能从基础执行切入，也能用数据和复盘意识提高交付质量。",
+          "personal_strengths": [
+            "使用 SQL 清洗业务数据并输出周度分析。",
+            "独立搭建 Tableau 仪表盘。"
+          ],
+          "interview_self_introduction_60s": "面试官您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，应聘的是AI运营实习生。我对这个岗位的理解，核心是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。与之最相关的经历有三类：第一，曾使用 SQL 清洗业务数据并输出周度分析；第二，曾独立搭建 Tableau 仪表盘；第三，曾独立搭建 Tableau 仪表盘。这些经历让我形成了先明确目标、再整理信息和数据、持续跟进问题、最后复盘交付的工作方式。我希望在示例科技（虚构）把这套方法用于真实业务，并对结果负责。",
+          "availability_answer": "每周可稳定到岗 3 天；可连续实习至少 6 个月。"
+        },
+        "evidence": [
+          {
+            "fact_id": "fact-sql-analysis",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+            "status": "documented",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          },
+          {
+            "fact_id": "fact-pending-tableau",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "独立搭建 Tableau 仪表盘。",
+            "status": "user_confirmed",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          }
+        ],
+        "review_checklist": [
+          {
+            "category": "hard_gate",
+            "item": "本科及以上学历",
+            "status": "confirmed",
+            "detail": "已确认学历达到该要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "每周至少 4 天",
+            "status": "needs_confirmation",
+            "detail": "每周最多可到岗 3 天，低于要求。",
+            "blocks_submission": true
+          },
+          {
+            "category": "hard_gate",
+            "item": "连续实习 3 个月",
+            "status": "confirmed",
+            "detail": "保证可实习 6 个月，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "必须熟练使用 SQL",
+            "status": "needs_confirmation",
+            "detail": "本地规则无法可靠判断，需要人工确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "availability",
+            "item": "到岗安排",
+            "status": "confirmed",
+            "detail": "每周可稳定到岗 3 天；可连续实习至少 6 个月。",
+            "blocks_submission": false
+          },
+          {
+            "category": "resume",
+            "item": "岗位定向简历",
+            "status": "needs_confirmation",
+            "detail": "演示未生成定向简历，需要本人审阅。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "薪资要求",
+            "status": "manual_input",
+            "detail": "若申请表要求填写，必须由本人确认，不自动猜测。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "地点与是否接受调剂",
+            "status": "manual_input",
+            "detail": "属于主观选择，必须由本人确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "最终提交申请",
+            "status": "manual_input",
+            "detail": "Agent 只准备材料；点击最终提交前必须由本人确认。",
+            "blocks_submission": true
+          }
+        ],
+        "gaps": [],
+        "resume": {
+          "status": "needs_generation",
+          "content_path": null,
+          "manifest_path": null,
+          "docx_path": null,
+          "pdf_path": null,
+          "fact_ids": [],
+          "qa_verified": false,
+          "note": "演示未生成定向简历，需要本人审阅。"
+        }
+      }
+    },
+    {
+      "id": "unknown-0",
+      "days": null,
+      "tableauConfirmed": false,
+      "profile": {
+        "schema_version": "1.0",
+        "updated_at": "2026-09-12T00:00:00Z",
+        "person": {
+          "display_name": "示例候选人（虚构）",
+          "legal_name": null,
+          "current_city": null,
+          "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "website": null
+          }
+        },
+        "job_search": {
+          "stage": "实习",
+          "target_roles": [
+            "AI运营",
+            "数据运营"
+          ],
+          "adjacent_roles": [],
+          "target_industries": [],
+          "preferred_locations": [
+            "上海"
+          ],
+          "employment_types": [],
+          "availability": {
+            "earliest_start": null,
+            "days_per_week": null,
+            "max_days_per_week": null,
+            "duration_months": 6,
+            "max_duration_months": null,
+            "notes": ""
+          },
+          "commute": {
+            "origin": "",
+            "max_one_way_minutes": null,
+            "transport_modes": [],
+            "remote_acceptable": false,
+            "notes": ""
+          },
+          "internship_daily_pay_floor": null,
+          "exclude_outsourcing": true,
+          "must_haves": [],
+          "avoid": [],
+          "notes": ""
+        },
+        "education": [
+          {
+            "id": "edu-undergrad",
+            "institution": "示例大学",
+            "degree": "本科",
+            "major": "信息管理",
+            "start": null,
+            "end": "2027-06",
+            "location": null,
+            "gpa": null,
+            "coursework": [],
+            "status": "documented",
+            "source_ids": [
+              "resume-test"
+            ]
+          }
+        ],
+        "experiences": [
+          {
+            "id": "exp-internship",
+            "kind": "internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "start": null,
+            "end": null,
+            "location": null,
+            "summary": "",
+            "facts": [
+              {
+                "id": "fact-sql-analysis",
+                "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+                "skills": [
+                  "SQL",
+                  "数据分析"
+                ],
+                "tools": [
+                  "SQL",
+                  "Excel"
+                ],
+                "metrics": [],
+                "status": "documented",
+                "source_ids": [
+                  "resume-test"
+                ],
+                "interview_notes": ""
+              },
+              {
+                "id": "fact-pending-tableau",
+                "statement": "独立搭建 Tableau 仪表盘。",
+                "skills": [
+                  "Tableau"
+                ],
+                "tools": [
+                  "Tableau"
+                ],
+                "metrics": [],
+                "status": "needs_confirmation",
+                "source_ids": [],
+                "interview_notes": ""
+              }
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "id": "skill-sql",
+            "name": "SQL",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "source_ids": [
+              "resume-test"
+            ],
+            "status": "documented",
+            "last_used": null
+          },
+          {
+            "id": "skill-tableau-pending",
+            "name": "Tableau",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "source_ids": [],
+            "status": "needs_confirmation",
+            "last_used": null
+          }
+        ],
+        "stories": [],
+        "source_documents": [
+          {
+            "id": "resume-test",
+            "kind": "resume",
+            "original_path": "resume.docx",
+            "sha256": null,
+            "imported_at": "2026-09-12T00:00:00Z",
+            "notes": ""
+          }
+        ]
+      },
+      "match": {
+        "job": {
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "source": "manual",
+          "source_url": null,
+          "location": "上海",
+          "responsibilities": [
+            "负责 AI 产品运营和用户数据分析。"
+          ],
+          "requirements": [
+            {
+              "text": "本科及以上学历",
+              "category": "education",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "本科及以上学历；"
+            },
+            {
+              "text": "每周至少 4 天",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "连续实习 3 个月",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "必须熟练使用 SQL",
+              "category": "tool",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "必须熟练使用 SQL；"
+            },
+            {
+              "text": "Tableau 经验加分",
+              "category": "experience",
+              "importance": "preferred",
+              "hard_gate": false,
+              "jd_evidence": "Tableau 经验加分。"
+            }
+          ],
+          "required_skills": [
+            "SQL"
+          ],
+          "preferred_skills": [
+            "Tableau"
+          ],
+          "tools": [
+            "SQL",
+            "Tableau"
+          ],
+          "industry_experience": [],
+          "education_requirements": [
+            "本科及以上学历"
+          ],
+          "major_requirements": [],
+          "internship_requirements": [
+            "Tableau 经验加分"
+          ],
+          "arrival_requirements": [
+            "每周至少 4 天",
+            "连续实习 3 个月"
+          ],
+          "raw_text": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。"
+        },
+        "score_breakdown": {
+          "role_direction": 20,
+          "skills": 26,
+          "experience": 15,
+          "education": 10,
+          "logistics": 7,
+          "preferences": 5
+        },
+        "overall_score": 83,
+        "recommendation": "recommend",
+        "why_fit": [
+          "岗位方向命中: AI运营",
+          "已确认技能命中: SQL",
+          "找到 1 条与 JD 相关的已确认经历事实。"
+        ],
+        "why_not_fit": [],
+        "advantages": [
+          "[fact-sql-analysis] 使用 SQL 清洗业务数据并输出周度分析。"
+        ],
+        "gaps": [],
+        "hard_gates": [
+          {
+            "requirement": "本科及以上学历",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "已确认学历达到该要求。"
+          },
+          {
+            "requirement": "每周至少 4 天",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "Profile 中尚未确认每周可到岗天数。"
+          },
+          {
+            "requirement": "连续实习 3 个月",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "保证可实习 6 个月，达到要求。"
+          },
+          {
+            "requirement": "必须熟练使用 SQL",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "本地规则无法可靠判断，需要人工确认。"
+          }
+        ],
+        "evidence": [
+          {
+            "requirement": "SQL",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          },
+          {
+            "requirement": "Tableau",
+            "status": "gap",
+            "profile_fact_ids": [],
+            "explanation": "Profile 中未找到已确认证据。"
+          }
+        ],
+        "unknowns": [
+          "每周至少 4 天",
+          "必须熟练使用 SQL"
+        ],
+        "scoring_version": "phase1-v1",
+        "engine": "local-baseline",
+        "generated_at": "2026-09-12T00:00:00Z"
+      },
+      "pack": {
+        "schema_version": "1.0",
+        "generator": "local-truth-first-v1",
+        "generated_at": "2026-09-12T00:00:00Z",
+        "job": {
+          "job_id": 1,
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "location": "上海",
+          "source_url": null,
+          "match_score": 83,
+          "recommendation": "recommend"
+        },
+        "materials": {
+          "boss_greeting": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，想应聘贵司AI运营实习生。我曾使用 SQL 清洗业务数据并输出周度分析；同时曾使用 SQL 清洗业务数据并输出周度分析。这些经历与岗位的数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长较契合，期待进一步沟通。",
+          "email_subject": "应聘AI运营实习生｜示例候选人（虚构）｜示例大学",
+          "email_body": "您好：\n\n我是示例候选人（虚构），示例大学信息管理专业2027届本科生，现申请示例科技（虚构）的AI运营实习生。\n\n结合 JD，我理解该岗位的重点是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。我的相关经历包括：曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析。以上内容均来自已确认的真实经历，并已在定向简历中按岗位重点呈现。\n\n可连续实习至少 6 个月。\n\n感谢您审阅我的申请，期待有机会进一步沟通。\n\n示例候选人（虚构）",
+          "self_introduction_30s": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生。我希望应聘AI运营实习生，过往经历主要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长展开。我曾使用 SQL 清洗业务数据并输出周度分析；也曾使用 SQL 清洗业务数据并输出周度分析。我希望把这些已验证的执行和分析经验迁移到该岗位。",
+          "why_company": "我关注示例科技（虚构），最直接的原因是该岗位把数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长放在同一条工作链路中，既要求扎实执行，也要求用数据和工具推动结果闭环。这与我在示例公司中形成的经验能够衔接，我可以较快进入实际任务，同时继续加深对业务场景的理解。",
+          "why_role": "我选择AI运营实习生，是因为它不只是完成单点事务，而是需要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长持续推进。我已经有可迁移的真实经验：曾使用 SQL 清洗业务数据并输出周度分析；曾使用 SQL 清洗业务数据并输出周度分析。因此我既能从基础执行切入，也能用数据和复盘意识提高交付质量。",
+          "personal_strengths": [
+            "使用 SQL 清洗业务数据并输出周度分析。"
+          ],
+          "interview_self_introduction_60s": "面试官您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，应聘的是AI运营实习生。我对这个岗位的理解，核心是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。与之最相关的经历有三类：第一，曾使用 SQL 清洗业务数据并输出周度分析；第二，曾使用 SQL 清洗业务数据并输出周度分析；第三，曾使用 SQL 清洗业务数据并输出周度分析。这些经历让我形成了先明确目标、再整理信息和数据、持续跟进问题、最后复盘交付的工作方式。我希望在示例科技（虚构）把这套方法用于真实业务，并对结果负责。",
+          "availability_answer": "可连续实习至少 6 个月。"
+        },
+        "evidence": [
+          {
+            "fact_id": "fact-sql-analysis",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+            "status": "documented",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          }
+        ],
+        "review_checklist": [
+          {
+            "category": "hard_gate",
+            "item": "本科及以上学历",
+            "status": "confirmed",
+            "detail": "已确认学历达到该要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "每周至少 4 天",
+            "status": "needs_confirmation",
+            "detail": "Profile 中尚未确认每周可到岗天数。",
+            "blocks_submission": true
+          },
+          {
+            "category": "hard_gate",
+            "item": "连续实习 3 个月",
+            "status": "confirmed",
+            "detail": "保证可实习 6 个月，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "必须熟练使用 SQL",
+            "status": "needs_confirmation",
+            "detail": "本地规则无法可靠判断，需要人工确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "availability",
+            "item": "到岗安排",
+            "status": "confirmed",
+            "detail": "可连续实习至少 6 个月。",
+            "blocks_submission": false
+          },
+          {
+            "category": "resume",
+            "item": "岗位定向简历",
+            "status": "needs_confirmation",
+            "detail": "演示未生成定向简历，需要本人审阅。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "薪资要求",
+            "status": "manual_input",
+            "detail": "若申请表要求填写，必须由本人确认，不自动猜测。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "地点与是否接受调剂",
+            "status": "manual_input",
+            "detail": "属于主观选择，必须由本人确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "最终提交申请",
+            "status": "manual_input",
+            "detail": "Agent 只准备材料；点击最终提交前必须由本人确认。",
+            "blocks_submission": true
+          }
+        ],
+        "gaps": [],
+        "resume": {
+          "status": "needs_generation",
+          "content_path": null,
+          "manifest_path": null,
+          "docx_path": null,
+          "pdf_path": null,
+          "fact_ids": [],
+          "qa_verified": false,
+          "note": "演示未生成定向简历，需要本人审阅。"
+        }
+      }
+    },
+    {
+      "id": "unknown-1",
+      "days": null,
+      "tableauConfirmed": true,
+      "profile": {
+        "schema_version": "1.0",
+        "updated_at": "2026-09-12T00:00:00Z",
+        "person": {
+          "display_name": "示例候选人（虚构）",
+          "legal_name": null,
+          "current_city": null,
+          "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "website": null
+          }
+        },
+        "job_search": {
+          "stage": "实习",
+          "target_roles": [
+            "AI运营",
+            "数据运营"
+          ],
+          "adjacent_roles": [],
+          "target_industries": [],
+          "preferred_locations": [
+            "上海"
+          ],
+          "employment_types": [],
+          "availability": {
+            "earliest_start": null,
+            "days_per_week": null,
+            "max_days_per_week": null,
+            "duration_months": 6,
+            "max_duration_months": null,
+            "notes": ""
+          },
+          "commute": {
+            "origin": "",
+            "max_one_way_minutes": null,
+            "transport_modes": [],
+            "remote_acceptable": false,
+            "notes": ""
+          },
+          "internship_daily_pay_floor": null,
+          "exclude_outsourcing": true,
+          "must_haves": [],
+          "avoid": [],
+          "notes": ""
+        },
+        "education": [
+          {
+            "id": "edu-undergrad",
+            "institution": "示例大学",
+            "degree": "本科",
+            "major": "信息管理",
+            "start": null,
+            "end": "2027-06",
+            "location": null,
+            "gpa": null,
+            "coursework": [],
+            "status": "documented",
+            "source_ids": [
+              "resume-test"
+            ]
+          }
+        ],
+        "experiences": [
+          {
+            "id": "exp-internship",
+            "kind": "internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "start": null,
+            "end": null,
+            "location": null,
+            "summary": "",
+            "facts": [
+              {
+                "id": "fact-sql-analysis",
+                "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+                "skills": [
+                  "SQL",
+                  "数据分析"
+                ],
+                "tools": [
+                  "SQL",
+                  "Excel"
+                ],
+                "metrics": [],
+                "status": "documented",
+                "source_ids": [
+                  "resume-test"
+                ],
+                "interview_notes": ""
+              },
+              {
+                "id": "fact-pending-tableau",
+                "statement": "独立搭建 Tableau 仪表盘。",
+                "skills": [
+                  "Tableau"
+                ],
+                "tools": [
+                  "Tableau"
+                ],
+                "metrics": [],
+                "status": "user_confirmed",
+                "source_ids": [],
+                "interview_notes": ""
+              }
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "id": "skill-sql",
+            "name": "SQL",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "source_ids": [
+              "resume-test"
+            ],
+            "status": "documented",
+            "last_used": null
+          },
+          {
+            "id": "skill-tableau-pending",
+            "name": "Tableau",
+            "category": "other",
+            "level": "working",
+            "aliases": [],
+            "evidence_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "source_ids": [],
+            "status": "user_confirmed",
+            "last_used": null
+          }
+        ],
+        "stories": [],
+        "source_documents": [
+          {
+            "id": "resume-test",
+            "kind": "resume",
+            "original_path": "resume.docx",
+            "sha256": null,
+            "imported_at": "2026-09-12T00:00:00Z",
+            "notes": ""
+          }
+        ]
+      },
+      "match": {
+        "job": {
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "source": "manual",
+          "source_url": null,
+          "location": "上海",
+          "responsibilities": [
+            "负责 AI 产品运营和用户数据分析。"
+          ],
+          "requirements": [
+            {
+              "text": "本科及以上学历",
+              "category": "education",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "本科及以上学历；"
+            },
+            {
+              "text": "每周至少 4 天",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "连续实习 3 个月",
+              "category": "availability",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "每周至少 4 天，连续实习 3 个月；"
+            },
+            {
+              "text": "必须熟练使用 SQL",
+              "category": "tool",
+              "importance": "required",
+              "hard_gate": true,
+              "jd_evidence": "必须熟练使用 SQL；"
+            },
+            {
+              "text": "Tableau 经验加分",
+              "category": "experience",
+              "importance": "preferred",
+              "hard_gate": false,
+              "jd_evidence": "Tableau 经验加分。"
+            }
+          ],
+          "required_skills": [
+            "SQL"
+          ],
+          "preferred_skills": [
+            "Tableau"
+          ],
+          "tools": [
+            "SQL",
+            "Tableau"
+          ],
+          "industry_experience": [],
+          "education_requirements": [
+            "本科及以上学历"
+          ],
+          "major_requirements": [],
+          "internship_requirements": [
+            "Tableau 经验加分"
+          ],
+          "arrival_requirements": [
+            "每周至少 4 天",
+            "连续实习 3 个月"
+          ],
+          "raw_text": "公司：示例科技（虚构）\n岗位：AI运营实习生\n地点：上海\n\n岗位职责：\n- 负责 AI 产品运营和用户数据分析。\n岗位要求：\n- 本科及以上学历；\n- 每周至少 4 天，连续实习 3 个月；\n- 必须熟练使用 SQL；\n- Tableau 经验加分。"
+        },
+        "score_breakdown": {
+          "role_direction": 20,
+          "skills": 30,
+          "experience": 20,
+          "education": 10,
+          "logistics": 4,
+          "preferences": 0
+        },
+        "overall_score": 84,
+        "recommendation": "recommend",
+        "why_fit": [
+          "岗位方向命中: AI运营",
+          "已确认技能命中: SQL",
+          "已确认加分技能命中: Tableau",
+          "找到 2 条与 JD 相关的已确认经历事实。"
+        ],
+        "why_not_fit": [],
+        "advantages": [
+          "[fact-sql-analysis] 使用 SQL 清洗业务数据并输出周度分析。",
+          "[fact-pending-tableau] 独立搭建 Tableau 仪表盘。"
+        ],
+        "gaps": [],
+        "hard_gates": [
+          {
+            "requirement": "本科及以上学历",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "已确认学历达到该要求。"
+          },
+          {
+            "requirement": "每周至少 4 天",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "Profile 中尚未确认每周可到岗天数。"
+          },
+          {
+            "requirement": "连续实习 3 个月",
+            "status": "passes",
+            "profile_fact_ids": [],
+            "explanation": "保证可实习 6 个月，达到要求。"
+          },
+          {
+            "requirement": "必须熟练使用 SQL",
+            "status": "unknown",
+            "profile_fact_ids": [],
+            "explanation": "本地规则无法可靠判断，需要人工确认。"
+          }
+        ],
+        "evidence": [
+          {
+            "requirement": "SQL",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-sql-analysis"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          },
+          {
+            "requirement": "Tableau",
+            "status": "matched",
+            "profile_fact_ids": [
+              "fact-pending-tableau"
+            ],
+            "explanation": "Profile 中有已确认技能或经历证据。"
+          }
+        ],
+        "unknowns": [
+          "每周至少 4 天",
+          "必须熟练使用 SQL"
+        ],
+        "scoring_version": "phase1-v1",
+        "engine": "local-baseline",
+        "generated_at": "2026-09-12T00:00:00Z"
+      },
+      "pack": {
+        "schema_version": "1.0",
+        "generator": "local-truth-first-v1",
+        "generated_at": "2026-09-12T00:00:00Z",
+        "job": {
+          "job_id": 1,
+          "company": "示例科技（虚构）",
+          "title": "AI运营实习生",
+          "location": "上海",
+          "source_url": null,
+          "match_score": 84,
+          "recommendation": "recommend"
+        },
+        "materials": {
+          "boss_greeting": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，想应聘贵司AI运营实习生。我曾使用 SQL 清洗业务数据并输出周度分析；同时曾独立搭建 Tableau 仪表盘。这些经历与岗位的数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长较契合，期待进一步沟通。",
+          "email_subject": "应聘AI运营实习生｜示例候选人（虚构）｜示例大学",
+          "email_body": "您好：\n\n我是示例候选人（虚构），示例大学信息管理专业2027届本科生，现申请示例科技（虚构）的AI运营实习生。\n\n结合 JD，我理解该岗位的重点是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。我的相关经历包括：曾使用 SQL 清洗业务数据并输出周度分析；曾独立搭建 Tableau 仪表盘；曾独立搭建 Tableau 仪表盘。以上内容均来自已确认的真实经历，并已在定向简历中按岗位重点呈现。\n\n可连续实习至少 6 个月。\n\n感谢您审阅我的申请，期待有机会进一步沟通。\n\n示例候选人（虚构）",
+          "self_introduction_30s": "您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生。我希望应聘AI运营实习生，过往经历主要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长展开。我曾使用 SQL 清洗业务数据并输出周度分析；也曾独立搭建 Tableau 仪表盘。我希望把这些已验证的执行和分析经验迁移到该岗位。",
+          "why_company": "我关注示例科技（虚构），最直接的原因是该岗位把数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长放在同一条工作链路中，既要求扎实执行，也要求用数据和工具推动结果闭环。这与我在示例公司中形成的经验能够衔接，我可以较快进入实际任务，同时继续加深对业务场景的理解。",
+          "why_role": "我选择AI运营实习生，是因为它不只是完成单点事务，而是需要围绕数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长持续推进。我已经有可迁移的真实经验：曾使用 SQL 清洗业务数据并输出周度分析；曾独立搭建 Tableau 仪表盘。因此我既能从基础执行切入，也能用数据和复盘意识提高交付质量。",
+          "personal_strengths": [
+            "使用 SQL 清洗业务数据并输出周度分析。",
+            "独立搭建 Tableau 仪表盘。"
+          ],
+          "interview_self_introduction_60s": "面试官您好，我是示例候选人（虚构），示例大学信息管理专业2027届本科生，应聘的是AI运营实习生。我对这个岗位的理解，核心是数据分析与复盘、AI 工具提效、产品与需求协同、用户运营与增长。与之最相关的经历有三类：第一，曾使用 SQL 清洗业务数据并输出周度分析；第二，曾独立搭建 Tableau 仪表盘；第三，曾独立搭建 Tableau 仪表盘。这些经历让我形成了先明确目标、再整理信息和数据、持续跟进问题、最后复盘交付的工作方式。我希望在示例科技（虚构）把这套方法用于真实业务，并对结果负责。",
+          "availability_answer": "可连续实习至少 6 个月。"
+        },
+        "evidence": [
+          {
+            "fact_id": "fact-sql-analysis",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "使用 SQL 清洗业务数据并输出周度分析。",
+            "status": "documented",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          },
+          {
+            "fact_id": "fact-pending-tableau",
+            "experience_id": "exp-internship",
+            "organization": "示例公司",
+            "role": "数据运营实习生",
+            "statement": "独立搭建 Tableau 仪表盘。",
+            "status": "user_confirmed",
+            "used_for": [
+              "个人优势",
+              "Why role",
+              "面试自我介绍",
+              "求职邮件",
+              "30 秒自我介绍",
+              "BOSS 招呼语"
+            ]
+          }
+        ],
+        "review_checklist": [
+          {
+            "category": "hard_gate",
+            "item": "本科及以上学历",
+            "status": "confirmed",
+            "detail": "已确认学历达到该要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "每周至少 4 天",
+            "status": "needs_confirmation",
+            "detail": "Profile 中尚未确认每周可到岗天数。",
+            "blocks_submission": true
+          },
+          {
+            "category": "hard_gate",
+            "item": "连续实习 3 个月",
+            "status": "confirmed",
+            "detail": "保证可实习 6 个月，达到要求。",
+            "blocks_submission": false
+          },
+          {
+            "category": "hard_gate",
+            "item": "必须熟练使用 SQL",
+            "status": "needs_confirmation",
+            "detail": "本地规则无法可靠判断，需要人工确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "availability",
+            "item": "到岗安排",
+            "status": "confirmed",
+            "detail": "可连续实习至少 6 个月。",
+            "blocks_submission": false
+          },
+          {
+            "category": "resume",
+            "item": "岗位定向简历",
+            "status": "needs_confirmation",
+            "detail": "演示未生成定向简历，需要本人审阅。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "薪资要求",
+            "status": "manual_input",
+            "detail": "若申请表要求填写，必须由本人确认，不自动猜测。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "地点与是否接受调剂",
+            "status": "manual_input",
+            "detail": "属于主观选择，必须由本人确认。",
+            "blocks_submission": true
+          },
+          {
+            "category": "manual_input",
+            "item": "最终提交申请",
+            "status": "manual_input",
+            "detail": "Agent 只准备材料；点击最终提交前必须由本人确认。",
+            "blocks_submission": true
+          }
+        ],
+        "gaps": [],
+        "resume": {
+          "status": "needs_generation",
+          "content_path": null,
+          "manifest_path": null,
+          "docx_path": null,
+          "pdf_path": null,
+          "fact_ids": [],
+          "qa_verified": false,
+          "note": "演示未生成定向简历，需要本人审阅。"
+        }
+      }
+    }
+  ]
+}

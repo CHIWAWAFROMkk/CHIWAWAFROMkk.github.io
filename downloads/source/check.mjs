@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {parseCSV,analyze,stats,histogram,csvExport} from './analysis-core.mjs';
+const data=parseCSV(readFileSync(new URL('./sample.csv',import.meta.url),'utf8'));
+assert.equal(data.rows.length,13);
+assert.equal(analyze(data).missingCells,2);
+const result=analyze(data,{deduplicate:true,dropMissing:true});
+assert.equal(result.rows.length,10);assert.equal(result.columns[2].mean,15.2);
+assert.equal(result.removedDuplicates+result.removedMissing+result.rows.length,13);
+assert.equal(stats([1,2,3,4]).median,2.5);
+assert.equal(histogram([1,2,3,4]).reduce((sum,b)=>sum+b.count,0),4);
+assert.equal(parseCSV('a;b\n"x;y";2').rows[0][0],'x;y');
+assert.throws(()=>parseCSV('a,b\n1'));assert.throws(()=>parseCSV('a\n"open'));
+assert.match(csvExport(['a'],[['=1+1']]),/'=1\+1/);
+console.log('PASS: sample, row audit, statistics, CSV parsing and safe export.');

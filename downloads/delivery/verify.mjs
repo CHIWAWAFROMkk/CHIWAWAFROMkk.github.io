@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createRequire} from 'node:module';
+import {seed,rows,place,refund,queries} from './delivery-core.mjs';
+const require=createRequire(import.meta.url),init=require('./vendor/sql-wasm.js');
+const SQL=await init({locateFile:()=>resolve(import.meta.dirname,'vendor/sql-wasm.wasm')});
+const db=new SQL.Database();seed(db,readFileSync(resolve(import.meta.dirname,'delivery-schema.sql'),'utf8'));
+let checks=0;function check(name,fn){fn();checks++;console.log('PASS '+name);}
+const one=sql=>rows(db,sql)[0];
+check('初始订单与外键',()=>{assert.equal(one('SELECT COUNT(*) n FROM orders').n,96);assert.deepEqual(rows(db,'PRAGMA foreign_key_check'),[]);});
+check('六组 SQL 可执行',()=>queries.forEach(q=>db.exec(q.sql)));
+check('账实一致',()=>assert.equal(rows(db,queries[4].sql).length,0));
+let id,stock=one('SELECT stock FROM dishes WHERE id=1').stock;
+check('下单扣库存与金额',()=>{id=place(db,{dish:1,quantity:2});assert.equal(one('SELECT stock FROM dishes WHERE id=1').stock,stock-2);assert.equal(one('SELECT total_cents FROM orders ORDER BY id DESC LIMIT 1').total_cents,3200);assert.equal(rows(db,queries[4].sql).length,0);});
+check('退款回库',()=>{refund(db,id);assert.equal(one('SELECT stock FROM dishes WHERE id=1').stock,stock);});
+check('重复退款无副作用',()=>{assert.throws(()=>refund(db,id));assert.equal(one('SELECT stock FROM dishes WHERE id=1').stock,stock);});
+check('库存不足整单回滚',()=>{db.run('UPDATE dishes SET stock=0 WHERE id=1');const count=one('SELECT COUNT(*) n FROM orders').n;assert.throws(()=>place(db,{dish:1,quantity:1}));assert.equal(one('SELECT COUNT(*) n FROM orders').n,count);assert.equal(rows(db,queries[4].sql).length,0);});
+check('无效学生整单回滚',()=>assert.throws(()=>place(db,{student:999,dish:2})));
+check('份数校验',()=>{for(const quantity of [0,-1,1.5,21])assert.throws(()=>place(db,{quantity}));});
+check('拒绝跨商户明细',()=>assert.throws(()=>db.run('INSERT INTO order_items VALUES(?,?,?,?,?)',[2,4,2,1,1800])));
+check('已送达订单拒绝取消',()=>assert.throws(()=>refund(db,2)));
+check('复合索引被使用',()=>assert.match(JSON.stringify(db.exec(queries[5].sql)),/idx_orders_student_created/));
+const imported=new SQL.Database();imported.run(readFileSync(resolve(import.meta.dirname,'init.sql'),'utf8'));
+check('SQL 导入与初始库一致',()=>{assert.equal(rows(imported,'SELECT COUNT(*) n FROM orders')[0].n,96);assert.deepEqual(rows(imported,'PRAGMA foreign_key_check'),[]);assert.equal(rows(imported,queries[4].sql).length,0);});
+db.close();imported.close();console.log(`${checks} checks passed.`);
