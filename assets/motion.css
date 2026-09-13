@@ -76,21 +76,24 @@
 @media(prefers-reduced-motion:reduce){.fade-up{opacity:1!important;transform:none!important;transition:none!important}.scroll-progress{display:none}.pulse-badge::before{animation:none}}
 
 
-/* Data Ambient Canvas: High-transparency motifs representing schema, curves, audit matrices, and pipeline trees */
+/* Data Ambient Canvas: Crisp, visible yet unobtrusive engineering motifs (~0.20 opacity) */
 .data-ambient-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.ambient-motif{position:absolute;color:#000;opacity:.065;will-change:transform;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.ambient-motif{position:absolute;color:#18181b;opacity:.20;will-change:transform;transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .4s ease;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.03))}
 .ambient-motif svg{width:100%;height:100%;display:block}
-.ambient-motif text{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:.08em;fill:currentColor}
-.ambient-motif path,.ambient-motif rect,.ambient-motif circle,.ambient-motif line{stroke:currentColor}
-.motif-schema{top:14%;right:4%;width:340px;height:250px;animation:motif-drift-a 24s ease-in-out infinite alternate}
-.motif-curve{top:48%;left:2%;width:360px;height:220px;animation:motif-drift-b 20s ease-in-out infinite alternate}
-.motif-matrix{bottom:12%;right:5%;width:290px;height:210px;animation:motif-drift-c 26s ease-in-out infinite alternate}
-.motif-pipeline{bottom:5%;left:6%;width:280px;height:190px;animation:motif-drift-d 22s ease-in-out infinite alternate}
-.ambient-flow-line{stroke-dasharray:6 4;animation:flow-dash 12s linear infinite}
+.ambient-motif text{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.06em;fill:#111}
+.ambient-motif path,.ambient-motif rect,.ambient-motif circle,.ambient-motif line,.ambient-motif polygon{stroke:#111;stroke-width:1.5px}
+.ambient-motif .motif-fill{fill:#fff;fill-opacity:.72}
+.ambient-motif .motif-mint{fill:var(--mint,#d1ffca);fill-opacity:.65;stroke:#059669;stroke-width:1.8px}
+.ambient-motif .motif-accent-text{fill:#065f46;font-weight:800}
+.motif-pos-tr{top:12%;right:3%;width:380px;height:280px;animation:motif-drift-a 24s ease-in-out infinite alternate}
+.motif-pos-ml{top:42%;left:2%;width:390px;height:260px;animation:motif-drift-b 20s ease-in-out infinite alternate}
+.motif-pos-br{bottom:10%;right:4%;width:350px;height:250px;animation:motif-drift-c 26s ease-in-out infinite alternate}
+.motif-pos-bl{bottom:6%;left:4%;width:340px;height:230px;animation:motif-drift-d 22s ease-in-out infinite alternate}
+.ambient-flow-line{stroke-dasharray:6 4;stroke:#059669!important;stroke-width:1.8px!important;animation:flow-dash 8s linear infinite}
 @keyframes flow-dash{to{stroke-dashoffset:-100}}
-@keyframes motif-drift-a{0%{transform:translate3d(0,0,0) rotate(0deg)}100%{transform:translate3d(-20px,26px,0) rotate(1.8deg)}}
-@keyframes motif-drift-b{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(22px,-18px,0) scale(1.04)}}
-@keyframes motif-drift-c{0%{transform:translate3d(0,0,0) rotate(0deg)}100%{transform:translate3d(-16px,-22px,0) rotate(-1.5deg)}}
-@keyframes motif-drift-d{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(18px,20px,0) scale(.97)}}
-@media(max-width:900px){.motif-matrix,.motif-pipeline{display:none}.motif-schema{width:220px;right:-30px;opacity:.04}.motif-curve{width:220px;left:-30px;opacity:.04}}
+@keyframes motif-drift-a{0%{transform:translate3d(0,0,0) rotate(0deg)}100%{transform:translate3d(-24px,28px,0) rotate(2deg)}}
+@keyframes motif-drift-b{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(24px,-20px,0) scale(1.05)}}
+@keyframes motif-drift-c{0%{transform:translate3d(0,0,0) rotate(0deg)}100%{transform:translate3d(-20px,-26px,0) rotate(-1.8deg)}}
+@keyframes motif-drift-d{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(22px,24px,0) scale(.96)}}
+@media(max-width:900px){.motif-pos-br,.motif-pos-bl{display:none}.motif-pos-tr{width:260px;right:-30px;opacity:.14}.motif-pos-ml{width:260px;left:-30px;opacity:.14}}
 @media(prefers-reduced-motion:reduce){.ambient-motif,.ambient-flow-line{animation:none!important}}
