@@ -1,0 +1,11 @@
+/* Foreground remains opaque and fully interactive. Schemas occupy the reading canvas. */
+.has-reading-depth{position:relative;isolation:isolate}
+.reading-depth{position:sticky;top:12vh;height:0;width:100%;z-index:-1;pointer-events:none;user-select:none}
+.depth-diagram{position:absolute;width:clamp(260px,38vw,520px);color:#444;transform-origin:center;transition:opacity .3s ease-out}
+.depth-diagram svg{display:block;width:100%;height:auto;stroke:currentColor;stroke-width:1.5}
+.depth-diagram[data-depth="0"]{left:-5%;top:2vh}
+.depth-diagram[data-depth="1"]{right:-3%;top:26vh}
+.depth-diagram[data-depth="2"]{left:23%;top:53vh}
+.depth-accent{fill:#d1ffca;stroke:#444}
+@media(max-width:800px){.depth-diagram{width:260px}.depth-diagram[data-depth="0"]{left:0}.depth-diagram[data-depth="1"]{right:0}.depth-diagram[data-depth="2"]{left:8%;top:58vh}.reading-depth{top:8vh;overflow:clip;overflow-clip-margin:100vh}}
+@media(prefers-reduced-motion:reduce){.depth-diagram{transition:none}}

@@ -1,3 +1,4 @@
+import './reading-depth.mjs';
 // Native, bounded feedback only. No scroll interception, cursor loops or motion dependency.
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const active = new Set();
