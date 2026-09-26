@@ -13,7 +13,8 @@ if (main && (route === '/' || route.startsWith('/projects/'))) {
   const layer = document.createElement('div');
   layer.className = 'reading-depth'; layer.setAttribute('aria-hidden','true');
   layer.innerHTML = labels.map((words,i)=>`<div class="depth-diagram" data-depth="${i}"><svg viewBox="0 0 440 280" fill="none"><rect x="36" y="36" width="320" height="196" rx="24"/><path d="M36 98H356M36 160H356M356 130H414V264H254"/><circle cx="414" cy="130" r="6"/><circle cx="254" cy="264" r="6"/><rect class="depth-accent" x="58" y="58" width="10" height="10" rx="2"/><g fill="currentColor" stroke="none" font-family="monospace" font-size="18"><text x="84" y="75">${words[0]}</text><text x="60" y="137">${words[1]}</text><text x="60" y="199">${words[2]}</text></g></svg></div>`).join('');
-  main.prepend(layer); main.classList.add('has-reading-depth');
+  // Unstyled, the layer would sit in normal flow and push content down; attach it only once its stylesheet applies.
+  sheet.addEventListener('load', () => { main.prepend(layer); main.classList.add('has-reading-depth'); draw(); }, { once: true });
   const diagrams = [...layer.children];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(pointer: fine)');

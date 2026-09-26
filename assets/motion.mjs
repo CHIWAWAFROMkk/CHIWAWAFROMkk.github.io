@@ -497,7 +497,7 @@ function createMotifs(type) {
     <path d="M 270 97 L 270 145" class="ambient-flow-line"/>
     <rect class="motif-mint" x="180" y="145" width="180" height="56" rx="8"/>
     <text class="motif-accent-text" x="195" y="168">SHAREPOINT LIST</text>
-    <text class="motif-accent-text" x="195" y="186" font-size="9">Verified Writeback (3,000)</text>
+    <text class="motif-accent-text" x="195" y="186" font-size="9">Verified Writeback (2,000)</text>
   </svg>
 </div>
 
