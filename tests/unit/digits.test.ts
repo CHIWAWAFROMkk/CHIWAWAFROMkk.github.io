@@ -6,7 +6,9 @@ describe('strayTokens', () => {
   const corpus = factCorpus();
 
   it('accepts whole numbers that appear in the ledger', () => {
-    expect(strayTokens('约 2000 名员工 · 6,000+ · 前 5% · 4–5 天 · 12/23', corpus)).toEqual([]);
+    expect(strayTokens('约 2000 名员工 · 6,000+ · 每周 5 天 · 12/23', corpus)).toEqual([]);
+    expect(strayTokens('专业排名前 5%', corpus)).toEqual(['5%']);
+    expect(strayTokens('每周 4–5 天', corpus)).toEqual(['4–5']);
   });
 
   it('rejects numbers that only appear inside a longer ledger number', () => {

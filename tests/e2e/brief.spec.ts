@@ -8,9 +8,10 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
     test('who, availability, main experience and contact are all present', async ({ page }) => {
       await page.goto(`${prefix}/brief/`);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(SITE.name[lang]);
-      for (const id of ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F8'] as const) {
+      for (const id of ['F1', 'F2', 'F3', 'F5', 'F6', 'F8'] as const) {
         await expect(page.getByText(fact(id).text[lang], { exact: false }).first(), id).toBeVisible();
       }
+      expect(await page.locator('main').innerText()).not.toContain(fact('F4').text[lang]);
       await expect(page.locator('.contact--red a[href^="mailto:"]')).toBeVisible();
       await expect(page.locator(`.contact--red a[href="${SITE.resume[lang]}"]`)).toBeVisible();
     });

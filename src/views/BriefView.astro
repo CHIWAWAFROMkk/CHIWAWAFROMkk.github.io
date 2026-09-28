@@ -33,7 +33,6 @@ const film = SITE.projects.find(p => p.line === 'film')!;
       <div class="section-head"><h2 id="b-edu">{B.education[lang]}</h2></div>
       <ul class="b-edu">
         <li>{fact('F2').text[lang]}</li>
-        <li>{fact('F4').text[lang]}</li>
         <li>{fact('F10').text[lang]}</li>
       </ul>
     </section>
@@ -63,7 +62,6 @@ const film = SITE.projects.find(p => p.line === 'film')!;
   .b-id__line { font: 500 clamp(17px, 1.6vw, 22px)/1.55 var(--font-body); }
   .b-id__avail { justify-self: start; padding: 4px 10px; background: var(--ink); color: var(--paper); font-weight: 500; font-size: 14px; }
   .b-edu { display: grid; gap: 6px; padding: 22px 0 8px; list-style: none; font-size: 16px; }
-  .b-edu li:nth-child(2) { font-weight: 500; }
   .b-film { margin-top: 56px; padding-bottom: 8px; }
   .b-film__row { display: grid; grid-template-columns: minmax(10em, 1fr) 2fr minmax(12em, 1fr); gap: 8px 32px; align-items: baseline; padding-block: 22px 28px; text-decoration: none; }
   .b-film__row:hover .b-film__title { text-decoration: underline; text-underline-offset: 6px; }
