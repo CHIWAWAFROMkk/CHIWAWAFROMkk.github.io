@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+import { SITE } from '../data/site';
+import { fact } from '../data/facts';
+import { localizePath, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.projects;
+const data = SITE.projects.filter(p => p.line === 'data');
+const film = SITE.projects.find(p => p.line === 'film')!;
+const posters = SITE.film.clips.filter(c => ['s04', 's06', 's09', 's16'].includes(c.file));
+---
+<Base lang={lang} path="/projects/" title={`${P.title[lang]} · ${SITE.name[lang]}`} description={P.description[lang]}>
+  <main id="main">
+    <header class="i-head wrap">
+      <h1>{P.title[lang]}</h1>
+      <p>{P.lead[lang]}</p>
+    </header>
+    <section aria-labelledby="i-data">
+      <div class="wrap"><div class="section-head"><h2 id="i-data">{P.data[lang]}</h2></div></div>
+      {data.map((p, i) => <ProjectRow lang={lang} project={p} index={i} />)}
+    </section>
+    <section class="night-zone i-film" aria-labelledby="i-film">
+      <div class="wrap"><div class="section-head"><h2 id="i-film">{P.film[lang]}</h2></div></div>
+      <a class="i-film__link" href={localizePath(film.href, lang)}>
+        <ul class="i-film__strip">
+          {posters.map(c => <li><img src={`/media/mais-je-taime/video/${c.file}.webp`} alt={`${c.shot} ${c.title[lang]}`} width="960" height="540" loading="lazy" decoding="async" /></li>)}
+        </ul>
+        <span class="wrap i-film__row">
+          <span class="i-film__title">{film.title[lang]}<span aria-hidden="true"> →</span></span>
+          <span>{film.did[lang]}</span>
+          <span class="i-film__status">{fact('F8').text[lang]}</span>
+        </span>
+      </a>
+    </section>
+  </main>
+</Base>
+<style>
+  .i-head { display: grid; gap: 16px; padding-block: clamp(32px, 6vh, 72px) 24px; }
+  .i-head h1 { font-size: clamp(56px, 10vw, 150px); line-height: 0.9; letter-spacing: -0.05em; }
+  :global(html[lang='en']) .i-head h1 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; }
+  .i-head p { max-width: 40em; font: 500 clamp(17px, 1.6vw, 22px)/1.55 var(--font-body); }
+  .i-film { margin-top: 56px; }
+  .i-film__link { display: block; text-decoration: none; }
+  .i-film__strip { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; }
+  .i-film__strip img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; filter: grayscale(1); transition: filter 0.5s var(--ease); }
+  .i-film__link:hover img, .i-film__link:focus-visible img { filter: none; }
+  .i-film__row { display: grid; grid-template-columns: minmax(10em, 1fr) 2fr minmax(12em, 1fr); gap: 8px 32px; padding-block: 22px 32px; }
+  .i-film__title { font: 900 24px/1.3 var(--font-cjk-bold); }
+  .i-film__status { color: var(--night-mute); font-size: 14px; }
+  @media (max-width: 800px) { .i-film__strip { grid-template-columns: 1fr 1fr; } .i-film__row { grid-template-columns: 1fr; } }
+</style>

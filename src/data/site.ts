@@ -146,6 +146,13 @@ export const SITE = {
         status: { zh: '原型，使用构造样本；真实行情回测项目正在重做，完成后替换本页。', en: 'Prototype on a synthetic sample; the real market backtest is being rebuilt and will replace this page.' },
       },
     },
+    projects: {
+      title: { zh: '项目与演示', en: 'Projects & demos' },
+      lead: { zh: '数据 × AI 工具是主要作品，每个项目都能打开看过程、亲手试；影像是独立的创作板块。', en: 'Data × AI tools are the main work — open any project to see the process and try it yourself. Film is a separate creative strand.' },
+      description: { zh: '何彦钧的全部项目：HR 档案补录工作流、SQL 工作台、求职 Agent、QuotaDeck、AI 校园研究、CSV 工具，以及 AI 短片分镜。', en: "All of Yanjun He's projects: the HR records workflow, SQL lab, job agent, QuotaDeck, AI-on-campus study, CSV tool, and an AI short-film storyboard." },
+      data: { zh: '数据 × AI 工具', en: 'Data × AI tools' },
+      film: { zh: 'AI 影像', en: 'AI film' },
+    },
     method: {
       title: { zh: '过程与运行 · CSV 数据分析工具', en: 'Method & results · CSV Analysis Tool' },
       heading: { zh: '一份分析，应该留下一条可复算的路径。', en: 'An analysis should leave a path you can recompute.' },
