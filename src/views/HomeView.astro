@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import LangSwitch from '../components/LangSwitch.astro';
 import Gate from '../components/Gate.astro';
 import ContactBar from '../components/ContactBar.astro';
+import Intro from '../components/Intro.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
 import type { Lang } from '../i18n';
@@ -10,7 +11,7 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const meta = SITE.pages.home;
 ---
-<Base lang={lang} path="/" title={meta.title[lang]} description={meta.description[lang]} nav={false} footer={false}>
+<Base lang={lang} path="/" title={meta.title[lang]} description={meta.description[lang]} nav={false} footer={false} intro>
   <main id="main" class="home">
     <header class="home__id wrap">
       <div class="home__top">
@@ -24,9 +25,14 @@ const meta = SITE.pages.home;
     <Gate lang={lang} />
   </main>
   <ContactBar lang={lang} />
+  <Intro slot="overlay" lang={lang} />
 </Base>
 <style>
-  .home__id { display: grid; gap: 10px; padding-block: clamp(20px, 4vh, 44px) clamp(24px, 4vh, 40px); }
+  :global(#page) { min-height: 100svh; display: flex; flex-direction: column; }
+  .home { flex: 1; display: flex; flex-direction: column; }
+  .home > :global(.gate) { flex: 1; }
+  .home__top { margin-bottom: 6px; }
+  .home__id { width: 100%; display: grid; gap: 10px; padding-block: clamp(20px, 4vh, 44px) clamp(24px, 4vh, 40px); }
   .home__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
   .home__name { font-size: clamp(56px, 9vw, 132px); line-height: 0.95; letter-spacing: -0.05em; }
   :global(html[lang='en']) .home__name { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; }

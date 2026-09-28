@@ -22,7 +22,7 @@ const origin = 'https://chiwawafromkk.github.io';
 const canonical = origin + localizePath(path, lang);
 ---
 <!doctype html>
-<html lang={lang === 'zh' ? 'zh-CN' : 'en'} style={cssVars()} data-intro={intro ? 'on' : undefined}>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'} style={cssVars()}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -39,6 +39,20 @@ const canonical = origin + localizePath(path, lang);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/assets/fonts/BarlowCondensed-Bold.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="/assets/fonts.css" />
+    {intro && (
+      <script is:inline>
+        (function () {
+          var d = document.documentElement;
+          try {
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            if (localStorage.getItem('hyj-intro-seen') === '1') return;
+          } catch (e) { /* storage blocked: treat as first visit */ }
+          d.classList.add('intro-pending');
+          // Failsafe: never leave the page covered if the intro module fails to load.
+          setTimeout(function () { d.classList.remove('intro-pending'); }, 3000);
+        })();
+      </script>
+    )}
     <slot name="head" />
   </head>
   <body class:list={[{ night }]}>

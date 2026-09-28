@@ -1,0 +1,40 @@
+---
+import { SITE } from '../data/site';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<div class="intro" hidden data-intro>
+  <div class="intro__words" aria-hidden="true">
+    {SITE.intro.words.map(w => (
+      <div class="intro__word"><b>{w.word}</b><span>{w.caption[lang]}</span></div>
+    ))}
+  </div>
+  <div class="intro__wipe" aria-hidden="true"></div>
+  <button type="button" class="intro__skip" data-intro-skip>{SITE.intro.skip[lang]} <kbd>Esc</kbd></button>
+</div>
+<script>
+  import { initIntro } from '../scripts/intro-dom';
+  const overlay = document.querySelector<HTMLElement>('[data-intro]');
+  const page = document.getElementById('page');
+  if (overlay && page) void initIntro(overlay, page);
+</script>
+<style>
+  .intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; background: var(--paper); }
+  :global(html.intro-pending) .intro, .intro.is-playing { display: block; }
+  .intro__word { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
+  .intro__word b { font: 700 min(38vw, 56vh)/0.8 var(--font-display); color: var(--ink); }
+  .intro__word:nth-child(2) b { color: var(--red); }
+  .intro__word span { margin-top: 3vh; font: 700 clamp(14px, 1.4vw, 20px)/1 var(--font-cjk-bold); letter-spacing: 0.3em; }
+  .intro__wipe { position: absolute; inset: 0; background: var(--red); transform: scaleX(0); transform-origin: left; }
+  .intro__skip { position: absolute; right: var(--gutter); bottom: 24px; z-index: 2; padding: 8px 14px; border: 1.5px solid var(--ink); background: var(--paper); font-weight: 700; cursor: pointer; }
+  .intro__skip kbd { margin-left: 6px; font: 700 11px/1 var(--font-display); letter-spacing: 0.1em; }
+  .is-playing { animation: intro-lift 0.5s 1.85s cubic-bezier(.7, 0, .2, 1) forwards; }
+  .is-playing .intro__word:nth-child(1) { animation: intro-flash 0.5s 0.05s both; }
+  .is-playing .intro__word:nth-child(2) { animation: intro-flash 0.5s 0.5s both; }
+  .is-playing .intro__word:nth-child(3) { animation: intro-flash 0.5s 0.95s both; }
+  .is-playing .intro__wipe { animation: intro-wipe 0.45s 1.4s cubic-bezier(.7, 0, .2, 1) forwards; }
+  @keyframes intro-flash { 0% { opacity: 0; transform: scale(1.1); } 14% { opacity: 1; transform: none; } 82% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes intro-wipe { to { transform: scaleX(1); } }
+  @keyframes intro-lift { to { transform: translateY(-100%); } }
+</style>
