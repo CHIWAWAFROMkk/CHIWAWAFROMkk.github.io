@@ -1,0 +1,21 @@
+---
+import { fact, type FactId } from '../data/facts';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang; factId: FactId; context?: FactId }
+const { lang, factId, context } = Astro.props;
+const f = fact(factId);
+---
+<div class="evidence" data-rise>
+  <span class="num" data-fact={f.id}>{f.figure}</span>
+  <div class="evidence__text">
+    <p class="evidence__caption">{f.text[lang]}</p>
+    {context && <p class="evidence__context">{fact(context).text[lang]}</p>}
+  </div>
+</div>
+<style>
+  .evidence { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 12px clamp(20px, 3vw, 48px); padding-block: 28px; }
+  .num { color: var(--red); }
+  .evidence__caption { font: 900 clamp(18px, 1.8vw, 26px)/1.4 var(--font-cjk-bold); }
+  .evidence__context { margin-top: 6px; color: var(--mute); font-size: 15px; }
+  @media (max-width: 640px) { .evidence { grid-template-columns: 1fr; } }
+</style>

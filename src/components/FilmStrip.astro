@@ -1,0 +1,17 @@
+---
+import { SITE } from '../data/site';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<ul class="film">
+  {SITE.film.stills.map(s => (
+    <li><img src={s.src} alt={s.alt[lang]} width="1200" height="675" loading="lazy" decoding="async" /></li>
+  ))}
+</ul>
+<style>
+  .film { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 0; list-style: none; }
+  .film img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; filter: grayscale(1) contrast(1.05); transition: filter 0.5s var(--ease); }
+  .film img:hover { filter: none; }
+  @media (max-width: 640px) { .film { grid-template-columns: 1fr 1fr; } }
+</style>
