@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import EvidenceRow from '../components/EvidenceRow.astro';
 import ProjectRow from '../components/ProjectRow.astro';
-import FilmStrip from '../components/FilmStrip.astro';
+import FilmReel from '../components/FilmReel.astro';
 import ContactBar from '../components/ContactBar.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
@@ -43,8 +43,7 @@ const film = SITE.projects.find(p => p.line === 'film')!;
     </section>
 
     <section class="night-zone b-film" aria-labelledby="b-film">
-      <div class="wrap"><div class="section-head"><h2 id="b-film">{B.film[lang]}</h2></div></div>
-      <FilmStrip lang={lang} />
+      <FilmReel lang={lang} heading={B.film[lang]} headingId="b-film" />
       <a class="b-film__row wrap" href={localizePath(film.href, lang)}>
         <span class="b-film__title">{film.title[lang]}</span>
         <span>{film.did[lang]}</span>

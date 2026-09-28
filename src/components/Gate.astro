@@ -15,6 +15,11 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
     </a>
   ))}
 </nav>
+<script>
+  import { initDoorTransition } from '../scripts/door-transition-dom';
+  const gate = document.querySelector<HTMLElement>('.gate');
+  if (gate) initDoorTransition(gate);
+</script>
 <style>
   .gate { display: grid; grid-template-columns: 1fr 1fr; border-block: var(--rule); }
   .door { display: grid; grid-template-rows: auto 1fr auto auto; gap: 12px; min-height: clamp(260px, 40vh, 440px); padding: 28px var(--gutter) 32px; background: var(--paper); color: var(--ink); text-decoration: none; transition: background-color 0.25s var(--ease); }

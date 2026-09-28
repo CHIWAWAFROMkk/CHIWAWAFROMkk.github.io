@@ -42,11 +42,10 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
       expect(hrefs.sort()).toEqual(expected.sort());
     });
 
-    test('film stills have alt text; layout does not overflow', async ({ page }) => {
+    test('film clips are labelled in the page language; layout does not overflow', async ({ page }) => {
       await page.goto(`${prefix}/brief/`);
-      const alts = await page.locator('.film img').evaluateAll(imgs => imgs.map(i => i.getAttribute('alt') ?? ''));
-      expect(alts).toHaveLength(4);
-      for (const a of alts) expect(a.length).toBeGreaterThan(3);
+      const labels = await page.locator('[data-reel] video').evaluateAll(vs => vs.map(v => v.getAttribute('aria-label') ?? ''));
+      expect(labels).toEqual(SITE.film.clips.map(c => `${c.shot} ${c.title[lang]}`));
       expect(await noHorizontalOverflow(page)).toBe(true);
     });
   });

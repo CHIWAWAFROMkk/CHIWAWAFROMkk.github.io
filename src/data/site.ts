@@ -57,11 +57,24 @@ export const SITE = {
   },
   pager: { label: { zh: '上一个 / 下一个项目', en: 'Previous / next project' } },
   film: {
-    stills: [
-      { src: '/media/mais-je-taime/s04.webp', alt: { zh: '黑白舞池中央展开的红裙', en: 'A red dress unfurling at the centre of a black-and-white dance floor' } },
-      { src: '/media/mais-je-taime/s06.webp', alt: { zh: '雨夜伞下相依的两人背影', en: 'Two figures under one umbrella on a rainy night' } },
-      { src: '/media/mais-je-taime/s16.webp', alt: { zh: '雨夜码头，风衣男人握枪而立', en: 'A man in a trench coat holding a gun on a rainy dock' } },
-      { src: '/media/mais-je-taime/s19-end.webp', alt: { zh: '雨中摊开的掌心里放着一枚戒指', en: 'A ring resting in an open palm in the rain' } },
+    pause: { zh: '暂停视频', en: 'Pause videos' },
+    play: { zh: '播放视频', en: 'Play videos' },
+    hint: { zh: '继续向下滚动，看完所有镜头', en: 'Keep scrolling to see every shot' },
+    swipe: { zh: '左右滑动，看完所有镜头', en: 'Swipe sideways to see every shot' },
+    /** The 12 shots already rendered as video; titles from the storyboard page. */
+    clips: [
+      { shot: 'S01', file: 's01', title: { zh: '握枪的手', en: 'The hand on the gun' } },
+      { shot: 'S02', file: 's02', title: { zh: '警员停步', en: 'The officer stops' } },
+      { shot: 'S03', file: 's03', title: { zh: '高空垂直下降', en: 'Vertical drop from above' } },
+      { shot: 'S04', file: 's04', title: { zh: '舞池红裙', en: 'Red dress on the dance floor' } },
+      { shot: 'S05a', file: 's05a', title: { zh: '隔着人群对视', en: 'Eyes meet across the crowd' } },
+      { shot: 'S05b', file: 's05b', title: { zh: '手下的眼神', en: "The henchman's look" } },
+      { shot: 'S06', file: 's06', title: { zh: '共撑一把伞', en: 'Sharing one umbrella' } },
+      { shot: 'S07', file: 's07', title: { zh: '天台分烟', en: 'Sharing a cigarette on the roof' } },
+      { shot: 'S08', file: 's08', title: { zh: '描他的枪疤', en: 'Tracing his bullet scar' } },
+      { shot: 'S09', file: 's09', title: { zh: '戴上对戒', en: 'Putting on the rings' } },
+      { shot: 'S10', file: 's10', title: { zh: '百叶窗与耳麦', en: 'Blinds and an earpiece' } },
+      { shot: 'S16', file: 's16', title: { zh: '枪响，他倒下', en: 'The shot; he falls' } },
     ],
   },
   projects: [

@@ -8,7 +8,8 @@ test('site builds and legacy URLs survive', async ({ request }) => {
     '/assets/fonts.css',
     '/assets/fonts/BarlowCondensed-Bold.ttf',
     '/favicon.svg',
-    '/media/mais-je-taime/s04.webp',
+    '/media/mais-je-taime/video/s04.webp',
+    '/media/mais-je-taime/video/s04.mp4',
     encodeURI('/downloads/hris/HRIS方案.md'),
     '/downloads/delivery/init.sql',
   ]) {
