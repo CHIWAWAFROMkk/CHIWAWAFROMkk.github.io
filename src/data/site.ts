@@ -59,7 +59,7 @@ export const SITE = {
   film: {
     pause: { zh: '暂停视频', en: 'Pause videos' },
     play: { zh: '播放视频', en: 'Play videos' },
-    hint: { zh: '继续向下滚动，看完所有镜头', en: 'Keep scrolling to see every shot' },
+    hint: { zh: '把鼠标移到画面最右边，看后面的镜头', en: 'Move the pointer to the right edge to see more shots' },
     swipe: { zh: '左右滑动，看完所有镜头', en: 'Swipe sideways to see every shot' },
     /** The 12 shots already rendered as video; titles from the storyboard page. */
     clips: [

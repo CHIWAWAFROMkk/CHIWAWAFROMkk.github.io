@@ -8,22 +8,29 @@ const base = '/media/mais-je-taime/video';
 const total = String(F.clips.length).padStart(2, '0');
 ---
 <div class="reel" data-reel>
-  <div class="reel__sticky">
-    <div class="reel__head wrap">
-      <h2 id={headingId}>{heading}</h2>
-      <p class="reel__hint"><span class="reel__hint--scroll">{F.hint[lang]}</span><span class="reel__hint--swipe">{F.swipe[lang]}</span></p>
-      <p class="reel__count" data-reel-count aria-hidden="true">01 / {total}</p>
-      <button type="button" class="reel__toggle" data-reel-toggle aria-pressed="false" data-pause={F.pause[lang]} data-play={F.play[lang]}>{F.pause[lang]}</button>
+  <div class="reel__head wrap">
+    <h2 id={headingId}>{heading}</h2>
+    <p class="reel__hint"><span class="reel__hint--edge">{F.hint[lang]}</span><span class="reel__hint--swipe">{F.swipe[lang]}</span></p>
+    <p class="reel__count" data-reel-count aria-hidden="true">01 / {total}</p>
+    <button type="button" class="reel__toggle" data-reel-toggle aria-pressed="false" data-pause={F.pause[lang]} data-play={F.play[lang]}>{F.pause[lang]}</button>
+  </div>
+  <div class="reel__hall">
+    <div class="reel__beam" aria-hidden="true"></div>
+    <div class="reel__screen">
+      <ul class="reel__track" data-reel-track tabindex="0" aria-label={F.swipe[lang]}>
+        {F.clips.map(c => (
+          <li class="reel__item">
+            <video data-src={`${base}/${c.file}.mp4`} poster={`${base}/${c.file}.webp`} width="960" height="540" muted loop playsinline preload="none" aria-label={`${c.shot} ${c.title[lang]}`}></video>
+            <p class="reel__cap"><span>{c.shot}</span>{c.title[lang]}</p>
+          </li>
+        ))}
+      </ul>
+      <span class="reel__edge reel__edge--left" aria-hidden="true">‹</span>
+      <span class="reel__edge reel__edge--right" aria-hidden="true">›</span>
     </div>
-    <ul class="reel__track" data-reel-track tabindex="0" aria-label={F.swipe[lang]}>
-      {F.clips.map(c => (
-        <li class="reel__item">
-          <video data-src={`${base}/${c.file}.mp4`} poster={`${base}/${c.file}.webp`} width="960" height="540" muted loop playsinline preload="none" aria-label={`${c.shot} ${c.title[lang]}`}></video>
-          <p class="reel__cap"><span>{c.shot}</span>{c.title[lang]}</p>
-        </li>
-      ))}
-    </ul>
-    <div class="reel__progress wrap" aria-hidden="true"><i data-reel-bar></i></div>
+    <div class="reel__curtain reel__curtain--left" aria-hidden="true"></div>
+    <div class="reel__curtain reel__curtain--right" aria-hidden="true"></div>
+    <div class="reel__seats" aria-hidden="true"></div>
   </div>
 </div>
 <script>
@@ -31,28 +38,53 @@ const total = String(F.clips.length).padStart(2, '0');
   document.querySelectorAll<HTMLElement>('[data-reel]').forEach(initReel);
 </script>
 <style>
-  .reel__sticky { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding-block: 44px 32px; }
-  .reel.is-pinned .reel__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; padding-block: 0; }
-  .reel__head { display: grid; grid-template-columns: 1fr auto auto; align-items: baseline; gap: 8px 24px; width: 100%; }
+  .reel { padding-top: 44px; }
+  .reel__head { display: grid; grid-template-columns: 1fr auto auto; align-items: baseline; gap: 8px 24px; }
   .reel__head h2 { font-size: clamp(24px, 2.6vw, 36px); }
   .reel__hint { grid-column: 1; grid-row: 2; color: var(--night-mute); font-size: 14px; }
-  .reel__hint--scroll, .reel.is-pinned .reel__hint--swipe { display: none; }
-  .reel.is-pinned .reel__hint--scroll { display: inline; }
+  .reel__hint--swipe { display: none; }
+  @media (hover: none), (pointer: coarse) { .reel__hint--edge { display: none; } .reel__hint--swipe { display: inline; } }
   .reel__count { font: 700 clamp(28px, 3vw, 44px)/1 var(--font-display); letter-spacing: 0.02em; }
   .reel__toggle { padding: 6px 12px; border: 1.5px solid var(--night-fg); background: transparent; font-size: 13px; font-weight: 500; cursor: pointer; }
   .reel__toggle:hover { background: var(--night-fg); color: var(--night); }
-  .reel__track { display: flex; gap: 12px; margin: 0; padding: 0 var(--gutter); list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: thin; }
+
+  /* The hall: projector beam from above, screen, curtains either side, a row of seats in front. */
+  .reel__hall { position: relative; overflow: hidden; margin-top: 28px; padding: 36px 0 92px; }
+  .reel__beam { position: absolute; left: 50%; top: -40px; width: 140%; height: 120%; transform: translateX(-50%); pointer-events: none;
+    background: radial-gradient(ellipse 45% 55% at 50% 0%, rgb(236 228 214 / 0.13), transparent 70%); }
+  .reel__screen { position: relative; margin-inline: clamp(24px, 7vw, 120px); box-shadow: 0 0 0 1px rgb(236 228 214 / 0.14), 0 30px 120px -20px rgb(236 228 214 / 0.18); }
+  .reel__track { display: flex; gap: 10px; margin: 0; padding: 10px; list-style: none; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 10px; scrollbar-width: thin; background: #000; }
   .reel__track:focus-visible { outline-offset: -3px; }
-  .reel.is-pinned .reel__track { overflow: visible; will-change: transform; }
-  .reel__item { flex: 0 0 min(78vw, 520px); scroll-snap-align: start; }
-  .reel.is-pinned .reel__item { flex-basis: clamp(340px, 44vw, 780px); }
+  .reel__item { flex: 0 0 min(80vw, 560px); scroll-snap-align: start; }
   .reel__item video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
-  .reel__cap { display: flex; gap: 10px; margin-top: 10px; font-size: 14px; }
+  .reel__cap { display: flex; gap: 10px; margin-top: 8px; font-size: 14px; }
   .reel__cap span { font: 700 14px/1.6 var(--font-display); letter-spacing: 0.08em; color: var(--night-mute); }
-  .reel__progress { width: 100%; }
-  .reel__progress i { display: block; height: 2px; background: var(--red); transform: scaleX(0); transform-origin: left; }
+  .reel__edge { position: absolute; top: 0; bottom: 0; width: 18%; display: flex; align-items: center; padding-inline: 14px; font: 700 56px/1 var(--font-display); color: var(--night-fg); opacity: 0; pointer-events: none; transition: opacity 0.3s var(--ease); }
+  .reel__edge--left { left: 0; background: linear-gradient(to right, rgb(0 0 0 / 0.7), transparent); }
+  .reel__edge--right { right: 0; justify-content: flex-end; background: linear-gradient(to left, rgb(0 0 0 / 0.7), transparent); }
+  .reel[data-edge='left'] .reel__edge--left, .reel[data-edge='right'] .reel__edge--right { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .reel__screen:hover .reel__edge { opacity: 0.45; } }
+
+  .reel__curtain { position: absolute; top: 0; bottom: 60px; width: 52%; pointer-events: none; z-index: 2;
+    background:
+      linear-gradient(to bottom, rgb(0 0 0 / 0.35), transparent 18%, transparent 80%, rgb(0 0 0 / 0.5)),
+      repeating-linear-gradient(90deg, #6e1407 0 18px, #9a1d0a 30px, #7b1608 44px, #5a1006 58px);
+    transition: transform 1.4s cubic-bezier(.7, 0, .2, 1); }
+  .reel__curtain--left { left: 0; transform-origin: left; }
+  .reel__curtain--right { right: 0; transform-origin: right; }
+  /* Drawn to the sides by default (no JS, reduced motion); the script closes them first and opens them on arrival. */
+  .reel__curtain { transform: scaleX(0.06); }
+  .reel.is-closed .reel__curtain { transform: scaleX(1); }
+
+  .reel__seats { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; pointer-events: none;
+    background:
+      radial-gradient(ellipse 34px 30px at 50% 100%, #1b1816 96%, transparent 100%) 0 30px / 84px 50px repeat-x,
+      radial-gradient(ellipse 34px 30px at 50% 100%, #141210 96%, transparent 100%) 42px 52px / 84px 50px repeat-x; }
+
   @media (max-width: 640px) {
     .reel__head { grid-template-columns: 1fr auto; }
     .reel__count { display: none; }
+    .reel__screen { margin-inline: 12px; }
+    .reel__hall { padding-bottom: 64px; }
   }
 </style>

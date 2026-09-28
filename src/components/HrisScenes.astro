@@ -1,0 +1,93 @@
+---
+import type { Lang, Bi } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+// Fictional roster of 8; row 1 has no file, row 5's file belongs to someone else.
+const ROWS = 8;
+const MISSING = 1;
+const CONFLICT = 5;
+const y = (i: number) => 20 + i * 50;
+const rows = Array.from({ length: ROWS }, (_, i) => i);
+const scatter: Record<number, [number, number, number]> = { 0: [40, 300, -12], 2: [250, 40, 9], 3: [130, 180, -6], 4: [270, 250, 14], 5: [60, 90, 7], 6: [190, 340, -10], 7: [300, 140, 4] };
+const files = rows.filter(i => i !== MISSING);
+const captions: Bi[] = [
+  { zh: '文件的顺序，不等于员工的顺序', en: 'File order is not employee order' },
+  { zh: '先固定花名册，再逐人查找', en: 'Fix the roster first, then look for each person' },
+  { zh: '归属不确定，就转给人工', en: 'Unclear ownership goes to a person' },
+  { zh: '模型只给候选，审核才放行', en: 'The model proposes; review lets it through' },
+  { zh: '只写空白字段，写后回读', en: 'Write empty fields only, then read back' },
+];
+---
+<figure class="scenes s-1" data-scenes data-scene="1" aria-hidden="true">
+  <svg viewBox="0 0 360 410" role="presentation">
+    <g class="roster">
+      {rows.map(i => (
+        <g class:list={['row', { 'row--missing': i === MISSING }]} style={`--d:${i * 40}ms`}>
+          <rect x="10" y={y(i)} width="110" height="30" />
+          <rect class="ink" x="20" y={y(i) + 11} width="44" height="8" />
+          <rect class="ink" x="72" y={y(i) + 11} width="36" height="8" />
+        </g>
+      ))}
+    </g>
+    <rect class="slot" x="150" y={y(MISSING) - 3} width="54" height="36" />
+    {files.map(i => (
+      <line class:list={['wire', { 'wire--bad': i === CONFLICT }]} x1="120" y1={y(i) + 15} x2="150" y2={y(i) + 15} pathLength="1" style={`--d:${i * 60}ms`} />
+    ))}
+    {files.map(i => (
+      <g class:list={['file', { 'file--bad': i === CONFLICT }]} style={`--sx:${scatter[i][0]};--sy:${scatter[i][1]};--sr:${scatter[i][2]};--ax:150;--ay:${y(i) - 3};--d:${i * 50}ms`}>
+        <path d="M0 0H42L54 12V36H0Z" />
+        <rect class="ink" x="8" y="14" width="30" height="5" />
+        <rect class="ink" x="8" y="24" width="20" height="5" />
+      </g>
+    ))}
+    <rect class="gate" x="224" y="8" width="6" height="394" />
+    {files.map(i => (
+      <circle class:list={['chip', { 'chip--stop': i === CONFLICT }]} cx="212" cy={y(i) + 15} r="6" style={`--d:${i * 70}ms`} />
+    ))}
+    {rows.map(i => (
+      <rect class:list={['cell', { 'cell--ok': i !== MISSING && i !== CONFLICT, 'cell--bad': i === MISSING || i === CONFLICT }]} x="284" y={y(i)} width="64" height="30" style={`--d:${i * 50}ms`} />
+    ))}
+  </svg>
+  <figcaption>
+    {captions.map((c, i) => <span class={`cap cap-${i + 1}`}>{`0${i + 1}`} · {c[lang]}</span>)}
+  </figcaption>
+</figure>
+<script>
+  import { initScenes } from '../scripts/scenes-dom';
+  const figure = document.querySelector<HTMLElement>('[data-scenes]');
+  const headings = [...document.querySelectorAll<HTMLElement>('.hris-text h2')];
+  if (figure && headings.length) initScenes(figure, headings, 5);
+</script>
+<style>
+  .scenes { margin: 0; color: var(--ink); }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg * { transition: transform 0.7s var(--ease), opacity 0.5s var(--ease), fill 0.4s, stroke 0.4s, stroke-dashoffset 0.6s var(--ease); transition-delay: var(--d, 0ms); }
+  .ink { fill: currentColor; opacity: 0.35; }
+  .row rect:first-child { fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .roster { opacity: 0; transform: translateX(-24px); }
+  .s-2 .roster { opacity: 1; transform: none; }
+  .slot { fill: none; stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 4 3; opacity: 0; }
+  .s-2 .slot { opacity: 1; }
+  .file { transform-box: fill-box; transform-origin: center; transform: translate(calc(var(--sx) * 1px), calc(var(--sy) * 1px)) rotate(calc(var(--sr) * 1deg)); }
+  .s-2 .file { transform: translate(calc(var(--ax) * 1px), calc(var(--ay) * 1px)); }
+  .file path { fill: var(--paper); stroke: currentColor; stroke-width: 1.5; }
+  .s-3 .file--bad path { stroke: var(--red); fill: rgb(232 56 13 / 0.08); }
+  .wire { stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .wire--bad { stroke: var(--red); }
+  .s-3 .wire { stroke-dashoffset: 0; }
+  .gate { fill: var(--red); transform-box: fill-box; transform-origin: top; transform: scaleY(0); }
+  .s-4 .gate { transform: none; }
+  .chip { fill: currentColor; opacity: 0; transform: translateX(0); }
+  .s-4 .chip { opacity: 1; transform: translateX(62px); }
+  .s-4 .chip--stop { fill: var(--red); transform: translateX(4px); }
+  .cell { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0; }
+  .s-4 .cell { opacity: 0.5; }
+  .s-5 .cell--ok { fill: currentColor; opacity: 0.85; }
+  .s-5 .cell--bad { stroke: var(--red); stroke-dasharray: 4 3; opacity: 1; }
+  figcaption { margin-top: 14px; min-height: 3em; font-weight: 500; }
+  .cap { display: none; }
+  .cap::first-letter { color: var(--red-text); }
+  [data-scene='1'] .cap-1, [data-scene='2'] .cap-2, [data-scene='3'] .cap-3, [data-scene='4'] .cap-4, [data-scene='5'] .cap-5 { display: block; animation: cap-in 0.4s var(--ease); }
+  @keyframes cap-in { from { opacity: 0; transform: translateY(6px); } }
+</style>

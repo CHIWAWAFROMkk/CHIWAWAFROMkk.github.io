@@ -1,51 +1,42 @@
-import { activeIndex, reelProgress } from './reel';
+import { activeIndex, edgeSpeed } from './reel';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
- * Desktop: the section pins for one screen and vertical scrolling slides the track sideways.
- * Phones, reduced motion or no JS: the track is a native horizontal scroller.
- * Clips load and play only while on screen; the toggle pauses all of them.
+ * The cinema: curtains open when it scrolls into view; a pointer near the screen's left or right edge
+ * slides the shots that way (faster nearer the edge); clips load and play only while on screen;
+ * the toggle pauses all of them. Phones and keyboards use the track's native horizontal scrolling.
  */
 export function initReel(root: HTMLElement): void {
   const track = root.querySelector<HTMLElement>('[data-reel-track]');
   if (!track) return;
   const count = root.querySelector<HTMLElement>('[data-reel-count]');
-  const bar = root.querySelector<HTMLElement>('[data-reel-bar]');
   const toggle = root.querySelector<HTMLButtonElement>('[data-reel-toggle]');
   const videos = [...root.querySelectorAll<HTMLVideoElement>('video[data-src]')];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktop = matchMedia('(min-width: 800px)');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const visible = new Set<HTMLVideoElement>();
   let paused = reduced;
-  let overflow = 0;
+  let speed = 0;
   let frame = 0;
 
-  const show = (p: number) => {
-    if (count) count.textContent = `${pad(activeIndex(p, videos.length) + 1)} / ${pad(videos.length)}`;
-    if (bar) bar.style.transform = `scaleX(${p})`;
+  const showCount = () => {
+    const run = track.scrollWidth - track.clientWidth;
+    if (count) count.textContent = `${pad(activeIndex(run > 0 ? track.scrollLeft / run : 0, videos.length) + 1)} / ${pad(videos.length)}`;
   };
 
-  const update = () => {
+  const glide = () => {
     frame = 0;
-    if (!root.classList.contains('is-pinned')) {
-      const run = track.scrollWidth - track.clientWidth;
-      return show(run > 0 ? track.scrollLeft / run : 0);
-    }
-    const top = root.getBoundingClientRect().top + window.scrollY;
-    const p = reelProgress(window.scrollY, top, root.offsetHeight, window.innerHeight);
-    track.style.transform = `translate3d(${-p * overflow}px,0,0)`;
-    show(p);
+    if (!speed) return;
+    track.scrollLeft += speed;
+    frame = requestAnimationFrame(glide);
   };
-  const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
-
-  const layout = () => {
-    const pin = desktop.matches && !reduced;
-    root.classList.toggle('is-pinned', pin);
-    track.style.transform = '';
-    overflow = pin ? Math.max(0, track.scrollWidth - track.clientWidth) : 0;
-    root.style.height = pin ? `${window.innerHeight + overflow}px` : '';
-    update();
+  const setSpeed = (s: number) => {
+    speed = s;
+    root.dataset.edge = s > 0 ? 'right' : s < 0 ? 'left' : '';
+    // Scroll snapping would pull each small step straight back; suspend it while gliding.
+    track.style.scrollSnapType = s ? 'none' : '';
+    if (speed && !frame) frame = requestAnimationFrame(glide);
   };
 
   const setPaused = (value: boolean) => {
@@ -58,7 +49,7 @@ export function initReel(root: HTMLElement): void {
     }
   };
 
-  const io = new IntersectionObserver(
+  const clips = new IntersectionObserver(
     entries => {
       for (const e of entries) {
         const v = e.target as HTMLVideoElement;
@@ -72,16 +63,32 @@ export function initReel(root: HTMLElement): void {
         }
       }
     },
-    { rootMargin: '0px 25% 0px 25%' },
+    { root: track, rootMargin: '0px 25% 0px 25%' },
   );
-  videos.forEach(v => io.observe(v));
+  videos.forEach(v => clips.observe(v));
 
-  if (reduced) videos.forEach(v => (v.controls = true));
+  if (reduced) {
+    root.classList.add('is-open');
+    videos.forEach(v => (v.controls = true));
+  } else {
+    root.classList.add('is-closed');
+    new IntersectionObserver((entries, io) => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      root.classList.replace('is-closed', 'is-open');
+      io.disconnect();
+    }, { threshold: 0.35 }).observe(root);
+  }
+
+  if (finePointer && !reduced) {
+    track.addEventListener('pointermove', e => {
+      const r = track.getBoundingClientRect();
+      setSpeed(edgeSpeed(e.clientX, r.left, r.width));
+    });
+    track.addEventListener('pointerleave', () => setSpeed(0));
+  }
+
   toggle?.addEventListener('click', () => setPaused(!paused));
+  track.addEventListener('scroll', showCount, { passive: true });
   setPaused(paused);
-  addEventListener('scroll', schedule, { passive: true });
-  track.addEventListener('scroll', schedule, { passive: true });
-  addEventListener('resize', layout);
-  desktop.addEventListener('change', layout);
-  layout();
+  showCount();
 }

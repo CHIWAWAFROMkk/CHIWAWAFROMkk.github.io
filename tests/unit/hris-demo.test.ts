@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CASES, STEPS, OUTCOME_LABEL, trace } from '../../src/scripts/hris-demo';
+import { CASES, STEPS, OUTCOME_LABEL, trace, stepFromPointer } from '../../src/scripts/hris-demo';
 
 describe('HRIS demo data', () => {
   it('has five fictional cases covering all five outcomes', () => {
@@ -15,6 +15,26 @@ describe('HRIS demo data', () => {
       expect(c[k].en.trim(), `${c.id}.${k}`).not.toBe('');
     }
     for (const o of Object.values(OUTCOME_LABEL)) expect(o.zh && o.en).toBeTruthy();
+  });
+});
+
+describe('trail (what the record card shows at each step)', () => {
+  it('has one bilingual line per step the record actually reached', () => {
+    for (const c of CASES) {
+      const reached = trace(c).filter(s => s.state !== 'skipped').length;
+      expect(c.trail, c.id).toHaveLength(reached);
+      for (const line of c.trail) expect(line.zh && line.en, c.id).toBeTruthy();
+    }
+  });
+});
+
+describe('stepFromPointer', () => {
+  it('maps a pointer x over the step bar to a step index, clamped at both ends', () => {
+    expect(stepFromPointer(100, 100, 600, 6)).toBe(0);
+    expect(stepFromPointer(399, 100, 600, 6)).toBe(2);
+    expect(stepFromPointer(699, 100, 600, 6)).toBe(5);
+    expect(stepFromPointer(-50, 100, 600, 6)).toBe(0);
+    expect(stepFromPointer(9999, 100, 600, 6)).toBe(5);
   });
 });
 
