@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import LangSwitch from '../components/LangSwitch.astro';
+import Gate from '../components/Gate.astro';
+import ContactBar from '../components/ContactBar.astro';
+import { SITE } from '../data/site';
+import { fact } from '../data/facts';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const meta = SITE.pages.home;
+---
+<Base lang={lang} path="/" title={meta.title[lang]} description={meta.description[lang]} nav={false} footer={false}>
+  <main id="main" class="home">
+    <header class="home__id wrap">
+      <div class="home__top">
+        <h1 class="home__name">{SITE.name[lang]}</h1>
+        <LangSwitch lang={lang} path="/" />
+      </div>
+      <p class="home__line">{fact('F1').text[lang]}</p>
+      <p class="home__meta">{fact('F2').text[lang]}</p>
+      <p class="home__avail">{fact('F3').text[lang]}</p>
+    </header>
+    <Gate lang={lang} />
+  </main>
+  <ContactBar lang={lang} />
+</Base>
+<style>
+  .home__id { display: grid; gap: 10px; padding-block: clamp(20px, 4vh, 44px) clamp(24px, 4vh, 40px); }
+  .home__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .home__name { font-size: clamp(56px, 9vw, 132px); line-height: 0.95; letter-spacing: -0.05em; }
+  :global(html[lang='en']) .home__name { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; }
+  .home__line { max-width: 34em; font: 500 clamp(18px, 1.8vw, 26px)/1.5 var(--font-body); }
+  .home__meta { color: var(--mute); font-size: 15px; }
+  .home__avail { justify-self: start; padding: 4px 10px; background: var(--ink); color: var(--paper); font-weight: 500; font-size: 14px; }
+</style>

@@ -1,0 +1,39 @@
+---
+import { SITE } from '../data/site';
+import { localizePath, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const doors = [SITE.gate.brief, SITE.gate.projects];
+---
+<nav class="gate" aria-label={SITE.gate.label[lang]}>
+  {doors.map((d, i) => (
+    <a class:list={['door', { 'door--ink': i === 1 }]} href={localizePath(d.href, lang)}>
+      <span class="door__index">{d.index}</span>
+      <span class="door__big" aria-hidden="true">{d.big}</span>
+      <span class="door__title">{d.title[lang]}<span class="door__arrow" aria-hidden="true">→</span></span>
+      <span class="door__desc">{d.desc[lang]}</span>
+    </a>
+  ))}
+</nav>
+<style>
+  .gate { display: grid; grid-template-columns: 1fr 1fr; border-block: var(--rule); }
+  .door { display: grid; grid-template-rows: auto 1fr auto auto; gap: 12px; min-height: clamp(260px, 40vh, 440px); padding: 28px var(--gutter) 32px; background: var(--paper); color: var(--ink); text-decoration: none; transition: background-color 0.25s var(--ease); }
+  .door + .door { border-left: var(--rule); }
+  .door--ink { background: var(--ink); color: var(--paper); }
+  .door__index { font: 700 14px/1 var(--font-display); letter-spacing: 0.2em; }
+  .door__big { align-self: end; font: 700 clamp(88px, 13vw, 200px)/0.8 var(--font-display); }
+  .door__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4em; font: 900 clamp(22px, 2.4vw, 34px)/1.2 var(--font-cjk-bold); }
+  .door__arrow { color: var(--red); transition: transform 0.3s var(--ease); }
+  .door__desc { color: var(--mute); font-size: 15px; }
+  .door--ink .door__desc { color: var(--night-mute); }
+  .door:hover { background: #e6e5de; }
+  .door--ink:hover { background: #222; }
+  .door:hover .door__arrow, .door:focus-visible .door__arrow { transform: translateX(8px); }
+  .door:focus-visible { outline-offset: -8px; }
+  @media (max-width: 640px) {
+    .gate { grid-template-columns: 1fr; }
+    .door + .door { border-left: 0; border-top: var(--rule); }
+    .door { min-height: 0; padding-block: 22px 26px; }
+    .door__big { font-size: 88px; }
+  }
+</style>
