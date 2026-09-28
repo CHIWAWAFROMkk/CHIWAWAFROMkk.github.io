@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { localizeError, CSV_ERRORS, DELIVERY_ERRORS } from '../../src/scripts/tool-i18n';
 
 describe('localizeError', () => {
@@ -15,6 +16,13 @@ describe('localizeError', () => {
   it('translates delivery core errors', () => {
     expect(localizeError('份数须为 1–20 的整数', 'en', DELIVERY_ERRORS)).toBe('Quantity must be a whole number from 1 to 20');
   });
+  it('translates every message the database triggers can raise', () => {
+    const schema = readFileSync('public/assets/delivery-schema.sql', 'utf8');
+    const raised = [...schema.matchAll(/RAISE\(ABORT,\s*'([^']+)'\)/g)].map(m => m[1]);
+    expect(raised.length).toBeGreaterThan(0);
+    for (const msg of raised) expect(localizeError(msg, 'en', DELIVERY_ERRORS), msg).not.toBe(msg);
+  });
+
   it('passes through messages it does not know (e.g. SQLite errors)', () => {
     expect(localizeError('no such table: foo', 'en', DELIVERY_ERRORS)).toBe('no such table: foo');
   });

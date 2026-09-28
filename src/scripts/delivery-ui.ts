@@ -27,6 +27,8 @@ export function initDelivery(root: HTMLElement): void {
   let state: State | null = null;
   let exportRows: unknown[][] = [];
   let booted = false;
+  /** Set once the engine could not load; from then on every action is refused and the controls stay disabled. */
+  let failed = false;
 
   const message = (text: string, error = false) => { const s = $('sql-status'); s.textContent = text; s.dataset.error = String(error); };
   const busy = (value: boolean) => {
@@ -34,7 +36,7 @@ export function initDelivery(root: HTMLElement): void {
     root.querySelectorAll<HTMLButtonElement>('[data-refund]').forEach(b => (b.disabled = value));
     button('cancel-query').disabled = !value;
   };
-  const halt = (text: string) => { busy(true); button('cancel-query').disabled = true; message(text, true); };
+  const halt = (text: string) => { failed = true; busy(true); button('cancel-query').disabled = true; message(text, true); };
 
   const start = () => {
     worker = new Worker('/assets/delivery-worker.js');
@@ -52,6 +54,7 @@ export function initDelivery(root: HTMLElement): void {
   };
 
   const request = (action: string, extra: Record<string, unknown> = {}): Promise<Reply> => {
+    if (failed) return Promise.reject(Error(T.loadFailed));
     if (pending) return Promise.reject(Error(T.busy));
     busy(true);
     return new Promise((resolve, reject) => {
@@ -68,7 +71,8 @@ export function initDelivery(root: HTMLElement): void {
     pending = null;
     worker?.terminate();
     task.reject(Error(text));
-    if (task.action === 'init') return halt(text);
+    // A failed first load has no committed data to fall back on: say plainly that the engine did not arrive.
+    if (task.action === 'init') return halt(text === T.loadTimeout ? text : T.loadFailed);
     start();
     request('init', { backup }).then(() => message(text, true)).catch(e => halt((e as Error).message + T.reload));
   }
@@ -142,7 +146,11 @@ export function initDelivery(root: HTMLElement): void {
     booted = true;
     message(T.loading);
     start();
-    request('init').then(run).catch(e => halt((e as Error).message + T.reload));
+    request('init').then(run).catch(e => {
+      if (failed) return; // already reported by abort()
+      console.error(e); // technical detail for the console; visitors get a readable sentence
+      halt(T.loadFailed);
+    });
   };
 
   // Static wiring works before the engine loads.

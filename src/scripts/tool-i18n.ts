@@ -24,6 +24,12 @@ export const DELIVERY_ERRORS: ErrorRule[] = [
   ['数据库尚未载入', 'The database has not loaded yet'],
   ['请输入 1–12000 字符的 SQL', 'Enter 1–12,000 characters of SQL'],
   ['一次最多执行 10 条语句', 'At most 10 statements per run'],
+  // Raised by triggers in delivery-schema.sql
+  ['价格快照不一致', 'The price snapshot does not match the dish price'],
+  ['库存不足', 'Not enough stock'],
+  ['支付金额与明细不一致', 'The payment does not match the order items'],
+  ['仅未送达订单可取消退款', 'Only undelivered orders can be cancelled and refunded'],
+  ['退款金额不一致', 'The refund amount does not match the order'],
 ];
 
 export function localizeError(message: string, lang: Lang, rules: ErrorRule[]): string {

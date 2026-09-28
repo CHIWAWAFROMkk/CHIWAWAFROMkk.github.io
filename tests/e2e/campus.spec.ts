@@ -64,8 +64,16 @@ test('engine fails to load: a readable error, the rest of the page still works',
   await page.goto('/projects/campus-delivery/');
   await page.locator('[data-campus]').scrollIntoViewIfNeeded();
   await expect(page.locator(status)).toHaveAttribute('data-error', 'true', { timeout: 25000 });
+  await expect(page.locator(status)).toContainText('SQLite 引擎未能下载');
+  await expect(page.locator(status)).not.toContainText(/XMLHttpRequest|NetworkError|Aborted/);
   await expect(page.locator('#run-query')).toBeDisabled();
   await expect(page.locator('#cancel-query')).toBeDisabled();
+  // After a failed load, the keyboard shortcut must not bring dead controls back to life.
+  await page.locator('#sql-input').focus();
+  await page.keyboard.press('Control+Enter');
+  await expect(page.locator('#run-query')).toBeDisabled();
+  await expect(page.locator('#place-order')).toBeDisabled();
+  await expect(page.locator(status)).toContainText('SQLite 引擎未能下载');
   await expect(page.locator('.prose h2').first()).toBeVisible();
   expect(errors).toEqual([]);
 });

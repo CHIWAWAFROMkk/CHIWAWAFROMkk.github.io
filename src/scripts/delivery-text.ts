@@ -1,7 +1,7 @@
 import type { Lang } from '../i18n';
 
 export interface DeliveryText {
-  idle: string; loading: string; running: string; loadTimeout: string; runTimeout: string; engineError: string;
+  idle: string; loadFailed: string; loading: string; running: string; loadTimeout: string; runTimeout: string; engineError: string;
   stopped: string; busy: string; reload: string; noSqlFile: string;
   rows: (n: number, ms: number, truncated: boolean) => string;
   status: Record<'paid' | 'delivered' | 'refunded', string>;
@@ -16,6 +16,7 @@ export interface DeliveryText {
 export const DELIVERY_TEXT: Record<Lang, DeliveryText> = {
   zh: {
     idle: '滚动到这里时载入 SQLite（约 700 KB）。',
+    loadFailed: 'SQLite 引擎未能下载（网络较慢或被拦截）。请刷新重试，或下载建表 SQL 在本地运行。',
     loading: '正在载入 SQLite…', running: '正在执行 SQL…',
     loadTimeout: '数据库加载超时，请刷新重试。', runTimeout: '运行已停止：超过 3 秒限制。',
     engineError: '运行引擎出错，已保留上次成功提交的数据。', stopped: '已停止运行。',
@@ -31,6 +32,7 @@ export const DELIVERY_TEXT: Record<Lang, DeliveryText> = {
   },
   en: {
     idle: 'SQLite (about 700 KB) loads when you scroll here.',
+    loadFailed: 'The SQLite engine could not be downloaded (slow or blocked network). Refresh to try again, or download the schema SQL and run it locally.',
     loading: 'Loading SQLite…', running: 'Running SQL…',
     loadTimeout: 'The database took too long to load — please refresh.', runTimeout: 'Stopped: the 3-second limit was reached.',
     engineError: 'The engine failed; the last committed data is kept.', stopped: 'Stopped.',
