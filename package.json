@@ -1,0 +1,20 @@
+{
+  "name": "heyanjun-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview --port 4321",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "resume:en": "node tools/print-resume.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "astro": "^7.3.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}
