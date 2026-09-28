@@ -1,0 +1,159 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const TEXT = {
+  zh: {
+    choose: '选择 CSV', sample: '加载示例', downloadSample: '下载示例', delimiter: '分隔符', delims: ['自动识别', '逗号', '分号', '制表符'],
+    limits: 'UTF-8 · 最大 2 MB / 20,000 行 / 100 列 · 更改分隔符后重新导入', paste: '或直接粘贴数据', pasteLabel: '第一行必须是唯一且非空的表头',
+    pasteRun: '分析粘贴内容', loading: '正在加载构造示例…', empty: '选择 CSV 或粘贴数据后，结果会显示在这里。',
+    dedupe: '移除完全重复行', drop: '移除含空白值的行', column: '分析字段', dist: '数值分布', histLabel: '直方图；精确频数见下方分箱数据',
+    noNumbers: '本列没有可分析的数值，请选择其他字段。', bins: '查看分箱数据', binHead: ['区间', '记录数'], stats: '描述统计',
+    quality: '字段质量', qualityNote: '空白按去除首尾空格后为空判定；NULL、NA 等文本不自动视为缺失。可转数值列是诊断信息，不代表编号有统计意义。',
+    qualityHead: ['字段', '推断类型', '空白', '非空唯一值', '可转数值', '非空非数值'], qualityLabel: '字段质量，可横向滚动',
+    preview: '数据预览', search: '搜索单元格', searchPh: '输入内容', previewNote: '点击表头排序；搜索和排序仅影响预览，不改变统计与导出。',
+    previewLabel: '输入数据，可横向滚动', noRows: '没有符合条件的数据行。', prev: '上一页', next: '下一页',
+    exportCsv: '导出处理后 CSV', exportJson: '导出分析记录 JSON',
+    footnote: 'JSON 包含输入内容的 SHA-256、处理选项、行数审计和字段统计，不含原始数据行。CSV 中可能被表格软件当作公式的文本会加单引号保护。刷新页面不保留你的输入。',
+    binsLabel: '分箱数据，可横向滚动',
+  },
+  en: {
+    choose: 'Choose CSV', sample: 'Load sample', downloadSample: 'Download sample', delimiter: 'Delimiter', delims: ['Auto-detect', 'Comma', 'Semicolon', 'Tab'],
+    limits: 'UTF-8 · up to 2 MB / 20,000 rows / 100 columns · re-import after changing the delimiter', paste: 'Or paste data', pasteLabel: 'The first line must be unique, non-empty headers',
+    pasteRun: 'Analyse pasted data', loading: 'Loading the synthetic sample…', empty: 'Choose a CSV or paste data to see results here.',
+    dedupe: 'Remove exact duplicate rows', drop: 'Remove rows with blanks', column: 'Column to analyse', dist: 'Distribution', histLabel: 'Histogram; exact counts are in the bins table below',
+    noNumbers: 'No numeric values in this column — choose another.', bins: 'Show bins', binHead: ['Range', 'Rows'], stats: 'Descriptive statistics',
+    quality: 'Column quality', qualityNote: 'Blank means empty after trimming spaces; text such as NULL or NA is not treated as missing. Convertible-to-number is a diagnostic, not a sign that an ID has statistical meaning.',
+    qualityHead: ['Column', 'Inferred type', 'Blank', 'Unique non-blank', 'Convertible to number', 'Non-blank non-numeric'], qualityLabel: 'Column quality, scrolls sideways',
+    preview: 'Data preview', search: 'Search cells', searchPh: 'Type to search', previewNote: 'Click a header to sort; search and sort affect only the preview, not statistics or exports.',
+    previewLabel: 'Input data, scrolls sideways', noRows: 'No rows match.', prev: 'Previous', next: 'Next',
+    exportCsv: 'Export processed CSV', exportJson: 'Export analysis record (JSON)',
+    footnote: "The JSON holds the input's SHA-256, the options, a row-count audit and column statistics — not the rows. Text a spreadsheet might treat as a formula gets a leading quote in the CSV. Refreshing the page discards your input.",
+    binsLabel: 'Bins, scrolls sideways',
+  },
+};
+const L = TEXT[lang];
+---
+<section class="lab wrap" data-lab data-demo data-lang={lang} aria-label="CSV">
+  <div class="lab__import">
+    <label class="lab__file" for="file">{L.choose}<input id="file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" /></label>
+    <button id="example" type="button" class="secondary">{L.sample}</button>
+    <a href="/assets/sample.csv" download>{L.downloadSample}</a>
+  </div>
+  <div class="lab__controls">
+    <label>{L.delimiter}
+      <select id="delimiter"><option value="auto">{L.delims[0]}</option><option value=",">{L.delims[1]}</option><option value=";">{L.delims[2]}</option><option value="&#9;">{L.delims[3]}</option></select>
+    </label>
+    <span class="meta">{L.limits}</span>
+  </div>
+  <details class="paste-box">
+    <summary>{L.paste}</summary>
+    <label for="paste">{L.pasteLabel}</label>
+    <textarea id="paste" spellcheck="false" placeholder="date,category,amount&#10;2025-01-01,A,120&#10;2025-01-02,B,180"></textarea>
+    <button id="paste-run" type="button">{L.pasteRun}</button>
+  </details>
+  <p id="message" class="notice" role="status" aria-live="polite">{L.loading}</p>
+  <p id="empty" class="meta">{L.empty}</p>
+
+  <div id="results" hidden>
+    <p class="meta" id="source-label"></p>
+    <div class="lab__controls">
+      <label class="check"><input type="checkbox" id="dedupe" />{L.dedupe}</label>
+      <label class="check"><input type="checkbox" id="drop-missing" />{L.drop}</label>
+    </div>
+    <div class="metrics" id="metrics"></div>
+    <p class="notice" id="audit"></p>
+
+    <section class="lab__block">
+      <div class="lab__controls"><label for="column">{L.column}</label><select id="column"></select></div>
+      <div class="lab__grid">
+        <div>
+          <h3 id="stats-title">{L.dist}</h3>
+          <div class="histogram" id="histogram" aria-label={L.histLabel}></div>
+          <p id="chart-empty" hidden>{L.noNumbers}</p>
+          <div class="range"><span id="range-min"></span><span id="range-max"></span></div>
+          <details><summary>{L.bins}</summary>
+            <div class="table-wrap" tabindex="0" aria-label={L.binsLabel}><table><thead><tr><th scope="col">{L.binHead[0]}</th><th scope="col">{L.binHead[1]}</th></tr></thead><tbody id="bins-body"></tbody></table></div>
+          </details>
+        </div>
+        <div><h3>{L.stats}</h3><dl class="stat-list" id="stat-list"></dl></div>
+      </div>
+      <p class="meta" id="numeric-note"></p>
+    </section>
+
+    <section class="lab__block">
+      <h3>{L.quality}</h3>
+      <p class="meta">{L.qualityNote}</p>
+      <div class="table-wrap" tabindex="0" aria-label={L.qualityLabel}><table><thead><tr>{L.qualityHead.map(h => <th scope="col">{h}</th>)}</tr></thead><tbody id="quality-body"></tbody></table></div>
+    </section>
+
+    <section class="lab__block">
+      <h3>{L.preview}</h3>
+      <div class="lab__controls"><label>{L.search}<input id="search" type="search" placeholder={L.searchPh} /></label><span class="meta">{L.previewNote}</span></div>
+      <div class="table-wrap" tabindex="0" aria-label={L.previewLabel}><table><thead id="data-head"></thead><tbody id="data-body"></tbody></table></div>
+      <p id="table-empty" hidden>{L.noRows}</p>
+      <div class="pager"><span id="page-info" class="meta" aria-live="polite"></span><div class="actions"><button id="prev" type="button" class="secondary">{L.prev}</button><button id="next" type="button" class="secondary">{L.next}</button></div></div>
+    </section>
+
+    <div class="actions"><button id="export-csv" type="button">{L.exportCsv}</button><button id="export-json" type="button" class="secondary">{L.exportJson}</button></div>
+    <p class="meta">{L.footnote}</p>
+  </div>
+</section>
+<script>
+  import { initLab } from '../scripts/lab-ui';
+  document.querySelectorAll<HTMLElement>('[data-lab]').forEach(initLab);
+</script>
+<style>
+  .lab { display: grid; gap: 14px; padding-block: 36px 48px; border-top: var(--rule); }
+  .meta { color: var(--mute); font-size: 14px; }
+  .lab__import, .lab__controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+  label { font-weight: 500; font-size: 14px; }
+  .lab__controls label:not(.check) { display: inline-flex; align-items: center; gap: 8px; }
+  .check { display: inline-flex; align-items: center; gap: 8px; }
+  select, textarea, input[type='search'] { padding: 8px 10px; border: 1.5px solid var(--ink); background: #fff; font: inherit; font-size: 15px; color: var(--ink); border-radius: 0; }
+  textarea { width: 100%; min-height: 120px; font: 13px/1.5 Consolas, monospace; }
+  input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--ink); }
+  button, .lab__file { display: inline-block; padding: 9px 16px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 700; cursor: pointer; border-radius: 0; }
+  button.secondary { background: transparent; color: var(--ink); }
+  button:hover:not(:disabled), .lab__file:hover { background: var(--red-text); border-color: var(--red-text); color: #fff; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .lab__file input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .lab__file:focus-within { outline: 3px solid var(--red-text); outline-offset: 3px; }
+  .paste-box { display: grid; gap: 8px; }
+  .paste-box summary { cursor: pointer; font-weight: 500; }
+  .notice { padding: 10px 14px; border-left: 4px solid var(--ink); background: #fff; font-size: 14px; }
+  .notice.error { border-left-color: var(--red-text); color: var(--red-text); }
+  #results { display: grid; gap: 18px; }
+  #results[hidden] { display: none; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); border-block: var(--rule); }
+  .metrics :global(.metric) { display: grid; gap: 4px; padding: 16px 14px 14px 0; }
+  .metrics :global(.metric + .metric) { padding-left: 14px; border-left: var(--hair); }
+  .metrics :global(strong) { font: 700 clamp(32px, 4vw, 52px)/0.9 var(--font-display); }
+  .metrics :global(span) { font-size: 13px; color: var(--mute); }
+  .lab__block { display: grid; gap: 12px; padding-top: 18px; border-top: var(--hair); }
+  .lab__block h3 { font-size: 20px; }
+  .lab__grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
+  .histogram { display: flex; align-items: flex-end; gap: 4px; height: 160px; margin-top: 12px; border-bottom: var(--rule); }
+  .histogram :global(.bin) { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; font-size: 11px; }
+  .histogram :global(.bin i) { display: block; width: 100%; background: var(--ink); }
+  .histogram :global(.bin:hover i) { background: var(--red); }
+  .range { display: flex; justify-content: space-between; font-size: 12px; color: var(--mute); margin-top: 4px; }
+  .stat-list { display: grid; gap: 0; }
+  .stat-list :global(div) { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: var(--hair); }
+  .stat-list :global(dd) { font-variant-numeric: tabular-nums; font-weight: 500; }
+  .table-wrap { overflow-x: auto; max-width: 100%; }
+  /* Rows and header cells are created by the script, so they carry no scoped attribute: style them globally within the wrapper. */
+  .table-wrap :global(table) { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .table-wrap :global(th), .table-wrap :global(td) { padding: 7px 10px; border-bottom: var(--hair); text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .table-wrap :global(th) { font-weight: 500; border-bottom: var(--rule); }
+  .table-wrap :global(th button) { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 500; cursor: pointer; }
+  .table-wrap :global(th button:hover) { color: var(--red-text); }
+  .table-wrap :global(td.missing) { color: var(--red-text); font-style: italic; }
+  .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  @media (max-width: 800px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .metrics :global(.metric:nth-child(3)) { padding-left: 0; border-left: 0; }
+    .lab__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

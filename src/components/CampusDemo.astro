@@ -150,9 +150,10 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
   .table-wrap { overflow-x: auto; max-width: 100%; }
   .table-wrap:focus-visible { outline-offset: 2px; }
   #sql-results { max-height: 420px; overflow: auto; border-top: var(--rule); }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th, td { padding: 8px 10px; border-bottom: var(--hair); text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  th { font-weight: 500; border-bottom: var(--rule); }
+  /* Query results are built by the script (no scoped attribute), so table styles apply globally within the wrappers. */
+  .table-wrap :global(table) { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .table-wrap :global(th), .table-wrap :global(td) { padding: 8px 10px; border-bottom: var(--hair); text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .table-wrap :global(th) { font-weight: 500; border-bottom: var(--rule); }
   .schema { margin-top: 20px; }
   .schema summary { cursor: pointer; font-weight: 500; }
   .schema pre { max-height: 360px; overflow: auto; padding: 14px; background: #fff; border: var(--hair); font: 12px/1.5 Consolas, monospace; }

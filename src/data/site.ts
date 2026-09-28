@@ -133,6 +133,19 @@ export const SITE = {
         status: { zh: '课程设计，已完成；演示数据为合成数据。', en: 'Course project, finished; the demo data is synthetic.' },
       },
     },
+    stock: {
+      title: { zh: 'CSV 数据分析工具', en: 'CSV Analysis Tool' },
+      lead: { zh: '让一张表，讲清楚自己的来路。', en: 'Let a table explain where it came from.' },
+      description: { zh: '上传或粘贴表格，检查缺失与重复，查看统计与分布，导出处理记录。数据只在浏览器中处理。', en: 'Upload or paste a table to check blanks and duplicates, see statistics and distributions, and export a processing record — all in the browser.' },
+      tags: [ { zh: '原型 · 构造样本', en: 'Prototype · synthetic sample' }, { zh: 'JavaScript · CSV · 描述统计', en: 'JavaScript · CSV · descriptive statistics' } ],
+      summary: {
+        task: { zh: '把原股票行情项目里的数据检查思路，改造成任何人都能带入自己表格的轻量工具：检查缺失与重复、看分布、导出处理记录。', en: 'Turn the data checks from my earlier market-data project into a light tool anyone can use on their own table: find blanks and duplicates, see distributions, export a record of what was done.' },
+        mine: { zh: '定义统计口径与处理规则（默认只诊断、不自动修复），实现解析、去重、统计与导出，并用构造样本做可手工核对的检查。', en: 'Defined the statistics and handling rules (diagnose by default, never auto-fix), implemented parsing, de-duplication, statistics and export, and checked it against a hand-verifiable sample.' },
+        tools: { zh: '浏览器与命令行共用同一个计算模块；没有服务器端处理，也不调用 AI 分析接口。', en: 'The browser and the command line share one calculation module; no server-side processing and no AI analysis calls.' },
+        evidence: { zh: '本页的工具、构造样本、源码包与检查脚本。', en: 'The tool on this page, the synthetic sample, the source package and the check script.' },
+        status: { zh: '原型，使用构造样本；真实行情回测项目正在重做，完成后替换本页。', en: 'Prototype on a synthetic sample; the real market backtest is being rebuilt and will replace this page.' },
+      },
+    },
     hris: {
       description: { zh: '员工电子档案补录：先确定员工再找档案，AI 只给候选，人工审核后写回。含虚构数据的审核流程演示。', en: 'HR records backfill: find the employee first, then the document; AI only proposes, a person approves the write-back. Includes a demo on fictional data.' },
       title: { zh: '员工电子档案补录', en: 'HR Records Backfill' },

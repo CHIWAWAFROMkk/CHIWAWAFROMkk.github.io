@@ -1,0 +1,16 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import CsvLab from '../components/CsvLab.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/stock-data.zh.md';
+import { Content as BodyEn } from '../copy/projects/stock-data.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.stock;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout lang={lang} slug="stock-data" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <CsvLab slot="demo" lang={lang} />
+  <Body />
+</ProjectLayout>
