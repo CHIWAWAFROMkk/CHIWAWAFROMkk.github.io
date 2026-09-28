@@ -1,0 +1,60 @@
+---
+import Base from './Base.astro';
+import { SITE } from '../data/site';
+import { localizePath, type Lang, type Bi } from '../i18n';
+
+export interface Summary { task: Bi; mine: Bi; tools: Bi; evidence: Bi; status: Bi }
+interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi }
+const { lang, slug, title, lead, tags, summary, description } = Astro.props;
+const path = `/projects/${slug}/`;
+const order = SITE.projects;
+const i = order.findIndex(p => p.slug === slug);
+const prev = i > 0 ? order[i - 1] : undefined;
+const next = i >= 0 && i < order.length - 1 ? order[i + 1] : undefined;
+const S = SITE.summaryLabels;
+const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.tools, summary.tools], [S.evidence, summary.evidence], [S.status, summary.status]];
+---
+<Base lang={lang} path={path} title={`${title[lang]} · ${SITE.name[lang]}`} description={description[lang]}>
+  <main id="main">
+    <header class="p-head wrap">
+      <ul class="p-tags">{tags.map(t => <li>{t[lang]}</li>)}</ul>
+      <h1 class="p-title">{title[lang]}</h1>
+      <p class="p-lead">{lead[lang]}</p>
+    </header>
+    <section class="p-summary wrap" aria-labelledby="p-summary-h">
+      <h2 id="p-summary-h" class="label">{S.heading[lang]}</h2>
+      <dl>{rows.map(([k, v]) => <div class="p-row"><dt>{k[lang]}</dt><dd>{v[lang]}</dd></div>)}</dl>
+    </section>
+    <slot name="demo" />
+    <article class="prose wrap"><slot /></article>
+    <nav class="p-pager wrap" aria-label={SITE.pager.label[lang]}>
+      {prev ? <a href={localizePath(prev.href, lang)}>← {prev.title[lang]}</a> : <span></span>}
+      {next && <a href={localizePath(next.href, lang)}>{next.title[lang]} →</a>}
+    </nav>
+  </main>
+</Base>
+<style>
+  .p-head { display: grid; gap: 18px; padding-block: clamp(32px, 6vh, 72px) 36px; border-bottom: var(--rule); }
+  .p-tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+  .p-tags li { padding: 3px 10px; border: 1.5px solid var(--ink); font-size: 13px; font-weight: 500; }
+  .p-title { font-size: clamp(44px, 7.5vw, 112px); line-height: 0.95; letter-spacing: -0.04em; }
+  .p-lead { max-width: 30em; font: 500 clamp(18px, 1.7vw, 24px)/1.5 var(--font-body); }
+  .p-summary { padding-block: 36px 48px; }
+  .p-summary .label { margin-bottom: 16px; color: var(--red-text); }
+  .p-row { display: grid; grid-template-columns: minmax(7em, 14em) 1fr; gap: 8px 32px; padding-block: 14px; border-top: var(--hair); }
+  .p-row dt { font: 900 16px/1.6 var(--font-cjk-bold); }
+  .p-row dd { max-width: 48em; }
+  .prose { max-width: 1600px; padding-block: 24px 64px; }
+  .prose :global(h2) { margin: 56px 0 16px; padding-bottom: 12px; border-bottom: var(--rule); font-size: clamp(24px, 2.6vw, 36px); }
+  .prose :global(h3) { margin: 28px 0 8px; font-size: 19px; }
+  .prose :global(p), .prose :global(ul), .prose :global(ol) { max-width: 46em; margin-bottom: 14px; }
+  .prose :global(li) { margin-bottom: 8px; }
+  .prose :global(strong) { font-weight: 500; }
+  .prose :global(table) { display: block; overflow-x: auto; width: 100%; margin: 20px 0; border-collapse: collapse; font-size: 15px; }
+  .prose :global(th), .prose :global(td) { padding: 10px 14px; border-bottom: var(--hair); text-align: left; vertical-align: top; min-width: 9em; }
+  .prose :global(th) { border-bottom: var(--rule); font-weight: 500; }
+  .p-pager { display: flex; justify-content: space-between; gap: 16px; padding-block: 28px; border-top: var(--rule); font-weight: 500; }
+  .p-pager a { text-decoration: none; }
+  .p-pager a:hover { text-decoration: underline; text-underline-offset: 6px; }
+  @media (max-width: 640px) { .p-row { grid-template-columns: 1fr; } }
+</style>

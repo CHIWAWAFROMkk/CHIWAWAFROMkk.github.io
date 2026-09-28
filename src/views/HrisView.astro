@@ -1,0 +1,16 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import HrisDemo from '../components/HrisDemo.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/hris-workflow.zh.md';
+import { Content as BodyEn } from '../copy/projects/hris-workflow.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.hris;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout lang={lang} slug="hris-workflow" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <HrisDemo slot="demo" lang={lang} />
+  <Body />
+</ProjectLayout>
