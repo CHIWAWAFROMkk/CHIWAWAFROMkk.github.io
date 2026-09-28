@@ -9,7 +9,7 @@ test.describe('intro', () => {
     await page.goto('/');
     await expect(page.locator(overlay)).toBeVisible();
     expect(await page.evaluate(() => document.getElementById('page')!.inert)).toBe(true);
-    await expect(page.locator('[data-intro-skip]')).toBeFocused();
+    await expect(page.locator(overlay)).toBeFocused();
     await expect(page.locator(overlay)).toBeHidden({ timeout: 3500 });
     expect(await page.evaluate(() => document.getElementById('page')!.inert)).toBe(false);
   });
@@ -27,12 +27,36 @@ test.describe('intro', () => {
     await expect(page.locator(overlay)).toBeHidden({ timeout: 300 });
   });
 
-  test('Tab and letters do not skip', async ({ page }) => {
+  test('Enter, Space, letters and Tab do not skip', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator(overlay)).toBeVisible();
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('a');
+    for (const key of ['Enter', ' ', 'a', 'Tab']) await page.keyboard.press(key);
     await expect(page.locator(overlay)).toBeVisible();
+  });
+
+  test('focus stays inside the intro while it plays', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator(overlay)).toBeVisible();
+    for (let i = 0; i < 4; i++) {
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() => !!document.activeElement?.closest('[data-intro]') || document.activeElement === document.body), `tab ${i + 1}`).toBe(true);
+    }
+  });
+
+  test('slow network: once the cover has lifted, the intro never starts', async ({ page }) => {
+    const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
+    // Astro's bundled stylesheet comes after the inline guess, so delaying it holds back the intro module but not the 3 s failsafe.
+    await page.route('**/_astro/*.css', async r => { await delay(2600); await r.continue(); });
+    await page.route('**/BarlowCondensed-Bold.ttf', async r => { await delay(3200); await r.continue(); });
+    await page.goto('/', { waitUntil: 'commit' });
+    await page.waitForFunction(() => document.readyState !== 'loading' || document.documentElement.classList.contains('intro-pending'));
+    await page.waitForFunction(() => !document.documentElement.classList.contains('intro-pending'), null, { timeout: 6000 });
+    // Sample without auto-retry: the page must stay usable, never re-covered, for the next 1.5 s.
+    for (let i = 0; i < 8; i++) {
+      const s = await page.evaluate(() => ({ playing: !!document.querySelector('.intro.is-playing'), inert: !!document.getElementById('page')?.inert }));
+      expect(s, `sample ${i}`).toEqual({ playing: false, inert: false });
+      await page.waitForTimeout(200);
+    }
   });
 
   test('second visit shows the page with no intro at all', async ({ page }) => {
@@ -63,9 +87,11 @@ test.describe('intro', () => {
     expect(errors).toEqual([]);
   });
 
-  test('module blocked: the page is uncovered within 3 seconds', async ({ page }) => {
-    await page.route(/\.js($|\?)/, route => route.abort());
+  test('intro script crashes: the page is uncovered within 3 seconds', async ({ page }) => {
+    // matchMedia throwing makes the inline guess fall back to "first visit" and makes the intro module crash before it can lift the cover.
+    await page.addInitScript(() => { window.matchMedia = () => { throw new Error('boom'); }; });
     await page.goto('/');
+    expect(await page.evaluate(() => document.documentElement.classList.contains('intro-pending'))).toBe(true);
     await page.waitForTimeout(3200);
     expect(await page.evaluate(() => document.documentElement.classList.contains('intro-pending'))).toBe(false);
     await expect(page.locator('a.door').first()).toBeVisible();

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { SITE } from '../../src/data/site';
 import { factCorpus } from '../../src/data/facts';
-import { digitTokens } from './digits';
+import { strayTokens } from './digits';
 
 const SKIP_KEYS = new Set(['email', 'resume', 'href', 'slug', 'src']);
 
@@ -16,7 +16,7 @@ function strings(node: unknown, key = ''): string[] {
 describe('SITE copy', () => {
   it('uses no number that is missing from the fact ledger', () => {
     const corpus = factCorpus();
-    for (const s of strings(SITE)) for (const t of digitTokens(s)) expect(corpus, `"${t}" in "${s}"`).toContain(t);
+    for (const s of strings(SITE)) expect(strayTokens(s, corpus), s).toEqual([]);
   });
 
   it('every project is bilingual and links to /projects/<slug>/', () => {

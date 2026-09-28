@@ -4,7 +4,7 @@ import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 ---
-<div class="intro" hidden data-intro>
+<div class="intro" hidden data-intro tabindex="-1">
   <div class="intro__words" aria-hidden="true">
     {SITE.intro.words.map(w => (
       <div class="intro__word"><b>{w.word}</b><span>{w.caption[lang]}</span></div>
@@ -16,11 +16,10 @@ const { lang } = Astro.props;
 <script>
   import { initIntro } from '../scripts/intro-dom';
   const overlay = document.querySelector<HTMLElement>('[data-intro]');
-  const page = document.getElementById('page');
-  if (overlay && page) void initIntro(overlay, page);
+  if (overlay) void initIntro(overlay);
 </script>
 <style>
-  .intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; background: var(--paper); }
+  .intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; background: var(--paper); outline: none; }
   :global(html.intro-pending) .intro, .intro.is-playing { display: block; }
   .intro__word { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
   .intro__word b { font: 700 min(38vw, 56vh)/0.8 var(--font-display); color: var(--ink); }
