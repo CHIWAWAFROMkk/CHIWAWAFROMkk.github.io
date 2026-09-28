@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { PHASE1_PAGES, skipIntro, noHorizontalOverflow } from './helpers';
+import { PAGES, skipIntro, noHorizontalOverflow } from './helpers';
 
-for (const p of PHASE1_PAGES) {
+for (const p of PAGES) {
   test(`layout ${p}`, async ({ page }, info) => {
     await skipIntro(page);
     await page.emulateMedia({ reducedMotion: 'reduce' });

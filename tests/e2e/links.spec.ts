@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { PHASE1_PAGES, PHASE2_PENDING, skipIntro } from './helpers';
+import { PAGES, PHASE2_PENDING, skipIntro } from './helpers';
 
 test('every internal link resolves (phase-2 pages excepted)', async ({ page, request, isMobile }) => {
   test.skip(!!isMobile, 'run once');
   await skipIntro(page);
   const found = new Set<string>();
-  for (const p of PHASE1_PAGES) {
+  for (const p of PAGES) {
     await page.goto(p);
     const hrefs = await page.locator('a[href]').evaluateAll(as => as.map(a => a.getAttribute('href') ?? ''));
     for (const h of hrefs) if (h.startsWith('/') && !h.startsWith('//')) found.add(h.split('#')[0]);

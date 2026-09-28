@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { PHASE1_PAGES, skipIntro } from './helpers';
+import { PAGES, skipIntro } from './helpers';
 
-for (const p of PHASE1_PAGES) {
+for (const p of PAGES) {
   test(`no serious a11y issues on ${p}`, async ({ page }) => {
     await skipIntro(page);
     await page.emulateMedia({ reducedMotion: 'reduce' });

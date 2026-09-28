@@ -73,7 +73,7 @@ const L = TEXT[lang];
           <p id="chart-empty" hidden>{L.noNumbers}</p>
           <div class="range"><span id="range-min"></span><span id="range-max"></span></div>
           <details><summary>{L.bins}</summary>
-            <div class="table-wrap" tabindex="0" aria-label={L.binsLabel}><table><thead><tr><th scope="col">{L.binHead[0]}</th><th scope="col">{L.binHead[1]}</th></tr></thead><tbody id="bins-body"></tbody></table></div>
+            <div class="table-wrap" tabindex="0" role="region" aria-label={L.binsLabel}><table><thead><tr><th scope="col">{L.binHead[0]}</th><th scope="col">{L.binHead[1]}</th></tr></thead><tbody id="bins-body"></tbody></table></div>
           </details>
         </div>
         <div><h3>{L.stats}</h3><dl class="stat-list" id="stat-list"></dl></div>
@@ -84,13 +84,13 @@ const L = TEXT[lang];
     <section class="lab__block">
       <h3>{L.quality}</h3>
       <p class="meta">{L.qualityNote}</p>
-      <div class="table-wrap" tabindex="0" aria-label={L.qualityLabel}><table><thead><tr>{L.qualityHead.map(h => <th scope="col">{h}</th>)}</tr></thead><tbody id="quality-body"></tbody></table></div>
+      <div class="table-wrap" tabindex="0" role="region" aria-label={L.qualityLabel}><table><thead><tr>{L.qualityHead.map(h => <th scope="col">{h}</th>)}</tr></thead><tbody id="quality-body"></tbody></table></div>
     </section>
 
     <section class="lab__block">
       <h3>{L.preview}</h3>
       <div class="lab__controls"><label>{L.search}<input id="search" type="search" placeholder={L.searchPh} /></label><span class="meta">{L.previewNote}</span></div>
-      <div class="table-wrap" tabindex="0" aria-label={L.previewLabel}><table><thead id="data-head"></thead><tbody id="data-body"></tbody></table></div>
+      <div class="table-wrap" tabindex="0" role="region" aria-label={L.previewLabel}><table><thead id="data-head"></thead><tbody id="data-body"></tbody></table></div>
       <p id="table-empty" hidden>{L.noRows}</p>
       <div class="pager"><span id="page-info" class="meta" aria-live="polite"></span><div class="actions"><button id="prev" type="button" class="secondary">{L.prev}</button><button id="next" type="button" class="secondary">{L.next}</button></div></div>
     </section>

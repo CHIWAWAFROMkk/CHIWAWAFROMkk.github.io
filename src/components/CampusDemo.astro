@@ -69,7 +69,7 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
       <div class="wb__output">
         <div class="wb__out-head"><h3>{L.results}</h3><button id="export-csv" type="button" class="secondary" disabled>{L.export}</button></div>
         <p id="sql-status" role="status" aria-live="polite"></p>
-        <div id="sql-results" class="table-wrap" tabindex="0" aria-label={L.scrollHint}></div>
+        <div id="sql-results" class="table-wrap" tabindex="0" role="region" aria-label={L.scrollHint}></div>
       </div>
     </div>
     <details class="schema"><summary>{L.schema}</summary><pre id="schema-source"></pre></details>
@@ -82,7 +82,7 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
     <div class="an__cards">
       <div class="card">
         <h3>{L.c1}</h3><p class="meta">{L.c1note}</p>
-        <div class="table-wrap" tabindex="0" aria-label={L.tableHint}><table>
+        <div class="table-wrap" tabindex="0" role="region" aria-label={L.tableHint}><table>
           <thead><tr>{L.c1head.map(h => <th scope="col">{h}</th>)}</tr></thead>
           <tbody>{MERCHANTS.map(r => <tr>{r.map((c, i) => <td>{c}{i === 0 && r[4] === '0%' && <span class="tag">{L.zeroTag}</span>}</td>)}</tr>)}</tbody>
         </table></div>
@@ -90,7 +90,7 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
       </div>
       <div class="card">
         <h3>{L.c2}</h3><p class="meta">{L.c2note}</p>
-        <div class="table-wrap" tabindex="0" aria-label={L.tableHint}><table>
+        <div class="table-wrap" tabindex="0" role="region" aria-label={L.tableHint}><table>
           <thead><tr>{L.c2head.map(h => <th scope="col">{h}</th>)}</tr></thead>
           <tbody>{DISHES.map(r => <tr>{r.map(c => <td>{c}</td>)}</tr>)}</tbody>
         </table></div>

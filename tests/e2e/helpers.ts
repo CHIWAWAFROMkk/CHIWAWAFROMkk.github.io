@@ -2,8 +2,11 @@ import type { Page } from '@playwright/test';
 
 export const PHASE1_PAGES = ['/', '/brief/', '/projects/hris-workflow/', '/en/', '/en/brief/', '/en/projects/hris-workflow/'];
 
+export const PHASE2A_PAGES = ['/projects/', '/projects/campus-delivery/', '/projects/stock-data/', '/projects/stock-data/method/'].flatMap(p => [p, `/en${p}`]);
+export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES];
+
 export const PHASE2_PENDING = new Set(
-  ['/projects/', '/projects/campus-delivery/', '/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/', '/projects/stock-data/', '/projects/mais-je-taime/', '/privacy/']
+  ['/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/', '/projects/mais-je-taime/', '/privacy/']
     .flatMap(p => [p, `/en${p}`]),
 );
 
