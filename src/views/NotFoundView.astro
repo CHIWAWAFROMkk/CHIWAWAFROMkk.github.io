@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+const P = SITE.pages.notFound;
+---
+<Base lang="zh" path="/404/" title={`${P.title.zh} / ${P.title.en}`} description={P.body.zh}>
+  <main id="main" class="nf wrap">
+    <p class="num" aria-hidden="true">404</p>
+    <h1>{P.title.zh} <span lang="en">/ {P.title.en}</span></h1>
+    <p>{P.body.zh}</p>
+    <p lang="en">{P.body.en}</p>
+    <p class="nf__links"><a href="/">{SITE.name.zh}</a> · <a href="/en/" lang="en">{SITE.name.en}</a></p>
+  </main>
+</Base>
+<style>
+  .nf { display: grid; gap: 18px; padding-block: 12vh; }
+  .nf h1 { font-size: clamp(28px, 4vw, 52px); }
+</style>

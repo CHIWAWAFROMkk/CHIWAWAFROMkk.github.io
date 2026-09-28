@@ -1,0 +1,13 @@
+---
+import { SITE } from '../data/site';
+import { localizePath, type Lang } from '../i18n';
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const other: Lang = lang === 'zh' ? 'en' : 'zh';
+const tag = other === 'zh' ? 'zh-CN' : 'en';
+---
+<a class="lang" href={localizePath(path, other)} hreflang={tag} lang={tag}>{SITE.nav.otherLang[lang]}</a>
+<style>
+  .lang { display: inline-block; padding: 6px 12px; border: 1.5px solid currentColor; font: 700 13px/1 var(--font-cjk-bold); letter-spacing: 0.06em; text-decoration: none; white-space: nowrap; }
+  .lang:hover { background: var(--ink); color: var(--paper); }
+</style>

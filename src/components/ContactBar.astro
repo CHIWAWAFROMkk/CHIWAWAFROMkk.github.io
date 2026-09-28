@@ -1,0 +1,23 @@
+---
+import { SITE } from '../data/site';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang; variant?: 'bar' | 'red' }
+const { lang, variant = 'bar' } = Astro.props;
+---
+<section class:list={['contact', `contact--${variant}`]} aria-label={SITE.contact.heading[lang]}>
+  <div class="wrap contact__in">
+    {variant === 'red' && <p class="contact__h">{SITE.contact.heading[lang]}</p>}
+    <a class="contact__mail" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    <a class="contact__cv" href={SITE.resume[lang]} download>{SITE.nav.resume[lang]} <span aria-hidden="true">↓</span></a>
+  </div>
+</section>
+<style>
+  .contact__in { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 24px; }
+  .contact--bar .contact__in { padding-block: 18px; font-size: 15px; }
+  .contact--red { background: var(--red); color: var(--ink); }
+  .contact--red .contact__in { padding-block: clamp(40px, 7vw, 88px); }
+  .contact__h { width: 100%; font: 900 clamp(48px, 9vw, 128px)/0.9 var(--font-cjk-bold); letter-spacing: -0.04em; }
+  .contact a { font-weight: 700; text-underline-offset: 5px; text-decoration-thickness: 1.5px; }
+  .contact--red a { font-size: clamp(17px, 1.6vw, 22px); }
+  .contact--red :focus-visible { outline-color: var(--ink); }
+</style>
