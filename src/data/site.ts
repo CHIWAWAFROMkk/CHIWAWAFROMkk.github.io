@@ -120,6 +120,19 @@ export const SITE = {
       title: { zh: '页面不存在', en: 'Page not found' },
       body: { zh: '这个页面不存在，或者还在制作中。', en: 'This page does not exist, or is still being built.' },
     },
+    campus: {
+      title: { zh: '校园外卖 SQL 工作台', en: 'Campus Delivery SQL Lab' },
+      lead: { zh: '一笔订单背后，是一组相互约束的记录。', en: 'Behind every order is a set of records that keep each other honest.' },
+      description: { zh: '校园外卖课程设计：8 张业务表、事务与复合外键，在浏览器里直接运行 SQL、下单和退款。', en: 'Campus delivery course project: 8 business tables, transactions and composite keys — run SQL, place orders and refunds in the browser.' },
+      tags: [ { zh: '课程设计', en: 'Course project' }, { zh: 'SQLite · sql.js · Web Worker', en: 'SQLite · sql.js · Web Worker' } ],
+      summary: {
+        task: { zh: '用一个校园外卖场景，把下单、库存、支付、配送和退款设计成相互约束、可以查询的关系数据库，再用 SQL 做经营分析。', en: 'Model campus food delivery — ordering, stock, payment, delivery and refunds — as a relational database whose records constrain each other, then analyse it with SQL.' },
+        mine: { zh: '独立完成：8 张业务表的建模、约束与触发器、下单与退款事务、业务查询和经营分析结论，并把数据库放进浏览器做成可操作的工作台。', en: 'On my own: modelled the 8 business tables, constraints and triggers, the order and refund transactions, the business queries and findings, and put the database in the browser as a working lab.' },
+        tools: { zh: 'SQLite；sql.js（WebAssembly）让它在浏览器里运行，查询放在 Web Worker 里执行并有超时保护。', en: 'SQLite; sql.js (WebAssembly) runs it in the browser, with queries in a Web Worker behind a timeout.' },
+        evidence: { zh: '本页的 SQL 工作台（可运行查询、下单、退款）、建表与数据 SQL、完整源码包。', en: 'The SQL lab on this page (run queries, place and refund orders), the schema and data SQL, and the full source package.' },
+        status: { zh: '课程设计，已完成；演示数据为合成数据。', en: 'Course project, finished; the demo data is synthetic.' },
+      },
+    },
     hris: {
       description: { zh: '员工电子档案补录：先确定员工再找档案，AI 只给候选，人工审核后写回。含虚构数据的审核流程演示。', en: 'HR records backfill: find the employee first, then the document; AI only proposes, a person approves the write-back. Includes a demo on fictional data.' },
       title: { zh: '员工电子档案补录', en: 'HR Records Backfill' },

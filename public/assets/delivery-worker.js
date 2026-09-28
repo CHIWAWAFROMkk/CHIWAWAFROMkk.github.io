@@ -1,4 +1,6 @@
 importScripts('/assets/vendor/sql-wasm.js');
+// sql.js also rejects an internal promise when the wasm fails to load; the failure is already reported via postMessage below.
+addEventListener('unhandledrejection',e=>e.preventDefault());
 let db,SQL,core;
 onmessage=async({data:m})=>{
  try{

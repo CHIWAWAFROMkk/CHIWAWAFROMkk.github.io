@@ -1,0 +1,190 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const TEXT = {
+  zh: {
+    wbTitle: '查询真实执行，结果直接查看。', wbMeta: '2024.04 · 合成业务数据',
+    preset: '业务问题', editor: 'SQL 编辑器',
+    hint: 'SQL 在独立沙盒中执行；自定义修改不写回订单演示。最多显示 500 行，运行超过 3 秒自动停止。',
+    run: '运行 SQL', stop: '停止', results: '查询结果', export: '导出 CSV', scrollHint: '查询结果，可横向滚动',
+    anTitle: '从数字读出经营状态。', anMeta: '基于 96 笔合成订单 · 2024.04 · 静态分析结论',
+    kpi: [['¥2,592', '总 GMV'], ['¥2,296', '净收入（扣退款）'], ['12.5%', '退款率 · 12/96 笔'], ['77', '已配送订单']],
+    c1: '商家净收入排名', c1note: '支付总额 − 退款总额 · 退款率 = 退款笔数 ÷ 总订单数', c1head: ['商家', '订单', 'GMV', '净收入', '退款率'], zeroTag: '零退款',
+    c2: '菜品 GMV Top 5', c2note: '排除退款单 · 按历史成交价格统计（非当前菜单价）', c2head: ['菜品', '商家', '销量', 'GMV'],
+    jump: '↑ 在工作台运行对应查询', tableHint: '表格，可横向滚动',
+    fTitle: '经营发现与建议',
+    findings: [
+      ['退款全部集中在午间下单（12:00），同学 03 退款 2 次，是唯一高风险用户。', '真实场景应对退款 ≥ 2 次的用户标记风控，触发人工核查，而非直接封号——误判会损失活跃用户。'],
+      ['校园茶点退款率为零，但客单价仅 ¥12.67，远低于其他三家（均值 ¥27.5+）。', '若配送固定成本 ≥ ¥3，低客单订单存在亏损风险；建议设置最低起送额或引入打包费。'],
+      ['土豆牛肉饭（¥22，最高单价）销量并列第一，GMV 领先第二名 ¥144。', '说明校园用户对"高价高分量"菜品接受度高，可作为主推单品提升整体客单价。'],
+    ],
+    fNote: '以上结论基于 96 笔合成数据，仅用于展示 SQL 查询与业务分析能力，不代表真实经营判断。点击各卡片的跳转按钮，可在上方工作台验证对应 SQL 的执行结果。',
+    flowTitle: '一笔订单，四处一致。', flowMeta: '订单 / 明细 / 支付 / 库存', flow: ['创建订单', '库存扣减与明细', '支付登记', '提交事务'],
+    form: '下单演示', student: '学生', dish: '菜品 · 单价 · 剩余库存', qty: '份数', place: '下单并登记支付', formNote: '仅操作当前页面的演示数据库，不产生真实交易。',
+    list: '订单流水', listIdle: '载入后可创建订单，或取消未送达订单。', reset: '重置演示数据', download: '下载当前数据库',
+    schema: '查看建表 SQL', dataNote: '',
+  },
+  en: {
+    wbTitle: 'Real queries, real results.', wbMeta: 'Apr 2024 · synthetic business data',
+    preset: 'Business question', editor: 'SQL editor',
+    hint: 'SQL runs in a separate sandbox; your edits never touch the order demo. Up to 500 rows are shown, and runs stop after 3 seconds.',
+    run: 'Run SQL', stop: 'Stop', results: 'Results', export: 'Export CSV', scrollHint: 'Query results, scrolls sideways',
+    anTitle: 'Reading the business from the numbers.', anMeta: 'Based on 96 synthetic orders · Apr 2024 · static findings',
+    kpi: [['¥2,592', 'Total GMV'], ['¥2,296', 'Net revenue (after refunds)'], ['12.5%', 'Refund rate · 12 of 96'], ['77', 'Delivered orders']],
+    c1: 'Net revenue by merchant', c1note: 'Payments − refunds · refund rate = refunded orders ÷ all orders', c1head: ['Merchant', 'Orders', 'GMV', 'Net', 'Refund rate'], zeroTag: 'no refunds',
+    c2: 'Dish GMV top 5', c2note: "Refunds excluded · priced at the time of sale, not today's menu", c2head: ['Dish', 'Merchant', 'Portions', 'GMV'],
+    jump: '↑ Run this query in the workbench', tableHint: 'Table, scrolls sideways',
+    fTitle: 'Findings',
+    findings: [
+      ['All refunds come from lunchtime orders (12:00); 同学 03 refunded twice and is the only high-risk user.', 'In practice, flag users with two or more refunds for a manual check rather than banning them — a false positive loses an active customer.'],
+      ['校园茶点 has no refunds, but its average order is only ¥12.67, far below the other three (¥27.5+ on average).', 'If the fixed delivery cost is ¥3 or more, small orders may lose money; consider a minimum order or a packaging fee.'],
+      ['土豆牛肉饭 (¥22, the highest price) ties for most portions sold and leads the runner-up by ¥144 in GMV.', 'Students accept "more expensive, more filling" dishes, which makes it a good lead item for raising the average order.'],
+    ],
+    fNote: 'These findings come from 96 synthetic orders and only demonstrate SQL analysis, not a real business judgement. Use the buttons on each card to check the matching SQL in the workbench above.',
+    flowTitle: 'One order, consistent in four places.', flowMeta: 'order · items · payment · stock', flow: ['Create order', 'Deduct stock & add items', 'Record payment', 'Commit'],
+    form: 'Place an order', student: 'Student', dish: 'Dish · price · stock left', qty: 'Portions', place: 'Place order & record payment', formNote: "Only touches this page's demo database — no real transactions.",
+    list: 'Order log', listIdle: 'Once loaded, place orders or cancel undelivered ones.', reset: 'Reset demo data', download: 'Download current database',
+    schema: 'View the schema SQL', dataNote: 'Demo data (merchants, dishes, students) is in Chinese.',
+  },
+};
+const L = TEXT[lang];
+const MERCHANTS = [['南门小厨', 24, '¥848', '¥784', '16.7%'], ['二食堂面馆', 24, '¥752', '¥640', '16.7%'], ['轻食窗口', 24, '¥688', '¥568', '16.7%'], ['校园茶点', 24, '¥304', '¥304', '0%']];
+const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面', '二食堂面馆', 24, '¥384'], ['杂粮饭盒', '轻食窗口', 16, '¥288'], ['番茄鸡蛋饭', '南门小厨', 16, '¥192'], ['鸡蛋饼', '校园茶点', 24, '¥192']];
+---
+<div class="campus" data-campus data-demo data-lang={lang}>
+  <section class="wrap wb" id="workbench" aria-labelledby="wb-title">
+    <div class="section-head"><h2 id="wb-title">{L.wbTitle}</h2><span class="meta">{L.wbMeta}</span></div>
+    <div class="wb__grid">
+      <div class="wb__input">
+        <label for="query-preset">{L.preset}</label>
+        <select id="query-preset"></select>
+        <p id="query-note" class="meta"></p>
+        <label for="sql-input">{L.editor}</label>
+        <textarea id="sql-input" spellcheck="false" aria-describedby="sql-hint"></textarea>
+        <p id="sql-hint" class="meta">{L.hint}</p>
+        <div class="actions"><button id="run-query" type="button" disabled>{L.run}</button><button id="cancel-query" type="button" class="secondary" disabled>{L.stop}</button></div>
+      </div>
+      <div class="wb__output">
+        <div class="wb__out-head"><h3>{L.results}</h3><button id="export-csv" type="button" class="secondary" disabled>{L.export}</button></div>
+        <p id="sql-status" role="status" aria-live="polite"></p>
+        <div id="sql-results" class="table-wrap" tabindex="0" aria-label={L.scrollHint}></div>
+      </div>
+    </div>
+    <details class="schema"><summary>{L.schema}</summary><pre id="schema-source"></pre></details>
+  </section>
+
+  <section class="wrap an" aria-labelledby="an-title">
+    <div class="section-head"><h2 id="an-title">{L.anTitle}</h2><span class="meta">{L.anMeta}</span></div>
+    {L.dataNote && <p class="meta an__note">{L.dataNote}</p>}
+    <div class="an__kpi">{L.kpi.map(([v, k], i) => <div class:list={['kpi', { 'kpi--warn': i === 2 }]}><span class="kpi__v">{v}</span><span class="kpi__k">{k}</span></div>)}</div>
+    <div class="an__cards">
+      <div class="card">
+        <h3>{L.c1}</h3><p class="meta">{L.c1note}</p>
+        <div class="table-wrap" tabindex="0" aria-label={L.tableHint}><table>
+          <thead><tr>{L.c1head.map(h => <th scope="col">{h}</th>)}</tr></thead>
+          <tbody>{MERCHANTS.map(r => <tr>{r.map((c, i) => <td>{c}{i === 0 && r[4] === '0%' && <span class="tag">{L.zeroTag}</span>}</td>)}</tr>)}</tbody>
+        </table></div>
+        <button type="button" class="jump" data-jump="6">{L.jump}</button>
+      </div>
+      <div class="card">
+        <h3>{L.c2}</h3><p class="meta">{L.c2note}</p>
+        <div class="table-wrap" tabindex="0" aria-label={L.tableHint}><table>
+          <thead><tr>{L.c2head.map(h => <th scope="col">{h}</th>)}</tr></thead>
+          <tbody>{DISHES.map(r => <tr>{r.map(c => <td>{c}</td>)}</tr>)}</tbody>
+        </table></div>
+        <button type="button" class="jump" data-jump="7">{L.jump}</button>
+      </div>
+    </div>
+    <div class="an__findings">
+      <h3>{L.fTitle}</h3>
+      <ul>{L.findings.map(([a, b]) => <li><strong>{a}</strong>{lang === 'en' ? ' ' : ''}{b}</li>)}</ul>
+      <p class="meta">{L.fNote}</p>
+    </div>
+  </section>
+
+  <section class="wrap flow" aria-labelledby="flow-title">
+    <div class="section-head"><h2 id="flow-title">{L.flowTitle}</h2><span class="meta">{L.flowMeta}</span></div>
+    <ol class="flow__steps">{L.flow.map(s => <li>{s}</li>)}</ol>
+    <div class="flow__grid">
+      <form class="card" id="order-form">
+        <h3>{L.form}</h3>
+        <label for="student">{L.student}</label><select id="student"></select>
+        <label for="dish">{L.dish}</label><select id="dish"></select>
+        <label for="quantity">{L.qty}</label><input id="quantity" type="number" min="1" max="20" step="1" value="1" required />
+        <p id="order-total"></p>
+        <button id="place-order" disabled>{L.place}</button>
+        <p class="meta">{L.formNote}</p>
+      </form>
+      <div class="card">
+        <h3>{L.list}</h3>
+        <p id="order-status" role="status" aria-live="polite">{L.listIdle}</p>
+        <div id="order-list"></div>
+      </div>
+    </div>
+    <div class="actions"><button id="reset-db" type="button" class="secondary" disabled>{L.reset}</button><button id="download-db" type="button" class="secondary" disabled>{L.download}</button></div>
+  </section>
+</div>
+<script>
+  import { initDelivery } from '../scripts/delivery-ui';
+  document.querySelectorAll<HTMLElement>('[data-campus]').forEach(initDelivery);
+</script>
+<style>
+  /* Block, not grid: auto inline margins on .wrap would shrink grid items to their content width. */
+  .campus { padding-bottom: 24px; }
+  .campus section { padding-bottom: 40px; }
+  .meta { color: var(--mute); font-size: 14px; }
+  label { display: block; margin: 14px 0 6px; font-weight: 500; font-size: 14px; }
+  select, textarea, input { width: 100%; padding: 9px 10px; border: 1.5px solid var(--ink); background: #fff; font: inherit; font-size: 15px; color: var(--ink); border-radius: 0; }
+  textarea { min-height: 220px; font: 13px/1.55 Consolas, 'Cascadia Mono', monospace; resize: vertical; }
+  button { padding: 9px 16px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 700; cursor: pointer; border-radius: 0; }
+  button.secondary, .jump { background: transparent; color: var(--ink); }
+  button:hover:not(:disabled) { background: var(--red-text); border-color: var(--red-text); color: #fff; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .wb__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 32px; margin-top: 20px; }
+  .wb__out-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 14px; }
+  #sql-status { margin: 10px 0; font-size: 14px; }
+  #sql-status[data-error='true'] { color: var(--red-text); font-weight: 500; }
+  .table-wrap { overflow-x: auto; max-width: 100%; }
+  .table-wrap:focus-visible { outline-offset: 2px; }
+  #sql-results { max-height: 420px; overflow: auto; border-top: var(--rule); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 8px 10px; border-bottom: var(--hair); text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  th { font-weight: 500; border-bottom: var(--rule); }
+  .schema { margin-top: 20px; }
+  .schema summary { cursor: pointer; font-weight: 500; }
+  .schema pre { max-height: 360px; overflow: auto; padding: 14px; background: #fff; border: var(--hair); font: 12px/1.5 Consolas, monospace; }
+  .an__note { margin-top: 10px; }
+  .an__kpi { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: var(--rule); }
+  .kpi { display: grid; gap: 6px; padding: 22px 16px 18px 0; }
+  .kpi + .kpi { padding-left: 16px; border-left: var(--hair); }
+  .kpi__v { font: 700 clamp(32px, 4vw, 56px)/0.9 var(--font-display); }
+  .kpi--warn .kpi__v { color: var(--red); }
+  .kpi__k { font-size: 14px; color: var(--mute); }
+  .an__cards { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 28px; }
+  .card { display: grid; gap: 8px; align-content: start; }
+  .card h3 { font-size: 20px; }
+  .tag { margin-left: 8px; padding: 1px 6px; background: var(--ink); color: var(--paper); font-size: 11px; }
+  .jump { justify-self: start; margin-top: 6px; }
+  .an__findings { margin-top: 32px; padding-top: 20px; border-top: var(--rule); display: grid; gap: 12px; }
+  .an__findings ul { display: grid; gap: 10px; padding-left: 20px; max-width: 58em; }
+  .an__findings strong { font-weight: 500; }
+  .flow__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 20px 0; padding: 0; list-style: none; counter-reset: s; }
+  .flow__steps li { padding: 12px 10px; border-top: 4px solid var(--ink); font-weight: 500; font-size: 14px; counter-increment: s; }
+  .flow__steps li::before { content: '0' counter(s) ' '; font: 700 13px var(--font-display); color: var(--red-text); }
+  .flow__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  #order-list { display: grid; gap: 0; }
+  #order-list :global(.order-row) { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: var(--hair); }
+  #order-list :global(.order-row p) { display: grid; }
+  #order-list :global(small) { color: var(--mute); font-size: 13px; }
+  #order-list :global(.status-refunded) { color: var(--red-text); }
+  #order-list :global(button) { padding: 6px 10px; font-size: 13px; background: transparent; color: var(--ink); }
+  @media (max-width: 900px) {
+    .wb__grid, .an__cards, .flow__grid { grid-template-columns: minmax(0, 1fr); }
+    .an__kpi { grid-template-columns: 1fr 1fr; }
+    .kpi:nth-child(3) { padding-left: 0; border-left: 0; }
+    .flow__steps { grid-template-columns: 1fr 1fr; }
+  }
+</style>

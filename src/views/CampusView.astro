@@ -1,0 +1,16 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import CampusDemo from '../components/CampusDemo.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/campus-delivery.zh.md';
+import { Content as BodyEn } from '../copy/projects/campus-delivery.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.campus;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout lang={lang} slug="campus-delivery" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <CampusDemo slot="demo" lang={lang} />
+  <Body />
+</ProjectLayout>
