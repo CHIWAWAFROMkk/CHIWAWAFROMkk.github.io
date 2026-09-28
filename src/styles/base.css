@@ -37,6 +37,25 @@ button { font: inherit; color: inherit; }
 html.intro-lock { overflow: hidden; }
 [data-rise] { transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
 .rise-ready [data-rise]:not(.is-in) { opacity: 0; transform: translateY(24px); }
+/* Long-form Markdown body, shared by project pages and the method page. */
+.prose { max-width: 1600px; padding-block: 24px 64px; }
+.prose h2 { margin: 56px 0 16px; padding-bottom: 12px; border-bottom: var(--rule); font-size: clamp(24px, 2.6vw, 36px); }
+.prose h3 { margin: 28px 0 8px; font-size: 19px; }
+.prose p, .prose ul, .prose ol { max-width: 46em; margin-bottom: 14px; }
+.prose li { margin-bottom: 8px; }
+.prose strong { font-weight: 500; }
+.prose img { margin: 8px 0 20px; width: 100%; max-width: 900px; height: auto; }
+.prose code { font: 0.92em Consolas, 'Cascadia Mono', monospace; padding: 1px 5px; background: #fff; border: var(--hair); }
+.prose pre { max-width: 46em; overflow-x: auto; margin: 0 0 14px; padding: 14px 16px; background: var(--ink); color: var(--paper); }
+.prose pre code { padding: 0; background: none; border: 0; color: inherit; }
+.prose table { width: 100%; max-width: 72em; margin: 20px 0; border-collapse: collapse; table-layout: fixed; font-size: 15px; }
+.prose th, .prose td { padding: 10px 14px; border-bottom: var(--hair); text-align: left; vertical-align: top; }
+.prose th { border-bottom: var(--rule); font-weight: 500; }
+@media (max-width: 640px) {
+  .prose table { font-size: 13px; }
+  .prose th, .prose td { padding: 8px 6px; }
+}
+
 /* Cross-page crossfade (browsers without support simply cut); the door expand hands over to it. */
 @view-transition { navigation: auto; }
 @media (prefers-reduced-motion: reduce) {

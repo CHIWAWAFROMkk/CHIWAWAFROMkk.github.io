@@ -146,6 +146,11 @@ export const SITE = {
         status: { zh: '原型，使用构造样本；真实行情回测项目正在重做，完成后替换本页。', en: 'Prototype on a synthetic sample; the real market backtest is being rebuilt and will replace this page.' },
       },
     },
+    method: {
+      title: { zh: '过程与运行 · CSV 数据分析工具', en: 'Method & results · CSV Analysis Tool' },
+      heading: { zh: '一份分析，应该留下一条可复算的路径。', en: 'An analysis should leave a path you can recompute.' },
+      description: { zh: 'CSV 数据分析工具的处理规则、构造样本的可核对结果和本地运行方法。', en: 'Handling rules of the CSV Analysis Tool, hand-checkable results on the synthetic sample, and how to run it locally.' },
+    },
     hris: {
       description: { zh: '员工电子档案补录：先确定员工再找档案，AI 只给候选，人工审核后写回。含虚构数据的审核流程演示。', en: 'HR records backfill: find the employee first, then the document; AI only proposes, a person approves the write-back. Includes a demo on fictional data.' },
       title: { zh: '员工电子档案补录', en: 'HR Records Backfill' },

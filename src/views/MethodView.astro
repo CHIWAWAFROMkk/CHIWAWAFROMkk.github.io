@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/stock-data-method.zh.md';
+import { Content as BodyEn } from '../copy/projects/stock-data-method.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.method;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<Base lang={lang} path="/projects/stock-data/method/" title={P.title[lang]} description={P.description[lang]}>
+  <main id="main">
+    <header class="m-head wrap"><h1>{P.heading[lang]}</h1></header>
+    <article class="prose wrap"><Body /></article>
+  </main>
+</Base>
+<style>
+  .m-head { padding-block: clamp(32px, 6vh, 72px) 28px; border-bottom: var(--rule); }
+  .m-head h1 { font-size: clamp(34px, 5vw, 72px); line-height: 1.05; letter-spacing: -0.03em; max-width: 18em; }
+</style>
