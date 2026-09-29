@@ -2,6 +2,12 @@ import { slots, reelRows } from './odometer';
 
 /** Spins el's text in as a mechanical counter. The reels draw their digits with CSS generated content, so el.textContent
  *  is the final text the whole time; when the reels stop, they are replaced by that plain text. A newer spin cancels an older one. */
+/** Writes text straight away and cancels any spin still running, so an older spin can never land on top of it. */
+export function setOdometerText(el: HTMLElement, text: string): void {
+  el.dataset.odoRun = String(Number(el.dataset.odoRun ?? '0') + 1);
+  el.textContent = text;
+}
+
 export function spinOdometer(el: HTMLElement, final: string, delay = 0, from?: string): void {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = final; return; }
   const run = String(Number(el.dataset.odoRun ?? '0') + 1);
@@ -17,7 +23,7 @@ export function spinOdometer(el: HTMLElement, final: string, delay = 0, from?: s
       anims.push(g.animate([{ opacity: 0, transform: 'translateY(0.3em)' }, { opacity: 1, transform: 'none' }], { duration: 400, delay: delay + 250, fill: 'both', easing: 'cubic-bezier(.2,.8,.2,1)' }));
       continue;
     }
-    const reel = document.createElement('span'); reel.className = 'odo__reel';
+    const reel = document.createElement('span'); reel.className = 'odo__reel'; reel.dataset.d = String(s.digit);
     const strip = document.createElement('span'); strip.className = 'odo__strip';
     reel.append(strip); reels.append(reel);
     const rows = reelRows(fromDigits[d] ?? null, s.digit);

@@ -1,6 +1,6 @@
 import { galaxy, textFromPixels, terrain, bars, type Cloud } from './shapes';
 import { cam, stateFromScroll } from './camera';
-import { particleBudget, decideQuality } from './quality';
+import { particleBudget, decideQuality, probeStep, PROBE_START } from './quality';
 import { POINT_VS, POINT_FS, QUAD_VS, BRIGHT_FS, BLUR_FS, COMP_FS } from './shaders';
 import type { Rows } from '../morph';
 
@@ -21,8 +21,22 @@ export function startPrologue(root: HTMLElement, data: PrologueData): void {
   later(() => { build(root, canvas, ctx, data).catch(err => { console.error(err); toStatic(root, ctx); }); });
 }
 
+/** Changes the prologue's height while keeping what follows it where the reader sees it (browsers without scroll anchoring would jump). */
+function keepAnchor(root: HTMLElement, change: () => void): void {
+  const next = root.nextElementSibling as HTMLElement | null;
+  const box = root.getBoundingClientRect();
+  const inside = box.top < 0 && box.bottom > 0;
+  const before = next?.getBoundingClientRect().top ?? 0;
+  change();
+  if (!next) return;
+  // Inside the film when it collapses: go back to the opening rather than land past the page header.
+  if (inside && root.dataset.state === 'static') { window.scrollTo(0, root.offsetTop); return; }
+  const diff = next.getBoundingClientRect().top - before;
+  if (Math.abs(diff) > 1) window.scrollBy(0, diff);
+}
+
 function toStatic(root: HTMLElement, gl: WebGL2RenderingContext): void {
-  root.dataset.state = 'static';
+  keepAnchor(root, () => { root.dataset.state = 'static'; });
   root.dispatchEvent(new CustomEvent('prologue:static'));
   if (!gl.isContextLost()) gl.getExtension('WEBGL_lose_context')?.loseContext();
 }
@@ -54,7 +68,7 @@ function program(gl: WebGL2RenderingContext, vs: string, fs: string): Prog {
 
 async function build(root: HTMLElement, canvas: HTMLCanvasElement, gl: WebGL2RenderingContext, data: PrologueData): Promise<void> {
   await Promise.race([document.fonts.load('700 400px Barlow'), new Promise(r => setTimeout(r, 1500))]);
-  root.dataset.state = 'live'; // lays out the sticky stage so the canvas has a size
+  keepAnchor(root, () => { root.dataset.state = 'live'; }); // lays out the sticky stage so the canvas has a size
   const N = particleBudget(innerWidth, matchMedia('(pointer: coarse)').matches);
   const lite = N < 200000;
   root.dataset.particles = String(N);
@@ -117,21 +131,23 @@ async function build(root: HTMLElement, canvas: HTMLCanvasElement, gl: WebGL2Ren
   const onScroll = () => { const r = root.getBoundingClientRect(); target = stateFromScroll(r.top, r.height, innerHeight); };
   addEventListener('scroll', onScroll, { passive: true }); onScroll(); state = target;
   const toNdc = (e: PointerEvent): [number, number] => { const r = canvas.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1)]; };
-  canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, yaw: dragYaw, pitch: dragPitch, moved: false }; canvas.setPointerCapture(e.pointerId); });
+  // Touch is for scrolling the page: a touch never rotates the camera, only a tap blasts.
+  canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, yaw: dragYaw, pitch: dragPitch, moved: false }; if (e.pointerType !== 'touch') canvas.setPointerCapture(e.pointerId); });
   canvas.addEventListener('pointermove', e => {
     mouse = toNdc(e);
     if (drag) {
-      if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) > 4) { drag.moved = true; canvas.classList.add('drag'); mouseOnTarget = 0; }
-      if (drag.moved) { dragYaw = drag.yaw + (e.clientX - drag.x) * 0.006; dragPitch = Math.max(-0.5, Math.min(0.7, drag.pitch + (e.clientY - drag.y) * 0.004)); }
+      if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) > 4) { drag.moved = true; if (e.pointerType !== 'touch') { canvas.classList.add('drag'); mouseOnTarget = 0; } }
+      if (drag.moved && e.pointerType !== 'touch') { dragYaw = drag.yaw + (e.clientX - drag.x) * 0.006; dragPitch = Math.max(-0.5, Math.min(0.7, drag.pitch + (e.clientY - drag.y) * 0.004)); }
     } else mouseOnTarget = 1;
   });
   canvas.addEventListener('pointerup', e => { if (drag && !drag.moved) { boom = toNdc(e); boomStart = performance.now() / 1000; } drag = null; canvas.classList.remove('drag'); });
+  canvas.addEventListener('pointercancel', () => { drag = null; canvas.classList.remove('drag'); });
   canvas.addEventListener('pointerleave', () => (mouseOnTarget = 0));
 
   const caps = [...root.querySelectorAll<HTMLElement>('[data-cap]')];
   const fpsEl = root.querySelector<HTMLElement>('[data-hud-fps]')!;
   let drawCount = N, b1Gain = lite ? 0 : 0.5, stopped = false, visible = true, raf = 0;
-  let probe = 0, probeStart = 0, frames = 0, last = performance.now();
+  let probe = PROBE_START, prevMs = 0, frames = 0, last = performance.now();
   const stop = () => { stopped = true; cancelAnimationFrame(raf); };
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); toStatic(root, gl); });
   new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible && !stopped && !raf) raf = requestAnimationFrame(frame); }).observe(root);
@@ -174,17 +190,18 @@ async function build(root: HTMLElement, canvas: HTMLCanvasElement, gl: WebGL2Ren
     caps.forEach((el, k) => { const v = Math.max(0, 1 - Math.abs(state - k) * 2.2); el.style.opacity = String(v); el.style.transform = `translateY(${(1 - v) * 16}px)`; });
     root.dataset.chapter = String(near);
 
-    // Probe the frame rate once (frames 10–100 while visible), then step down if the device struggles.
-    if (probe < 100) {
-      probe++;
-      if (probe === 10) probeStart = nowMs;
-      if (probe === 100) {
-        const q = decideQuality(90000 / Math.max(1, nowMs - probeStart));
+    // Probe the frame rate once (gaps from offscreen or hidden tabs don't count), then step down if the device struggles.
+    if (!probe.done) {
+      const step = probeStep(probe, prevMs ? nowMs - prevMs : 0);
+      probe = step.next;
+      if (step.fps !== null) {
+        const q = decideQuality(step.fps);
         root.dataset.quality = q;
         if (q === 'static') { stop(); toStatic(root, gl); return; }
         if (q === 'reduced') { drawCount = N >> 1; b1Gain = 0; }
       }
     }
+    prevMs = nowMs;
     frames++;
     if (nowMs - last > 500) { fpsEl.textContent = String(Math.round(frames * 1000 / (nowMs - last))); frames = 0; last = nowMs; }
     raf = requestAnimationFrame(frame);

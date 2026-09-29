@@ -1,7 +1,7 @@
 import { QUERIES, params } from './insights-queries.mjs';
 import { heatmap, pareto, paretoCurve, delivery, waffle, interpolate, type Layout, type Mark, type Key, type Rows } from './morph';
 import { paint } from './morph-dom';
-import { spinOdometer } from './odometer-dom';
+import { spinOdometer, setOdometerText } from './odometer-dom';
 import { merchantLegend, reasonLegend } from './insights-names';
 import { COCKPIT_TEXT, KPI_IDS, kpiText, type KpiId } from './cockpit-text';
 import type { Results } from './insights-facts';
@@ -108,7 +108,7 @@ export function initCockpit(root: HTMLElement, initial: Results): void {
     const was = kpiShown.get(k) ?? null;
     kpiShown.set(k, v);
     const text = kpiText(k, v, lang);
-    if (reduced || v === null || was === null || was === v) { el.textContent = text; return; }
+    if (reduced || v === null || was === null || was === v) { setOdometerText(el, text); return; }
     spinOdometer(el, text, 0, kpiText(k, was, lang));
   }
 

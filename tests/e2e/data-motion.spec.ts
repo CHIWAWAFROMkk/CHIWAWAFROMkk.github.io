@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { skipIntro } from './helpers';
+import { skipIntro, noHorizontalOverflow } from './helpers';
 
 test.describe('odometer', () => {
   test('the overview number spins and ends as plain text', async ({ page }) => {
@@ -80,4 +80,50 @@ test.describe('impact on the SQL page', () => {
     await expect(page.locator('.kpi__k.is-hit')).toHaveCount(0);
     await expect(page.locator('.an__cards .scanline')).toHaveCount(0);
   });
+});
+
+test('an older spin never overwrites a newer value', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.goto('/projects/campus-delivery/insights/');
+  await page.locator('[data-cockpit]').scrollIntoViewIfNeeded();
+  await expect(page.locator('#ck-from')).toBeEnabled({ timeout: 25000 });
+  await page.locator('#ck-from').fill('16');
+  await page.locator('input[name="merchant"][value="8"]').check();
+  await page.waitForTimeout(400);
+  await page.locator('input[name="area"][value="东区"]').check();
+  const aov = page.locator('[data-kpi="aov"]');
+  await expect(aov).toHaveText('—');
+  await page.waitForTimeout(2000);
+  expect(await aov.textContent()).toBe('—');
+});
+
+test('the reels keep the width of the final text (no sideways jump, spaces kept)', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await skipIntro(page);
+  await page.goto('/brief/');
+  const num = page.locator('.evidence .num[data-fact="F6"]');
+  await expect(num.locator('.odo')).toHaveCount(1, { timeout: 3000 });
+  const during = await num.evaluate(el => el.getBoundingClientRect().width);
+  await expect(num).toHaveAttribute('data-spun', '', { timeout: 5000 });
+  const after = await num.evaluate(el => el.getBoundingClientRect().width);
+  expect(Math.abs(during - after)).toBeLessThanOrEqual(1);
+  await page.goto('/projects/campus-delivery/insights/');
+  await page.locator('[data-cockpit]').scrollIntoViewIfNeeded();
+  await expect(page.locator('#ck-from')).toBeEnabled({ timeout: 25000 });
+  await page.locator('#ck-from').fill('5');
+  const min = page.locator('[data-kpi="minutes"]');
+  await expect(min.locator('.odo')).toHaveCount(1, { timeout: 3000 });
+  const w1 = await min.evaluate(el => (el.querySelector('.odo') as HTMLElement).getBoundingClientRect().width);
+  await expect(min).toHaveAttribute('data-spun', '', { timeout: 5000 });
+  const w2 = await min.evaluate(el => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect().width; });
+  expect(Math.abs(w1 - w2)).toBeLessThanOrEqual(1);
+});
+
+test('the slam never widens the page', async ({ page }) => {
+  await page.goto('/projects/campus-delivery/');
+  await page.locator('.an__kpi').scrollIntoViewIfNeeded();
+  for (let i = 0; i < 20; i++) {
+    expect(await noHorizontalOverflow(page), `at ${i * 100} ms`).toBe(true);
+    await page.waitForTimeout(100);
+  }
 });

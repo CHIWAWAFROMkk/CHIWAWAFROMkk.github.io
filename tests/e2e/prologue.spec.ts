@@ -90,3 +90,34 @@ test.describe('with WebGL2', () => {
     expect(errors).toEqual([]);
   });
 });
+
+test('falling back mid-film keeps the reader at the opening, not past the header', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await page.goto(PATH);
+  test.skip(!(await hasWebGL2(page)), 'no WebGL2 in this browser');
+  const pro = page.locator('[data-prologue]');
+  await expect(pro).toHaveAttribute('data-state', 'live', { timeout: 10000 });
+  await pro.evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + scrollY + (el.offsetHeight - innerHeight) * 0.4));
+  await page.waitForTimeout(300);
+  await pro.locator('canvas').evaluate(c => (c as HTMLCanvasElement).getContext('webgl2')!.getExtension('WEBGL_lose_context')!.loseContext());
+  await expect(pro).toHaveAttribute('data-state', 'static');
+  expect(await page.locator('h1').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(-1);
+});
+
+test('a touch swipe on the film never leaves it in drag mode', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'touch');
+  await page.goto(PATH);
+  test.skip(!(await hasWebGL2(page)), 'no WebGL2 in this browser');
+  const canvas = page.locator('[data-prologue] canvas');
+  await expect(canvas).toHaveAttribute('data-ready', '', { timeout: 10000 });
+  await canvas.evaluate(c => {
+    const at = (type: string, y: number) => c.dispatchEvent(new PointerEvent(type, { pointerType: 'touch', pointerId: 7, clientX: 150, clientY: y, bubbles: true }));
+    at('pointerdown', 500); at('pointermove', 420); at('pointermove', 300); at('pointercancel', 300);
+  });
+  await expect(canvas).not.toHaveClass(/drag/);
+});
+
+test('pinch-zoom stays available over the film', async ({ page }) => {
+  await page.goto(PATH);
+  expect(await page.locator('[data-prologue] canvas').evaluate(c => getComputedStyle(c).touchAction)).toContain('pinch-zoom');
+});

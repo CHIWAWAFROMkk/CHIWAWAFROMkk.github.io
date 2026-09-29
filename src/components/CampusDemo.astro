@@ -184,6 +184,8 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
   .kpi__k.is-hit::before { animation: kpi-wipe 0.45s var(--ease) forwards; }
   @keyframes kpi-wipe { to { transform: scaleX(1); } }
   .an__kpi.is-armed .kpi__v { opacity: 0; }
+  /* The slam starts at 3x size; keep it from widening the page. */
+  .an { overflow-x: clip; }
   .table-wrap { position: relative; }
   .table-wrap :global(.scanline) { position: absolute; left: 0; right: 0; top: 0; height: 40px; margin-top: -40px; pointer-events: none; background: linear-gradient(to bottom, transparent, rgb(232 56 13 / 0.14)); border-bottom: 2px solid var(--red); }
   .table-wrap :global(tr.is-top td) { animation: top-flash 1.2s var(--ease); }

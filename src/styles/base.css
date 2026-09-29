@@ -42,11 +42,13 @@ html.intro-lock { overflow: hidden; }
 .reveal:not(.is-in) { opacity: 0; transform: translateY(18px); }
 /* Odometer (odometer-dom.ts): reels draw their digits with generated content, so the element's text stays the final value. */
 /* The reels are 1em tall; the box keeps the text's own line height (1lh) so the page never shifts while they spin. */
-.odo { display: inline-flex; align-items: center; height: 1lh; vertical-align: top; font-variant-numeric: tabular-nums; }
-.odo__reel { display: inline-block; height: 1em; overflow: hidden; line-height: 1; }
-.odo__strip { display: block; white-space: pre; line-height: 1; }
+/* Each reel takes the width of its final digit (hidden ::before), so the text does not shift when the reels give way to it. */
+.odo { display: inline-flex; align-items: center; height: 1lh; vertical-align: top; }
+.odo__reel { position: relative; display: inline-block; height: 1em; overflow: hidden; line-height: 1; }
+.odo__reel::before { content: attr(data-d); visibility: hidden; }
+.odo__strip { position: absolute; left: 0; right: 0; top: 0; display: block; white-space: pre; line-height: 1; text-align: center; }
 .odo__strip::before { content: '0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9'; }
-.odo__g { line-height: 1; }
+.odo__g { line-height: 1; white-space: pre; }
 .odo__g::before { content: attr(data-ch); }
 /* Long-form Markdown body, shared by project pages and the method page. */
 .prose { max-width: 1600px; padding-block: 24px 64px; }

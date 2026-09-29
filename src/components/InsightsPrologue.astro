@@ -51,7 +51,7 @@ const P = C.prologue;
   .prologue[data-state='live'] .prologue__static { display: none; }
   .prologue[data-state='live'] .prologue__stick { display: block; position: sticky; top: 0; height: 100vh; overflow: hidden; }
   .prologue[data-state='live'] :focus-visible { outline-color: var(--night-fg); }
-  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.8s var(--ease); cursor: crosshair; touch-action: pan-y; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.8s var(--ease); cursor: crosshair; touch-action: pan-y pinch-zoom; }
   canvas[data-ready] { opacity: 1; }
   canvas.drag { cursor: grabbing; }
   .prologue__cap { position: absolute; left: 6vw; bottom: 12vh; max-width: 34em; opacity: 0; pointer-events: none; }

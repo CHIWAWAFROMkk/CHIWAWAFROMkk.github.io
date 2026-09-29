@@ -23,6 +23,16 @@ const scale = (c: RGB, k: number): RGB => [c[0] * k, c[1] * k, c[2] * k];
 const mixRGB = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 const cloud = (n: number): Cloud => ({ pos: new Float32Array(n * 3), col: new Float32Array(n * 3) });
 
+/** Shapes are filled cell by cell; shuffle the particle order so any leading slice (the reduced tier draws N/2) still shows every cell. */
+function shuffled(c: Cloud, rand: Rand): Cloud {
+  const n = c.pos.length / 3;
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    for (const a of [c.pos, c.col]) for (let k = 0; k < 3; k++) { const t = a[i * 3 + k]; a[i * 3 + k] = a[j * 3 + k]; a[j * 3 + k] = t; }
+  }
+  return c;
+}
+
 /** A three-armed spiral galaxy on the xz plane; the core is red, the arms warm white. */
 export function galaxy(n: number, rand: Rand): Cloud {
   const c = cloud(n);
@@ -67,7 +77,7 @@ export function terrain(n: number, heat: Rows, rand: Rand, sx: number): Cloud {
       c.col.set(mixRGB(DIM, RED, Math.min(1, a * 1.4) * (0.55 + 0.45 * f)), i * 3);
     }
   });
-  return c;
+  return shuffled(c, rand);
 }
 
 /** Share of particles per bar: proportional to net revenue, with a floor so the smallest bar stays visible. */
@@ -87,5 +97,5 @@ export function bars(n: number, nets: number[], rand: Rand, sx: number): Cloud {
       c.col.set(j < 3 ? RED : scale(LIGHT, 0.7), i * 3);
     }
   });
-  return c;
+  return shuffled(c, rand);
 }
