@@ -40,3 +40,33 @@ test.describe('odometer', () => {
     await expect(page.locator('[data-kpi="orders"]')).toHaveAttribute('data-spun', '');
   });
 });
+
+test.describe('impact on the SQL page', () => {
+  const read = (page: import('@playwright/test').Page) => page.evaluate(() => ({
+    kpis: [...document.querySelectorAll('.an__kpi .kpi__v')].map(e => e.textContent),
+    cells: [...document.querySelectorAll('.an__cards table td')].map(e => e.textContent),
+  }));
+
+  test('indicators slam in, tables decode, and every value ends as rendered', async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'run once');
+    await page.goto('/projects/campus-delivery/');
+    const before = await read(page);
+    await expect(page.locator('.an__kpi')).toHaveClass(/is-armed/);
+    await page.locator('.an__kpi').scrollIntoViewIfNeeded();
+    await expect(page.locator('.kpi__k.is-hit')).toHaveCount(4, { timeout: 4000 });
+    await page.locator('.an__cards').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(2500);
+    expect(await read(page)).toEqual(before);
+    await expect(page.locator('.an__cards .scanline')).toHaveCount(0);
+  });
+
+  test('reduced motion: no arming, no scan', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/projects/campus-delivery/');
+    await page.locator('.an__cards').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600);
+    await expect(page.locator('.an__kpi.is-armed')).toHaveCount(0);
+    await expect(page.locator('.kpi__k.is-hit')).toHaveCount(0);
+    await expect(page.locator('.an__cards .scanline')).toHaveCount(0);
+  });
+});

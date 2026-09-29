@@ -139,7 +139,9 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
 </div>
 <script>
   import { initDelivery } from '../scripts/delivery-ui';
+  import { armImpact } from '../scripts/impact-dom';
   document.querySelectorAll<HTMLElement>('[data-campus]').forEach(initDelivery);
+  document.querySelectorAll<HTMLElement>('[data-campus] .an').forEach(armImpact);
 </script>
 <style>
   /* Block, not grid: auto inline margins on .wrap would shrink grid items to their content width. */
@@ -176,7 +178,16 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
   .kpi + .kpi { padding-left: 16px; border-left: var(--hair); }
   .kpi__v { font: 700 clamp(32px, 4vw, 56px)/0.9 var(--font-display); }
   .kpi--warn .kpi__v { color: var(--red); }
-  .kpi__k { font-size: 14px; color: var(--mute); }
+  .kpi__k { position: relative; isolation: isolate; justify-self: start; padding: 1px 6px; margin-left: -6px; font-size: 14px; color: var(--mute); transition: color 0.2s var(--ease) 0.2s; }
+  .kpi__k::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+  .kpi__k.is-hit { color: var(--paper); }
+  .kpi__k.is-hit::before { animation: kpi-wipe 0.45s var(--ease) forwards; }
+  @keyframes kpi-wipe { to { transform: scaleX(1); } }
+  .an__kpi.is-armed .kpi__v { opacity: 0; }
+  .table-wrap { position: relative; }
+  .table-wrap :global(.scanline) { position: absolute; left: 0; right: 0; top: 0; height: 40px; margin-top: -40px; pointer-events: none; background: linear-gradient(to bottom, transparent, rgb(232 56 13 / 0.14)); border-bottom: 2px solid var(--red); }
+  .table-wrap :global(tr.is-top td) { animation: top-flash 1.2s var(--ease); }
+  @keyframes top-flash { 20% { background: rgb(232 56 13 / 0.22); } }
   .an__cards { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 28px; }
   .card { display: grid; gap: 8px; align-content: start; }
   .card h3 { font-size: 20px; }
