@@ -12,6 +12,21 @@ const f = fact(factId);
     {context && <p class="evidence__context">{fact(context).text[lang]}</p>}
   </div>
 </div>
+<script>
+  import { spinOdometer } from '../scripts/odometer-dom';
+  const nums = document.querySelectorAll<HTMLElement>('.evidence .num[data-fact]');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const el = e.target as HTMLElement;
+        spinOdometer(el, el.textContent ?? '', 200);
+      }
+    }, { threshold: 0.4 });
+    nums.forEach(n => io.observe(n));
+  }
+</script>
 <style>
   .evidence { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 12px clamp(20px, 3vw, 48px); padding-block: 28px; }
   .num { color: var(--red); }

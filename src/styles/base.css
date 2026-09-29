@@ -40,6 +40,13 @@ html.intro-lock { overflow: hidden; }
 /* Scripted reveal (motion-dom.ts): hidden only after a script adds .reveal, so content without JS stays visible. */
 .reveal { transition: opacity 0.6s var(--ease) var(--d, 0ms), transform 0.6s var(--ease) var(--d, 0ms); }
 .reveal:not(.is-in) { opacity: 0; transform: translateY(18px); }
+/* Odometer (odometer-dom.ts): reels draw their digits with generated content, so the element's text stays the final value. */
+.odo { display: inline-flex; font-variant-numeric: tabular-nums; }
+.odo__reel { display: inline-block; height: 1em; overflow: hidden; line-height: 1; }
+.odo__strip { display: block; white-space: pre; line-height: 1; }
+.odo__strip::before { content: '0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9'; }
+.odo__g { line-height: 1; }
+.odo__g::before { content: attr(data-ch); }
 /* Long-form Markdown body, shared by project pages and the method page. */
 .prose { max-width: 1600px; padding-block: 24px 64px; }
 .prose h2 { margin: 56px 0 16px; padding-bottom: 12px; border-bottom: var(--rule); font-size: clamp(24px, 2.6vw, 36px); }

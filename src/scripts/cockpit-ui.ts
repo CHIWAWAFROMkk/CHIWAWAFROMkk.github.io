@@ -1,6 +1,7 @@
 import { QUERIES, params } from './insights-queries.mjs';
 import { heatmap, pareto, paretoCurve, delivery, waffle, interpolate, type Layout, type Mark, type Key, type Rows } from './morph';
 import { paint } from './morph-dom';
+import { spinOdometer } from './odometer-dom';
 import { merchantLegend, reasonLegend } from './insights-names';
 import { COCKPIT_TEXT, KPI_IDS, kpiText, type KpiId } from './cockpit-text';
 import type { Results } from './insights-facts';
@@ -106,16 +107,11 @@ export function initCockpit(root: HTMLElement, initial: Results): void {
     const el = $<HTMLElement>(`[data-kpi="${k}"]`);
     const was = kpiShown.get(k) ?? null;
     kpiShown.set(k, v);
-    if (reduced || v === null || was === null) { el.textContent = kpiText(k, v, lang); return; }
-    const t0 = performance.now();
-    const step = (now: number) => {
-      if (kpiShown.get(k) !== v) return;
-      const e = 1 - (1 - Math.min(1, (now - t0) / 400)) ** 3;
-      el.textContent = e >= 1 ? kpiText(k, v, lang) : kpiText(k, was + (v - was) * e, lang);
-      if (e < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    const text = kpiText(k, v, lang);
+    if (reduced || v === null || was === null || was === v) { el.textContent = text; return; }
+    spinOdometer(el, text, 0, kpiText(k, was, lang));
   }
+
 
   async function run() {
     if (!ready || failed) return;
