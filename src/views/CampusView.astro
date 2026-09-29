@@ -2,6 +2,7 @@
 import ProjectLayout from '../layouts/ProjectLayout.astro';
 import CampusDemo from '../components/CampusDemo.astro';
 import InsightsTeaser from '../components/InsightsTeaser.astro';
+import RelationsDiagram from '../components/RelationsDiagram.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/campus-delivery.zh.md';
 import { Content as BodyEn } from '../copy/projects/campus-delivery.en.md';
@@ -13,6 +14,30 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <ProjectLayout lang={lang} slug="campus-delivery" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <CampusDemo slot="demo" lang={lang} />
+  <RelationsDiagram lang={lang} />
   <Body />
   <InsightsTeaser lang={lang} />
 </ProjectLayout>
+<script>
+  import { reveal } from '../scripts/motion-dom';
+  // The six h3 in this page's Markdown are the key decisions; number them and let each rise with its paragraph.
+  const heads = [...document.querySelectorAll<HTMLElement>('article.prose h3')];
+  heads.forEach(h => h.classList.add('decision'));
+  reveal(heads.flatMap(h => (h.nextElementSibling ? [h, h.nextElementSibling] : [h])), 0);
+</script>
+<style>
+  :global(article.prose) { counter-reset: decision; }
+  :global(article.prose h3.decision)::before {
+    counter-increment: decision;
+    content: counter(decision, decimal-leading-zero);
+    display: inline-block; margin-right: 0.6em; padding: 0 0.2em;
+    font: 700 0.95em/1.2 var(--font-display); color: var(--red-text);
+    background: linear-gradient(var(--red), var(--red)) no-repeat left / 0% 100%;
+  }
+  :global(article.prose h3.decision.is-in)::before { animation: decision-sweep 0.7s var(--ease) 0.15s both; }
+  @keyframes decision-sweep {
+    0% { background-size: 0% 100%; background-position: left; }
+    45% { background-size: 100% 100%; background-position: left; color: var(--paper); }
+    100% { background-size: 0% 100%; background-position: right; color: var(--red-text); }
+  }
+</style>

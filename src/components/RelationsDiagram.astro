@@ -1,0 +1,75 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+// Same alt text as the Markdown image this replaces.
+const label = lang === 'zh' ? '以订单为中心的业务关系' : 'Order-centred relationships (diagram in Chinese)';
+const boxes = [
+  { x: 46, y: 110, w: 240, h: 96, fill: 'card', title: '学生', sub: '下单人与送达地址' },
+  { x: 46, y: 310, w: 240, h: 96, fill: 'card', title: '商家与菜品', sub: '菜单、数量与库存' },
+  { x: 409, y: 163, w: 276, h: 165, fill: 'ink', title: '订单 / 明细', sub: '金额 · 状态 · 数量', note: '一致的事务边界' },
+  { x: 811, y: 79, w: 243, h: 96, fill: 'card', title: '支付', sub: '金额记录' },
+  { x: 811, y: 214, w: 243, h: 96, fill: 'tint', title: '配送', sub: '履约状态' },
+  { x: 811, y: 349, w: 243, h: 96, fill: 'card', title: '退款', sub: '反向冲销' },
+];
+const wires = [
+  { d: 'M286 158 H347.5 V245 H409', end: [409, 245] },
+  { d: 'M286 358 H347.5 V245 H409', end: [409, 245] },
+  { d: 'M685 245 H748 V127 H811', end: [811, 127] },
+  { d: 'M685 245 H748 V262 H811', end: [811, 262] },
+  { d: 'M685 245 H748 V397 H811', end: [811, 397] },
+];
+---
+<template id="relations-tpl">
+  <figure class="rel" data-relations>
+    <svg viewBox="0 0 1100 500" role="img" aria-label={label}>
+      <text class="rel-head-text" x="46" y="55">ONE ORDER, CONNECTED RECORDS</text>
+      {wires.map(w => <path class="rel-wire" d={w.d} pathLength="1" />)}
+      {wires.map(w => <path class="rel-head" d="M-9 -5 0 0-9 5" transform={`translate(${w.end[0]} ${w.end[1]})`} />)}
+      {boxes.map((b, i) => (
+        <g data-box class={`rel-box rel-box--${b.fill}`} style={`--i:${i}`}>
+          <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="12" />
+          <text class="t1" x={b.x + (b.fill === 'ink' ? 29 : 22)} y={b.y + (b.fill === 'ink' ? 47 : 38)}>{b.title}</text>
+          <text class="t2" x={b.x + (b.fill === 'ink' ? 29 : 22)} y={b.y + (b.fill === 'ink' ? 93 : 69)}>{b.sub}</text>
+          {b.note && <text class="t3" x={b.x + 29} y={b.y + 136}>{b.note}</text>}
+        </g>
+      ))}
+    </svg>
+  </figure>
+</template>
+<script>
+  import { scrollProgress } from '../scripts/scroll-progress';
+  import { reveal, onScroll } from '../scripts/motion-dom';
+  const tpl = document.querySelector<HTMLTemplateElement>('#relations-tpl');
+  const img = document.querySelector<HTMLImageElement>('.prose img[src$="delivery-relations.svg"]');
+  if (tpl && img) {
+    const fig = tpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
+    // Markdown wraps the image in its own paragraph; replace the paragraph so the figure is not nested in a <p>.
+    const target = img.parentElement?.tagName === 'P' && img.parentElement.childElementCount === 1 ? img.parentElement : img;
+    target.replaceWith(fig);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      reveal(fig.querySelectorAll('[data-box]'), 120);
+      onScroll(() => {
+        const r = fig.getBoundingClientRect();
+        fig.style.setProperty('--p', scrollProgress(r.top, r.height, innerHeight).toFixed(3));
+      });
+    }
+  }
+</script>
+<style>
+  .rel { margin: 8px 0 20px; max-width: 900px; --p: 1; }
+  svg { display: block; width: 100%; height: auto; font-family: Arial, 'Microsoft YaHei', sans-serif; }
+  .rel-head-text { font-size: 30px; fill: var(--ink); }
+  .rel-wire { fill: none; stroke: var(--mute); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p)); }
+  .rel-head { fill: none; stroke: var(--mute); stroke-width: 1.5; opacity: clamp(0, (var(--p) - 0.9) * 10, 1); }
+  .rel-box rect { fill: #fff; }
+  .rel-box--ink rect { fill: var(--ink); }
+  .rel-box--tint rect { fill: #f6d5ca; }
+  .t1 { font-size: 24px; fill: var(--ink); }
+  .t2 { font-size: 18px; fill: var(--mute); }
+  .rel-box--ink .t1 { font-size: 29px; fill: #f6d5ca; }
+  .rel-box--ink .t2 { font-size: 21px; fill: #fff; }
+  .t3 { font-size: 18px; fill: #d9d7cf; }
+  .rel-box { transition: opacity 0.5s var(--ease) var(--d, 0ms), transform 0.5s var(--ease) var(--d, 0ms); }
+  .rel-box:global(.reveal):not(:global(.is-in)) { opacity: 0; transform: translateY(14px); }
+</style>
