@@ -216,3 +216,27 @@ test('engine fails to load: the story stays whole, the dashboard explains itself
   await expect(page.locator('[data-chapter-section]')).toHaveCount(6);
   expect(errors).toEqual([]);
 });
+
+test('chapter 2 and the dashboard draw the cumulative-share curve, and it follows the filter', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.goto(PATH);
+  const points = (await page.locator('[data-stage] polyline[data-curve]').getAttribute('points'))!.trim().split(' ');
+  expect(points).toHaveLength(13);
+  await expect(page.locator('[data-chapter-section]').nth(1).locator('table thead th')).toHaveCount(4);
+  await openCockpit(page);
+  const curve = page.locator('[data-chart="merchants"] polyline[data-curve]');
+  const before = await curve.getAttribute('points');
+  await page.locator('input[name="area"][value="北区"]').check();
+  await expect(curve).not.toHaveAttribute('points', before!);
+});
+
+test('a slow network is not mistaken for a failed download', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  test.setTimeout(90_000);
+  // About 2 MB at a slow mainland connection takes well over 20 seconds.
+  await page.route('**/campus-term.sqlite', async r => { await new Promise(res => setTimeout(res, 22_000)); await r.continue(); });
+  await page.goto(PATH);
+  await page.locator('[data-cockpit]').scrollIntoViewIfNeeded();
+  await expect(page.locator('#ck-from')).toBeEnabled({ timeout: 45_000 });
+  await expect(page.locator('#ck-status')).toHaveAttribute('data-error', 'false');
+});

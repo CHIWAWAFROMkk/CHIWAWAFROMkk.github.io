@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { storyLayouts, pareto, delivery, heatmap, largestRemainder, interpolate, chapterProgress, frameAt, PLOT, MARKS, type Mark } from '../../src/scripts/morph';
+import { storyLayouts, pareto, paretoCurve, delivery, heatmap, largestRemainder, interpolate, chapterProgress, frameAt, PLOT, MARKS, type Mark } from '../../src/scripts/morph';
 
 const R = JSON.parse(readFileSync('src/data/insights.json', 'utf8')).results;
 const finite = (m: Mark) => [m.x, m.y, m.w, m.h, m.a].every(Number.isFinite);
@@ -33,6 +33,17 @@ describe('layouts', () => {
     expect(l.marks[0].red).toBe(1);
     expect(l.marks[3 * 14].red).toBe(0);
     expect(l.keys[0]).toBe(R.merchants.values[0][0]);
+  });
+
+  it('paretoCurve climbs from the plot floor to 100% over the bar centres', () => {
+    const pts = paretoCurve([[1, 'A', 0, 300], [2, 'B', 0, 100]]).split(' ').map(p => p.split(',').map(Number));
+    expect(pts).toHaveLength(3);
+    expect(pts[0]).toEqual([PLOT.x, PLOT.y + PLOT.h]);
+    expect(pts[1][1]).toBeCloseTo(PLOT.y + PLOT.h * 0.25);
+    expect(pts[2][1]).toBeCloseTo(PLOT.y);
+    expect(pts[2][0]).toBeCloseTo(PLOT.x + (PLOT.w / 12) * 1.5);
+    expect(paretoCurve([[1, 'A', 0, 0]])).toBe('');
+    expect(paretoCurve([])).toBe('');
   });
 
   it('delivery: bars from 45 minutes are red and carry their dorm area; surplus marks share a real key', () => {

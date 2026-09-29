@@ -22,9 +22,12 @@ const cohorts = [...new Set(R.retention.values.map(r => Number(r[0])))];
 const maxK = Math.max(0, ...R.retention.values.map(r => Number(r[1])));
 const ret = new Map(R.retention.values.map(([c, k, size, n]) => [`${c}-${k}`, `${Math.round((Number(n) / Number(size)) * 100)}%`]));
 const ks = Array.from({ length: maxK + 1 }, (_, k) => k);
+const netTotal = R.merchants.values.reduce((s, r) => s + Number(r[3]), 0);
+let netAcc = 0;
+const cumulative = R.merchants.values.map(r => { netAcc += Number(r[3]); return `${Math.round((netAcc / Math.max(1, netTotal)) * 100)}%`; });
 const tables: ({ head: string[]; rows: string[][] } | null)[] = [
   { head: [L.day[lang], ...hours.map(h => `${h}:00`)], rows: DAYS[lang].map((d, i) => [d, ...hours.map(h => hm.get(`${i}-${h}`) ?? '0')]) },
-  { head: [L.merchant[lang], L.orders[lang], L.net[lang]], rows: R.merchants.values.map(([, m, n, net]) => [merchantName(String(m), lang), String(n), yuan(Number(net))]) },
+  { head: [L.merchant[lang], L.orders[lang], L.net[lang], L.cumulative[lang]], rows: R.merchants.values.map(([, m, n, net], i) => [merchantName(String(m), lang), String(n), yuan(Number(net)), cumulative[i]]) },
   { head: [L.cohort[lang], ...ks.map(k => `+${k}`)], rows: cohorts.map(c => [lang === 'zh' ? `第 ${c} 周` : `Week ${c}`, ...ks.map(k => ret.get(`${c}-${k}`) ?? '')]) },
   { head: [L.area[lang], L.delivered[lang], L.avg[lang], L.over45[lang]], rows: R.slow.values.map(([a, n, over, avg]) => [areaName(String(a), lang), String(n), String(avg), String(over)]) },
   { head: [L.reason[lang], L.refunds[lang]], rows: R.reasons.values.map(([r, n]) => [reasonName(String(r), lang), String(n)]) },

@@ -87,6 +87,7 @@ export const INSIGHTS_COPY = {
     merchant: { zh: '商家', en: 'Merchant' },
     orders: { zh: '订单', en: 'Orders' },
     net: { zh: '净收款', en: 'Net revenue' },
+    cumulative: { zh: '累计占比', en: 'Cumulative share' },
     cohort: { zh: '首单周', en: 'First-order week' },
     area: { zh: '宿舍区', en: 'Dorm area' },
     delivered: { zh: '已送达', en: 'Delivered' },

@@ -76,6 +76,13 @@ describe('insights copy', () => {
     }
   });
 
+  it('derived numbers agree with the parts printed next to them', () => {
+    const n = (k: string) => parseFloat(formatFact(real[k], 'zh'));
+    expect(formatFact(real.cancelRatio, 'zh')).toBe((n('peakCancel') / n('calmCancel')).toFixed(1));
+    expect(n('retentionGap')).toBe(n('freshRetention') - n('laterRetention'));
+    expect(n('peakShare')).toBe(n('lunchShare') + n('dinnerShare'));
+  });
+
   it('the real data tells the story the copy claims', () => {
     const v = (k: string) => Number(real[k].value);
     expect(v('peakCancel')).toBeGreaterThan(v('calmCancel'));

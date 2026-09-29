@@ -1,5 +1,5 @@
 import { QUERIES, params } from './insights-queries.mjs';
-import { heatmap, pareto, delivery, waffle, interpolate, type Layout, type Mark, type Key, type Rows } from './morph';
+import { heatmap, pareto, paretoCurve, delivery, waffle, interpolate, type Layout, type Mark, type Key, type Rows } from './morph';
 import { paint } from './morph-dom';
 import { merchantLegend, reasonLegend } from './insights-names';
 import { COCKPIT_TEXT, KPI_IDS, kpiText, type KpiId } from './cockpit-text';
@@ -9,6 +9,8 @@ type ChartId = 'heatmap' | 'merchants' | 'delivery' | 'reasons';
 const CHARTS: ChartId[] = ['heatmap', 'merchants', 'delivery', 'reasons'];
 const LAYOUT: Record<ChartId, (v: Rows) => Layout> = { heatmap, merchants: pareto, delivery, reasons: waffle };
 const RUN = ['kpi', ...CHARTS] as const;
+/** SQLite plus the term database is about 2 MB; a slow mainland connection needs well over 20 s, so only give up after a minute. */
+const LOAD_TIMEOUT = 60_000;
 interface Reply { id: number; ok: boolean; error?: string; results?: Results }
 interface Chart { rects: SVGRectElement[]; shown: Mark[]; keys: Key[]; token: number; fig: HTMLElement }
 
@@ -71,6 +73,7 @@ export function initCockpit(root: HTMLElement, initial: Results): void {
     c.keys = next.keys;
     const legend = id === 'merchants' ? merchantLegend(values, lang) : id === 'reasons' ? reasonLegend(values, lang) : null;
     if (legend) c.fig.querySelectorAll<SVGTextElement>('[data-legend]').forEach((t, i) => (t.textContent = legend[i] ?? ''));
+    if (id === 'merchants') c.fig.querySelector('polyline[data-curve]')?.setAttribute('points', paretoCurve(values));
     fillTable(c.fig.querySelector('table[data-table]')!, values, id);
     if (reduced) { c.shown = next.marks; return paint(c.rects, next.marks); }
     const t0 = performance.now();
@@ -141,7 +144,7 @@ export function initCockpit(root: HTMLElement, initial: Results): void {
     say(T.loading);
     try { worker = new Worker('/assets/insights-worker.js'); } catch (e) { console.error(e); return halt(T.loadFailed); }
     worker.onerror = e => { e.preventDefault(); halt(T.loadFailed); };
-    call({ action: 'init' }, 20000, T.loadFailed)
+    call({ action: 'init' }, LOAD_TIMEOUT, T.loadFailed)
       .then(() => { if (failed) return; ready = true; enable(true); say(T.ready); })
       .catch(e => { if (!failed) halt((e as Error).message); });
   };

@@ -55,6 +55,17 @@ export function pareto(rows: Rows): Layout {
   return { marks, keys };
 }
 
+/** Cumulative share of net revenue over the pareto bars, as SVG polyline points on a 0–100% scale of the plot height ('' when there is no revenue). */
+export function paretoCurve(rows: Rows): string {
+  const nets = rows.slice(0, 12).map(r => Math.max(0, Number(r[3])));
+  const total = nets.reduce((a, b) => a + b, 0);
+  if (!total) return '';
+  const bw = PLOT.w / 12;
+  let acc = 0;
+  const pts = [[PLOT.x, PLOT.y + PLOT.h], ...nets.map((n, j) => { acc += n; return [PLOT.x + bw * (j + 0.5), PLOT.y + PLOT.h * (1 - acc / total)]; })];
+  return pts.map(([x, y]) => `${Math.round(x * 10) / 10},${Math.round(y * 10) / 10}`).join(' ');
+}
+
 /** Rows [cohort, weeks_after, size, students] → a cohort triangle; opacity is the retained share. */
 export function retention(rows: Rows): Layout {
   const cw = PLOT.w / 16, ch = PLOT.h / 16;

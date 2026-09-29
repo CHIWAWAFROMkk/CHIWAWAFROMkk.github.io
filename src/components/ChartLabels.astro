@@ -1,5 +1,5 @@
 ---
-import { PLOT, AREAS } from '../scripts/morph';
+import { PLOT, AREAS, paretoCurve } from '../scripts/morph';
 import { areaName, merchantLegend, reasonLegend } from '../scripts/insights-names';
 import type { Results } from '../scripts/insights-facts';
 import type { Lang } from '../i18n';
@@ -15,7 +15,11 @@ const blockBottom = PLOT.y + 8 * Math.min((bw3 - 24) / 7, PLOT.h / 8) + 16;
 <g class="lbl" data-for={chapter}>
   {kind === 'heatmap' && DAYS[lang].map((d, i) => <text x={PLOT.x - 8} y={PLOT.y + i * ch7 + ch7 / 2 + 4} text-anchor="end">{d}</text>)}
   {kind === 'heatmap' && [0, 6, 12, 18].map(h => <text x={PLOT.x + h * cw24 + cw24 / 2} y={bottom} text-anchor="middle">{`${h}:00`}</text>)}
-  {kind === 'merchants' && merchantLegend(results.merchants.values, lang).map((t, i) => <text class="red" data-legend={i} x={PLOT.x + PLOT.w} y={PLOT.y + 14 + i * 18} text-anchor="end">{t}</text>)}
+  {kind === 'merchants' && <line class="ref" x1={PLOT.x} x2={PLOT.x + PLOT.w} y1={PLOT.y + PLOT.h * 0.2} y2={PLOT.y + PLOT.h * 0.2} />}
+  {kind === 'merchants' && <text x={PLOT.x - 8} y={PLOT.y + PLOT.h * 0.2 + 4} text-anchor="end">80%</text>}
+  {kind === 'merchants' && <polyline data-curve points={paretoCurve(results.merchants.values)} />}
+  {kind === 'merchants' && <text x={PLOT.x + PLOT.w} y={PLOT.y + 22} text-anchor="end">{lang === 'zh' ? '— 累计占比' : '— cumulative share'}</text>}
+  {kind === 'merchants' && merchantLegend(results.merchants.values, lang).map((t, i) => <text class="red" data-legend={i} x={PLOT.x + PLOT.w} y={PLOT.y + 76 + i * 18} text-anchor="end">{t}</text>)}
   {kind === 'retention' && [1, 4, 7, 10, 13, 16].map(c => <text x={PLOT.x - 8} y={PLOT.y + (c - 1) * (PLOT.h / 16) + PLOT.h / 32 + 4} text-anchor="end">{lang === 'zh' ? `第${c}周` : `W${c}`}</text>)}
   {kind === 'retention' && [0, 4, 8, 12].map(k => <text x={PLOT.x + k * (PLOT.w / 16) + PLOT.w / 32} y={bottom} text-anchor="middle">{`+${k}`}</text>)}
   {kind === 'delivery' && AREAS.map((a, i) => <text x={PLOT.x - 8} y={PLOT.y + i * rh4 + rh4 - 8} text-anchor="end">{areaName(a, lang, true)}</text>)}
@@ -25,6 +29,8 @@ const blockBottom = PLOT.y + 8 * Math.min((bw3 - 24) / 7, PLOT.h / 8) + 16;
 </g>
 <style>
   text { font: 400 11px/1 var(--font-body); fill: currentColor; }
+  polyline { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+  .ref { stroke: currentColor; stroke-opacity: 0.4; stroke-dasharray: 4 4; }
   .red, .r0 { fill: var(--red-text); font-weight: 700; }
   .r1 { fill-opacity: 0.85; } .r2 { fill-opacity: 0.7; } .r3 { fill-opacity: 0.6; }
   :global(.night-zone) .red, :global(.night-zone) .r0 { fill: var(--red); }

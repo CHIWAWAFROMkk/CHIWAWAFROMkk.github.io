@@ -11,7 +11,7 @@ export const PARAMS = {
   areas: [['东区', 18, 0.3], ['西区', 20, 0.3], ['南区', 22, 0.25], ['北区', 32, 0.15]],
   // Share of students whose first order falls in the first two weeks, and how weekly ordering decays after joining.
   freshmanShare: 0.6,
-  retention: { fresh: [0.55, 0.45, 6], later: [0.3, 0.7, 2.5] }, // floor + span * exp(-weeksSinceJoining / halfLife)
+  retention: { fresh: [0.55, 0.45, 6], later: [0.3, 0.7, 2.5] }, // floor + span * exp(-weeksSinceJoining / timeConstant)
   // [orders per week at full interest, share of students]
   appetite: [[0.6, 0.5], [1.1, 0.35], [2.0, 0.15]],
   dayWeights: [1, 1, 1, 1, 1.1, 1.2, 1.1], // Monday … Sunday
@@ -80,10 +80,10 @@ export function generate(SQL, schema, P = PARAMS) {
   const hours = Object.keys(P.hourWeights).map(Number);
   const orders = [];
   for (const st of students) {
-    const [floor, span, halfLife] = st.fresh ? P.retention.fresh : P.retention.later;
+    const [floor, span, timeConstant] = st.fresh ? P.retention.fresh : P.retention.later;
     for (let week = st.join; week <= P.weeks; week++) {
       const k = week - st.join;
-      let n = poisson(st.appetite * (floor + span * Math.exp(-k / halfLife)));
+      let n = poisson(st.appetite * (floor + span * Math.exp(-k / timeConstant)));
       if (k === 0 && n === 0) n = 1; // joining means ordering in that week
       for (let i = 0; i < n; i++) {
         const dow = pick(P.dayWeights);

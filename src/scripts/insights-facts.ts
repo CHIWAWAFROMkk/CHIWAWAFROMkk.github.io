@@ -14,6 +14,8 @@ export const DEF = { lunch: [11, 12], dinner: [17, 18], freshWeeks: 2, retainAft
 const num = (v: unknown) => Number(v);
 const sum = (rows: Rows, col: number) => rows.reduce((s, r) => s + num(r[col]), 0);
 const share = (a: number, b: number) => (b ? (a / b) * 100 : 0);
+/** A percentage as formatFact prints it, so sums, gaps and ratios agree with the numbers next to them. */
+const shown = (v: number) => (v >= 10 ? Math.round(v) : Math.round(v * 10) / 10);
 
 /** Every number the story prints, derived from the committed query results. */
 export function deriveFacts(r: Results): Record<string, Fact> {
@@ -63,7 +65,7 @@ export function deriveFacts(r: Results): Record<string, Fact> {
     dinnerEnd: f(DEF.dinner[DEF.dinner.length - 1] + 1, 'hour'),
     lunchShare: f(lunchShare, 'pct'),
     dinnerShare: f(dinnerShare, 'pct'),
-    peakShare: f(lunchShare + dinnerShare, 'pct'),
+    peakShare: f(shown(lunchShare) + shown(dinnerShare), 'pct'),
     busiestDow: f(num(busiest[0]), 'dow'),
     busiestHour: f(num(busiest[1]), 'hour'),
     busiestCount: f(num(busiest[2]), 'int'),
@@ -72,7 +74,7 @@ export function deriveFacts(r: Results): Record<string, Fact> {
     paretoLine: f(DEF.paretoLine, 'pct'),
     freshRetention: f(fresh, 'pct'),
     laterRetention: f(later, 'pct'),
-    retentionGap: f(fresh - later, 'pp'),
+    retentionGap: f(shown(fresh) - shown(later), 'pp'),
     farArea: f(String(far[0]), 'area'),
     nearArea: f(String(near[0]), 'area'),
     farMinutes: f(num(far[3]), 'min'),
@@ -86,7 +88,7 @@ export function deriveFacts(r: Results): Record<string, Fact> {
     topReasonShare: f(share(num(reasons[0]?.[1] ?? 0), sum(reasons, 1)), 'pct'),
     peakCancel: f(peakCancel, 'pct'),
     calmCancel: f(calmCancel, 'pct'),
-    cancelRatio: f(calmCancel ? peakCancel / calmCancel : 0, 'times'),
+    cancelRatio: f(shown(calmCancel) ? shown(peakCancel) / shown(calmCancel) : 0, 'times'),
   };
 }
 
