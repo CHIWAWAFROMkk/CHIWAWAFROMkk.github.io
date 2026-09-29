@@ -1,5 +1,6 @@
 ---
 import type { Lang } from '../i18n';
+import { STEPS, BAND_TEXT } from '../scripts/txn-band';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 
@@ -21,7 +22,7 @@ const TEXT = {
       ['土豆牛肉饭（¥22，最高单价）销量并列第一，GMV 领先第二名 ¥144。', '说明校园用户对"高价高分量"菜品接受度高，可作为主推单品提升整体客单价。'],
     ],
     fNote: '以上结论基于 96 笔合成数据，仅用于展示 SQL 查询与业务分析能力，不代表真实经营判断。点击各卡片的跳转按钮，可在上方工作台验证对应 SQL 的执行结果。',
-    flowTitle: '一笔订单，四处一致。', flowMeta: '订单 / 明细 / 支付 / 库存', flow: ['创建订单', '库存扣减与明细', '支付登记', '提交事务'],
+    flowTitle: '一笔订单，四处一致。', flowMeta: '订单 / 明细 / 支付 / 库存',
     form: '下单演示', student: '学生', dish: '菜品 · 单价 · 剩余库存', qty: '份数', place: '下单并登记支付', formNote: '仅操作当前页面的演示数据库，不产生真实交易。',
     list: '订单流水', listIdle: '载入后可创建订单，或取消未送达订单。', reset: '重置演示数据', download: '下载当前数据库',
     schema: '查看建表 SQL', dataNote: '',
@@ -43,13 +44,14 @@ const TEXT = {
       ['土豆牛肉饭 (¥22, the highest price) ties for most portions sold and leads the runner-up by ¥144 in GMV.', 'Students accept "more expensive, more filling" dishes, which makes it a good lead item for raising the average order.'],
     ],
     fNote: 'These findings come from 96 synthetic orders and only demonstrate SQL analysis, not a real business judgement. Use the buttons on each card to check the matching SQL in the workbench above.',
-    flowTitle: 'One order, consistent in four places.', flowMeta: 'order · items · payment · stock', flow: ['Create order', 'Deduct stock & add items', 'Record payment', 'Commit'],
+    flowTitle: 'One order, consistent in four places.', flowMeta: 'order · items · payment · stock',
     form: 'Place an order', student: 'Student', dish: 'Dish · price · stock left', qty: 'Portions', place: 'Place order & record payment', formNote: "Only touches this page's demo database — no real transactions.",
     list: 'Order log', listIdle: 'Once loaded, place orders or cancel undelivered ones.', reset: 'Reset demo data', download: 'Download current database',
     schema: 'View the schema SQL', dataNote: 'Demo data (merchants, dishes, students) is in Chinese.',
   },
 };
 const L = TEXT[lang];
+const B = BAND_TEXT[lang];
 const MERCHANTS = [['南门小厨', 24, '¥848', '¥784', '16.7%'], ['二食堂面馆', 24, '¥752', '¥640', '16.7%'], ['轻食窗口', 24, '¥688', '¥568', '16.7%'], ['校园茶点', 24, '¥304', '¥304', '0%']];
 const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面', '二食堂面馆', 24, '¥384'], ['杂粮饭盒', '轻食窗口', 16, '¥288'], ['番茄鸡蛋饭', '南门小厨', 16, '¥192'], ['鸡蛋饼', '校园茶点', 24, '¥192']];
 ---
@@ -106,7 +108,11 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
 
   <section class="wrap flow" aria-labelledby="flow-title">
     <div class="section-head"><h2 id="flow-title">{L.flowTitle}</h2><span class="meta">{L.flowMeta}</span></div>
-    <ol class="flow__steps">{L.flow.map(s => <li>{s}</li>)}</ol>
+    <div class="band" data-band="place" data-result="">
+      <ol class="flow__steps">{STEPS.place.map(s => <li data-step data-state="idle">{s[lang]}</li>)}</ol>
+      <p class="band__result" data-band-result aria-hidden="true"></p>
+      <p class="meta band__note">{B.replay}</p>
+    </div>
     <div class="flow__grid">
       <form class="card" id="order-form">
         <h3>{L.form}</h3>
@@ -120,6 +126,11 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
       <div class="card">
         <h3>{L.list}</h3>
         <p id="order-status" role="status" aria-live="polite">{L.listIdle}</p>
+        <div class="band band--refund" data-band="refund" data-result="" hidden>
+          <p class="band__title">{B.refundTitle}</p>
+          <ol class="flow__steps">{STEPS.refund.map(s => <li data-step data-state="idle">{s[lang]}</li>)}</ol>
+          <p class="band__result" data-band-result aria-hidden="true"></p>
+        </div>
         <div id="order-list"></div>
       </div>
     </div>
@@ -172,9 +183,20 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
   .an__findings { margin-top: 32px; padding-top: 20px; border-top: var(--rule); display: grid; gap: 12px; }
   .an__findings ul { display: grid; gap: 10px; padding-left: 20px; max-width: 58em; }
   .an__findings strong { font-weight: 500; }
-  .flow__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 20px 0; padding: 0; list-style: none; counter-reset: s; }
+  .flow__steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 20px 0; padding: 0; list-style: none; counter-reset: s; }
   .flow__steps li { padding: 12px 10px; border-top: 4px solid var(--ink); font-weight: 500; font-size: 14px; counter-increment: s; }
   .flow__steps li::before { content: '0' counter(s) ' '; font: 700 13px var(--font-display); color: var(--red-text); }
+  .flow__steps li { transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease), color 0.2s var(--ease); }
+  .flow__steps li[data-state='on'] { border-top-color: var(--red); }
+  .flow__steps li[data-state='fail'] { border-top-color: var(--red-text); background: var(--red-text); color: #fff; }
+  .flow__steps li[data-state='fail']::before { color: #fff; }
+  .band__result { min-height: 1.6em; font-weight: 700; font-size: 14px; }
+  .band[data-result='committed'] .band__result { color: var(--ink); }
+  .band[data-result='rolled-back'] .band__result, .band[data-result='rejected'] .band__result { color: var(--red-text); }
+  .band__note { margin-bottom: 12px; }
+  .band--refund { margin: 6px 0 10px; }
+  .band--refund .flow__steps { grid-template-columns: repeat(3, 1fr); margin: 6px 0; }
+  .band__title { font-size: 13px; font-weight: 500; color: var(--mute); }
   .flow__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
   #order-list { display: grid; gap: 0; }
   #order-list :global(.order-row) { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: var(--hair); }

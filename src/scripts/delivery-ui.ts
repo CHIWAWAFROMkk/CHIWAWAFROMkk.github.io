@@ -1,6 +1,7 @@
 import { DELIVERY_QUERIES } from './delivery-queries';
 import { DELIVERY_TEXT } from './delivery-text';
 import { DELIVERY_ERRORS, localizeError } from './tool-i18n';
+import { playBand, failedStep } from './txn-band';
 
 interface Dish { id: number; name: string; merchant: string; price_cents: number; stock: number }
 interface Order { id: number; student: string; merchant: string; status: 'paid' | 'delivered' | 'refunded'; total_cents: number }
@@ -20,6 +21,10 @@ export function initDelivery(root: HTMLElement): void {
   const $ = <E extends HTMLElement = HTMLElement>(id: string) => root.querySelector<E>(`#${id}`)!;
   const button = (id: string) => $<HTMLButtonElement>(id);
   const controls = ['run-query', 'place-order', 'reset-db', 'download-db'];
+  const placeBand = root.querySelector<HTMLElement>('[data-band="place"]');
+  const refundBand = root.querySelector<HTMLElement>('[data-band="refund"]');
+  /** Errors that mean the operation was never attempted: nothing to replay. */
+  const notAttempted = (msg: string) => msg === T.busy || msg === T.loadFailed;
   let worker: Worker | null = null;
   let sequence = 0;
   let pending: Pending | null = null;
@@ -137,9 +142,18 @@ export function initDelivery(root: HTMLElement): void {
   }
 
   async function refundOrder(id: number) {
-    try { await request('refund', { order: id }); $('order-status').textContent = T.refunded(id); await run(); }
-    catch (e) { $('order-status').textContent = (e as Error).message; }
+    try {
+      await request('refund', { order: id });
+      if (refundBand) playBand(refundBand, 'refund', undefined, lang);
+      $('order-status').textContent = T.refunded(id);
+      await run();
+    } catch (e) {
+      const msg = (e as Error).message;
+      if (refundBand && !notAttempted(msg)) playBand(refundBand, 'refund', failedStep('refund', msg), lang);
+      $('order-status').textContent = msg;
+    }
   }
+
 
   const boot = () => {
     if (booted) return;
@@ -172,9 +186,15 @@ export function initDelivery(root: HTMLElement): void {
     e.preventDefault();
     try {
       const data = await request('place', { input: { student: Number(student.value), dish: Number($<HTMLSelectElement>('dish').value), quantity: Number($<HTMLInputElement>('quantity').value) } });
+      if (placeBand) playBand(placeBand, 'place', undefined, lang);
       $('order-status').textContent = T.placed(data.order!); await run();
-    } catch (err) { $('order-status').textContent = T.placeFailed((err as Error).message); }
+    } catch (err) {
+      const msg = (err as Error).message;
+      if (placeBand && !notAttempted(msg)) playBand(placeBand, 'place', failedStep('place', msg), lang);
+      $('order-status').textContent = T.placeFailed(msg);
+    }
   };
+
   button('reset-db').onclick = async () => { try { await request('init'); $('order-status').textContent = T.reset; await run(); } catch (e) { message((e as Error).message, true); } };
   button('download-db').onclick = () => { if (backup) download(backup as BlobPart, 'campus-delivery.sqlite', 'application/vnd.sqlite3'); };
   button('export-csv').onclick = () => download('﻿' + exportRows.map(row => row.map(v => '"' + String(v ?? '').replace(/^[=+@-]/, "'$&").replaceAll('"', '""') + '"').join(',')).join('\r\n'), 'query-result.csv', 'text/csv;charset=utf-8');

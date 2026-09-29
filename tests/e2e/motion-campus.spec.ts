@@ -54,3 +54,81 @@ test.describe('key decisions', () => {
     await expect(page.locator('.prose h3.decision')).toHaveCount(6);
   });
 });
+
+for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
+  test.describe(`transaction band (${lang})`, () => {
+    const status = (page: Page) => page.locator('#order-status');
+    const band = (page: Page) => page.locator('[data-band="place"]');
+    async function ready(page: Page) {
+      await page.goto(`${prefix}${CAMPUS}`);
+      await page.locator('#order-form').scrollIntoViewIfNeeded();
+      await expect(page.locator('#place-order')).toBeEnabled({ timeout: 20000 });
+    }
+
+    test('a placed order lights all five steps and commits', async ({ page, isMobile }) => {
+      test.skip(!!isMobile, 'run once');
+      await ready(page);
+      await page.locator('#place-order').click();
+      await expect(band(page)).toHaveAttribute('data-result', 'committed');
+      await expect(band(page).locator('[data-step][data-state="on"]')).toHaveCount(5);
+    });
+
+    test('running out of stock fails at "items · stock" and rolls back', async ({ page, isMobile }) => {
+      test.skip(!!isMobile, 'run once');
+      await ready(page);
+      await page.locator('#quantity').fill('20');
+      for (let i = 0; i < 8; i++) {
+        const before = (await status(page).textContent()) ?? '';
+        await page.locator('#place-order').click();
+        await expect(status(page)).not.toHaveText(before);
+        if ((await status(page).textContent())!.includes(lang === 'zh' ? '库存不足' : 'Not enough stock')) break;
+      }
+      await expect(status(page)).toContainText(lang === 'zh' ? '库存不足' : 'Not enough stock');
+      await expect(band(page)).toHaveAttribute('data-result', 'rolled-back');
+      await expect(band(page).locator('[data-step]').nth(1)).toHaveAttribute('data-state', 'fail');
+      await expect(band(page).locator('[data-step]').nth(0)).toHaveAttribute('data-state', 'idle');
+    });
+
+    test('an out-of-range quantity never enters the transaction', async ({ page, isMobile }) => {
+      test.skip(!!isMobile, 'run once');
+      await ready(page);
+      await page.locator('#quantity').evaluate(el => { (el as HTMLInputElement).removeAttribute('max'); (el as HTMLInputElement).value = '25'; });
+      await page.locator('#place-order').click();
+      await expect(band(page)).toHaveAttribute('data-result', 'rejected');
+      await expect(band(page).locator('[data-state="on"], [data-state="fail"]')).toHaveCount(0);
+    });
+
+    test('a refund plays its own three-step band', async ({ page, isMobile }) => {
+      test.skip(!!isMobile, 'run once');
+      await ready(page);
+      await expect(page.locator('[data-band="refund"]')).toBeHidden();
+      await page.locator('[data-refund]').first().click();
+      const refund = page.locator('[data-band="refund"]');
+      await expect(refund).toBeVisible();
+      await expect(refund).toHaveAttribute('data-result', 'committed');
+      await expect(refund.locator('[data-step][data-state="on"]')).toHaveCount(3);
+    });
+  });
+}
+
+test('a new order restarts the band', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.goto(CAMPUS);
+  await page.locator('#order-form').scrollIntoViewIfNeeded();
+  await expect(page.locator('#place-order')).toBeEnabled({ timeout: 20000 });
+  await page.locator('#place-order').click();
+  await expect(page.locator('#place-order')).toBeEnabled();
+  await page.locator('#place-order').click();
+  await expect(page.locator('[data-band="place"]')).toHaveAttribute('data-result', 'committed');
+  await expect(page.locator('[data-band="place"] [data-state="fail"]')).toHaveCount(0);
+});
+
+test('reduced motion shows the band\'s end state at once', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(CAMPUS);
+  await page.locator('#order-form').scrollIntoViewIfNeeded();
+  await expect(page.locator('#place-order')).toBeEnabled({ timeout: 20000 });
+  await page.locator('#place-order').click();
+  await expect(page.locator('[data-band="place"]')).toHaveAttribute('data-result', 'committed', { timeout: 1000 });
+});
