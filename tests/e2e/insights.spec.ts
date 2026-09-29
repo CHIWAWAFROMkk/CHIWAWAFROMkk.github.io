@@ -91,3 +91,27 @@ test('chapter numbers count up and land exactly on the query result', async ({ p
   const n = page.locator('[data-chapter-section]').first().locator('[data-insight-num="lunchShare"]');
   await expect(n).toHaveText(formatFact(FACTS.lunchShare, 'zh'), { timeout: 3000 });
 });
+
+test('the rain ends on its own and leaves the real number', async ({ page }) => {
+  await page.goto(PATH);
+  const hero = page.locator('[data-rain]');
+  await expect(hero).toHaveClass(/is-done/, { timeout: 4000 });
+  await expect(hero.locator('canvas')).toHaveCount(0);
+  await expect(hero.locator('[data-insight-num="orders"]')).toHaveText(formatFact(FACTS.orders, 'zh'));
+  const color = await hero.locator('[data-rain-target] .inum').evaluate(el => getComputedStyle(el).color);
+  expect(color).not.toBe('rgba(0, 0, 0, 0)');
+});
+
+test('a click ends the rain at once', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.goto(PATH);
+  await page.mouse.click(5, 5);
+  await expect(page.locator('[data-rain]')).toHaveClass(/is-done/, { timeout: 500 });
+});
+
+test('reduced motion skips the rain', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(PATH);
+  await expect(page.locator('[data-rain]')).toHaveClass(/is-done/, { timeout: 500 });
+  await expect(page.locator('[data-rain] canvas')).toHaveCount(0);
+});

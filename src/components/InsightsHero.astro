@@ -15,6 +15,19 @@ const facts = deriveFacts(data.results as unknown as Results);
     <p class="ihero__sub"><InsightText text={C.hero.sub[lang]} facts={facts} lang={lang} /></p>
   </div>
 </section>
+<script is:inline>
+  (function () {
+    var hero = document.currentScript.previousElementSibling;
+    if (!hero || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    hero.classList.add('is-raining');
+    setTimeout(function () { if (!hero.classList.contains('is-done')) { hero.classList.remove('is-raining'); hero.classList.add('is-done'); } }, 2500);
+  })();
+</script>
+<script>
+  import { initRain } from '../scripts/rain-dom';
+  const hero = document.querySelector<HTMLElement>('[data-rain]');
+  if (hero) initRain(hero);
+</script>
 <style>
   .ihero { position: relative; padding-block: clamp(40px, 9vh, 110px) 8px; overflow: hidden; }
   canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -22,4 +35,6 @@ const facts = deriveFacts(data.results as unknown as Results);
   .ihero__big :global(.inum) { display: inline-block; margin-right: 0.12em; font: 700 clamp(84px, 15vw, 230px)/0.82 var(--font-display); color: var(--ink); letter-spacing: -0.01em; }
   .ihero__sub { margin-top: 18px; color: var(--mute); font-size: clamp(14px, 1.2vw, 17px); }
   .ihero__sub :global(.inum) { color: inherit; }
+  .ihero.is-raining [data-rain-target] :global(.inum) { color: transparent; }
+  .ihero [data-rain-target] :global(.inum) { transition: color 0.25s var(--ease); }
 </style>
