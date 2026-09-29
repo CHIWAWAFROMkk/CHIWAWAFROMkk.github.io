@@ -1,6 +1,6 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
-import InsightsHero from '../components/InsightsHero.astro';
+import InsightsPrologue from '../components/InsightsPrologue.astro';
 import InsightsStory from '../components/InsightsStory.astro';
 import InsightsCockpit from '../components/InsightsCockpit.astro';
 import InsightsMethod from '../components/InsightsMethod.astro';
@@ -14,7 +14,7 @@ const P = SITE.pages.insights;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <ProjectLayout lang={lang} slug="campus-delivery/insights" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
-  <InsightsHero slot="top" lang={lang} />
+  <InsightsPrologue slot="top" lang={lang} />
   <Fragment slot="demo">
     <InsightsStory lang={lang} />
     <InsightsCockpit lang={lang} />

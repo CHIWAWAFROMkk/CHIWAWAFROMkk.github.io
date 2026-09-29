@@ -1,0 +1,56 @@
+---
+import InsightText from './InsightText.astro';
+import { INSIGHTS_COPY as C } from '../data/insights-copy';
+import { deriveFacts, formatFact, type Results } from '../scripts/insights-facts';
+import data from '../data/insights.json';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const facts = deriveFacts(data.results as unknown as Results);
+const P = C.prologue;
+---
+<section class="prologue" data-prologue data-state="static" data-label={formatFact(facts.orders, 'en')} aria-label={P.label[lang]}>
+  <a class="prologue__skip" href="#p-summary-h">{P.skip[lang]}</a>
+  <div class="prologue__static wrap">
+    <p class="prologue__big"><InsightText text={C.hero.big[lang]} facts={facts} lang={lang} /></p>
+    <p class="prologue__sub"><InsightText text={C.hero.sub[lang]} facts={facts} lang={lang} /></p>
+  </div>
+  <div class="prologue__stick">
+    <canvas aria-hidden="true"></canvas>
+    {P.caps.map((c, i) => (
+      <div class="prologue__cap" data-cap={i}>
+        <small><InsightText text={c.small[lang]} facts={facts} lang={lang} /></small>
+        <p class="prologue__title"><InsightText text={c.title[lang]} facts={facts} lang={lang} /></p>
+        <p class="prologue__body"><InsightText text={c.body[lang]} facts={facts} lang={lang} /></p>
+      </div>
+    ))}
+    <p class="prologue__hud" aria-hidden="true" data-insight-data><b data-hud-count></b> PARTICLES · WEBGL2 · <b data-hud-fps></b> FPS</p>
+  </div>
+</section>
+<style>
+  .prologue { position: relative; }
+  .prologue__static { padding-block: clamp(40px, 9vh, 110px) 8px; }
+  .prologue__big { font: 900 clamp(26px, 3.4vw, 52px)/1 var(--font-cjk-bold); letter-spacing: -0.01em; }
+  .prologue__big :global(.inum) { display: inline-block; margin-right: 0.12em; font: 700 clamp(84px, 15vw, 230px)/0.82 var(--font-display); color: var(--ink); letter-spacing: -0.01em; }
+  .prologue__sub { margin-top: 18px; color: var(--mute); font-size: clamp(14px, 1.2vw, 17px); }
+  .prologue__sub :global(.inum) { color: inherit; }
+  .prologue__stick { display: none; }
+  .prologue__skip { position: absolute; left: 6vw; top: 18px; z-index: 3; font-size: 13px; color: inherit; }
+  .prologue[data-state='static'] .prologue__skip:not(:focus) { width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .prologue[data-state='live'] { height: 460vh; background: var(--night); color: var(--night-fg); }
+  .prologue[data-state='live'] .prologue__static { display: none; }
+  .prologue[data-state='live'] .prologue__stick { display: block; position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .prologue[data-state='live'] :focus-visible { outline-color: var(--night-fg); }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.8s var(--ease); cursor: crosshair; touch-action: pan-y; }
+  canvas[data-ready] { opacity: 1; }
+  canvas.drag { cursor: grabbing; }
+  .prologue__cap { position: absolute; left: 6vw; bottom: 12vh; max-width: 34em; opacity: 0; pointer-events: none; }
+  .prologue__cap small { display: block; margin-bottom: 8px; font: 700 13px var(--font-display); letter-spacing: 0.26em; color: var(--night-mute); }
+  .prologue__cap small :global(.inum) { color: inherit; font-weight: 700; }
+  .prologue__title { font: 900 clamp(30px, 3.6vw, 56px)/1.1 var(--font-cjk-bold); }
+  .prologue__title :global(.inum) { color: var(--red); font-family: var(--font-display); font-size: 1.25em; }
+  .prologue__body { margin-top: 10px; font-size: 17px; color: var(--night-mute); }
+  .prologue__body :global(.inum) { color: var(--night-fg); }
+  .prologue__hud { position: absolute; right: 24px; top: 22px; text-align: right; font: 700 12px/1.8 var(--font-display); letter-spacing: 0.2em; color: var(--night-mute); pointer-events: none; }
+  .prologue__hud b { color: var(--night-fg); }
+</style>

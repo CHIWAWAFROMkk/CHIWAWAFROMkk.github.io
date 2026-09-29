@@ -57,6 +57,8 @@ describe('insights copy', () => {
   const templates: { zh: string; en: string }[] = [
     INSIGHTS_COPY.hero.big, INSIGHTS_COPY.hero.sub,
     ...INSIGHTS_COPY.chapters.flatMap(c => [c.q, c.a, ...(c.note ? [c.note] : []), ...(c.recs ?? [])]),
+    INSIGHTS_COPY.prologue.label, INSIGHTS_COPY.prologue.skip,
+    ...INSIGHTS_COPY.prologue.caps.flatMap(c => [c.small, c.title, c.body]),
   ];
   const keys = (s: string) => [...new Set([...s.matchAll(/\{(\w+)\}/g)].map(m => m[1]))].sort();
 

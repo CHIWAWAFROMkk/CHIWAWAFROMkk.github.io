@@ -11,6 +11,16 @@ export const INSIGHTS_COPY = {
       en: 'One term · {weeks} weeks · {students} students · {merchants} merchants · synthetic data',
     },
   },
+  prologue: {
+    label: { zh: '序章：一个学期的订单', en: 'Prologue: one term of orders' },
+    skip: { zh: '跳过序章', en: 'Skip the intro' },
+    caps: [
+      { small: { zh: 'ONE TERM · SYNTHETIC DATA', en: 'ONE TERM · SYNTHETIC DATA' }, title: { zh: '一个学期的外卖订单', en: 'One term of delivery orders' }, body: { zh: '向下滚动', en: 'Scroll down' } },
+      { small: { zh: 'CAMPUS DELIVERY · {weeks} WEEKS', en: 'CAMPUS DELIVERY · {weeks} WEEKS' }, title: { zh: '{orders} 笔订单', en: '{orders} orders' }, body: { zh: '每一个光点，都会落到它该去的位置。', en: 'Every point of light lands where it belongs.' } },
+      { small: { zh: 'WHEN IS IT BUSIEST', en: 'WHEN IS IT BUSIEST' }, title: { zh: '什么时候最忙？', en: 'When is it busiest?' }, body: { zh: '星期 × 小时。午餐和晚餐，是两条山脊。', en: 'Weekday × hour. Lunch and dinner rise as two ridges.' } },
+      { small: { zh: 'WHERE DOES THE MONEY COME FROM', en: 'WHERE DOES THE MONEY COME FROM' }, title: { zh: '前三家拿走 {top3Share}', en: 'The top three take {top3Share}' }, body: { zh: '{merchants} 家商家的净收款，从高到低。', en: 'Net revenue of {merchants} merchants, highest first.' } },
+    ],
+  },
   storyTitle: { zh: '五个经营问题', en: 'Five business questions' },
   chapters: [
     {
