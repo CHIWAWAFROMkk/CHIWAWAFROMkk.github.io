@@ -165,6 +165,8 @@ const DISHES = [['土豆牛肉饭', '南门小厨', 24, '¥528'], ['菌菇拌面
   .table-wrap :global(table) { width: 100%; border-collapse: collapse; font-size: 14px; }
   .table-wrap :global(th), .table-wrap :global(td) { padding: 8px 10px; border-bottom: var(--hair); text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .table-wrap :global(th) { font-weight: 500; border-bottom: var(--rule); }
+  .table-wrap :global(tr.drop) { animation: row-drop 0.35s var(--ease) both; animation-delay: calc(var(--i, 0) * 20ms); }
+  @keyframes row-drop { from { opacity: 0; transform: translateY(-10px); } }
   .schema { margin-top: 20px; }
   .schema summary { cursor: pointer; font-weight: 500; }
   .schema pre { max-height: 360px; overflow: auto; padding: 14px; background: #fff; border: var(--hair); font: 12px/1.5 Consolas, monospace; }

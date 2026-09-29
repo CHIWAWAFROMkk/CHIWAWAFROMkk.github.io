@@ -2,6 +2,7 @@ import { DELIVERY_QUERIES } from './delivery-queries';
 import { DELIVERY_TEXT } from './delivery-text';
 import { DELIVERY_ERRORS, localizeError } from './tool-i18n';
 import { playBand, failedStep } from './txn-band';
+import { countText } from './countup';
 
 interface Dish { id: number; name: string; merchant: string; price_cents: number; stock: number }
 interface Order { id: number; student: string; merchant: string; status: 'paid' | 'delivered' | 'refunded'; total_cents: number }
@@ -36,6 +37,23 @@ export function initDelivery(root: HTMLElement): void {
   let failed = false;
 
   const message = (text: string, error = false) => { const s = $('sql-status'); s.textContent = text; s.dataset.error = String(error); };
+  /** Success line for a query: screen readers get the final text once (.sr); the visible copy counts the rows up. */
+  const showRows = (text: string) => {
+    const s = $('sql-status');
+    s.dataset.error = 'false';
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { s.textContent = text; return; }
+    const sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = text;
+    const shown = document.createElement('span'); shown.setAttribute('aria-hidden', 'true');
+    s.replaceChildren(sr, shown);
+    const t0 = performance.now();
+    const step = (now: number) => {
+      if (!shown.isConnected) return;
+      const k = Math.min(1, (now - t0) / 500);
+      shown.textContent = countText(text, 1 - (1 - k) ** 3);
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
   const busy = (value: boolean) => {
     controls.forEach(id => (button(id).disabled = value));
     root.querySelectorAll<HTMLButtonElement>('[data-refund]').forEach(b => (b.disabled = value));
@@ -124,7 +142,12 @@ export function initDelivery(root: HTMLElement): void {
       r.columns.forEach(c => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = c; hr.append(th); });
       head.append(hr); t.append(head);
       const body = document.createElement('tbody');
-      r.values.forEach(v => { const row = document.createElement('tr'); v.forEach(x => { const td = document.createElement('td'); td.textContent = x === null ? 'NULL' : String(x); row.append(td); }); body.append(row); });
+      r.values.forEach((v, i) => {
+        const row = document.createElement('tr');
+        if (i < 20) { row.className = 'drop'; row.style.setProperty('--i', String(i)); }
+        v.forEach(x => { const td = document.createElement('td'); td.textContent = x === null ? 'NULL' : String(x); row.append(td); });
+        body.append(row);
+      });
       t.append(body); out.append(t); count += r.values.length;
     }
     button('export-csv').disabled = !exportRows.length;
@@ -137,7 +160,7 @@ export function initDelivery(root: HTMLElement): void {
     try {
       const data = await request('query', { sql: $<HTMLTextAreaElement>('sql-input').value });
       const n = table(data.result);
-      message(T.rows(n, Math.round(performance.now() - started), data.result.some(x => x.truncated)));
+      showRows(T.rows(n, Math.round(performance.now() - started), data.result.some(x => x.truncated)));
     } catch (e) { $('sql-results').replaceChildren(); exportRows = []; message((e as Error).message, true); }
   }
 

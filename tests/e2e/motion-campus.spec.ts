@@ -132,3 +132,30 @@ test('reduced motion shows the band\'s end state at once', async ({ page, isMobi
   await page.locator('#place-order').click();
   await expect(page.locator('[data-band="place"]')).toHaveAttribute('data-result', 'committed', { timeout: 1000 });
 });
+
+test.describe('query results', () => {
+  async function runAllOrders(page: Page) {
+    await page.goto(CAMPUS);
+    await page.locator('[data-campus]').scrollIntoViewIfNeeded();
+    await expect(page.locator('#run-query')).toBeEnabled({ timeout: 20000 });
+    await page.locator('#sql-input').fill('SELECT * FROM orders');
+    await page.locator('#run-query').click();
+    await expect(page.locator('#sql-results tbody tr').nth(25)).toBeAttached();
+  }
+
+  test('the first twenty rows drop in, the rest appear at once', async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'run once');
+    await runAllOrders(page);
+    await expect(page.locator('#sql-results tbody tr').nth(0)).toHaveClass(/drop/);
+    await expect(page.locator('#sql-results tbody tr').nth(19)).toHaveClass(/drop/);
+    await expect(page.locator('#sql-results tbody tr').nth(20)).not.toHaveClass(/drop/);
+  });
+
+  test('the row count rolls up visually while screen readers get the final text once', async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'run once');
+    await runAllOrders(page);
+    const sr = page.locator('#sql-status .sr');
+    await expect(sr).toHaveText(/\d+ 行/);
+    await expect(page.locator('#sql-status [aria-hidden="true"]')).toHaveText((await sr.textContent())!);
+  });
+});
