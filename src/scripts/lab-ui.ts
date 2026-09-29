@@ -140,7 +140,7 @@ export function initLab(root: HTMLElement): void {
       const th = node('th'); const b = node('button', h + (sortColumn === i ? (ascending ? ' ↑' : ' ↓') : ''));
       th.scope = 'col'; th.setAttribute('aria-sort', sortColumn === i ? (ascending ? 'ascending' : 'descending') : 'none');
       b.type = 'button'; b.title = T.sortTitle(h);
-      b.onclick = () => { ascending = sortColumn === i ? !ascending : true; sortColumn = i; renderTable(); };
+      b.onclick = () => { flush(); ascending = sortColumn === i ? !ascending : true; sortColumn = i; renderTable(); };
       th.append(b); tr.append(th);
     });
     $('data-head').replaceChildren(tr);
@@ -184,12 +184,15 @@ export function initLab(root: HTMLElement): void {
     removal = window.setTimeout(() => { removal = 0; page = 0; render(); }, 480);
   };
   ['dedupe', 'drop-missing'].forEach(id => ($<HTMLInputElement>(id).onchange = toggle));
-  $<HTMLSelectElement>('column').onchange = renderStats;
-  $<HTMLInputElement>('search').oninput = () => { page = 0; renderTable(); };
-  $('prev').onclick = () => { page--; renderTable(); };
-  $('next').onclick = () => { page++; renderTable(); };
-  $('export-csv').onclick = () => { if (result && source) download('analyzed-data.csv', csvExport(source.headers, result.rows), 'text/csv;charset=utf-8'); };
+  /** Finishes a pending removal at once, so anything that reads the analysis (paging, sorting, search, exports) sees what the options say. */
+  function flush() { if (!removal) return; clearTimeout(removal); removal = 0; page = 0; render(); }
+  $<HTMLSelectElement>('column').onchange = () => { flush(); renderStats(); };
+  $<HTMLInputElement>('search').oninput = () => { flush(); page = 0; renderTable(); };
+  $('prev').onclick = () => { flush(); page = Math.max(0, page - 1); renderTable(); };
+  $('next').onclick = () => { flush(); page++; renderTable(); };
+  $('export-csv').onclick = () => { flush(); if (result && source) download('analyzed-data.csv', csvExport(source.headers, result.rows), 'text/csv;charset=utf-8'); };
   $('export-json').onclick = () => {
+    flush();
     if (!result || !source) return;
     const report = {
       version: VERSION, filename, inputSha256: hash, delimiter: source.delimiter,

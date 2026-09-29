@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 const LAB = '/projects/stock-data/';
 const metric = (page: Page, i: number) => page.locator('#metrics .metric strong').nth(i);
@@ -64,4 +65,15 @@ test('a bad paste shakes the input area and marks it red until a good load', asy
   await page.locator('#paste-run').click();
   await expect(metric(page, 0)).toHaveText('2');
   await expect(page.locator('.paste-box')).not.toHaveClass(/shake/);
+});
+
+test('exporting right after ticking an option reports the new state', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.goto(LAB);
+  await expect(metric(page, 0)).toHaveText('13');
+  await page.locator('#dedupe').check();
+  const [dl] = await Promise.all([page.waitForEvent('download'), page.locator('#export-json').click()]);
+  const report = JSON.parse(readFileSync((await dl.path())!, 'utf8'));
+  expect(report.options.deduplicate).toBe(true);
+  expect(report.audit.outputRows).toBe(12);
 });

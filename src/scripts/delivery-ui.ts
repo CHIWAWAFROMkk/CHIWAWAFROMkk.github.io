@@ -50,7 +50,10 @@ export function initDelivery(root: HTMLElement): void {
       if (!shown.isConnected) return;
       const k = Math.min(1, (now - t0) / 500);
       shown.textContent = countText(text, 1 - (1 - k) ** 3);
-      if (k < 1) requestAnimationFrame(step);
+      if (k < 1) { requestAnimationFrame(step); return; }
+      // Done: leave the final text once, as plain status text (no re-announcement: only a class and a hidden node change).
+      shown.remove();
+      sr.removeAttribute('class');
     };
     requestAnimationFrame(step);
   };

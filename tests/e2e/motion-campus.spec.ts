@@ -151,11 +151,11 @@ test.describe('query results', () => {
     await expect(page.locator('#sql-results tbody tr').nth(20)).not.toHaveClass(/drop/);
   });
 
-  test('the row count rolls up visually while screen readers get the final text once', async ({ page, isMobile }) => {
+  test('the row count rolls up, then the status holds the final text exactly once', async ({ page, isMobile }) => {
     test.skip(!!isMobile, 'run once');
     await runAllOrders(page);
-    const sr = page.locator('#sql-status .sr');
-    await expect(sr).toHaveText(/\d+ 行/);
-    await expect(page.locator('#sql-status [aria-hidden="true"]')).toHaveText((await sr.textContent())!);
+    await expect(page.locator('#sql-status [aria-hidden="true"]')).toHaveCount(0);
+    const text = (await page.locator('#sql-status').textContent())!;
+    expect(text).toMatch(/^\d+ 行 · \d+ ms$/);
   });
 });

@@ -63,3 +63,30 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('article.prose h3').first()).toBeVisible();
   });
 });
+
+test('the overview page keeps its rows exactly as before (no index motion)', async ({ page }) => {
+  await skipIntro(page);
+  await page.goto('/brief/');
+  await expect(page.locator('a.prow').first()).toBeVisible();
+  await expect(page.locator('a.prow.reveal')).toHaveCount(0);
+  await expect(page.locator('.prow__preview')).toHaveCount(0);
+});
+
+test('a row already on screen at load is shown without scrolling, even at the very bottom', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  // Put the third row inside the bottom 10% of the viewport, where the observer margin never fires.
+  // The header spacing depends on the viewport height, so measure and shrink until the row sits there.
+  const row = page.locator('a.prow').nth(2);
+  let height = 2000;
+  for (let i = 0; i < 6; i++) {
+    await page.setViewportSize({ width: 1440, height });
+    await page.goto(INDEX);
+    const top = await row.evaluate(el => el.getBoundingClientRect().top);
+    if (top > height * 0.9 && top < height - 5) break;
+    height = Math.round(top + 30);
+  }
+  const top = await row.evaluate(el => el.getBoundingClientRect().top);
+  expect(top).toBeGreaterThan(height * 0.9);
+  expect(top).toBeLessThan(height);
+  await expect(row).toHaveClass(/is-in/, { timeout: 2000 });
+});

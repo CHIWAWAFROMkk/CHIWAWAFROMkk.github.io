@@ -15,7 +15,9 @@ export function reveal(els: Iterable<Element>, staggerMs = 0): void {
   for (const el of els) {
     (el as HTMLElement).style.setProperty('--d', `${i++ * staggerMs}ms`);
     el.classList.add('reveal');
-    io.observe(el);
+    // Already on screen: show it on the next frames (so it still animates) instead of waiting for the observer margin.
+    if (el.getBoundingClientRect().top < innerHeight) requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-in')));
+    else io.observe(el);
   }
 }
 
