@@ -15,7 +15,45 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
     <article class="prose wrap"><Body /></article>
   </main>
 </Base>
+<script>
+  import { scrollProgress } from '../scripts/scroll-progress';
+  import { onScroll } from '../scripts/motion-dom';
+  import { initCountUp } from '../scripts/countup-dom';
+  import { countEvery } from '../scripts/countup';
+  const ol = document.querySelector<HTMLOListElement>('article.prose ol');
+  if (ol) {
+    const items = [...ol.querySelectorAll<HTMLElement>(':scope > li')];
+    ol.classList.add('timeline');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      ol.style.setProperty('--p', '1');
+      items.forEach(li => li.classList.add('is-lit'));
+    } else {
+      onScroll(() => {
+        const r = ol.getBoundingClientRect();
+        ol.style.setProperty('--p', scrollProgress(r.top, r.height, innerHeight, 0.6, 0.6).toFixed(3));
+        items.forEach(li => li.classList.toggle('is-lit', li.getBoundingClientRect().top < innerHeight * 0.6));
+      });
+    }
+  }
+  const table = document.querySelector('article.prose table');
+  if (table) initCountUp(table.querySelectorAll<HTMLElement>('tbody td:nth-child(2)'), countEvery);
+</script>
 <style>
   .m-head { padding-block: clamp(32px, 6vh, 72px) 28px; border-bottom: var(--rule); }
   .m-head h1 { font-size: clamp(34px, 5vw, 72px); line-height: 1.05; letter-spacing: -0.03em; max-width: 18em; }
+  :global(article.prose ol.timeline) { position: relative; padding-left: 2.4em; list-style: none; counter-reset: step; }
+  :global(article.prose ol.timeline)::before,
+  :global(article.prose ol.timeline)::after { content: ''; position: absolute; left: 0.55em; top: 0.5em; bottom: 0.5em; width: 2px; }
+  :global(article.prose ol.timeline)::after { background: var(--mute); opacity: 0.3; }
+  :global(article.prose ol.timeline)::before { z-index: 1; background: var(--red); transform: scaleY(var(--p, 0)); transform-origin: top; }
+  :global(article.prose ol.timeline > li) { position: relative; counter-increment: step; }
+  :global(article.prose ol.timeline > li)::before {
+    content: counter(step); position: absolute; left: -2.4em; top: 0.05em; z-index: 2;
+    display: grid; place-items: center; width: 1.6em; height: 1.6em;
+    background: var(--paper); border: 2px solid var(--mute); font: 700 13px/1 var(--font-display); color: var(--mute);
+    transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  :global(article.prose ol.timeline > li.is-lit)::before { background: var(--red-text); border-color: var(--red-text); color: #fff; }
+  :global(article.prose ol.timeline > li strong) { transition: color 0.3s var(--ease); }
+  :global(article.prose ol.timeline > li.is-lit strong) { color: var(--red-text); }
 </style>
