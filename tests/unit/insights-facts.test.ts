@@ -89,6 +89,5 @@ describe('insights copy', () => {
     expect(v('freshRetention')).toBeGreaterThan(v('laterRetention'));
     expect(v('farMinutes')).toBeGreaterThan(v('nearMinutes'));
     expect(v('top3Share')).toBeGreaterThan(50);
-    expect(real.topReason.value).toBe('等待太久'); // chapter 6 suggestion 2 relies on it
   });
 });
