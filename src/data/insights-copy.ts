@@ -54,7 +54,7 @@ export const INSIGHTS_COPY = {
     {
       q: { zh: '为什么退款？', en: 'Why do orders get refunded?' },
       a: {
-        zh: '整体退款率 {refundPct}，第一大原因是"{topReason}"，占 {topReasonShare}。高峰时段的取消率是 {peakCancel}，是平时（{calmCancel}）的 {cancelRatio} 倍。',
+        zh: '整体退款率 {refundPct}，第一大原因是“{topReason}”，占 {topReasonShare}。高峰时段的取消率是 {peakCancel}，是平时（{calmCancel}）的 {cancelRatio} 倍。',
         en: 'The refund rate is {refundPct}; the top reason, "{topReason}", accounts for {topReasonShare}. At peak hours {peakCancel} of orders are cancelled — {cancelRatio} times the off-peak {calmCancel}.',
       },
       note: {
@@ -71,7 +71,7 @@ export const INSIGHTS_COPY = {
           en: 'Stock and staff for the peaks: the four lunch and dinner hours bring in {peakShare} of orders, so kitchens and riders should lean into them.',
         },
         {
-          zh: '给{farArea}加派骑手或设自提点：平均 {farMinutes}送达，{farOver45} 的订单超过 {slowLine}，而"{topReason}"正是退款的第一原因。',
+          zh: '给{farArea}加派骑手或设自提点：平均 {farMinutes}送达，{farOver45} 的订单超过 {slowLine}，而“{topReason}”正是退款的第一原因。',
           en: 'Add riders or a pickup point for the {farArea}: {farMinutes} on average and {farOver45} of orders over {slowLine} — and "{topReason}" is the top refund reason.',
         },
         {
