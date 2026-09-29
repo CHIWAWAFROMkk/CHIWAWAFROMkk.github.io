@@ -16,6 +16,7 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
 ---
 <Base lang={lang} path={path} title={`${title[lang]} · ${SITE.name[lang]}`} description={description[lang]}>
   <main id="main">
+    <slot name="top" />
     <header class="p-head wrap">
       <ul class="p-tags">{tags.map(t => <li>{t[lang]}</li>)}</ul>
       <h1 class="p-title">{title[lang]}</h1>

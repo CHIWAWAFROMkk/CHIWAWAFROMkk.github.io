@@ -1,0 +1,95 @@
+---
+import InsightText from './InsightText.astro';
+import ChartLabels from './ChartLabels.astro';
+import { INSIGHTS_COPY as C } from '../data/insights-copy';
+import { deriveFacts, type Results } from '../scripts/insights-facts';
+import { storyLayouts, VIEW } from '../scripts/morph';
+import { merchantName, areaName, reasonName } from '../scripts/insights-names';
+import data from '../data/insights.json';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const R = data.results as unknown as Results;
+const facts = deriveFacts(R);
+const first = storyLayouts(R)[0].marks;
+const KINDS = ['heatmap', 'merchants', 'retention', 'delivery', 'reasons', 'blocks'] as const;
+const L = C.tables;
+const yuan = (c: number) => `¥${Math.round(c / 100).toLocaleString('en-US')}`;
+const DAYS = { zh: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'], en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] };
+const hm = new Map(R.heatmap.values.map(([d, h, n]) => [`${d}-${h}`, String(n)]));
+const hours = [...new Set(R.heatmap.values.map(r => Number(r[1])))].sort((a, b) => a - b);
+const cohorts = [...new Set(R.retention.values.map(r => Number(r[0])))];
+const maxK = Math.max(0, ...R.retention.values.map(r => Number(r[1])));
+const ret = new Map(R.retention.values.map(([c, k, size, n]) => [`${c}-${k}`, `${Math.round((Number(n) / Number(size)) * 100)}%`]));
+const ks = Array.from({ length: maxK + 1 }, (_, k) => k);
+const tables: ({ head: string[]; rows: string[][] } | null)[] = [
+  { head: [L.day[lang], ...hours.map(h => `${h}:00`)], rows: DAYS[lang].map((d, i) => [d, ...hours.map(h => hm.get(`${i}-${h}`) ?? '0')]) },
+  { head: [L.merchant[lang], L.orders[lang], L.net[lang]], rows: R.merchants.values.map(([, m, n, net]) => [merchantName(String(m), lang), String(n), yuan(Number(net))]) },
+  { head: [L.cohort[lang], ...ks.map(k => `+${k}`)], rows: cohorts.map(c => [lang === 'zh' ? `第 ${c} 周` : `Week ${c}`, ...ks.map(k => ret.get(`${c}-${k}`) ?? '')]) },
+  { head: [L.area[lang], L.delivered[lang], L.avg[lang], L.over45[lang]], rows: R.slow.values.map(([a, n, over, avg]) => [areaName(String(a), lang), String(n), String(avg), String(over)]) },
+  { head: [L.reason[lang], L.refunds[lang]], rows: R.reasons.values.map(([r, n]) => [reasonName(String(r), lang), String(n)]) },
+  null,
+];
+---
+<section class="story" data-story aria-labelledby="story-h">
+  <h2 id="story-h" class="sr">{C.storyTitle[lang]}</h2>
+  <div class="story__grid wrap">
+    <div class="story__text">
+      {C.chapters.map((c, i) => (
+        <article class="chapter" data-chapter-section>
+          <p class="chapter__n" data-insight-data>{`0${i + 1}`}</p>
+          <h3>{c.q[lang]}</h3>
+          <p class="chapter__a"><InsightText text={c.a[lang]} facts={facts} lang={lang} /></p>
+          {c.recs && <ol class="recs">{c.recs.map(r => <li><InsightText text={r[lang]} facts={facts} lang={lang} /></li>)}</ol>}
+          {c.note && <p class="chapter__note"><InsightText text={c.note[lang]} facts={facts} lang={lang} /></p>}
+          {tables[i] && (
+            <details class="chapter__data" data-insight-data>
+              <summary>{L.view[lang]}</summary>
+              <div class="table-wrap" role="region" tabindex="0" aria-label={`${c.q[lang]} · ${L.view[lang]}`}>
+                <table>
+                  <thead><tr>{tables[i]!.head.map(h => <th scope="col">{h}</th>)}</tr></thead>
+                  <tbody>{tables[i]!.rows.map(r => <tr>{r.map((v, j) => (j === 0 ? <th scope="row">{v}</th> : <td>{v}</td>))}</tr>)}</tbody>
+                </table>
+              </div>
+            </details>
+          )}
+        </article>
+      ))}
+    </div>
+    <figure class="stage" data-stage data-chapter="1" data-insight-data aria-hidden="true">
+      <svg viewBox={`0 0 ${VIEW.w} ${VIEW.h}`}>
+        {first.map((m, i) => <rect data-m={i} x={m.x.toFixed(1)} y={m.y.toFixed(1)} width={m.w.toFixed(1)} height={m.h.toFixed(1)} fill-opacity={m.a.toFixed(3)} class:list={[{ red: m.red === 1 }]} />)}
+        {KINDS.map((k, i) => <ChartLabels kind={k} results={R} lang={lang} chapter={i + 1} />)}
+      </svg>
+    </figure>
+  </div>
+</section>
+<style>
+  .story { border-top: var(--rule); }
+  .story__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 72px); align-items: start; }
+  .chapter { min-height: 100vh; padding-block: 16vh 8vh; }
+  .chapter:last-child { min-height: 80vh; }
+  .chapter__n { font: 700 14px/1 var(--font-display); letter-spacing: 0.2em; color: var(--red-text); }
+  .chapter h3 { margin: 12px 0 20px; font-size: clamp(32px, 3.8vw, 60px); line-height: 1.05; letter-spacing: -0.02em; }
+  .chapter__a { max-width: 30em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.75; }
+  .recs { max-width: 32em; margin-top: 20px; padding-left: 1.4em; font-size: 17px; line-height: 1.7; }
+  .recs li { margin-bottom: 12px; }
+  .chapter__note { max-width: 36em; margin-top: 16px; color: var(--mute); font-size: 14px; }
+  .chapter__data { margin-top: 18px; font-size: 14px; }
+  .chapter__data summary { cursor: pointer; font-weight: 500; }
+  .table-wrap { max-width: 100%; overflow-x: auto; margin-top: 10px; }
+  table { border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+  th, td { padding: 6px 10px; border-bottom: var(--hair); text-align: right; }
+  th[scope='row'], thead th:first-child { text-align: left; }
+  thead th { border-bottom: var(--rule); font-weight: 500; }
+  .stage { position: sticky; top: 12vh; margin: 0; color: var(--ink); }
+  .stage svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .stage rect { fill: currentColor; }
+  .stage rect.red { fill: var(--red); }
+  @media (max-width: 800px) {
+    .story__grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .stage { order: -1; top: 0; z-index: 2; margin-inline: calc(var(--gutter) * -1); padding: 8px var(--gutter); background: var(--paper); border-bottom: var(--hair); }
+    .stage svg { width: auto; max-width: 100%; max-height: 36svh; margin-inline: auto; }
+    .chapter { min-height: 85svh; padding-block: 6vh; }
+  }
+</style>

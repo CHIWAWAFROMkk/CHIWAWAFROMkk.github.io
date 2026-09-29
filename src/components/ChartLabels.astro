@@ -1,0 +1,36 @@
+---
+import { PLOT, AREAS } from '../scripts/morph';
+import { areaName, merchantLegend, reasonLegend } from '../scripts/insights-names';
+import type { Results } from '../scripts/insights-facts';
+import type { Lang } from '../i18n';
+type LabelKind = 'heatmap' | 'merchants' | 'retention' | 'delivery' | 'reasons' | 'blocks';
+interface Props { kind: LabelKind; results: Results; lang: Lang; chapter?: number }
+const { kind, results, lang, chapter } = Astro.props;
+const DAYS = { zh: ['一', '二', '三', '四', '五', '六', '日'], en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] };
+const bottom = PLOT.y + PLOT.h + 16;
+const ch7 = PLOT.h / 7, cw24 = PLOT.w / 24, rh4 = PLOT.h / 4, bw13 = PLOT.w / 13, cell = PLOT.h / 14, bw3 = PLOT.w / 3;
+---
+<g class="lbl" data-for={chapter}>
+  {kind === 'heatmap' && DAYS[lang].map((d, i) => <text x={PLOT.x - 8} y={PLOT.y + i * ch7 + ch7 / 2 + 4} text-anchor="end">{d}</text>)}
+  {kind === 'heatmap' && [0, 6, 12, 18].map(h => <text x={PLOT.x + h * cw24 + cw24 / 2} y={bottom} text-anchor="middle">{`${h}:00`}</text>)}
+  {kind === 'merchants' && merchantLegend(results.merchants.values, lang).map((t, i) => <text class="red" data-legend={i} x={PLOT.x + PLOT.w} y={PLOT.y + 14 + i * 18} text-anchor="end">{t}</text>)}
+  {kind === 'retention' && [1, 4, 7, 10, 13, 16].map(c => <text x={PLOT.x - 8} y={PLOT.y + (c - 1) * (PLOT.h / 16) + PLOT.h / 32 + 4} text-anchor="end">{lang === 'zh' ? `第${c}周` : `W${c}`}</text>)}
+  {kind === 'retention' && [0, 4, 8, 12].map(k => <text x={PLOT.x + k * (PLOT.w / 16) + PLOT.w / 32} y={bottom} text-anchor="middle">{`+${k}`}</text>)}
+  {kind === 'delivery' && AREAS.map((a, i) => <text x={PLOT.x - 8} y={PLOT.y + i * rh4 + rh4 - 8} text-anchor="end">{areaName(a, lang, true)}</text>)}
+  {kind === 'delivery' && [0, 15, 30, 45, 60].map(m => <text x={PLOT.x + (m / 5) * bw13 + bw13 / 2} y={bottom} text-anchor="middle">{m === 60 ? '60+' : String(m)}</text>)}
+  {kind === 'reasons' && reasonLegend(results.reasons.values, lang).map((t, i) => <text class={`r${Math.min(i, 3)}`} data-legend={i} x={PLOT.x + 12 * cell + 16} y={PLOT.y + 14 + i * 22}>{t}</text>)}
+  {kind === 'blocks' && [1, 2, 3].map(b => <text x={PLOT.x + (b - 1) * bw3} y={bottom}>{`0${b}`}</text>)}
+</g>
+<style>
+  text { font: 400 11px/1 var(--font-body); fill: currentColor; }
+  .red, .r0 { fill: var(--red-text); font-weight: 700; }
+  .r1 { fill-opacity: 0.85; } .r2 { fill-opacity: 0.7; } .r3 { fill-opacity: 0.6; }
+  :global(.night-zone) .red, :global(.night-zone) .r0 { fill: var(--red); }
+  :global([data-stage]) .lbl { opacity: 0; transition: opacity 0.3s var(--ease); }
+  :global([data-stage][data-chapter='1']) .lbl[data-for='1'],
+  :global([data-stage][data-chapter='2']) .lbl[data-for='2'],
+  :global([data-stage][data-chapter='3']) .lbl[data-for='3'],
+  :global([data-stage][data-chapter='4']) .lbl[data-for='4'],
+  :global([data-stage][data-chapter='5']) .lbl[data-for='5'],
+  :global([data-stage][data-chapter='6']) .lbl[data-for='6'] { opacity: 1; }
+</style>

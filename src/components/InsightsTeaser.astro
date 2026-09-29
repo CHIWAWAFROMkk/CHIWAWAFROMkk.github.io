@@ -1,0 +1,20 @@
+---
+import { localizePath, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = lang === 'zh'
+  ? { kicker: '进阶版', title: '一个学期的经营分析 →', sub: '同一套表结构放大到一个学期，用 SQL 回答五个经营问题，还能在驾驶舱里自己筛选。' }
+  : { kicker: 'Advanced edition', title: 'A full term of business analysis →', sub: 'The same schema scaled to a whole term: five business questions answered in SQL, plus a dashboard you can filter.' };
+---
+<a class="teaser" href={localizePath('/projects/campus-delivery/insights/', lang)}>
+  <span class="teaser__kicker">{T.kicker}</span>
+  <span class="teaser__title">{T.title}</span>
+  <span class="teaser__sub">{T.sub}</span>
+</a>
+<style>
+  .teaser { display: grid; gap: 8px; max-width: 900px; margin: 48px 0 8px; padding: 24px 28px; background: var(--ink); color: var(--paper); text-decoration: none; transition: background-color 0.2s var(--ease); }
+  .teaser:hover, .teaser:focus-visible { background: var(--red-text); }
+  .teaser__kicker { font: 700 12px/1 var(--font-display); letter-spacing: 0.24em; text-transform: uppercase; }
+  .teaser__title { font: 900 clamp(22px, 2.6vw, 36px)/1.2 var(--font-cjk-bold); }
+  .teaser__sub { font-size: 15px; opacity: 0.85; }
+</style>

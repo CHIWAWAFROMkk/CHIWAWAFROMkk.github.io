@@ -1,0 +1,25 @@
+---
+import InsightText from './InsightText.astro';
+import { INSIGHTS_COPY as C } from '../data/insights-copy';
+import { deriveFacts, type Results } from '../scripts/insights-facts';
+import data from '../data/insights.json';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const facts = deriveFacts(data.results as unknown as Results);
+---
+<section class="ihero" data-rain>
+  <canvas aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p class="ihero__big" data-rain-target><InsightText text={C.hero.big[lang]} facts={facts} lang={lang} /></p>
+    <p class="ihero__sub"><InsightText text={C.hero.sub[lang]} facts={facts} lang={lang} /></p>
+  </div>
+</section>
+<style>
+  .ihero { position: relative; padding-block: clamp(40px, 9vh, 110px) 8px; overflow: hidden; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .ihero__big { font: 900 clamp(26px, 3.4vw, 52px)/1 var(--font-cjk-bold); letter-spacing: -0.01em; }
+  .ihero__big :global(.inum) { display: inline-block; margin-right: 0.12em; font: 700 clamp(84px, 15vw, 230px)/0.82 var(--font-display); color: var(--ink); letter-spacing: -0.01em; }
+  .ihero__sub { margin-top: 18px; color: var(--mute); font-size: clamp(14px, 1.2vw, 17px); }
+  .ihero__sub :global(.inum) { color: inherit; }
+</style>

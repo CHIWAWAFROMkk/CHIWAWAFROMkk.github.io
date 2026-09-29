@@ -1,0 +1,58 @@
+---
+import { PARAMS } from '../../tools/insights-gen.mjs';
+import { QUERIES } from '../scripts/insights-queries.mjs';
+import { merchantName, areaName, reasonName } from '../scripts/insights-names';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const pct = (v: number) => `${Math.round(v * 1000) / 10}%`;
+const T = {
+  params: zh ? '生成参数（预设的规律都在这里）' : 'Generator parameters (every planted pattern is here)',
+  sql: zh ? '全部 SQL' : 'Every query',
+  downloads: zh ? '下载' : 'Downloads',
+  db: zh ? '学期数据库（SQLite）' : 'Term database (SQLite)',
+  gen: zh ? '数据生成脚本' : 'Generator script',
+  queries: zh ? '全部查询' : 'All queries',
+  label: zh ? '生成参数，可横向滚动' : 'Generator parameters, scrolls sideways',
+};
+const rows: [string, string][] = [
+  [zh ? '学期' : 'Term', zh ? `${PARAMS.termStart} 起，${PARAMS.weeks} 周` : `${PARAMS.weeks} weeks from ${PARAMS.termStart}`],
+  [zh ? '学生' : 'Students', String(PARAMS.students)],
+  [zh ? '宿舍区（基础送达分钟 · 学生占比）' : 'Dorm areas (base minutes · share of students)', PARAMS.areas.map(([a, m, s]) => `${areaName(a, lang, true)} ${m} · ${pct(s)}`).join('；')],
+  [zh ? '开学头两周加入的学生占比' : 'Share joining in the first two weeks', pct(PARAMS.freshmanShare)],
+  [zh ? '加入后下单兴趣的衰减（下限 + 幅度 × e^(−周/半衰)）' : 'Interest after joining (floor + span × e^(−weeks/half-life))', `${zh ? '头两周' : 'first two weeks'} ${PARAMS.retention.fresh.join(' / ')}；${zh ? '之后' : 'later'} ${PARAMS.retention.later.join(' / ')}`],
+  [zh ? '每周下单强度（次数 · 学生占比）' : 'Weekly ordering (orders · share)', PARAMS.appetite.map(([n, s]) => `${n} · ${pct(s)}`).join('；')],
+  [zh ? '各小时权重' : 'Hour weights', Object.entries(PARAMS.hourWeights).map(([h, w]) => `${h}:00 ${w}`).join(' · ')],
+  [zh ? '周五周六夜宵加成' : 'Friday/Saturday late-night boost', `× ${PARAMS.lateBoost}`],
+  [zh ? '高峰时段与额外送达分钟' : 'Peak hours and extra minutes', `${PARAMS.peakHours.map(h => `${h}:00`).join(' · ')}；+${PARAMS.peakExtraMinutes}`],
+  [zh ? '取消概率（基础 · 高峰加 · 北区加）' : 'Cancellation (base · peak extra · North extra)', `${pct(PARAMS.cancel.base)} · ${pct(PARAMS.cancel.peak)} · ${pct(PARAMS.cancel.far)}`],
+  [zh ? '退款原因（高峰）' : 'Refund reasons (peak)', PARAMS.reasons.peak.map(([r, s]) => `${reasonName(r, lang)} ${pct(s)}`).join('；')],
+  [zh ? '退款原因（平时）' : 'Refund reasons (off-peak)', PARAMS.reasons.calm.map(([r, s]) => `${reasonName(r, lang)} ${pct(s)}`).join('；')],
+  [zh ? '商家热度权重' : 'Merchant popularity weights', PARAMS.merchants.map(([m, w]) => `${merchantName(m, lang)} ${w}`).join(' · ')],
+  [zh ? '随机种子' : 'Random seed', String(PARAMS.seed)],
+];
+---
+<section class="method" data-method data-insight-data>
+  <h2>{T.params}</h2>
+  <div class="table-wrap" role="region" tabindex="0" aria-label={T.label}>
+    <table><tbody>{rows.map(([k, v]) => <tr><th scope="row">{k}</th><td>{v}</td></tr>)}</tbody></table>
+  </div>
+  <h2>{T.sql}</h2>
+  {Object.entries(QUERIES).map(([id, sql]) => (
+    <>
+      <h3><code>{id}</code></h3>
+      <pre tabindex="0"><code>{sql}</code></pre>
+    </>
+  ))}
+  <h2>{T.downloads}</h2>
+  <ul>
+    <li><a href="/assets/insights/campus-term.sqlite" download>{T.db}</a></li>
+    <li><a href="/downloads/insights/insights-gen.mjs" download>{T.gen}</a></li>
+    <li><a href="/downloads/insights/insights-queries.mjs" download>{T.queries}</a></li>
+  </ul>
+</section>
+<style>
+  .table-wrap { overflow-x: auto; }
+  pre { max-width: 72em; }
+</style>

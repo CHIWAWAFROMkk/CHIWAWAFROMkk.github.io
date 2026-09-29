@@ -3,7 +3,8 @@ import type { Page } from '@playwright/test';
 export const PHASE1_PAGES = ['/', '/brief/', '/projects/hris-workflow/', '/en/', '/en/brief/', '/en/projects/hris-workflow/'];
 
 export const PHASE2A_PAGES = ['/projects/', '/projects/campus-delivery/', '/projects/stock-data/', '/projects/stock-data/method/'].flatMap(p => [p, `/en${p}`]);
-export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES];
+export const INSIGHTS_PAGES = ['/projects/campus-delivery/insights/', '/en/projects/campus-delivery/insights/'];
+export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES];
 
 export const PHASE2_PENDING = new Set(
   ['/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/', '/projects/mais-je-taime/', '/privacy/']

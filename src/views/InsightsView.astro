@@ -1,0 +1,22 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import InsightsHero from '../components/InsightsHero.astro';
+import InsightsStory from '../components/InsightsStory.astro';
+import InsightsMethod from '../components/InsightsMethod.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/campus-insights.zh.md';
+import { Content as BodyEn } from '../copy/projects/campus-insights.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.insights;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout lang={lang} slug="campus-delivery/insights" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <InsightsHero slot="top" lang={lang} />
+  <Fragment slot="demo">
+    <InsightsStory lang={lang} />
+  </Fragment>
+  <Body />
+  <InsightsMethod lang={lang} />
+</ProjectLayout>

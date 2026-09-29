@@ -1,0 +1,17 @@
+---
+import { formatFact, type Fact } from '../scripts/insights-facts';
+import type { Lang } from '../i18n';
+interface Props { text: string; facts: Record<string, Fact>; lang: Lang }
+const { text, facts, lang } = Astro.props;
+// '{orders} 笔订单' → [<span data-insight-num="orders">5,142</span>, ' 笔订单']
+const parts = text.split(/(\{\w+\})/).filter(Boolean).map(p => {
+  const key = p.match(/^\{(\w+)\}$/)?.[1];
+  if (!key) return { text: p };
+  if (!facts[key]) throw new Error(`Unknown insight fact: ${key}`);
+  return { key, text: formatFact(facts[key], lang) };
+});
+---
+{parts.map(p => (p.key ? <span class="inum" data-insight-num={p.key}>{p.text}</span> : p.text))}
+<style>
+  .inum { font-weight: 700; color: var(--red-text); font-variant-numeric: tabular-nums; }
+</style>
