@@ -1,7 +1,7 @@
 import { countText } from './countup';
 
 /** Counts each number up once as it enters the viewport; always ends on the exact original text. */
-export function initCountUp(els: Iterable<HTMLElement>): void {
+export function initCountUp(els: Iterable<HTMLElement>, text: (final: string, k: number) => string = countText): void {
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const io = new IntersectionObserver(entries => {
     for (const e of entries) {
@@ -12,7 +12,7 @@ export function initCountUp(els: Iterable<HTMLElement>): void {
       const t0 = performance.now();
       const step = (now: number) => {
         const k = Math.min(1, (now - t0) / 700);
-        el.textContent = countText(final, 1 - (1 - k) ** 3);
+        el.textContent = text(final, 1 - (1 - k) ** 3);
         if (k < 1) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
