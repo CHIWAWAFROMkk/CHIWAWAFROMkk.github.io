@@ -2,6 +2,7 @@
 import ProjectLayout from '../layouts/ProjectLayout.astro';
 import InsightsHero from '../components/InsightsHero.astro';
 import InsightsStory from '../components/InsightsStory.astro';
+import InsightsCockpit from '../components/InsightsCockpit.astro';
 import InsightsMethod from '../components/InsightsMethod.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/campus-insights.zh.md';
@@ -16,6 +17,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   <InsightsHero slot="top" lang={lang} />
   <Fragment slot="demo">
     <InsightsStory lang={lang} />
+    <InsightsCockpit lang={lang} />
   </Fragment>
   <Body />
   <InsightsMethod lang={lang} />

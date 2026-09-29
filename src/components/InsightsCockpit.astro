@@ -1,0 +1,121 @@
+---
+import ChartLabels from './ChartLabels.astro';
+import { COCKPIT_TEXT, KPI_IDS, kpiText } from '../scripts/cockpit-text';
+import { heatmap, pareto, delivery, waffle, VIEW, AREAS, type Rows } from '../scripts/morph';
+import { QUERIES } from '../scripts/insights-queries.mjs';
+import { merchantName, areaName } from '../scripts/insights-names';
+import type { Results } from '../scripts/insights-facts';
+import data from '../data/insights.json';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = COCKPIT_TEXT[lang];
+const R = data.results as unknown as Results;
+const CHARTS = [
+  { id: 'heatmap', layout: heatmap, label: 'heatmap' },
+  { id: 'merchants', layout: pareto, label: 'merchants' },
+  { id: 'delivery', layout: delivery, label: 'delivery' },
+  { id: 'reasons', layout: waffle, label: 'reasons' },
+] as const;
+const merchants = [...R.merchants.values].sort((a, b) => Number(a[0]) - Number(b[0]));
+const rows = (v: Rows) => v.slice(0, 50);
+---
+<section class="cockpit night-zone" data-cockpit data-insight-data data-lang={lang} aria-labelledby="ck-h">
+  <div class="wrap">
+    <div class="section-head"><h2 id="ck-h">{T.title}</h2><span class="label">{T.kicker}</span></div>
+    <p id="ck-status" class="ck-status" role="status" aria-live="polite">{T.idle}</p>
+    <form id="ck-form" class="ck-form">
+      <fieldset class="ck-weeks">
+        <legend>{T.weeks}</legend>
+        <label>{T.from} <input id="ck-from" type="range" min="1" max="16" value="1" disabled /> <output id="ck-from-out" for="ck-from">1</output> {T.week}</label>
+        <label>{T.to} <input id="ck-to" type="range" min="1" max="16" value="16" disabled /> <output id="ck-to-out" for="ck-to">16</output> {T.week}</label>
+      </fieldset>
+      <fieldset>
+        <legend>{T.merchants}</legend>
+        <div class="chips">{merchants.map(([id, name]) => <label class="chip"><input type="checkbox" name="merchant" value={String(id)} disabled /><span>{merchantName(String(name), lang)}</span></label>)}</div>
+      </fieldset>
+      <fieldset>
+        <legend>{T.areas}</legend>
+        <div class="chips">{AREAS.map(a => <label class="chip"><input type="checkbox" name="area" value={a} disabled /><span>{areaName(a, lang)}</span></label>)}</div>
+      </fieldset>
+      <button id="ck-reset" type="reset" class="secondary" disabled>{T.reset}</button>
+    </form>
+    <dl class="ck-kpis">
+      {KPI_IDS.map((k, i) => <div><dt>{T.kpi[k]}</dt><dd data-kpi={k}>{kpiText(k, R.kpi.values[0][i] as number | null, lang)}</dd></div>)}
+    </dl>
+    <div class="ck-charts">
+      {CHARTS.map(c => (
+        <figure class="ck-chart" data-chart={c.id}>
+          <figcaption>{T.charts[c.id]}</figcaption>
+          <svg viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} aria-hidden="true">
+            {c.layout(R[c.id].values).marks.map((m, i) => <rect data-m={i} x={m.x.toFixed(1)} y={m.y.toFixed(1)} width={m.w.toFixed(1)} height={m.h.toFixed(1)} fill-opacity={m.a.toFixed(3)} class:list={[{ red: m.red === 1 }]} />)}
+            <ChartLabels kind={c.label} results={R} lang={lang} />
+          </svg>
+          <details>
+            <summary>{T.viewSql}</summary>
+            <pre data-sql tabindex="0"><code>{QUERIES[c.id].split('\n').map((line, i) => <span style={`--i:${i}`}>{line + '\n'}</span>)}</code></pre>
+            <div class="table-wrap" role="region" tabindex="0" aria-label={T.resultLabel}>
+              <table data-table>
+                <thead><tr>{R[c.id].columns.map(col => <th scope="col">{col}</th>)}</tr></thead>
+                <tbody>{rows(R[c.id].values).map(r => <tr>{r.map(v => <td>{String(v)}</td>)}</tr>)}</tbody>
+              </table>
+            </div>
+          </details>
+        </figure>
+      ))}
+    </div>
+    <p class="ck-hint">{T.clickHint}</p>
+  </div>
+</section>
+<script>
+  import { initCockpit } from '../scripts/cockpit-ui';
+  import data from '../data/insights.json';
+  import type { Results } from '../scripts/insights-facts';
+  document.querySelectorAll<HTMLElement>('[data-cockpit]').forEach(el => initCockpit(el, data.results as unknown as Results));
+</script>
+<style>
+  .cockpit { padding-bottom: 56px; }
+  .ck-status { margin: 18px 0; color: var(--night-mute); font-size: 14px; }
+  .ck-status[data-error='true'] { color: var(--night-fg); border-left: 3px solid var(--red); padding-left: 10px; }
+  .ck-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr) auto; gap: 16px 28px; align-items: start; }
+  fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+  legend { margin-bottom: 8px; font: 700 12px/1 var(--font-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--night-mute); }
+  .ck-weeks label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  input[type='range'] { flex: 1; accent-color: var(--red); }
+  output { min-width: 2ch; font: 700 18px/1 var(--font-display); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .chip span { display: inline-block; padding: 5px 10px; border: 1.5px solid var(--night-mute); font-size: 13px; }
+  .chip input:checked + span { background: var(--red); border-color: var(--red); color: var(--night); }
+  .chip input:focus-visible + span { outline: 3px solid var(--night-fg); outline-offset: 2px; }
+  .chip input:disabled + span { opacity: 0.45; }
+  button.secondary { padding: 8px 14px; border: 1.5px solid var(--night-fg); background: transparent; color: var(--night-fg); cursor: pointer; }
+  button:disabled { opacity: 0.45; cursor: default; }
+  .ck-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 32px 0 8px; border-top: 1.5px solid var(--night-fg); }
+  .ck-kpis div { padding: 14px 12px 14px 0; }
+  .ck-kpis dt { color: var(--night-mute); font-size: 13px; }
+  .ck-kpis dd { font: 700 clamp(28px, 3.4vw, 52px)/1 var(--font-display); font-variant-numeric: tabular-nums; }
+  .ck-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 40px; margin-top: 24px; }
+  .ck-chart { margin: 0; min-width: 0; color: var(--night-fg); }
+  .ck-chart figcaption { margin-bottom: 8px; font-weight: 500; }
+  .ck-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .ck-chart rect { fill: currentColor; }
+  .ck-chart rect.red { fill: var(--red); }
+  [data-chart='merchants'] rect, [data-chart='delivery'] rect { cursor: pointer; }
+  details { margin-top: 10px; font-size: 13px; }
+  summary { cursor: pointer; color: var(--night-mute); }
+  pre { max-height: 320px; overflow: auto; margin: 10px 0; padding: 12px 14px; background: #000; font: 12px/1.55 Consolas, 'Cascadia Mono', monospace; }
+  /* Spans stay inline so each trailing newline breaks the line exactly once; opacity is all that animates. */
+  details[open] pre span { animation: line-in 0.3s var(--ease) both; animation-delay: calc(var(--i) * 25ms); }
+  @keyframes line-in { from { opacity: 0; } }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; font-size: 12px; white-space: nowrap; }
+  th, td { padding: 4px 8px; border-bottom: 1px solid rgb(236 228 214 / 0.2); text-align: right; }
+  .ck-hint { margin-top: 20px; color: var(--night-mute); font-size: 13px; }
+  @media (max-width: 800px) {
+    .ck-form { grid-template-columns: minmax(0, 1fr); }
+    .ck-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ck-charts { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
