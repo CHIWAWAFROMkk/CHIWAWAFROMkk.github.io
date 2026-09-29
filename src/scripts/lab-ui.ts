@@ -24,6 +24,11 @@ export function initLab(root: HTMLElement): void {
   let sortColumn = -1;
   let ascending = true;
   let generation = 0;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /** Preview rows on screen with the source row each shows, so a toggle can tell which rows are about to go. */
+  let onScreen: [HTMLTableRowElement, Row][] = [];
+  let removal = 0;
+  const shakeTargets = [root.querySelector<HTMLElement>('.lab__import'), root.querySelector<HTMLElement>('.paste-box')];
 
   const node = <K extends keyof HTMLElementTagNameMap>(tag: K, text?: string | number, className?: string) => {
     const el = document.createElement(tag);
@@ -31,7 +36,14 @@ export function initLab(root: HTMLElement): void {
     if (className) el.className = className;
     return el;
   };
-  const message = (text: string, error = false) => { const m = $('message'); m.textContent = text; m.className = 'notice' + (error ? ' error' : ''); };
+  const message = (text: string, error = false) => {
+    const m = $('message'); m.textContent = text; m.className = 'notice' + (error ? ' error' : '');
+    for (const el of shakeTargets) {
+      if (!el) continue;
+      el.classList.remove('shake');
+      if (error) { void el.offsetWidth; el.classList.add('shake'); }
+    }
+  };
   const download = (name: string, content: string, type: string) => {
     const url = URL.createObjectURL(new Blob([content], { type }));
     const a = node('a'); a.href = url; a.download = name; a.click();
@@ -45,6 +57,7 @@ export function initLab(root: HTMLElement): void {
       let digest = T.hashUnavailable;
       if (globalThis.crypto?.subtle) digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))).map(x => x.toString(16).padStart(2, '0')).join('');
       if (ticket !== generation) return;
+      if (removal) { clearTimeout(removal); removal = 0; }
       source = next; hash = digest; filename = name; page = 0; sortColumn = -1;
       $<HTMLInputElement>('dedupe').checked = false; $<HTMLInputElement>('drop-missing').checked = false; $<HTMLInputElement>('search').value = '';
       $('column').replaceChildren(...source.headers.map((h, i) => { const o = node('option', h); o.value = String(i); return o; }));
@@ -64,8 +77,25 @@ export function initLab(root: HTMLElement): void {
     if (!source) return;
     result = analyze(source, { deduplicate: $<HTMLInputElement>('dedupe').checked, dropMissing: $<HTMLInputElement>('drop-missing').checked }) as Result;
     const r = result;
-    $('metrics').replaceChildren(...([[r.rows.length, T.metrics[0]], [source.headers.length, T.metrics[1]], [r.missingCells, T.metrics[2]], [r.duplicates, T.metrics[3]]] as const).map(([v, label]) => {
-      const el = node('div', undefined, 'metric'); el.append(node('strong', fmt(v)), node('span', label)); return el;
+    const before = [...root.querySelectorAll<HTMLElement>('#metrics .metric strong')].map(e => Number(e.dataset.value ?? NaN));
+    const values = [r.rows.length, source.headers.length, r.missingCells, r.duplicates];
+    $('metrics').replaceChildren(...values.map((v, i) => {
+      const el = node('div', undefined, 'metric');
+      const strong = node('strong', fmt(v)); strong.dataset.value = String(v);
+      el.append(strong, node('span', T.metrics[i]));
+      const from = before[i];
+      if (!reduced && Number.isFinite(from) && from !== v) {
+        const t0 = performance.now();
+        const step = (now: number) => {
+          if (!strong.isConnected) return;
+          const k = Math.min(1, (now - t0) / 400);
+          strong.textContent = fmt(k < 1 ? Math.round(from + (v - from) * (1 - (1 - k) ** 3)) : v);
+          if (k < 1) requestAnimationFrame(step);
+        };
+        strong.textContent = fmt(from);
+        requestAnimationFrame(step);
+      }
+      return el;
     }));
     $('audit').textContent = T.audit(source.rows.length, r.removedDuplicates, r.removedMissing, r.rows.length);
     $('quality-body').replaceChildren(...r.columns.map(c => {
@@ -88,7 +118,7 @@ export function initLab(root: HTMLElement): void {
     const bins: { low: number; high: number; count: number }[] = histogram(values);
     const max = Math.max(1, ...bins.map(b => b.count));
     $('histogram').replaceChildren(...bins.map((b, i) => {
-      const col = node('div', undefined, 'bin'); const bar = node('i');
+      const col = node('div', undefined, 'bin'); const bar = node('i'); bar.style.setProperty('--i', String(i));
       bar.style.height = `${(b.count / max) * 130}px`;
       col.title = T.binTitle(fmt(b.low), i === bins.length - 1 ? '≤ x ≤' : '≤ x <', fmt(b.high), b.count);
       col.append(node('span', b.count), bar); return col;
@@ -114,11 +144,13 @@ export function initLab(root: HTMLElement): void {
       th.append(b); tr.append(th);
     });
     $('data-head').replaceChildren(tr);
-    $('data-body').replaceChildren(...rows.slice(page * pageSize, (page + 1) * pageSize).map(r => {
+    const shown = rows.slice(page * pageSize, (page + 1) * pageSize);
+    onScreen = shown.map(r => {
       const row = node('tr');
       r.forEach(v => { const td = node('td', v.trim() ? v : T.blankCell, v.trim() ? '' : 'missing'); td.title = v; row.append(td); });
-      return row;
-    }));
+      return [row, r] as [HTMLTableRowElement, Row];
+    });
+    $('data-body').replaceChildren(...onScreen.map(([row]) => row));
     $('table-empty').hidden = rows.length > 0;
     $('page-info').textContent = T.pageInfo(rows.length ? page * pageSize + 1 : 0, Math.min((page + 1) * pageSize, rows.length), rows.length);
     $<HTMLButtonElement>('prev').disabled = page === 0; $<HTMLButtonElement>('next').disabled = page === maxPage;
@@ -138,7 +170,20 @@ export function initLab(root: HTMLElement): void {
     try { message(T.exampleLoading); const response = await fetch('/assets/sample.csv'); if (!response.ok) throw Error(); await load(await response.text(), 'sample.csv'); }
     catch { message(T.exampleError, true); }
   };
-  ['dedupe', 'drop-missing'].forEach(id => ($<HTMLInputElement>(id).onchange = () => { page = 0; render(); }));
+  /** Toggling a cleaning option first shows which preview rows go (struck out or sinking), then renders the new state. */
+  const toggle = () => {
+    if (!source) return;
+    if (removal) { clearTimeout(removal); removal = 0; }
+    const next = analyze(source, { deduplicate: $<HTMLInputElement>('dedupe').checked, dropMissing: $<HTMLInputElement>('drop-missing').checked }) as Result;
+    const keep = new Set(next.rows);
+    const doomed = onScreen.filter(([, r]) => !keep.has(r));
+    if (reduced || !doomed.length) { page = 0; render(); return; }
+    // A row the de-duplication alone would drop is a duplicate (struck out); anything else goes for its blanks (sinks).
+    const deduped = new Set((analyze(source, { deduplicate: $<HTMLInputElement>('dedupe').checked, dropMissing: false }) as Result).rows);
+    for (const [tr, r] of doomed) tr.classList.add(deduped.has(r) ? 'sinking' : 'leaving');
+    removal = window.setTimeout(() => { removal = 0; page = 0; render(); }, 480);
+  };
+  ['dedupe', 'drop-missing'].forEach(id => ($<HTMLInputElement>(id).onchange = toggle));
   $<HTMLSelectElement>('column').onchange = renderStats;
   $<HTMLInputElement>('search').oninput = () => { page = 0; renderTable(); };
   $('prev').onclick = () => { page--; renderTable(); };

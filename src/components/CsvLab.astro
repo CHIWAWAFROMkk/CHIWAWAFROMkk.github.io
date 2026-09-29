@@ -156,4 +156,14 @@ const L = TEXT[lang];
     .metrics :global(.metric:nth-child(3)) { padding-left: 0; border-left: 0; }
     .lab__grid { grid-template-columns: minmax(0, 1fr); }
   }
+  .histogram :global(.bin i) { transform-origin: bottom; animation: bar-grow 0.5s var(--ease) both; animation-delay: calc(var(--i, 0) * 30ms); }
+  @keyframes bar-grow { from { transform: scaleY(0); } }
+  .lab :global(#data-body tr.leaving td) { text-decoration: line-through; text-decoration-color: var(--red-text); text-decoration-thickness: 2px; }
+  .lab :global(#data-body tr.leaving) { animation: row-leave 0.48s var(--ease) both; }
+  .lab :global(#data-body tr.sinking) { animation: row-sink 0.48s var(--ease) both; }
+  .lab :global(#data-body tr.sinking td) { color: var(--mute); }
+  @keyframes row-leave { 55% { opacity: 1; } to { opacity: 0; transform: translateX(24px); } }
+  @keyframes row-sink { 30% { opacity: 0.6; } to { opacity: 0; transform: translateY(14px); } }
+  .shake { outline: 1.5px solid var(--red-text); outline-offset: 4px; animation: shake 0.36s var(--ease); }
+  @keyframes shake { 20% { transform: translateX(-6px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
 </style>
