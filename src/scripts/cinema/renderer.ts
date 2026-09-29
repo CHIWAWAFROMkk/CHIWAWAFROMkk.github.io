@@ -154,7 +154,7 @@ async function build(root: HTMLElement, canvas: HTMLCanvasElement, gl: WebGL2Ren
     const u = pts.u;
     gl.uniform1f(u('uState'), state); gl.uniform1f(u('uTime'), now); gl.uniform1f(u('uAspect'), aspect); gl.uniform1f(u('uDpr'), dpr);
     gl.uniform1f(u('uYaw'), c.yaw + dragYaw + Math.sin(now * 0.25) * 0.08); gl.uniform1f(u('uPitch'), c.pitch + dragPitch); gl.uniform1f(u('uDist'), c.dist);
-    gl.uniform2f(u('uMouse'), mouse[0], mouse[1]); gl.uniform1f(u('uMouseOn'), mouseOn); gl.uniform1f(u('uGain'), lite ? 0.34 : 0.13);
+    gl.uniform2f(u('uMouse'), mouse[0], mouse[1]); gl.uniform1f(u('uMouseOn'), mouseOn); gl.uniform1f(u('uGain'), lite ? 0.26 : 0.13);
     gl.uniform1f(u('uPulse'), now - pulseStart); gl.uniform2f(u('uBoom'), boom[0], boom[1]); gl.uniform1f(u('uBoomT'), now - boomStart);
     gl.drawArrays(gl.POINTS, 0, drawCount);
     gl.disable(gl.BLEND);

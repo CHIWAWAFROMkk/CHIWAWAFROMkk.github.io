@@ -21,6 +21,17 @@ test.describe('odometer', () => {
     }
   });
 
+  test('the reels never change the height of the line (no layout shift)', async ({ page }) => {
+    await skipIntro(page);
+    await page.goto('/brief/');
+    const num = page.locator('.evidence .num[data-fact="F6"]');
+    await expect(num.locator('.odo')).toHaveCount(1, { timeout: 3000 });
+    const during = await num.evaluate(el => el.getBoundingClientRect().height);
+    await expect(num).toHaveAttribute('data-spun', '', { timeout: 5000 });
+    const after = await num.evaluate(el => el.getBoundingClientRect().height);
+    expect(Math.abs(during - after)).toBeLessThanOrEqual(1);
+  });
+
   test('reduced motion shows the number without reels', async ({ page }) => {
     await skipIntro(page);
     await page.emulateMedia({ reducedMotion: 'reduce' });

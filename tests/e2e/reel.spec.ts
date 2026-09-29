@@ -27,10 +27,15 @@ test.describe('cinema on desktop', () => {
   });
 
   test('pointer at the right edge reveals later shots; left edge goes back; middle stops', async ({ page }) => {
+    const items = page.locator('.reel__item');
+    const pitch = (await items.nth(1).evaluate(el => (el as HTMLElement).offsetLeft)) - (await items.first().evaluate(el => (el as HTMLElement).offsetLeft));
     await pointAt(page, 0.98);
-    await expect.poll(() => scrollLeft(page)).toBeGreaterThan(200);
+    // Glide well past the first shot: when the glide stops, scroll snapping settles on the nearest shot, which must not be the start.
+    await expect.poll(() => scrollLeft(page)).toBeGreaterThan(pitch * 1.3);
     await pointAt(page, 0.5);
+    await page.waitForTimeout(500);
     const held = await scrollLeft(page);
+    expect(held).toBeGreaterThan(pitch * 0.9);
     await page.waitForTimeout(400);
     expect(Math.abs((await scrollLeft(page)) - held)).toBeLessThan(20);
     await pointAt(page, 0.02);

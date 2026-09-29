@@ -41,7 +41,8 @@ html.intro-lock { overflow: hidden; }
 .reveal { transition: opacity 0.6s var(--ease) var(--d, 0ms), transform 0.6s var(--ease) var(--d, 0ms); }
 .reveal:not(.is-in) { opacity: 0; transform: translateY(18px); }
 /* Odometer (odometer-dom.ts): reels draw their digits with generated content, so the element's text stays the final value. */
-.odo { display: inline-flex; font-variant-numeric: tabular-nums; }
+/* The reels are 1em tall; the box keeps the text's own line height (1lh) so the page never shifts while they spin. */
+.odo { display: inline-flex; align-items: center; height: 1lh; vertical-align: top; font-variant-numeric: tabular-nums; }
 .odo__reel { display: inline-block; height: 1em; overflow: hidden; line-height: 1; }
 .odo__strip { display: block; white-space: pre; line-height: 1; }
 .odo__strip::before { content: '0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9'; }
