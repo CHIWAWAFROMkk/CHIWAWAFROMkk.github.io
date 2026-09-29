@@ -12,7 +12,8 @@ const film = SITE.projects.find(p => p.line === 'film')!;
 const posters = SITE.film.clips.filter(c => ['s04', 's06', 's09', 's16'].includes(c.file));
 ---
 <Base lang={lang} path="/projects/" title={`${P.title[lang]} · ${SITE.name[lang]}`} description={P.description[lang]}>
-  <main id="main">
+  <main id="main" class="i-main">
+    <div class="i-bgword" aria-hidden="true" data-bgword>PROJECTS</div>
     <header class="i-head wrap">
       <h1>{P.title[lang]}</h1>
       <p>{P.lead[lang]}</p>
@@ -36,6 +37,11 @@ const posters = SITE.film.clips.filter(c => ['s04', 's06', 's09', 's16'].include
     </section>
   </main>
 </Base>
+<script>
+  import { onScroll } from '../scripts/motion-dom';
+  const word = document.querySelector<HTMLElement>('[data-bgword]');
+  if (word && !matchMedia('(prefers-reduced-motion: reduce)').matches) onScroll(() => word.style.setProperty('--s', String(Math.round(window.scrollY * 0.35))));
+</script>
 <style>
   .i-head { display: grid; gap: 16px; padding-block: clamp(32px, 6vh, 72px) 24px; }
   .i-head h1 { font-size: clamp(56px, 10vw, 150px); line-height: 0.9; letter-spacing: -0.05em; }
@@ -50,4 +56,7 @@ const posters = SITE.film.clips.filter(c => ['s04', 's06', 's09', 's16'].include
   .i-film__title { font: 900 24px/1.3 var(--font-cjk-bold); }
   .i-film__status { color: var(--night-mute); font-size: 14px; }
   @media (max-width: 800px) { .i-film__strip { grid-template-columns: 1fr 1fr; } .i-film__row { grid-template-columns: 1fr; } }
+  /* isolation keeps the word's negative z-index inside main, behind the rows but above the page background. */
+  .i-main { position: relative; isolation: isolate; overflow-x: clip; }
+  .i-bgword { position: absolute; z-index: -1; top: clamp(24px, 6vh, 72px); left: 0; font: 700 clamp(160px, 30vw, 520px)/0.8 var(--font-display); letter-spacing: -0.02em; color: var(--ink); opacity: 0.05; white-space: nowrap; pointer-events: none; transform: translateX(calc(var(--s, 0) * -1px)); }
 </style>

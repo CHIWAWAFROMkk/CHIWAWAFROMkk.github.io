@@ -8,6 +8,8 @@ export interface ProjectEntry {
   title: Bi;
   did: Bi;
   status: Bi;
+  /** Illustration shown beside the row on the projects index (desktop hover / focus). */
+  preview?: string;
 }
 
 const project = (p: Omit<ProjectEntry, 'href'>): ProjectEntry => ({ ...p, href: `/projects/${p.slug}/` });
@@ -78,15 +80,15 @@ export const SITE = {
     ],
   },
   projects: [
-    project({ slug: 'hris-workflow', line: 'data', inBrief: true,
+    project({ slug: 'hris-workflow', line: 'data', preview: '/assets/editorial/hris-flow.svg', inBrief: true,
       title: { zh: '员工电子档案补录', en: 'HR Records Backfill' },
       did: { zh: '核查约 2000 名员工的档案主数据，并把补录流程拆成可审核的工作流', en: 'Reviewed master records for about 2000 employees and turned the backfill into a reviewable workflow' },
       status: { zh: '已结束 · 企业流程为方案设计', en: 'Finished · enterprise flow is a design' } }),
-    project({ slug: 'campus-delivery', line: 'data', inBrief: true,
+    project({ slug: 'campus-delivery', line: 'data', preview: '/assets/editorial/delivery-relations.svg', inBrief: true,
       title: { zh: '校园外卖 SQL 工作台', en: 'Campus Delivery SQL Lab' },
       did: { zh: '独立完成的课程设计：8 张业务表、事务与复合外键，可在浏览器里直接运行', en: 'Solo course project: 8 business tables with transactions and composite keys, runnable in the browser' },
       status: { zh: '课程设计 · 可在线运行', en: 'Course project · runs online' } }),
-    project({ slug: 'campus-delivery/insights', line: 'data', inBrief: false,
+    project({ slug: 'campus-delivery/insights', line: 'data', preview: '/assets/previews/campus-insights.svg', inBrief: false,
       title: { zh: '校园外卖经营分析（进阶版）', en: 'Campus Delivery Insights (advanced)' },
       did: { zh: '在课程设计数据库上扩展出一个学期的合成数据：滚动读五个经营问题的答案，再在驾驶舱里自己筛选验证', en: 'A synthetic term built on the course-project database: scroll through five business questions, then filter the dashboard yourself' },
       status: { zh: '进阶版 · 借助 AI 编程工具开发 · 合成数据', en: 'Advanced · built with AI coding tools · synthetic data' } }),
@@ -102,7 +104,7 @@ export const SITE = {
       title: { zh: 'AI 校园应用研究', en: 'AI on Campus — Study' },
       did: { zh: '项目组长：设计问卷、清洗数据并做交叉统计，获校级大学生创新创业项目一等奖', en: 'Team lead: survey design, data cleaning and cross-tab analysis; First Prize, university student innovation programme' },
       status: { zh: '大创项目 · 2024.03—2024.07', en: 'Student research · 2024.03—2024.07' } }),
-    project({ slug: 'stock-data', line: 'data', inBrief: false,
+    project({ slug: 'stock-data', line: 'data', preview: '/assets/editorial/csv-process.svg', inBrief: false,
       title: { zh: 'CSV 数据分析工具', en: 'CSV Analysis Tool' },
       did: { zh: '上传表格即可检查缺失与重复、查看统计与分布', en: 'Upload a table to check gaps and duplicates and see its statistics' },
       status: { zh: '原型 · 构造样本', en: 'Prototype · synthetic sample' } }),
