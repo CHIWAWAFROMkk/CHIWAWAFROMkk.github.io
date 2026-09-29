@@ -27,6 +27,16 @@ const P = C.prologue;
     <p class="prologue__hud" aria-hidden="true" data-insight-data><b data-hud-count></b> PARTICLES · WEBGL2 · <b data-hud-fps></b> FPS</p>
   </div>
 </section>
+<script>
+  import { startPrologue } from '../scripts/cinema/renderer';
+  import data from '../data/insights.json';
+  const root = document.querySelector<HTMLElement>('[data-prologue]');
+  if (root) startPrologue(root, {
+    heat: data.results.heatmap.values as (number | string)[][],
+    nets: data.results.merchants.values.map(r => Number(r[3])),
+    label: root.dataset.label ?? '',
+  });
+</script>
 <style>
   .prologue { position: relative; }
   .prologue__static { padding-block: clamp(40px, 9vh, 110px) 8px; }
