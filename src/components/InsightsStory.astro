@@ -64,6 +64,17 @@ const tables: ({ head: string[]; rows: string[][] } | null)[] = [
     </figure>
   </div>
 </section>
+<script>
+  import { initMorph } from '../scripts/morph-dom';
+  import { initCountUp } from '../scripts/countup-dom';
+  import { storyLayouts } from '../scripts/morph';
+  import data from '../data/insights.json';
+  import type { Results } from '../scripts/insights-facts';
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  const chapters = [...document.querySelectorAll<HTMLElement>('[data-chapter-section]')];
+  if (stage && chapters.length) initMorph(stage, chapters, storyLayouts(data.results as unknown as Results).map(l => l.marks));
+  initCountUp(document.querySelectorAll<HTMLElement>('[data-story] [data-insight-num]'));
+</script>
 <style>
   .story { border-top: var(--rule); }
   .story__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 72px); align-items: start; }
