@@ -8,7 +8,8 @@
     "preview": "astro preview --port 4321",
     "test": "vitest run",
     "e2e": "playwright test",
-    "resume:en": "node tools/print-resume.mjs"
+    "resume:en": "node tools/print-resume.mjs",
+    "insights:gen": "node tools/gen-insights.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
