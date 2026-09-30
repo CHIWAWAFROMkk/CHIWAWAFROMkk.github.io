@@ -61,7 +61,7 @@ const TABLES = ['matches', 'gates', 'review'] as const;
   .career__intro { max-width: 52em; margin: 16px 0 8px; font-size: 16px; }
   .meta { color: var(--mute); font-size: 14px; }
   .career__controls { display: flex; flex-wrap: wrap; gap: 16px 28px; margin: 18px 0; }
-  label { display: grid; gap: 6px; font-weight: 500; font-size: 14px; }
+  label { display: grid; justify-items: start; gap: 6px; font-weight: 500; font-size: 14px; }
   select { min-width: 12em; padding: 9px 10px; border: 1.5px solid var(--ink); background: #fff; font: inherit; font-size: 16px; border-radius: 0; color: var(--ink); }
   .notice { padding: 10px 14px; border-left: 4px solid var(--ink); background: #fff; font-size: 14px; }
   button { padding: 9px 16px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 700; cursor: pointer; border-radius: 0; }
@@ -69,7 +69,7 @@ const TABLES = ['matches', 'gates', 'review'] as const;
   button:hover { background: var(--red-text); border-color: var(--red-text); color: #fff; }
   h3 { margin: 28px 0 10px; font-size: 20px; }
   .career__io { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
-  pre { max-height: 320px; overflow: auto; margin: 0; padding: 14px 16px; background: #fff; border: var(--hair); font: 13px/1.6 Consolas, 'Cascadia Mono', monospace; white-space: pre-wrap; }
+  pre { max-height: 320px; overflow: auto; margin: 0; padding: 14px 16px; background: #fff; border: var(--hair); font: 14px/1.7 var(--font-body); white-space: pre-wrap; }
   .career__facts :global(p) { display: grid; gap: 2px; padding: 10px 0; border-bottom: var(--hair); }
   .career__facts :global(.tag) { justify-self: start; padding: 1px 6px; background: var(--ink); color: var(--paper); font-size: 12px; }
   .career__facts :global(small) { color: var(--mute); font-size: 12px; }
@@ -92,7 +92,7 @@ const TABLES = ['matches', 'gates', 'review'] as const;
   @media (max-width: 800px) {
     .career__io { grid-template-columns: minmax(0, 1fr); }
     .career__kpi { grid-template-columns: 1fr 1fr; }
-    .career__kpi div:nth-child(3) { padding-left: 0; border-left: 0; }
+    .career__kpi div + div:nth-child(3) { padding-left: 0; border-left: 0; }
     .career__breakdown { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

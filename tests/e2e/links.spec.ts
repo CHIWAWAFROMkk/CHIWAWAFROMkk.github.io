@@ -3,6 +3,7 @@ import { PAGES, PHASE2_PENDING, skipIntro } from './helpers';
 
 test('every internal link resolves (phase-2 pages excepted)', async ({ page, request, isMobile }) => {
   test.skip(!!isMobile, 'run once');
+  test.setTimeout(120_000); // visits every page in turn; the default 30 s is too tight once the whole suite runs in parallel
   await skipIntro(page);
   const found = new Set<string>();
   for (const p of PAGES) {
