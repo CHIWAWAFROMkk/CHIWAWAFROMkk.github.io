@@ -9,7 +9,8 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "resume:en": "node tools/print-resume.mjs",
-    "insights:gen": "node tools/gen-insights.mjs"
+    "insights:gen": "node tools/gen-insights.mjs",
+    "quotadeck:shots": "node tools/quotadeck/run.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
