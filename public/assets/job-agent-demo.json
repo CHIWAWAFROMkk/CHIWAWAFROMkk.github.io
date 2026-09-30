@@ -1,10 +1,10 @@
 {
   "title": "Job Agent synthetic replay",
-  "sourceCommit": "a576dd7273c788778d310e02f2147bf2c1ce254d",
+  "sourceCommit": "4397ded9c603e7e26d3dc241eb910ce3ad0a749a",
   "sourceRepository": "https://github.com/CHIWAWAFROMkk/personal-job-agent",
   "sourceHashes": {
     "src/job_agent/services/local_matcher.py": "c3cb04e8bd74c988ea0e532f630dbf54c1cc04324018b87d132f685cba36a509",
-    "src/job_agent/services/application_pack.py": "8e9836b75a2ba2bcc2fc8ebb56760bd2f510410133d65a90db7508ab91da2588",
+    "src/job_agent/services/application_pack.py": "8001a6ff063f5b6ef88ae891d38c0a109b1372a517ffb5f531f92ddc5ad1028b",
     "tests/helpers.py": "066315919394f35fcaf25d1f07ae81fce2b57f93c7d7f3f6e4cddd6449402ec9"
   },
   "engine": "local-baseline",
@@ -306,6 +306,7 @@
         ],
         "scoring_version": "phase1-v1",
         "engine": "local-baseline",
+        "input_fingerprint": null,
         "generated_at": "2026-09-12T00:00:00Z"
       },
       "pack": {
@@ -728,6 +729,7 @@
         ],
         "scoring_version": "phase1-v1",
         "engine": "local-baseline",
+        "input_fingerprint": null,
         "generated_at": "2026-09-12T00:00:00Z"
       },
       "pack": {
@@ -1165,6 +1167,7 @@
         ],
         "scoring_version": "phase1-v1",
         "engine": "local-baseline",
+        "input_fingerprint": null,
         "generated_at": "2026-09-12T00:00:00Z"
       },
       "pack": {
@@ -1589,6 +1592,7 @@
         ],
         "scoring_version": "phase1-v1",
         "engine": "local-baseline",
+        "input_fingerprint": null,
         "generated_at": "2026-09-12T00:00:00Z"
       },
       "pack": {
@@ -2025,6 +2029,7 @@
         ],
         "scoring_version": "phase1-v1",
         "engine": "local-baseline",
+        "input_fingerprint": null,
         "generated_at": "2026-09-12T00:00:00Z"
       },
       "pack": {
@@ -2448,6 +2453,7 @@
         ],
         "scoring_version": "phase1-v1",
         "engine": "local-baseline",
+        "input_fingerprint": null,
         "generated_at": "2026-09-12T00:00:00Z"
       },
       "pack": {
