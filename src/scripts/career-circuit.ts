@@ -110,14 +110,19 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
     for (const k in a) e.setAttribute(k, String(a[k]));
     parent.append(e); return e;
   };
-  const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+  // Latin letters and digits are about half as wide as CJK characters: clip by width, not by character count.
+  const clip = (s: string, n: number) => {
+    let w = 0, out = '';
+    for (const ch of s) { w += /[\x20-\x7e]/.test(ch) ? .55 : 1; if (w > n) return out.slice(0, -1) + '…'; out += ch; }
+    return out;
+  };
   function box(parent: Element, b: Box, label: string, sub: string, cls: string) {
     const g = mk('g', { class: `cnode ${cls}`, transform: `translate(${b.x},${b.y})` }, parent);
     mk('rect', { class: 'cbox', width: b.w, height: b.h, rx: 2 }, g);
-    const chars = Math.floor((b.w - 28) / 15);
+    const chars = (b.w - 28) / 15;
     const t = mk('text', { x: 14, y: b.h > 50 ? 25 : 21, class: 'cnt' }, g); t.textContent = clip(label, chars);
     mk('title', {}, g).textContent = `${label} — ${sub}`;
-    const s = mk('text', { x: 14, y: b.h > 50 ? 45 : 39, class: 'cns' }, g); s.textContent = clip(sub, Math.floor((b.w - 28) / 7.4));
+    const s = mk('text', { x: 14, y: b.h > 50 ? 45 : 39, class: 'cns' }, g); s.textContent = clip(sub, (b.w - 28) / 11.5);
     return g;
   }
   function sample(p: SVGPathElement, tone: Tone, material: boolean): Sampled {

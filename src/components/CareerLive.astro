@@ -114,6 +114,7 @@ const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes(
   .cl-facts :global(li) { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 8px 0; border-top: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); font-size: 13px; }
   .cl-facts :global(small) { grid-column: 1; color: var(--night-mute); font: 11px Consolas, monospace; }
   .cl-facts :global(.cl-doc) { color: var(--night-mute); font-size: 12px; }
+  .cl-facts :global(.cl-link) { justify-self: start; padding: 0; border: 0; background: none; color: var(--night-fg); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; font-size: 12.5px; }
   .cl-facts :global(select) { background: var(--night); color: var(--night-fg); border: 1px solid color-mix(in srgb, var(--night-fg) 30%, transparent); font-size: 12px; }
   .cl-add summary { cursor: pointer; font-size: 13px; }
   .cl-btn { justify-self: start; padding: 8px 14px; border: 1.5px solid var(--night-fg); background: transparent; color: var(--night-fg); font-weight: 700; cursor: pointer; }
@@ -159,7 +160,8 @@ const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes(
   .cl-raw { margin-top: 6px; font: 12px Consolas, monospace; color: var(--night-mute); min-height: 18px; }
   .cl-ceil { position: absolute; left: 0; right: 0; top: 40px; height: 5px; background: var(--night-fg); opacity: 0; transform: translateY(-60px); }
   .cl-ceil.fail { background: var(--red); }
-  .cl-ceil span { position: absolute; right: 12px; top: 10px; font: 600 11.5px Consolas, monospace; white-space: nowrap; color: var(--night-fg); }
+  /* The reason sits under the raw score, clear of the digits the bar presses on. */
+  .cl-ceil span { position: absolute; left: 18px; right: 12px; top: 120px; font: 600 11.5px Consolas, monospace; color: var(--night-fg); }
   .cl-ceil.down { animation: cl-drop .2s cubic-bezier(.55,0,.9,.4) forwards; }
   @keyframes cl-drop { 0% { opacity: 1; transform: translateY(-60px); } 80% { opacity: 1; transform: translateY(3px) scaleY(1.8); } 100% { opacity: 1; transform: none; } }
   .cl-codewrap { display: flex; flex-direction: column; gap: 10px; padding: 12px 18px 14px; min-width: 0; }
@@ -177,6 +179,8 @@ const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes(
     .cl-bottom { grid-template-columns: 1fr 1fr; }
     .cl-codewrap { grid-column: 1 / -1; }
     .cl-kv { font-size: 64px; }
+    .cl-ceil span { top: 96px; }
+    .cl-kpi { padding-bottom: 52px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .cl-ceil.down { animation: none; opacity: 1; transform: none; }

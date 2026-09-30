@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import AxeBuilder from '@axe-core/playwright';
 import { noHorizontalOverflow } from './helpers';
 
 const PATH = '/projects/ai-career/';
@@ -157,4 +158,12 @@ test('phones wait for the start button before downloading the runtime', async ({
   await expect(page.locator('#cl-chip')).toHaveClass(/live/, { timeout: 90_000 });
   await expect(page.locator('#cl-score')).toHaveText('84', { timeout: 20_000 });
   expect(await noHorizontalOverflow(page)).toBe(true);
+});
+
+test('once the engine runs, the live stage has no serious accessibility issue', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  const { violations } = await new AxeBuilder({ page }).include('#cl-stage').analyze();
+  const bad = violations.filter(v => v.impact === 'serious' || v.impact === 'critical');
+  expect(bad.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([]);
 });
