@@ -167,3 +167,98 @@ test('once the engine runs, the live stage has no serious accessibility issue', 
   const bad = violations.filter(v => v.impact === 'serious' || v.impact === 'critical');
   expect(bad.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([]);
 });
+
+// ---- review fixes ----
+const addFact = async (page: Page, text: string) => {
+  await page.locator('#cl-add-text').fill(text);
+  await page.locator('#cl-add-btn').click();
+};
+
+test('removing every fact empties the list', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await page.locator('#cl-facts li').first().getByRole('button').click();
+  await expect(page.locator('#cl-facts li')).toHaveCount(1);
+  await page.locator('#cl-facts li').first().getByRole('button').click();
+  await expect(page.locator('#cl-facts li')).toHaveCount(0);
+  await page.waitForTimeout(2500);
+  await expect(page.locator('#cl-facts li')).toHaveCount(0);
+});
+
+test('removing added facts in quick succession removes exactly those', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await page.locator('.cl-add summary').click();
+  for (const t of ['经历甲', '经历乙', '经历丙']) await addFact(page, t);
+  await expect(page.locator('#cl-facts li')).toHaveCount(5, { timeout: 15_000 });
+  await page.locator('#cl-facts li', { hasText: '经历甲' }).getByRole('button').click();
+  await page.locator('#cl-facts li', { hasText: '经历乙' }).getByRole('button').click();
+  await page.waitForTimeout(2500);
+  await expect(page.locator('#cl-facts')).toContainText('经历丙');
+  await expect(page.locator('#cl-facts')).not.toContainText('经历甲');
+  await expect(page.locator('#cl-facts')).not.toContainText('经历乙');
+});
+
+test('choosing the replay during boot and coming back renders at full width', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await page.goto(PATH);
+  await page.locator('#cl-stage').scrollIntoViewIfNeeded();
+  await page.locator('#cl-toggle-replay').click();
+  await page.locator('#cl-chip.live').waitFor({ state: 'attached', timeout: 90_000 });
+  await page.waitForTimeout(3000);
+  await expect(page.locator('.cl-fly')).toHaveCount(0);
+  await page.locator('#cl-toggle-replay').click();
+  await expect(page.locator('#cl-circuit svg')).toHaveAttribute('viewBox', /^0 0 1000 /, { timeout: 15_000 });
+});
+
+test('an invalid edit during the animation leaves the previous result complete', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await page.locator('#cl-days').selectOption('3');
+  await page.waitForTimeout(1600);
+  await page.locator('#cl-jd-toggle').click();
+  await page.locator('#cl-jd-input').fill('   ');
+  await page.locator('#cl-jd-toggle').click();
+  await expect(page.locator('#cl-status')).toHaveText('职位描述不能为空。');
+  await page.waitForTimeout(3000);
+  await expect(page.locator('#cl-score')).toHaveText('59');
+  await expect(page.locator('#cl-obs')).toContainText('总分被限制在 59');
+});
+
+test('English page words validation messages in English', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page, '/en');
+  await page.locator('#cl-jd-toggle').click();
+  await page.locator('#cl-jd-input').fill('   ');
+  await page.locator('#cl-jd-toggle').click();
+  await expect(page.locator('#cl-status')).toHaveText('The job description is empty.');
+});
+
+test('text without recognisable requirements is explained, not drawn as an empty circuit', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await page.locator('#cl-jd-toggle').click();
+  await page.locator('#cl-jd-input').fill('hello world');
+  await page.locator('#cl-jd-toggle').click();
+  await expect(page.locator('#cl-status')).toContainText('没有从这段文字里识别出岗位要求');
+  await expect(page.locator('#cl-score')).toHaveText('84');
+});
+
+test('a long job description draws twelve requirements promptly and says how many more ran', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  const long = '岗位要求：\n' + Array.from({ length: 40 }, (_, i) => `- 第 ${i + 1} 项：熟悉 Excel，能独立完成数据清洗；`).join('\n');
+  await page.locator('#cl-jd-toggle').click();
+  await page.locator('#cl-jd-input').fill(long);
+  await page.locator('#cl-jd-toggle').click();
+  await expect(page.locator('#cl-circuit .cmore')).toContainText('另有', { timeout: 15_000 });
+  await expect(page.locator('#cl-obs')).not.toBeEmpty({ timeout: 8_000 });
+});
+
+test('the boot byte stream shows the real SHA-256 of the files being loaded', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  const manifest = JSON.parse(readFileSync('public/assets/vendor/pyodide/0.29.5/manifest.json', 'utf8'));
+  const wasm = manifest.files.find((f: { name: string }) => f.name === 'pyodide.asm.wasm').sha256.slice(0, 8);
+  await live(page);
+  await expect(page.locator('#cl-boot-hex')).toContainText(wasm);
+});

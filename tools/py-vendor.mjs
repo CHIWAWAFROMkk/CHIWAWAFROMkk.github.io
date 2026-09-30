@@ -30,5 +30,17 @@ for (const pkg of WHEELS) {
   writeFileSync(join(out, entry.file_name), bytes);
   files.push({ name: entry.file_name, bytes: bytes.length, sha256: entry.sha256, source: url, package: pkg });
 }
+// Licence notices travel with the files: Pyodide is MPL-2.0, the bundled standard library is under the PSF licence.
+for (const [name, url] of [
+  // jsDelivr's GitHub mirror serves the tagged files; unlike raw.githubusercontent.com it is reachable without a proxy.
+  ['LICENSE-pyodide.txt', `https://cdn.jsdelivr.net/gh/pyodide/pyodide@${VERSION}/LICENSE`],
+  ['LICENSE-python.txt', `https://cdn.jsdelivr.net/gh/python/cpython@v${lock.info.python}/LICENSE`],
+]) {
+  const res = await fetch(url);
+  if (!res.ok) throw Error(`${url}: ${res.status}`);
+  const bytes = Buffer.from(await res.arrayBuffer());
+  writeFileSync(join(out, name), bytes);
+  files.push({ name, bytes: bytes.length, sha256: sha(bytes), source: url });
+}
 writeFileSync(join(out, 'manifest.json'), JSON.stringify({ version: VERSION, python: lock.info.python, packages: ['pydantic', 'sqlite3'], files }, null, 2) + '\n');
 console.log(`${files.length} files, ${(files.reduce((s, f) => s + f.bytes, 0) / 1048576).toFixed(1)} MB`);

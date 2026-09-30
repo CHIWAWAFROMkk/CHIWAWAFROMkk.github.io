@@ -7,6 +7,8 @@ export interface Placed {
   mode: 'wide' | 'stack'; width: number; height: number;
   reqBoxes: Box[]; targetBoxes: { id: string; box: Box; group: number | null }[];
   traces: Trace[]; material: Box; materialTraces: { d: string; target: string }[];
+  /** Where to say how many requirements were not drawn, or null when all are. */
+  note: [number, number] | null;
 }
 
 const LEFT = 20, RIGHT = 718, COL = 262, TOP = 50, LANE_FROM = 330, LANE_TO = 670;
@@ -39,8 +41,10 @@ export function layoutWide(m: CircuitModel): Placed {
     const b = targetBoxes.find(t => t.id === id)!.box, x = RIGHT + COL + 6 + (k % 3) * 5;
     return { d: `M ${RIGHT + COL} ${b.y + h / 2} H ${x} V ${material.y + material.h / 2} H ${RIGHT + COL}`, target: id };
   });
-  const bottom = Math.max(reqBoxes.length ? reqBoxes[reqBoxes.length - 1].y + h : 0, material.y + material.h);
-  return { mode: 'wide', width: 1000, height: bottom + 24, reqBoxes, targetBoxes, traces, material, materialTraces };
+  const reqBottom = reqBoxes.length ? reqBoxes[reqBoxes.length - 1].y + h : TOP;
+  const note: [number, number] | null = m.hiddenReqs > 0 ? [LEFT, reqBottom + 26] : null;
+  const bottom = Math.max(reqBottom, material.y + material.h, note ? note[1] + 10 : 0);
+  return { mode: 'wide', width: 1000, height: bottom + 24, reqBoxes, targetBoxes, traces, material, materialTraces, note };
 }
 
 export function layoutStack(m: CircuitModel, width: number): Placed {
@@ -62,8 +66,10 @@ export function layoutStack(m: CircuitModel, width: number): Placed {
     }
     y += 14;
   });
+  let note: [number, number] | null = null;
+  if (m.hiddenReqs > 0) { note = [0, y + 14]; y += 32; }
   const material = { x: 0, y, w: width, h: 46 };
-  return { mode: 'stack', width, height: y + 46 + 8, reqBoxes, targetBoxes, traces, material, materialTraces: [] };
+  return { mode: 'stack', width, height: y + 46 + 8, reqBoxes, targetBoxes, traces, material, materialTraces: [], note };
 }
 
 /* ---------------- rendering ---------------- */
@@ -80,8 +86,10 @@ export interface CircuitView {
 
 const NS = 'http://www.w3.org/2000/svg';
 const MARK: Record<Tone, string> = { ok: '', fail: '×', gap: '×', unknown: '?', none: '∅' };
-const TEXT = { zh: { reqs: 'JD 要求 · structure_job_locally()', facts: '候选人 · profile', material: '材料草稿', pack: 'build_application_pack()' },
-  en: { reqs: 'JD requirements · structure_job_locally()', facts: 'Candidate · profile', material: 'Draft materials', pack: 'build_application_pack()' } };
+const TEXT = {
+  zh: { reqs: 'JD 要求 · structure_job_locally()', facts: '候选人 · profile', material: '材料草稿', pack: 'build_application_pack()', more: (n: number) => `另有 ${n} 条要求未画出（引擎已全部计算）` },
+  en: { reqs: 'JD requirements · structure_job_locally()', facts: 'Candidate · profile', material: 'Draft materials', pack: 'build_application_pack()', more: (n: number) => `${n} more requirements not drawn (the engine computed all of them)` },
+};
 
 interface Sampled { pts: Float32Array; len: number; tone: Tone; u: Float32Array; v: Float32Array; surge: number; material: boolean }
 
@@ -234,6 +242,7 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
         const g = box(svg, t.box, n.label, n.sub, `tone-${n.tone}`);
         if (!targetEls.has(t.id)) targetEls.set(t.id, g);
       }
+      if (placed.note) mk('text', { x: placed.note[0], y: placed.note[1], class: 'cmore' }, svg).textContent = TEXT[lang].more(m.hiddenReqs);
       materialBox = box(svg, placed.material, TEXT[lang].material, m.packError ?? TEXT[lang].pack, m.packError ? 'tone-fail' : 'tone-none');
       const paths = placed.traces.map((t, k) => {
         const p = mk('path', { d: t.d, class: `ctr tone-${t.tone}` }, traceLayer);

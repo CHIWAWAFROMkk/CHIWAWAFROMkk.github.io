@@ -43,12 +43,20 @@ describe('career bridge running the real engine under Pyodide', () => {
     expect(r.packError).toBe('Profile 中没有可用于投递材料的已确认事实。');
     expect(r.score).toBe(45);
   });
-  it('rejects empty and oversized input without running the engine', () => {
-    expect(run('   ', { days: 4 }).error).toBe('职位描述不能为空。');
-    expect(run('字'.repeat(20001), { days: 4 }).error).toBe('职位描述超过 20,000 字。');
-    expect(run(DEMO_JD, { days: 9 }).error).toBe('每周到岗天数应为 1–7。');
-    expect(run(DEMO_JD, { days: 4, added: [{ statement: '经'.repeat(201), skills: [], status: 'user_confirmed' }] }).error).toBe('每条经历不超过 200 字。');
-    expect(run(DEMO_JD, { days: 4, added: Array.from({ length: 21 }, () => ({ statement: '一条', skills: [], status: 'user_confirmed' })) }).error).toBe('新增经历最多 20 条。');
+  it('rejects empty and oversized input with a code the page translates, without running the engine', () => {
+    expect(run('   ', { days: 4 })).toEqual({ error: 'jd-empty', params: {} });
+    expect(run('字'.repeat(20001), { days: 4 })).toEqual({ error: 'jd-too-long', params: { max: 20000 } });
+    expect(run(DEMO_JD, { days: 9 })).toEqual({ error: 'days-range', params: {} });
+    expect(run(DEMO_JD, { days: 4, added: [{ statement: '经'.repeat(201), skills: [], status: 'user_confirmed' }] })).toEqual({ error: 'added-too-long', params: { max: 200 } });
+    expect(run(DEMO_JD, { days: 4, added: Array.from({ length: 21 }, () => ({ statement: '一条', skills: [], status: 'user_confirmed' })) })).toEqual({ error: 'too-many-added', params: { max: 20 } });
+  });
+  it('a job description with no recognisable requirement is reported, not drawn as an empty circuit', () => {
+    expect(run('hello world', { days: 4 })).toEqual({ error: 'no-requirements', params: {} });
+  });
+  it('links each requirement to skills with the engine\'s own alias catalogue', () => {
+    const r = run('岗位要求：\n- 会用数据透视表；\n- 熟悉 SQL 查询。', { days: 4 });
+    expect(r.requirements.map((q: any) => q.skills)).toEqual([['Excel'], ['SQL']]);
+    expect(r.evidence.find((e: any) => e.skill === 'Excel')).toMatchObject({ status: 'matched', factIds: ['fact-sql-analysis'] });
   });
   it('reports the fictional candidate the circuit draws', () => {
     const r = run(DEMO_JD, { days: 4 });

@@ -30,6 +30,9 @@ export interface LiveText {
   score: string; raw: (n: number) => string; facts: string; ceilFail: (cap: number) => string; ceilUnknown: (cap: number) => string; latency: (ms: number) => string;
   codeTitle: string; codeMeta: string; codeLabel: string;
   fallback: string; retry: string; toReplay: string; toLive: string; privacy: string;
+  /** Words for the bridge's input codes (career_bridge._problem and no-requirements). */
+  errors: Record<string, (p: Record<string, number>) => string>;
+  hexTitle: string;
 }
 
 export const LIVE_TEXT: Record<Lang, LiveText> = {
@@ -50,6 +53,17 @@ export const LIVE_TEXT: Record<Lang, LiveText> = {
     codeTitle: 'local_matcher.py · match_job_locally()', codeMeta: '代码实况 · 源码第 697–702 行', codeLabel: '代码实况：引擎封顶逻辑的源码',
     fallback: '在线引擎暂时无法启动（浏览器不支持、网络中断或超时）。下面是同一引擎预先算好的六组回放。', retry: '重新启动引擎',
     toReplay: '改看六组固定回放', toLive: '回到在线引擎', privacy: '全部计算在你的浏览器里完成，不上传任何内容。',
+    errors: {
+      'jd-empty': () => '职位描述不能为空。',
+      'jd-too-long': p => `职位描述超过 ${p.max.toLocaleString('en-US')} 字。`,
+      'days-range': () => '每周到岗天数应为 1–7。',
+      'too-many-added': p => `新增经历最多 ${p.max} 条。`,
+      'added-empty': () => '新增经历不能为空。',
+      'added-too-long': p => `每条经历不超过 ${p.max} 字。`,
+      'status-invalid': () => '经历状态只能是已确认或待确认。',
+      'no-requirements': () => '没有从这段文字里识别出岗位要求。试试在"岗位要求："下面逐条列出，或粘贴完整的职位描述。',
+    },
+    hexTitle: 'SHA-256 · 正在载入的文件（来自清单）',
   },
   en: {
     title: 'Live engine: job agent matching', meta: 'Public build 0.8.5 · 4397ded · running in your browser',
@@ -68,5 +82,16 @@ export const LIVE_TEXT: Record<Lang, LiveText> = {
     codeTitle: 'local_matcher.py · match_job_locally()', codeMeta: 'Live source · lines 697–702', codeLabel: 'Live source: the engine\'s cap logic',
     fallback: 'The live engine could not start (unsupported browser, network error or timeout). Below are six replays computed by the same engine.', retry: 'Start the engine again',
     toReplay: 'Show the six fixed replays instead', toLive: 'Back to the live engine', privacy: 'Everything is computed in your browser; nothing is uploaded.',
+    errors: {
+      'jd-empty': () => 'The job description is empty.',
+      'jd-too-long': p => `The job description is longer than ${p.max.toLocaleString('en-US')} characters.`,
+      'days-range': () => 'Days per week must be between 1 and 7.',
+      'too-many-added': p => `At most ${p.max} added experiences.`,
+      'added-empty': () => 'An added experience cannot be empty.',
+      'added-too-long': p => `Each experience is at most ${p.max} characters.`,
+      'status-invalid': () => 'A status must be Confirmed or To confirm.',
+      'no-requirements': () => 'No requirements were recognised in this text. Try listing them one per line under a "岗位要求：" heading, or paste the full posting.',
+    },
+    hexTitle: 'SHA-256 · files being loaded (from the manifests)',
   },
 };

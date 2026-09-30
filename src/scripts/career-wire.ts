@@ -4,7 +4,7 @@ import type { Lang } from '../i18n';
 export interface EngineResult {
   ms: number;
   job: { company: string; title: string };
-  requirements: { text: string; category: string; hardGate: boolean }[];
+  requirements: { text: string; category: string; hardGate: boolean; skills: string[] }[];
   evidence: { skill: string; status: 'matched' | 'gap' | 'unknown'; factIds: string[] }[];
   gates: { requirement: string; status: 'passes' | 'fails' | 'unknown'; factIds: string[]; explanation: string }[];
   profile: { education: string | null; days: number | null; months: number | null; facts: { id: string; statement: string; status: string }[] };
@@ -15,7 +15,9 @@ export interface EngineResult {
 export type Tone = 'ok' | 'gap' | 'unknown' | 'fail' | 'none';
 export interface CircuitNode { id: string; label: string; sub: string; tone: Tone }
 export interface Wire { req: number; target: string | null; tone: Tone }
-export interface CircuitModel { reqs: CircuitNode[]; targets: CircuitNode[]; wires: Wire[]; materials: string[]; packError: string | null }
+export interface CircuitModel { reqs: CircuitNode[]; targets: CircuitNode[]; wires: Wire[]; materials: string[]; packError: string | null; hiddenReqs: number }
+/** A long posting can split into hundreds of requirement clauses; the circuit draws the first ones and says how many more ran. */
+export const MAX_DRAWN = 12;
 export interface CapStep { line: number; mode: 'flash' | 'on'; tone: '' | 'red' | 'soft' }
 
 type Names = (g: string[], raw: number, cap: number | null) => string;
@@ -55,7 +57,7 @@ const EVIDENCE_TONE: Record<string, Tone> = { matched: 'ok', gap: 'gap', unknown
 const WORST: Tone[] = ['fail', 'gap', 'unknown', 'ok'];
 const worst = (tones: Tone[]): Tone => WORST.find(t => tones.includes(t)) ?? 'none';
 
-export function wire(r: EngineResult, lang: Lang): CircuitModel {
+export function wire(r: EngineResult, lang: Lang, limit = MAX_DRAWN): CircuitModel {
   const T = L[lang], facts = r.profile.facts, known = new Set(facts.map(f => f.id));
   const targets: CircuitNode[] = [
     { id: 'field-education', label: r.profile.education ?? T.noEducation, sub: `education · ${T.self}`, tone: 'none' },
@@ -64,10 +66,10 @@ export function wire(r: EngineResult, lang: Lang): CircuitModel {
     ...facts.map(f => ({ id: f.id, label: f.statement.replace(/。$/, ''), sub: `${f.id} · ${T.fact[f.status] ?? f.status}`, tone: 'none' as Tone })),
   ];
   const reqs: CircuitNode[] = [], wires: Wire[] = [];
-  r.requirements.forEach((q, i) => {
+  r.requirements.slice(0, limit).forEach((q, i) => {
     const gate = r.gates.find(g => g.requirement === q.text);
-    const text = q.text.toLowerCase();
-    const evidence = r.evidence.filter(e => text.includes(e.skill.toLowerCase()));
+    // The bridge lists the catalogue skills each line names, by the engine's own alias rule (数据透视表 → Excel).
+    const evidence = r.evidence.filter(e => q.skills.includes(e.skill));
     const tone: Tone = gate ? GATE_TONE[gate.status] : evidence.length ? worst(evidence.map(e => EVIDENCE_TONE[e.status])) : 'none';
     const sub = gate ? `${T.gate} · ${T.status[gate.status]}` : evidence.length ? `${T.skill} · ${evidence.map(e => e.skill).join(' · ')}` : T.none;
     reqs.push({ id: `req-${i + 1}`, label: q.text, sub, tone });
@@ -79,7 +81,7 @@ export function wire(r: EngineResult, lang: Lang): CircuitModel {
     const tones = wires.filter(w => w.target === t.id).map(w => w.tone);
     t.tone = tones.includes('ok') ? 'ok' : worst(tones);
   }
-  return { reqs, targets, wires, materials: (r.pack?.factIds ?? []).filter(id => known.has(id)), packError: r.packError };
+  return { reqs, targets, wires, materials: (r.pack?.factIds ?? []).filter(id => known.has(id)), packError: r.packError, hiddenReqs: Math.max(0, r.requirements.length - limit) };
 }
 
 export function capInfo(r: EngineResult): { slam: boolean; tone: 'fail' | 'unknown' | null; steps: CapStep[] } {

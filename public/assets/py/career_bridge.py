@@ -23,24 +23,25 @@ EDITABLE = ('user_confirmed', 'needs_confirmation')
 
 
 def _problem(jd, candidate):
+    """Returns (code, params) for input the demo will not send to the engine; the page words each code per language."""
     if not jd.strip():
-        return '职位描述不能为空。'
+        return 'jd-empty', {}
     if len(jd) > MAX_JD:
-        return f'职位描述超过 {MAX_JD:,} 字。'
+        return 'jd-too-long', {'max': MAX_JD}
     days = candidate.get('days')
     if days is not None and (type(days) is not int or not 1 <= days <= 7):
-        return '每周到岗天数应为 1–7。'
+        return 'days-range', {}
     added = candidate.get('added') or []
     if len(added) > MAX_ADDED:
-        return f'新增经历最多 {MAX_ADDED} 条。'
+        return 'too-many-added', {'max': MAX_ADDED}
     for item in added:
         statement = str(item.get('statement', '')).strip()
         if not statement:
-            return '新增经历不能为空。'
+            return 'added-empty', {}
         if len(statement) > MAX_FACT:
-            return f'每条经历不超过 {MAX_FACT} 字。'
+            return 'added-too-long', {'max': MAX_FACT}
         if item.get('status') not in EDITABLE:
-            return '经历状态只能是已确认或待确认。'
+            return 'status-invalid', {}
     return None
 
 
@@ -81,7 +82,7 @@ def run(jd_json, candidate_json):
     jd, candidate = json.loads(jd_json), json.loads(candidate_json)
     problem = _problem(jd, candidate)
     if problem:
-        return json.dumps({'error': problem}, ensure_ascii=False)
+        return json.dumps({'error': problem[0], 'params': problem[1]}, ensure_ascii=False)
     started = time.perf_counter()
     profile = build_profile(candidate)
     capture = {}
@@ -97,6 +98,8 @@ def run(jd_json, candidate_json):
         result = local_matcher.match_job_locally(profile, job)
     finally:
         local_matcher._cap_breakdown = original
+    if not job.requirements:
+        return json.dumps({'error': 'no-requirements', 'params': {}}, ensure_ascii=False)
     stamp = FIXED.isoformat()
     detail = JobDetail(job_id=1, company=result.job.company, title=result.job.title, location=result.job.location, jd_text=jd,
                        status='saved', created_at=stamp, updated_at=stamp, first_seen_at=stamp, last_seen_at=stamp)
@@ -111,7 +114,10 @@ def run(jd_json, candidate_json):
     return json.dumps({
         'ms': round((time.perf_counter() - started) * 1000, 1),
         'job': {'company': job.company, 'title': job.title},
-        'requirements': [{'text': r.text, 'category': r.category, 'hardGate': r.hard_gate} for r in job.requirements],
+        # Which catalogue skills each requirement line names, by the same alias rule structure_job_locally uses.
+        'requirements': [{'text': r.text, 'category': r.category, 'hardGate': r.hard_gate,
+                          'skills': [name for name, aliases in local_matcher.SKILL_CATALOG.items() if local_matcher._any_alias(r.text, aliases)]}
+                         for r in job.requirements],
         'evidence': [{'skill': e.requirement, 'status': str(e.status), 'factIds': list(e.profile_fact_ids)} for e in result.evidence],
         'gates': [{'requirement': g.requirement, 'status': str(g.status), 'factIds': list(g.profile_fact_ids), 'explanation': g.explanation}
                   for g in result.hard_gates],

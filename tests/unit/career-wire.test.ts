@@ -4,11 +4,11 @@ import { wire, capInfo, observation, type EngineResult } from '../../src/scripts
 const SQL = { id: 'fact-sql-analysis', statement: '使用 SQL 清洗业务数据并输出周度分析。', status: 'documented' };
 const TAB = { id: 'fact-pending-tableau', statement: '独立搭建 Tableau 仪表盘。', status: 'needs_confirmation' };
 const REQS = [
-  { text: '本科及以上学历', category: 'education', hardGate: true },
-  { text: '每周至少 4 天', category: 'availability', hardGate: true },
-  { text: '连续实习 3 个月', category: 'availability', hardGate: true },
-  { text: '必须熟练使用 SQL', category: 'tool', hardGate: true },
-  { text: 'Tableau 经验加分', category: 'experience', hardGate: false },
+  { text: '本科及以上学历', category: 'education', hardGate: true, skills: [] },
+  { text: '每周至少 4 天', category: 'availability', hardGate: true, skills: [] },
+  { text: '连续实习 3 个月', category: 'availability', hardGate: true, skills: [] },
+  { text: '必须熟练使用 SQL', category: 'tool', hardGate: true, skills: ['SQL'] },
+  { text: 'Tableau 经验加分', category: 'experience', hardGate: false, skills: ['Tableau'] },
 ];
 const gate = (requirement: string, status: 'passes' | 'fails' | 'unknown') => ({ requirement, status, factIds: [] as string[], explanation: '' });
 function demo(days: number | null, over: Partial<EngineResult> = {}): EngineResult {
@@ -25,10 +25,10 @@ function demo(days: number | null, over: Partial<EngineResult> = {}): EngineResu
 const JD2: EngineResult = {
   ms: 2.1, job: { company: '未识别', title: '数据分析实习生' },
   requirements: [
-    { text: '熟练使用 Python 和 SQL', category: 'tool', hardGate: false },
-    { text: '每周至少 3 天', category: 'availability', hardGate: true },
-    { text: '有数据可视化经验（Power BI 或 Tableau）', category: 'experience', hardGate: false },
-    { text: '良好的沟通能力', category: 'other', hardGate: false },
+    { text: '熟练使用 Python 和 SQL', category: 'tool', hardGate: false, skills: ['SQL', 'Python'] },
+    { text: '每周至少 3 天', category: 'availability', hardGate: true, skills: [] },
+    { text: '有数据可视化经验（Power BI 或 Tableau）', category: 'experience', hardGate: false, skills: ['Power BI', 'Tableau', '数据可视化'] },
+    { text: '良好的沟通能力', category: 'other', hardGate: false, skills: [] },
   ],
   evidence: [
     { skill: 'SQL', status: 'matched', factIds: ['fact-sql-analysis'] }, { skill: 'Python', status: 'matched', factIds: ['fact-visitor-1'] },
@@ -93,4 +93,21 @@ describe('career wire', () => {
     expect(m.targets[1].label).toBe('4 days a week');
     expect(observation(demo(3), 'en')).toBe('Hard requirement not met (每周至少 4 天): raw 81, capped at 59. 1 confirmed fact enters the materials.');
   });
+  it('follows the engine alias match: 数据透视表 is Excel, not "not assessed"', () => {
+    const r = demo(4, {
+      requirements: [{ text: '会用数据透视表', category: 'tool', hardGate: false, skills: ['Excel'] }],
+      evidence: [{ skill: 'Excel', status: 'matched', factIds: ['fact-sql-analysis'] }], gates: [],
+    });
+    expect(pairs(r)).toEqual([[0, 'fact-sql-analysis', 'ok']]);
+    expect(wire(r, 'zh').reqs[0].sub).toBe('技能 · Excel');
+  });
+  it('draws at most twelve requirements and says how many more the engine computed', () => {
+    const many = Array.from({ length: 14 }, (_, i) => ({ text: `要求 ${i + 1}`, category: 'other', hardGate: false, skills: [] as string[] }));
+    const m = wire(demo(4, { requirements: many, evidence: [], gates: [] }), 'zh');
+    expect(m.reqs).toHaveLength(12);
+    expect(m.hiddenReqs).toBe(2);
+    expect(Math.max(...m.wires.map(w => w.req))).toBe(11);
+    expect(wire(demo(4), 'zh').hiddenReqs).toBe(0);
+  });
 });
+

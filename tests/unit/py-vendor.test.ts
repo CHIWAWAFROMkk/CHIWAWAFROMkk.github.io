@@ -19,4 +19,12 @@ describe('self-hosted Pyodide', () => {
     const wheels = manifest().files.map((f: { package?: string }) => f.package).filter(Boolean).sort();
     expect(wheels).toEqual(['annotated-types', 'pydantic', 'pydantic-core', 'sqlite3', 'typing-extensions', 'typing-inspection']);
   });
+  it('ships the licence notices of Pyodide (MPL-2.0) and of the Python standard library (PSF)', () => {
+    const names = manifest().files.map((f: { name: string }) => f.name);
+    expect(names).toContain('LICENSE-pyodide.txt');
+    expect(names).toContain('LICENSE-python.txt');
+    expect(readFileSync(`${DIR}/LICENSE-pyodide.txt`, 'utf8')).toContain('Mozilla Public License');
+    expect(readFileSync(`${DIR}/LICENSE-python.txt`, 'utf8')).toContain('PYTHON SOFTWARE FOUNDATION LICENSE');
+  });
 });
+

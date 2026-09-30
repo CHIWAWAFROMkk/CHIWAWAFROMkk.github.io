@@ -4,7 +4,7 @@ import type { CircuitModel, Tone } from '../../src/scripts/career-wire';
 
 const node = (id: string, tone: Tone = 'ok') => ({ id, label: id, sub: '', tone });
 function model(reqs: number, wires: [number, string | null, Tone][], targets = ['field-education', 'field-days', 'field-months', 'fact-a', 'fact-b'], materials = ['fact-a']): CircuitModel {
-  return { reqs: Array.from({ length: reqs }, (_, i) => node(`req-${i + 1}`)), targets: targets.map(t => node(t)), wires: wires.map(([req, target, tone]) => ({ req, target, tone })), materials, packError: null };
+  return { reqs: Array.from({ length: reqs }, (_, i) => node(`req-${i + 1}`)), targets: targets.map(t => node(t)), wires: wires.map(([req, target, tone]) => ({ req, target, tone })), materials, packError: null, hiddenReqs: 0 };
 }
 const DEMO = model(5, [[0, 'field-education', 'ok'], [1, 'field-days', 'fail'], [2, 'field-months', 'ok'], [3, 'fact-a', 'unknown'], [4, null, 'gap']]);
 const nums = (d: string) => d.match(/-?\d+(\.\d+)?/g)!.map(Number);
@@ -69,3 +69,17 @@ describe('stacked circuit layout for narrow screens', () => {
     expect(p.height).toBeGreaterThan(p.material.y);
   });
 });
+
+describe('requirements beyond the drawn ones', () => {
+  it('reserve a note line under the requirements in both layouts', () => {
+    const m = { ...DEMO, hiddenReqs: 3 };
+    for (const p of [layoutWide(m), layoutStack(m, 358)]) {
+      expect(p.note).not.toBeNull();
+      const last = p.reqBoxes[p.reqBoxes.length - 1];
+      expect(p.note![1]).toBeGreaterThan(last.y);
+      expect(p.note![1]).toBeLessThan(p.height);
+    }
+    expect(layoutWide(DEMO).note).toBeNull();
+  });
+});
+

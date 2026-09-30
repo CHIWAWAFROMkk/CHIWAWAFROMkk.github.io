@@ -1,15 +1,18 @@
 import { createPyRuntime, type PyRuntime, type PyProgress, type PyReady } from './py-runtime';
-import { wire, capInfo, observation, type EngineResult } from './career-wire';
+import { wire, capInfo, observation, MAX_DRAWN, type EngineResult } from './career-wire';
 import { createCircuit } from './career-circuit';
 import { codeLive } from './code-live';
 import { spinOdometer, setOdometerText } from './odometer-dom';
 import { LIVE_TEXT, DEMO_JD, DEMO_FACTS } from './career-live-text';
 
 type Status = 'user_confirmed' | 'needs_confirmation';
-interface Candidate { days: number | null; statuses: Record<string, Status>; removed: string[]; added: { statement: string; skills: string[]; status: Status }[] }
-type Answer = EngineResult | { error: string };
+/** Each added experience keeps a stable key, so edits never depend on list positions that change while the engine runs. */
+interface Added { key: number; statement: string; skills: string[]; status: Status }
+interface Candidate { days: number | null; statuses: Record<string, Status>; removed: string[]; added: Added[] }
+type Answer = EngineResult | { error: string; params: Record<string, number> };
 const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
 const esc = (s: string) => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!));
+const MANIFESTS = ['/assets/vendor/pyodide/0.29.5/manifest.json', '/assets/py/job-agent/4397ded/manifest.json'];
 
 export function initCareerLive(root: HTMLElement): void {
   const lang = root.dataset.lang === 'en' ? 'en' : 'zh', T = LIVE_TEXT[lang];
@@ -18,7 +21,9 @@ export function initCareerLive(root: HTMLElement): void {
   const light = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData || matchMedia('(pointer: coarse)').matches || innerWidth < 720;
   const stage = $('cl-stage'), code = codeLive($('cl-code')), circuit = createCircuit($('cl-circuit'), lang);
   const cand: Candidate = { days: 4, statuses: {}, removed: [], added: [] };
-  let jd = DEMO_JD, runtime: PyRuntime | null = null, ready = false, seq = 0, debounce = 0, charge: string | null = null, factKey = '';
+  // reqSeq drops answers a newer edit has superseded; showSeq stops an animation only when a newer result will be shown,
+  // so an input error never leaves the previous result half drawn.
+  let jd = DEMO_JD, runtime: PyRuntime | null = null, ready = false, reqSeq = 0, showSeq = 0, debounce = 0, charge: string | null = null, nextKey = 1;
 
   const say = (text: string, bad = false) => { const s = $('cl-status'); s.textContent = text; s.classList.toggle('bad', bad); };
   const lock = (on: boolean) => {
@@ -34,22 +39,28 @@ export function initCareerLive(root: HTMLElement): void {
   }
   function showLive() {
     stage.hidden = false; $('cl-replay').hidden = true; $('cl-toggle-replay').textContent = T.toReplay;
-    if (!runtime) { if (light) $('cl-start').hidden = false; else void start(); }
+    if (ready) void compute(false);                // draw at the width the stage has now
+    else if (!runtime) { if (light) $('cl-start').hidden = false; else void start(); }
   }
   $('cl-toggle-replay').onclick = () => (stage.hidden ? showLive() : showReplay(false));
   $('cl-retry').onclick = () => { runtime?.dispose(); runtime = null; ready = false; showLive(); };
 
-  /* ---------- boot: every number shown is measured ---------- */
+  /* ---------- boot: every number shown is measured or read from the manifests ---------- */
   function bootView() {
     const box = $('cl-boot'), log = $('cl-boot-log'), hex = $('cl-boot-hex'), mods = $('cl-boot-mods');
     box.hidden = reduced; log.replaceChildren(); mods.replaceChildren(); hex.textContent = '';
-    const t0 = performance.now(), rows: string[] = [];
-    let addr = 0, modules: string[] = [];
-    const hx = reduced ? 0 : window.setInterval(() => {
-      const bytes = Array.from({ length: 16 }, () => ((Math.random() * 256) | 0).toString(16).padStart(2, '0'));
-      rows.push(`${addr.toString(16).padStart(8, '0')}  ${bytes.slice(0, 8).join(' ')}  ${bytes.slice(8).join(' ')}`);
-      addr += 0x10000; if (rows.length > 24) rows.shift(); hex.textContent = rows.join('\n');
-    }, 35);
+    const t0 = performance.now(), shown: string[] = [];
+    let lines: string[] = [], at = 0, modules: string[] = [];
+    // The stream is the SHA-256 of each file being loaded, as recorded in the vendored manifests.
+    void Promise.all(MANIFESTS.map(u => fetch(u).then(r => r.json()))).then(ms => {
+      lines = ms.flatMap(m => m.files.map((f: { name?: string; path?: string; sha256: string }) =>
+        `${f.sha256.slice(0, 8)} ${f.sha256.slice(8, 16)} ${f.sha256.slice(16, 24)} ${f.sha256.slice(24, 32)}  ${f.name ?? f.path}`));
+    }).catch(() => {});
+    const hx = window.setInterval(() => {
+      if (!lines.length) return;
+      shown.push(lines[at++ % lines.length]); if (shown.length > 40) shown.shift();
+      hex.textContent = `${T.hexTitle}\n${shown.join('\n')}`;
+    }, 60);
     return {
       step(p: PyProgress) {
         const d = document.createElement('div');
@@ -59,7 +70,7 @@ export function initCareerLive(root: HTMLElement): void {
       },
       async done(r: PyReady) {
         clearInterval(hx);
-        if (!reduced) {
+        if (!reduced && !stage.hidden) {
           for (const m of modules) { const c = document.createElement('span'); c.className = 'cl-mod'; c.textContent = m; mods.append(c); }
           const chips = [...mods.children] as HTMLElement[];
           for (const c of chips) { c.classList.add('in'); await wait(30); }
@@ -96,17 +107,19 @@ export function initCareerLive(root: HTMLElement): void {
   }
 
   /* ---------- one engine call ---------- */
+  const payload = () => ({ ...cand, added: cand.added.map(({ statement, skills, status }) => ({ statement, skills, status })) });
   async function compute(parse: boolean) {
     if (!ready || !runtime) return;
-    const id = ++seq;
+    const req = ++reqSeq;
     say(T.computing);
     let answer: Answer;
-    try { answer = (await runtime.call<Answer>('career_bridge', 'run', [jd, cand])).value; }
-    catch (e) { if (id === seq) say(T.engineError((e as Error).message), true); return; }
-    if (id !== seq) return;                      // a newer edit has already asked again
-    if ('error' in answer) { say(answer.error, true); return; }
+    try { answer = (await runtime.call<Answer>('career_bridge', 'run', [jd, payload()])).value; }
+    catch (e) { if (req === reqSeq) say(T.engineError((e as Error).message), true); return; }
+    if (req !== reqSeq) return;                  // a newer edit has already asked again
+    if ('error' in answer) { say(T.errors[answer.error]?.(answer.params) ?? answer.error, true); return; }
     say('');
-    await show(answer, parse, id);
+    if (stage.hidden) return;                    // the replay is showing; showLive() recomputes at the right width
+    await show(answer, parse, ++showSeq);
   }
   const schedule = () => { clearTimeout(debounce); debounce = window.setTimeout(() => void compute(false), 600); };
 
@@ -122,13 +135,16 @@ export function initCareerLive(root: HTMLElement): void {
   }
 
   async function flyReqs(r: EngineResult, id: number) {
+    const drawn = r.requirements.slice(0, MAX_DRAWN);
+    if (stage.hidden) { drawn.forEach((_, i) => circuit.reveal(i)); return; }
     const view = $('cl-jd-view'), scan = $('cl-scan'), panel = view.getBoundingClientRect();
+    const step = Math.min(150, 1200 / Math.max(1, drawn.length));   // the whole fly-in stays under about two seconds
     scan.hidden = false;
     void scan.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${view.clientHeight}px)` }], { duration: 1000, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' })
       .finished.then(() => { scan.hidden = true; });
-    await Promise.all(r.requirements.map(async (q, i) => {
-      await wait(180 + i * 150);
-      if (id !== seq) return;
+    await Promise.all(drawn.map(async (q, i) => {
+      await wait(180 + i * step);
+      if (id !== showSeq) return;
       const mark = view.querySelector<HTMLElement>(`mark[data-i="${i}"]`);
       mark?.classList.add('hit');
       const from = mark?.getBoundingClientRect() ?? panel, to = circuit.reqRect(i);
@@ -169,7 +185,7 @@ export function initCareerLive(root: HTMLElement): void {
     code.flash(697);
     if (cap.slam && cap.tone) {
       spinOdometer(el, String(r.raw), 0, before);
-      await wait(1100); if (id !== seq) return;
+      await wait(1100); if (id !== showSeq) return;
       ceiling(cap.tone, r.cap!); slamFx(cap.tone);
       branch.forEach(apply);
       code.count(cap.tone === 'fail' ? 698 : 700, `→ ${r.cap}`);
@@ -180,51 +196,46 @@ export function initCareerLive(root: HTMLElement): void {
       spinOdometer(el, String(r.score), 0, before);
       await wait(1100);
     }
-    if (id !== seq) return;
+    if (id !== showSeq) return;
     code.on(last.line); code.count(last.line, `score = ${r.score}`);
   }
 
   async function show(r: EngineResult, parse: boolean, id: number) {
     const model = wire(r, lang);
     $('cl-lat').textContent = T.latency(r.ms);
-    renderFacts(r.profile.facts);
     markJD(r);
     code.reset(); $('cl-ceil').className = 'cl-ceil'; $('cl-obs').textContent = '';
     const fly = parse && !reduced;
     const drawn = circuit.render(model, { draw: !reduced, hideReqs: fly });
     if (fly) await flyReqs(r, id);
-    await drawn; if (id !== seq) return;
+    await drawn; if (id !== showSeq) return;
     if (charge && model.materials.includes(charge)) await circuit.charge(charge);
     charge = null;
-    await circuit.flowMaterials(); if (id !== seq) return;
+    await circuit.flowMaterials(); if (id !== showSeq) return;
     const n = $('cl-facts-n');
     if (reduced) setOdometerText(n, String(model.materials.length)); else spinOdometer(n, String(model.materials.length), 0, n.textContent || '0');
-    await score(r, id); if (id !== seq) return;
+    await score(r, id); if (id !== showSeq) return;
     $('cl-obs').textContent = observation(r, lang);
   }
 
-  /* ---------- the candidate editor ---------- */
-  function renderFacts(facts: { id: string; statement: string; status: string }[]) {
-    const list = $('cl-facts'), key = facts.map(f => f.id).join('|');
-    if (key === factKey) {
-      for (const f of facts) { const s = list.querySelector<HTMLSelectElement>(`select[data-id="${f.id}"]`); if (s && s.value !== f.status) s.value = f.status; }
-      return;
-    }
-    factKey = key;
-    list.replaceChildren(...facts.map(f => {
+  /* ---------- the candidate editor: drawn from the page's own state, immediately on every edit ---------- */
+  function renderCand() {
+    const base = DEMO_FACTS.filter(f => !cand.removed.includes(f.id)).map(f => ({ id: f.id, statement: f.statement, status: cand.statuses[f.id] ?? f.status, key: 0 }));
+    const added = cand.added.map((a, i) => ({ id: `fact-visitor-${i + 1}`, statement: a.statement, status: a.status as string, key: a.key }));
+    $('cl-facts').replaceChildren(...[...base, ...added].map(f => {
       const li = document.createElement('li');
       const text = document.createElement('span'); text.className = 'cl-fact'; text.textContent = f.statement;
       const idEl = document.createElement('small'); idEl.textContent = f.id;
       li.append(text, idEl);
-      const visitor = f.id.startsWith('fact-visitor-'), index = Number(f.id.split('-').pop()) - 1;
       if (f.status === 'documented') {
         const b = document.createElement('span'); b.className = 'cl-doc'; b.textContent = T.documented; li.append(b);
       } else {
-        const s = document.createElement('select'); s.dataset.id = f.id; s.setAttribute('aria-label', `${T.statusLabel}：${f.statement}`);
+        const s = document.createElement('select'); s.setAttribute('aria-label', `${T.statusLabel}：${f.statement}`);
+        if (!f.key) s.dataset.id = f.id;
         for (const [v, t] of T.statusOptions) s.add(new Option(t, v, false, v === f.status));
         s.onchange = () => {
           const v = s.value as Status;
-          if (visitor) cand.added[index].status = v; else cand.statuses[f.id] = v;
+          if (f.key) { const a = cand.added.find(x => x.key === f.key); if (a) a.status = v; } else cand.statuses[f.id] = v;
           if (v === 'user_confirmed') charge = f.id;
           schedule();
         };
@@ -232,7 +243,10 @@ export function initCareerLive(root: HTMLElement): void {
       }
       const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'cl-link'; rm.textContent = T.remove;
       rm.setAttribute('aria-label', `${T.remove}：${f.statement}`);
-      rm.onclick = () => { if (visitor) cand.added.splice(index, 1); else cand.removed.push(f.id); factKey = ''; schedule(); };
+      rm.onclick = () => {
+        if (f.key) cand.added = cand.added.filter(x => x.key !== f.key); else cand.removed.push(f.id);
+        renderCand(); schedule();
+      };
       li.append(rm);
       return li;
     }));
@@ -242,8 +256,8 @@ export function initCareerLive(root: HTMLElement): void {
     const text = $<HTMLInputElement>('cl-add-text'), skills = $<HTMLInputElement>('cl-add-skills');
     const statement = text.value.trim();
     if (!statement) { say(T.addEmpty, true); return; }
-    cand.added.push({ statement, skills: skills.value.split(/[,，、]/).map(s => s.trim()).filter(Boolean), status: $<HTMLSelectElement>('cl-add-status').value as Status });
-    text.value = ''; skills.value = ''; factKey = ''; schedule();
+    cand.added.push({ key: nextKey++, statement, skills: skills.value.split(/[,，、]/).map(s => s.trim()).filter(Boolean), status: $<HTMLSelectElement>('cl-add-status').value as Status });
+    text.value = ''; skills.value = ''; renderCand(); schedule();
   };
   $('cl-jd-toggle').onclick = () => {
     const input = $<HTMLTextAreaElement>('cl-jd-input'), view = $('cl-jd-view'), btn = $('cl-jd-toggle');
@@ -254,7 +268,7 @@ export function initCareerLive(root: HTMLElement): void {
   $('cl-rerun').onclick = () => void compute(true);
 
   /* ---------- when to start ---------- */
-  renderFacts(DEMO_FACTS);
+  renderCand();
   lock(true);
   if (new URLSearchParams(location.search).get('engine') === 'replay') { showReplay(false); return; }
   if (light) { $('cl-start').hidden = false; $('cl-start-btn').onclick = () => void start(); return; }
