@@ -10,13 +10,15 @@
     "e2e": "playwright test",
     "resume:en": "node tools/print-resume.mjs",
     "insights:gen": "node tools/gen-insights.mjs",
-    "quotadeck:shots": "node tools/quotadeck/run.mjs"
+    "quotadeck:shots": "node tools/quotadeck/run.mjs",
+    "py:vendor": "node tools/py-vendor.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "astro": "^7.3.5",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.2",
+    "pyodide": "0.29.5"
   }
 }
