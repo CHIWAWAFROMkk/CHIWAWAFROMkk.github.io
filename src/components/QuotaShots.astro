@@ -1,0 +1,40 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const SHOTS = [
+  { id: 'quota', zh: '额度：按服务商折叠，共享池只展示一次', en: 'Quota: folded by provider; a shared pool is shown once' },
+  { id: 'models', zh: '模型库：列出已连接服务返回的模型，可搜索', en: 'Models: every model the connected services report, searchable' },
+  { id: 'collab', zh: '并行分工：勾选多个 Agent，同一任务各自负责不同角度', en: 'Parallel hand-off: pick several agents, each takes one angle of the same task' },
+];
+const title = zh ? '在本机运行的界面' : 'The interface, running locally';
+const note = zh
+  ? '截图来自本机运行的 QuotaDeck 当前候选版托盘窗口。为保护账号隐私，额度、余额与模型名称均为演示数据（标题栏写着"演示数据 · 非真实额度"）。'
+  : 'Screenshots of the current QuotaDeck release candidate running on my machine. To keep accounts private, every quota, balance and model name is demo data (the header reads "演示数据 · 非真实额度" — demo data, not real quota).';
+---
+<section class="qshots wrap" aria-labelledby="qshots-title">
+  <div class="section-head"><h2 id="qshots-title">{title}</h2></div>
+  <p class="qshots__note">{note}</p>
+  <div class="qshots__row">
+    {SHOTS.map(s => (
+      <figure data-shot={s.id}>
+        <img src={`/media/quota-deck/${s.id}.png`} alt={zh ? s.zh : s.en} width="504" height="775" loading="lazy" decoding="async" />
+        <figcaption>{zh ? s.zh : s.en}</figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+<script>
+  import { reveal } from '../scripts/motion-dom';
+  reveal(document.querySelectorAll('.qshots figure'), 140);
+</script>
+<style>
+  .qshots { padding-bottom: 32px; }
+  .qshots__note { max-width: 52em; margin: 14px 0 20px; color: var(--mute); font-size: 14px; }
+  .qshots__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  figure { margin: 0; }
+  img { width: 100%; height: auto; border: var(--rule); background: var(--night); }
+  figcaption { margin-top: 10px; font-size: 14px; }
+  @media (max-width: 800px) { .qshots__row { grid-template-columns: minmax(0, 1fr); max-width: 420px; } }
+</style>

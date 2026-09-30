@@ -33,3 +33,26 @@ test('every download and image on the three pages resolves', async ({ page, requ
   expect(found.size).toBeGreaterThan(6);
   for (const u of found) expect((await request.get(u)).status(), u).toBe(200);
 });
+
+test('QuotaDeck shows three interface screenshots, labelled as demo data', async ({ page }) => {
+  await page.goto('/projects/quota-deck/');
+  const shots = page.locator('.qshots figure[data-shot]');
+  await expect(shots).toHaveCount(3);
+  await expect(page.locator('.qshots')).toContainText('演示数据');
+  for (const i of [0, 1, 2]) {
+    const img = shots.nth(i).locator('img');
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  }
+  expect(await noHorizontalOverflow(page)).toBe(true);
+});
+
+test('the AI campus framework lists its five stages in order', async ({ page }) => {
+  await page.goto('/projects/ai-campus/');
+  const steps = page.locator('.framework li[data-step]');
+  await expect(steps).toHaveCount(5);
+  await expect(steps.first()).toContainText('任务定义');
+  await expect(steps.last()).toContainText('独立验收');
+  await page.goto('/en/projects/ai-campus/');
+  await expect(page.locator('.framework li[data-step]').first()).toContainText('Define the task');
+});

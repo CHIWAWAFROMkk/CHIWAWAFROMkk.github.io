@@ -1,0 +1,46 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const STEPS = [
+  { zh: ['任务定义', '明确目标和约束'], en: ['Define the task', 'State the goal and the constraints'] },
+  { zh: ['可靠输入', '建立事实依据'], en: ['Reliable input', 'Establish the factual basis'] },
+  { zh: ['AI 辅助', '提出解释或候选方案'], en: ['AI assistance', 'Propose explanations or candidate options'] },
+  { zh: ['人工核验', '检查来源、计算和遗漏'], en: ['Human check', 'Check sources, calculations and omissions'] },
+  { zh: ['独立验收', '检验使用者是否能够解释关键决策'], en: ['Independent sign-off', 'Test whether the user can explain the key decisions'] },
+];
+const title = zh ? '成果：五段式任务评估框架' : 'Outcome: a five-stage task evaluation framework';
+const note = zh ? '框架将研究发现转成可检查的任务流程。' : 'The framework turns the findings into a task workflow that can be checked.';
+---
+<section class="framework wrap" aria-labelledby="framework-title">
+  <div class="section-head"><h2 id="framework-title">{title}</h2></div>
+  <ol>
+    {STEPS.map(s => (
+      <li data-step>
+        <strong>{zh ? s.zh[0] : s.en[0]}</strong>
+        <span>{zh ? s.zh[1] : s.en[1]}</span>
+      </li>
+    ))}
+  </ol>
+  <p class="framework__note">{note}</p>
+</section>
+<script>
+  import { reveal } from '../scripts/motion-dom';
+  reveal(document.querySelectorAll('.framework li'), 120);
+</script>
+<style>
+  .framework { padding-bottom: 28px; }
+  ol { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: step; }
+  li { position: relative; display: grid; gap: 8px; align-content: start; padding: 18px 16px 18px 0; border-top: 4px solid var(--ink); counter-increment: step; }
+  li + li { padding-left: 16px; }
+  li::before { content: '0' counter(step); font: 700 14px/1 var(--font-display); color: var(--red-text); }
+  li:last-child { border-top-color: var(--red); }
+  strong { font: 900 clamp(18px, 1.6vw, 22px)/1.25 var(--font-cjk-bold); }
+  span { color: var(--mute); font-size: 14px; }
+  .framework__note { margin-top: 14px; font-size: 15px; }
+  @media (max-width: 800px) {
+    ol { grid-template-columns: minmax(0, 1fr); }
+    li + li { padding-left: 0; }
+  }
+</style>
