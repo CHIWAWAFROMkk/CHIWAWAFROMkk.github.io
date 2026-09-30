@@ -79,3 +79,25 @@ test('English page: English interface, Chinese demo data', async ({ page, isMobi
   await expect(page.locator('#agent-jd')).toContainText('岗位');
   await expect(page.locator('#agent-recommendation')).not.toHaveText(/[一-鿿]/);
 });
+
+test('a request that never answers still ends in a retry button', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  test.setTimeout(60_000);
+  await page.route('**/job-agent-demo.json', () => { /* never answers */ });
+  await page.goto(PATH);
+  await expect(page.locator('#agent-retry')).toBeVisible({ timeout: 25_000 });
+  await expect(page.locator('#agent-status')).toContainText('范例暂时未能加载');
+  await page.unroute('**/job-agent-demo.json');
+  await page.locator('#agent-retry').click();
+  await expect(page.locator('#agent-results')).toBeVisible();
+  await expect(page.locator('#agent-score')).toHaveText(String(sc('4-0').match.overall_score));
+});
+
+test('an unchanged indicator stays still while a changed one spins', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await ready(page);
+  await page.locator('#agent-evidence').selectOption('1');
+  const spinning = await page.evaluate(() => ['agent-score', 'agent-facts', 'agent-blocks'].map(id => !!document.querySelector(`#${id} .odo`)));
+  expect(sc('4-1').match.overall_score).toBe(sc('4-0').match.overall_score);
+  expect(spinning).toEqual([false, true, false]);
+});

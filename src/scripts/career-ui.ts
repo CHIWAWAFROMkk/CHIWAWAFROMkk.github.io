@@ -12,6 +12,9 @@ interface Scenario {
   };
   pack: { evidence: unknown[]; review_checklist: { item: string; status: string; detail: string; blocks_submission: boolean }[]; materials: Record<string, string | string[]> };
 }
+/** A request that has not answered by then counts as failed, so the retry button always appears. */
+const LOAD_TIMEOUT = 15_000;
+
 interface Demo { disclaimer: string; sourceCommit: string; sourceHashes: Record<string, string>; jd: string; scenarios: Scenario[] }
 
 /** Port of the original career-demo.mjs: replays the six engine outputs; only the interface strings are language-aware. */
@@ -24,8 +27,14 @@ export function initCareer(root: HTMLElement): void {
   let demo: Demo | null = null;
   let selected: Scenario | null = null;
   let first = true;
+  let loading = false;
 
-  const setNum = (id: string, text: string) => (first ? setOdometerText($(id), text) : spinOdometer($(id), text, 0, $(id).textContent ?? undefined));
+  // An unchanged value is written, not spun: a spinning reel would suggest the number moved.
+  const setNum = (id: string, text: string) => {
+    const was = $(id).textContent ?? '';
+    if (first || was === text) setOdometerText($(id), text);
+    else spinOdometer($(id), text, 0, was);
+  };
   const rows = (id: string, data: string[][]) => $(id).replaceChildren(...data.map(r => { const tr = node('tr'); r.forEach(v => tr.append(node('td', v))); return tr; }));
   const draft = () => {
     if (!selected) return;
@@ -60,10 +69,14 @@ export function initCareer(root: HTMLElement): void {
   }
 
   async function load() {
+    if (loading) return;
+    loading = true;
     $('agent-retry').hidden = true;
     $('agent-status').textContent = T.loading;
+    const abort = new AbortController();
+    const timer = setTimeout(() => abort.abort(), LOAD_TIMEOUT);
     try {
-      const response = await fetch('/assets/job-agent-demo.json');
+      const response = await fetch('/assets/job-agent-demo.json', { signal: abort.signal });
       if (!response.ok) throw Error(String(response.status));
       const data = await response.json() as Demo;
       if (!Array.isArray(data.scenarios) || data.scenarios.length !== 6) throw Error('scenarios');
@@ -76,6 +89,9 @@ export function initCareer(root: HTMLElement): void {
       console.error(e);
       $('agent-status').textContent = T.loadFailed;
       $('agent-retry').hidden = false;
+    } finally {
+      clearTimeout(timer);
+      loading = false;
     }
   }
 
