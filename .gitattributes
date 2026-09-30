@@ -1,0 +1,3 @@
+# Vendored runtimes and engine sources are pinned by SHA-256 in their manifests: never convert their line endings.
+public/assets/vendor/** -text
+public/assets/py/** -text
