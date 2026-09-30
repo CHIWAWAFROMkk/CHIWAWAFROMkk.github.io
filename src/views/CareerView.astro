@@ -1,0 +1,14 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/ai-career.zh.md';
+import { Content as BodyEn } from '../copy/projects/ai-career.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.career;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout lang={lang} slug="ai-career" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <Body />
+</ProjectLayout>

@@ -4,10 +4,11 @@ export const PHASE1_PAGES = ['/', '/brief/', '/projects/hris-workflow/', '/en/',
 
 export const PHASE2A_PAGES = ['/projects/', '/projects/campus-delivery/', '/projects/stock-data/', '/projects/stock-data/method/'].flatMap(p => [p, `/en${p}`]);
 export const INSIGHTS_PAGES = ['/projects/campus-delivery/insights/', '/en/projects/campus-delivery/insights/'];
-export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES];
+export const PHASE2B_PAGES = ['/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/'].flatMap(p => [p, `/en${p}`]);
+export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES, ...PHASE2B_PAGES];
 
 export const PHASE2_PENDING = new Set(
-  ['/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/', '/projects/mais-je-taime/', '/privacy/']
+  ['/projects/mais-je-taime/', '/privacy/']
     .flatMap(p => [p, `/en${p}`]),
 );
 
