@@ -13,6 +13,12 @@
       "source": "npm:pyodide@0.29.5/pyodide.mjs"
     },
     {
+      "name": "pyodide.mjs.map",
+      "bytes": 83719,
+      "sha256": "212ffbcf75de8ab88f862784600494f1c106421118257d509f2dbbe6d472a8ca",
+      "source": "npm:pyodide@0.29.5/pyodide.mjs.map"
+    },
+    {
       "name": "pyodide.asm.js",
       "bytes": 1074322,
       "sha256": "356c42f69e1695397e9d8670bd3c2e678248cde76e18bdae1731e848537b47d7",

@@ -5,7 +5,7 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const VERSION = '0.29.5';
-const CORE = ['pyodide.mjs', 'pyodide.asm.js', 'pyodide.asm.wasm', 'python_stdlib.zip', 'pyodide-lock.json'];
+const CORE = ['pyodide.mjs', 'pyodide.mjs.map', 'pyodide.asm.js', 'pyodide.asm.wasm', 'python_stdlib.zip', 'pyodide-lock.json'];
 const WHEELS = ['pydantic', 'pydantic-core', 'typing-extensions', 'annotated-types', 'typing-inspection', 'sqlite3'];
 const src = 'node_modules/pyodide', out = `public/assets/vendor/pyodide/${VERSION}`;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
