@@ -1,0 +1,30 @@
+---
+import { readFileSync } from 'node:fs';
+interface Props { id: string; file: string; first: number; last: number; title: string; meta: string; label: string }
+const { id, file, first, last, title, meta, label } = Astro.props;
+// Read at build time from the real file, so the page can only ever show the source verbatim.
+const lines = readFileSync(file, 'utf8').replace(/\r\n/g, '\n').split('\n').slice(first - 1, last);
+---
+<div class="codelive" id={id} role="region" aria-label={label} tabindex="0">
+  <div class="cl-h"><span>{title}</span><em>{meta}</em></div>
+  {lines.map((s, i) => (
+    <div class="cl-l" data-n={first + i}><span class="cl-no" aria-hidden="true">{first + i}</span><span class="cl-src">{s}</span><span class="cl-cnt"></span></div>
+  ))}
+</div>
+<style>
+  .codelive { font: 12.5px/1.8 Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); border: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); padding: 6px 0 8px; overflow-x: auto; }
+  .cl-h { display: flex; justify-content: space-between; gap: 12px; padding: 0 12px 6px; margin-bottom: 4px; color: var(--night-fg); font-size: 11.5px; border-bottom: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); }
+  .cl-h em { font-style: normal; color: var(--night-mute); }
+  .cl-l { position: relative; display: grid; grid-template-columns: 46px max-content auto; white-space: pre; padding-right: 12px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--red) calc(var(--heat, 0) * 38%), transparent), transparent 75%); }
+  .cl-no { text-align: right; padding-right: 12px; color: color-mix(in srgb, var(--night-mute) 60%, transparent); }
+  .cl-src, .cl-cnt { position: relative; z-index: 1; }
+  .cl-cnt { padding-left: 16px; color: var(--night-fg); }
+  .cl-l.on { color: var(--night-fg); }
+  .cl-l.on.red { background: color-mix(in srgb, var(--red) 26%, transparent); }
+  .cl-l.on.soft { background: color-mix(in srgb, var(--night-fg) 10%, transparent); }
+  .cl-l.flash::before { content: ''; position: absolute; inset: 0; background: color-mix(in srgb, var(--night-fg) 16%, transparent); animation: cl-flash .9s ease-out forwards; }
+  .cl-l.flash.red::before { background: color-mix(in srgb, var(--red) 34%, transparent); }
+  @keyframes cl-flash { from { opacity: 1; } to { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cl-l.flash::before { animation: none; opacity: 0; } }
+</style>

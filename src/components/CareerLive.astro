@@ -1,0 +1,185 @@
+---
+import { readFileSync } from 'node:fs';
+import CodeLive from './CodeLive.astro';
+import CareerDemo from './CareerDemo.astro';
+import { LIVE_TEXT, DEMO_JD } from '../scripts/career-live-text';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = LIVE_TEXT[lang];
+const bytes = (p: string) => JSON.parse(readFileSync(p, 'utf8')).files.reduce((s: number, f: { bytes: number }) => s + f.bytes, 0);
+const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes('public/assets/py/job-agent/4397ded/manifest.json')) / 1048576).toFixed(1);
+---
+<section class="career-live" data-career-live data-demo data-lang={lang} aria-labelledby="cl-title">
+  <div class="wrap">
+    <div class="section-head"><h2 id="cl-title">{T.title}</h2><span class="meta">{T.meta}</span></div>
+    <p class="cl-intro">{T.intro}</p>
+  </div>
+  <div class="cl-stage night-zone" id="cl-stage">
+    <div class="cl-top">
+      <span class="cl-chip" id="cl-chip">PYTHON · WEBASSEMBLY</span>
+      <span class="cl-status" id="cl-status" role="status" aria-live="polite"></span>
+      <span class="cl-lat" id="cl-lat"></span>
+    </div>
+    <div class="cl-start" id="cl-start" hidden><button type="button" class="cl-btn" id="cl-start-btn">{T.start(mb)}</button><p>{T.startNote}</p></div>
+    <div class="cl-main">
+      <div class="cl-side">
+        <div class="cl-jd">
+          <div class="cl-h"><span id="cl-jd-label">{T.jdLabel}</span><button type="button" class="cl-link" id="cl-jd-toggle">{T.jdEdit}</button></div>
+          <div class="cl-jd-view" id="cl-jd-view" tabindex="0" role="region" aria-labelledby="cl-jd-label">{DEMO_JD}</div>
+          <textarea id="cl-jd-input" aria-labelledby="cl-jd-label" maxlength="20000" rows="12" hidden></textarea>
+          <p class="cl-hint">{T.jdHint}</p>
+          <div class="cl-scan" id="cl-scan" hidden></div>
+        </div>
+        <fieldset class="cl-cand" id="cl-cand">
+          <legend>{T.candLabel}</legend>
+          <label>{T.daysLabel}
+            <select id="cl-days">
+              {[1, 2, 3, 4, 5, 6, 7].map(d => <option value={String(d)} selected={d === 4}>{T.day(d)}</option>)}
+              <option value="">{T.daysUnknown}</option>
+            </select>
+          </label>
+          <ul class="cl-facts" id="cl-facts"></ul>
+          <details class="cl-add">
+            <summary>{T.addLabel}</summary>
+            <label>{T.addStatement}<input id="cl-add-text" maxlength="200" /></label>
+            <label>{T.addSkills}<input id="cl-add-skills" /></label>
+            <label>{T.statusLabel}<select id="cl-add-status">{T.statusOptions.map(([v, t]) => <option value={v}>{t}</option>)}</select></label>
+            <button type="button" class="cl-btn" id="cl-add-btn">{T.addBtn}</button>
+          </details>
+        </fieldset>
+        <button type="button" class="cl-btn" id="cl-rerun">{T.recompute}</button>
+        <p class="cl-hint">{T.privacy}</p>
+      </div>
+      <div class="cl-circuit" id="cl-circuit">
+        <div class="cl-boot" id="cl-boot" hidden>
+          <pre class="cl-boot-hex" id="cl-boot-hex" aria-hidden="true"></pre>
+          <div><div class="cl-boot-log" id="cl-boot-log"></div><div class="cl-boot-mods" id="cl-boot-mods" aria-hidden="true"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cl-bottom">
+      <div class="cl-kpi">
+        <div class="cl-kl">{T.score}</div>
+        <div class="cl-kv" id="cl-score">0</div>
+        <div class="cl-raw" id="cl-raw"></div>
+        <div class="cl-ceil" id="cl-ceil"><span id="cl-ceil-t"></span></div>
+      </div>
+      <div class="cl-kpi"><div class="cl-kl">{T.facts}</div><div class="cl-kv" id="cl-facts-n">0</div></div>
+      <div class="cl-codewrap">
+        <CodeLive id="cl-code" file="public/assets/py/job-agent/4397ded/job_agent/services/local_matcher.py" first={697} last={702} title={T.codeTitle} meta={T.codeMeta} label={T.codeLabel} />
+        <p class="cl-obs" id="cl-obs"></p>
+      </div>
+    </div>
+    <div class="cl-vig" id="cl-vig"></div>
+  </div>
+  <div class="wrap cl-switch"><button type="button" class="cl-link" id="cl-toggle-replay">{T.toReplay}</button></div>
+  <div class="cl-replay" id="cl-replay" hidden>
+    <p class="wrap cl-fallback-note" id="cl-fallback-note" hidden>{T.fallback} <button type="button" class="cl-link" id="cl-retry">{T.retry}</button></p>
+    <CareerDemo lang={lang} />
+  </div>
+</section>
+<script>
+  import { initCareerLive } from '../scripts/career-live';
+  document.querySelectorAll<HTMLElement>('[data-career-live]').forEach(initCareerLive);
+</script>
+<style>
+  .career-live { padding-bottom: 32px; overflow-x: clip; }   /* the slam shake must never widen the page */
+  .cl-intro { max-width: 60em; margin: 14px 0 18px; }
+  .cl-stage { position: relative; max-width: 1600px; margin-inline: auto; overflow: hidden; }
+  .cl-top { display: flex; align-items: center; gap: 16px; padding: 12px var(--gutter); border-bottom: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); flex-wrap: wrap; }
+  .cl-chip { padding: 2px 8px; border: 1px solid color-mix(in srgb, var(--night-fg) 25%, transparent); font: 600 12px Consolas, 'Cascadia Mono', monospace; letter-spacing: .06em; color: var(--night-mute); }
+  .cl-chip.live { color: var(--night-fg); border-color: var(--red); }
+  .cl-status { font-size: 13px; color: var(--night-mute); }
+  .cl-status.bad { color: var(--night-fg); padding: 2px 8px; background: color-mix(in srgb, var(--red) 30%, transparent); }
+  .cl-lat { margin-left: auto; font: 12px Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); }
+  .cl-start { padding: 28px var(--gutter); }
+  .cl-start p { margin-top: 8px; color: var(--night-mute); font-size: 13px; }
+  .cl-main { display: grid; grid-template-columns: 330px minmax(0, 1fr); border-bottom: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); }
+  .cl-side { display: flex; flex-direction: column; gap: 14px; padding: 14px 18px; border-right: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); }
+  .cl-jd { position: relative; }
+  .cl-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 600 12px Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); margin-bottom: 8px; }
+  .cl-jd-view { max-height: 300px; overflow: auto; white-space: pre-wrap; font-size: 13px; line-height: 2; color: var(--night-fg); }
+  .cl-jd-view :global(mark) { background: transparent; color: inherit; box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--red) 60%, transparent); transition: background .25s; }
+  .cl-jd-view :global(mark.hit) { background: color-mix(in srgb, var(--red) 28%, transparent); }
+  .cl-jd textarea { width: 100%; min-height: 240px; background: var(--night); color: var(--night-fg); border: 1.5px solid color-mix(in srgb, var(--night-fg) 30%, transparent); font: 13px/1.8 var(--font-body); padding: 8px; }
+  .cl-scan { position: absolute; left: 0; right: 0; top: 24px; height: 36px; pointer-events: none; border-bottom: 1px solid color-mix(in srgb, var(--night-fg) 45%, transparent);
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--night-fg) 22%, transparent)); }
+  .cl-hint { font-size: 12px; color: var(--night-mute); }
+  .cl-cand { border: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); padding: 10px 12px; margin: 0; min-width: 0; }
+  .cl-cand legend { padding: 0 4px; font-weight: 700; }
+  .cl-cand label { display: grid; gap: 4px; font-size: 13px; margin-bottom: 8px; }
+  .cl-cand select, .cl-cand input { background: var(--night); color: var(--night-fg); border: 1.5px solid color-mix(in srgb, var(--night-fg) 30%, transparent); font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 0; }
+  .cl-facts { list-style: none; margin: 4px 0 8px; padding: 0; display: grid; gap: 8px; }
+  .cl-facts :global(li) { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 8px 0; border-top: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); font-size: 13px; }
+  .cl-facts :global(small) { grid-column: 1; color: var(--night-mute); font: 11px Consolas, monospace; }
+  .cl-facts :global(.cl-doc) { color: var(--night-mute); font-size: 12px; }
+  .cl-facts :global(select) { background: var(--night); color: var(--night-fg); border: 1px solid color-mix(in srgb, var(--night-fg) 30%, transparent); font-size: 12px; }
+  .cl-add summary { cursor: pointer; font-size: 13px; }
+  .cl-btn { justify-self: start; padding: 8px 14px; border: 1.5px solid var(--night-fg); background: transparent; color: var(--night-fg); font-weight: 700; cursor: pointer; }
+  .cl-btn:hover:not(:disabled) { background: var(--night-fg); color: var(--night); }
+  .cl-btn:disabled { opacity: .45; cursor: default; }
+  .cl-link { padding: 0; border: 0; background: none; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; font-size: 12.5px; }
+  .cl-circuit { position: relative; min-height: 420px; }
+  .cl-circuit :global(svg) { display: block; width: 100%; height: auto; }
+  .cl-circuit :global(canvas) { position: absolute; left: 0; top: 0; pointer-events: none; }
+  .cl-circuit :global(.cbox) { fill: color-mix(in srgb, var(--night-fg) 3%, transparent); stroke: color-mix(in srgb, var(--night-fg) 16%, transparent); stroke-width: 1.2; transition: stroke .3s, fill .3s; }
+  .cl-circuit :global(.cnode) { transition: opacity .3s; }
+  .cl-circuit :global(.cnode.hide) { opacity: 0; }
+  .cl-circuit :global(.cnode.tone-ok .cbox) { stroke: color-mix(in srgb, var(--night-fg) 70%, transparent); fill: color-mix(in srgb, var(--night-fg) 7%, transparent); }
+  .cl-circuit :global(.cnode.tone-fail .cbox) { stroke: var(--red); fill: color-mix(in srgb, var(--red) 12%, transparent); }
+  .cl-circuit :global(.cnode.tone-unknown .cbox), .cl-circuit :global(.cnode.tone-gap .cbox) { stroke: var(--night-mute); stroke-dasharray: 4 4; }
+  .cl-circuit :global(.cnode.flash .cbox) { animation: cl-nodeflash .6s ease-out; }
+  @keyframes cl-nodeflash { 0% { fill: color-mix(in srgb, var(--night-fg) 26%, transparent); } }
+  .cl-circuit :global(.cnt) { fill: var(--night-fg); font: 600 15px var(--font-body); }
+  .cl-circuit :global(.cns) { fill: var(--night-mute); font: 11.5px Consolas, monospace; }
+  .cl-circuit :global(.chd) { fill: var(--night-mute); font: 600 11.5px Consolas, monospace; letter-spacing: .08em; }
+  .cl-circuit :global(.ctr) { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .cl-circuit :global(.ctr.tone-ok) { stroke: color-mix(in srgb, var(--night-fg) 50%, transparent); }
+  .cl-circuit :global(.ctr.tone-fail) { stroke: var(--red); stroke-width: 2.4; }
+  .cl-circuit :global(.ctr.tone-gap) { stroke: color-mix(in srgb, var(--red) 45%, transparent); stroke-dasharray: 6 7; }
+  .cl-circuit :global(.ctr.tone-unknown) { stroke: var(--night-mute); stroke-dasharray: 6 7; }
+  .cl-circuit :global(.ctr.tone-none) { stroke: color-mix(in srgb, var(--night-mute) 50%, transparent); stroke-dasharray: 2 5; }
+  .cl-circuit :global(.cvia) { fill: var(--night); stroke: color-mix(in srgb, var(--night-fg) 45%, transparent); stroke-width: 1.5; }
+  .cl-circuit :global(.cmark) { fill: var(--night-fg); font: 700 15px Consolas, monospace; }
+  .cl-circuit :global(.ccharge) { fill: color-mix(in srgb, var(--night-fg) 18%, transparent); transform-box: fill-box; transform-origin: left center; }
+  .cl-boot { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; padding: 22px 26px; background: var(--night); font: 12.5px/1.8 Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); }
+  .cl-boot[hidden] { display: none; }
+  .cl-boot-hex { margin: 0; overflow: hidden; font-size: 11.5px; line-height: 1.6; color: color-mix(in srgb, var(--night-mute) 60%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, #000 25%, #000 80%, transparent); mask-image: linear-gradient(180deg, transparent, #000 25%, #000 80%, transparent); }
+  .cl-boot-log :global(.ready) { color: var(--night-fg); font-weight: 600; }
+  .cl-boot-mods { display: grid; grid-template-columns: repeat(3, max-content); gap: 6px 8px; margin-top: 16px; }
+  .cl-boot-mods :global(.cl-mod) { padding: 2px 7px; border: 1px solid color-mix(in srgb, var(--night-fg) 25%, transparent); color: var(--night-fg); font-size: 11px; opacity: 0; transform: scale(.6); }
+  .cl-boot-mods :global(.cl-mod.in) { opacity: 1; transform: none; transition: opacity .2s, transform .25s cubic-bezier(.2,.8,.2,1.3); }
+  .cl-bottom { display: grid; grid-template-columns: 240px 190px minmax(0, 1fr); }
+  .cl-kpi { position: relative; padding: 12px 18px 16px; border-right: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); overflow: hidden; }
+  .cl-kl { font-size: 12px; color: var(--night-mute); }
+  .cl-kv { font: 700 88px/1 var(--font-display); margin-top: 12px; transform-origin: left bottom; }
+  .cl-kv.squash { animation: cl-squash .36s cubic-bezier(.2,.8,.2,1); }
+  @keyframes cl-squash { 0% { transform: scaleY(.8); } 60% { transform: scaleY(1.04); } 100% { transform: none; } }
+  .cl-raw { margin-top: 6px; font: 12px Consolas, monospace; color: var(--night-mute); min-height: 18px; }
+  .cl-ceil { position: absolute; left: 0; right: 0; top: 40px; height: 5px; background: var(--night-fg); opacity: 0; transform: translateY(-60px); }
+  .cl-ceil.fail { background: var(--red); }
+  .cl-ceil span { position: absolute; right: 12px; top: 10px; font: 600 11.5px Consolas, monospace; white-space: nowrap; color: var(--night-fg); }
+  .cl-ceil.down { animation: cl-drop .2s cubic-bezier(.55,0,.9,.4) forwards; }
+  @keyframes cl-drop { 0% { opacity: 1; transform: translateY(-60px); } 80% { opacity: 1; transform: translateY(3px) scaleY(1.8); } 100% { opacity: 1; transform: none; } }
+  .cl-codewrap { display: flex; flex-direction: column; gap: 10px; padding: 12px 18px 14px; min-width: 0; }
+  .cl-obs { font-size: 13px; color: var(--night-fg); min-height: 22px; }
+  .cl-vig { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse at center, transparent 55%, color-mix(in srgb, var(--red) 30%, transparent)); }
+  .cl-vig.soft { background: radial-gradient(ellipse at center, transparent 55%, color-mix(in srgb, var(--night-fg) 18%, transparent)); }
+  .career-live :global(.cl-fly) { position: fixed; z-index: 20; pointer-events: none; padding: 1px 4px; white-space: nowrap; font: 600 13px var(--font-body); color: var(--night-fg); background: color-mix(in srgb, var(--red) 35%, var(--night)); border: 1px solid var(--red); }
+  .cl-switch { padding-top: 12px; }
+  .cl-fallback-note { margin: 12px auto; }
+  @media (max-width: 800px) {
+    .cl-main { grid-template-columns: minmax(0, 1fr); }
+    .cl-side { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); }
+    .cl-boot { grid-template-columns: minmax(0, 1fr); }
+    .cl-boot-hex { display: none; }
+    .cl-bottom { grid-template-columns: 1fr 1fr; }
+    .cl-codewrap { grid-column: 1 / -1; }
+    .cl-kv { font-size: 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cl-ceil.down { animation: none; opacity: 1; transform: none; }
+    .cl-kv.squash { animation: none; }
+  }
+</style>

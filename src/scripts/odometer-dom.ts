@@ -8,7 +8,7 @@ export function setOdometerText(el: HTMLElement, text: string): void {
   el.textContent = text;
 }
 
-export function spinOdometer(el: HTMLElement, final: string, delay = 0, from?: string): void {
+export function spinOdometer(el: HTMLElement, final: string, delay = 0, from?: string, ms = 850): void {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = final; return; }
   const run = String(Number(el.dataset.odoRun ?? '0') + 1);
   el.dataset.odoRun = run;
@@ -29,7 +29,7 @@ export function spinOdometer(el: HTMLElement, final: string, delay = 0, from?: s
     const rows = reelRows(fromDigits[d] ?? null, s.digit);
     anims.push(strip.animate(
       [{ transform: `translateY(-${rows.from}em)`, filter: 'blur(0)' }, { filter: 'blur(5px)', offset: 0.3 }, { filter: 'blur(1.5px)', offset: 0.8 }, { transform: `translateY(-${rows.to}em)`, filter: 'blur(0)' }],
-      { duration: 850 + d * 160, delay: delay + d * 40, easing: 'cubic-bezier(.12,.85,.22,1.12)', fill: 'both' },
+      { duration: ms + d * (ms * 160 / 850), delay: delay + d * 40, easing: 'cubic-bezier(.12,.85,.22,1.12)', fill: 'both' },
     ));
     d++;
   }

@@ -88,7 +88,7 @@ interface Sampled { pts: Float32Array; len: number; tone: Tone; u: Float32Array;
 export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-hidden', 'true');                 // empty until the first render gives it a name
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
   host.append(svg, canvas);
@@ -214,6 +214,8 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
       placed = host.clientWidth >= 720 ? layoutWide(m) : layoutStack(m, Math.max(280, host.clientWidth));
       svg.replaceChildren(); sampled = []; sparks = []; reqEls.length = 0; targetEls.clear();
       svg.setAttribute('viewBox', `0 0 ${placed.width} ${placed.height}`);
+      svg.removeAttribute('aria-hidden');
+      svg.setAttribute('role', 'img');
       svg.setAttribute('aria-label', m.reqs.map((q, i) => `${q.label}: ${q.sub}`).join('；'));
       if (placed.mode === 'wide') {
         mk('text', { x: LEFT, y: 30, class: 'chd' }, svg).textContent = TEXT[lang].reqs;
