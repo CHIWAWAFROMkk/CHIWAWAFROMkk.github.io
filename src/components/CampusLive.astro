@@ -1,0 +1,226 @@
+---
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import CodeLive from './CodeLive.astro';
+import PyBoot from './PyBoot.astro';
+import { CAMPUS_TEXT } from '../scripts/campus-live-text';
+import { CAMPUS_RUNTIME, CORE_FILES, SCENARIOS, testNames } from '../scripts/campus-flow';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = CAMPUS_TEXT[lang];
+// Everything the runtime downloads, read at build time: the Pyodide core from its manifest, and the three Python files,
+// hashed here. The sum is the size on the start button; the hashes feed the boot byte stream.
+type Entry = { name: string; sha256: string; bytes: number };
+const manifest = JSON.parse(readFileSync('public/assets/vendor/pyodide/0.29.5/manifest.json', 'utf8')) as { files: Entry[] };
+const core = manifest.files.filter(f => CORE_FILES.includes(f.name)).map(({ name, sha256, bytes }) => ({ name, sha256, bytes }));
+const own = CAMPUS_RUNTIME.files.map(u => {
+  const b = readFileSync(`public${u}`);
+  return { name: u.slice(u.lastIndexOf('/') + 1), sha256: createHash('sha256').update(b).digest('hex'), bytes: b.length };
+});
+const files = [...core, ...own];
+const mb = (files.reduce((s, f) => s + f.bytes, 0) / 1048576).toFixed(1);
+const tests = testNames(readFileSync('public/downloads/campus/test_analysis.py', 'utf8'));
+---
+<section class="campus-live" data-campus-live data-demo data-lang={lang} aria-labelledby="cm-title">
+  <div class="wrap">
+    <div class="section-head"><h2 id="cm-title">{T.title}</h2><span class="meta">{T.meta}</span></div>
+    <p class="cm-intro">{T.intro}</p>
+  </div>
+  <div class="cm-stage night-zone" id="cm-stage" data-state="idle" data-files={JSON.stringify(files.map(({ name, sha256 }) => ({ name, sha256 })))}>
+    <div class="cm-top">
+      <span class="cm-chip" id="cm-chip">PYTHON · WEBASSEMBLY</span>
+      <span class="cm-tag" id="cm-tag" hidden>{T.tag}</span>
+      <span class="cm-status" id="cm-status" role="status" aria-live="polite"></span>
+      <span class="cm-timing" id="cm-timing"></span>
+    </div>
+    <div class="cm-start" id="cm-start" hidden><button type="button" class="cm-btn" id="cm-start-btn">{T.start(mb)}</button><p>{T.startNote}</p></div>
+    <div class="cm-main">
+      <form class="cm-form" id="cm-form" novalidate>
+        <fieldset class="cm-fields" id="cm-fields" disabled>
+          <legend class="sr">{T.title}</legend>
+          <div class="cm-pair">
+            <label>{T.id}<input id="cm-id" value="V001" maxlength="40" autocomplete="off" spellcheck="false" /></label>
+            <label>{T.date}<input id="cm-date" type="date" value="2026-09-15" /></label>
+          </div>
+          <label class="cm-row"><input type="checkbox" id="cm-q1" checked /><span><b class="cm-qn">Q1</b>{T.q1}</span></label>
+          <label class="cm-row"><input type="checkbox" id="cm-q2" checked /><span><b class="cm-qn">Q2</b>{T.q2}</span></label>
+          <label><span><b class="cm-qn">Q3</b>{T.q3}</span><select id="cm-q3">{T.used.map(([v, t]) => <option value={v}>{t}</option>)}</select></label>
+          <fieldset class="cm-yes" id="cm-yes">
+            <legend class="sr">Q4–Q7</legend>
+            <label><span><b class="cm-qn">Q4</b>{T.q4}</span><select id="cm-q4">{T.freq.map(([v, t]) => <option value={v} selected={v === '4_15'}>{t}</option>)}</select></label>
+            <fieldset class="cm-q5"><legend><b class="cm-qn">Q5</b>{T.q5}</legend>
+              <div class="cm-chk">{SCENARIOS.map((k, i) => <label><input type="checkbox" name="cm-q5" value={k} checked={k === 'study' || k === 'daily'} />{T.scenes[i]}</label>)}</div>
+            </fieldset>
+            <label><span><b class="cm-qn">Q6</b>{T.q6}</span><select id="cm-q6">{T.help.map(([v, t]) => <option value={v} selected={v === '4'}>{t}</option>)}</select></label>
+            <label><span><b class="cm-qn">Q7</b>{T.q7}</span><select id="cm-q7">{T.verify.map(([v, t]) => <option value={v} selected={v === '3'}>{t}</option>)}</select></label>
+          </fieldset>
+          <p class="cm-hint" id="cm-hint"></p>
+          <div class="cm-btns">
+            <button type="submit" class="cm-btn" id="cm-add">{T.submit}</button>
+            <button type="button" class="cm-btn red" id="cm-sample">{T.sample}</button>
+            <button type="button" class="cm-btn red" id="cm-stress">{T.stress}</button>
+            <button type="button" class="cm-link" id="cm-clear">{T.clear}</button>
+          </div>
+        </fieldset>
+        <p class="cm-hint">{T.privacy}</p>
+      </form>
+      <div class="cm-pipe" id="cm-pipe"><PyBoot prefix="cm" /></div>
+      <div class="cm-stats" id="cm-stats">
+        <div>
+          <div class="cm-lab"><span>{T.incLabel}</span><span class="cm-note">included_n / input_n</span></div>
+          <div class="cm-kpi"><span class="cm-inc" id="cm-inc">0</span><span class="cm-sl">/</span><span class="cm-all" id="cm-all">0</span></div>
+        </div>
+        <div>
+          <div class="cm-lab"><span>{T.yesLabel}</span><span class="cm-note">{T.yesNote}</span></div>
+          <div class="cm-yesrow"><span class="cm-yesv" id="cm-yes-share">—</span><span class="cm-usub" id="cm-counts"></span></div>
+        </div>
+        <div>
+          <div class="cm-lab"><span>{T.sceneLabel}</span><span class="cm-note" id="cm-den"></span></div>
+          <ul class="cm-scenes" id="cm-scenes">{SCENARIOS.map((k, i) => <li data-k={k}><span>{T.scenes[i]}</span><span class="cm-st"><i></i></span><span class="cm-sp">—</span></li>)}</ul>
+        </div>
+        <div>
+          <div class="cm-lab"><span>{T.helpLabel}</span><span class="cm-note">{T.median} <b class="cm-medv" id="cm-med">—</b></span></div>
+          <div class="cm-hist" id="cm-hist"><div class="cm-medl" id="cm-medl"></div>{[1, 2, 3, 4, 5].map(v => <div class="cm-hc" data-v={v}><i></i><b></b><em>{v}</em></div>)}</div>
+        </div>
+        <p class="cm-pstatus" id="cm-pstatus" hidden>{T.statusLabel} <span id="cm-program-status" lang="zh-CN"></span></p>
+      </div>
+    </div>
+    <p class="cm-ledger" id="cm-ledger"></p>
+    <p class="cm-hint cm-lightnote" id="cm-light" hidden>{T.lightNote}</p>
+    <div class="cm-invalid" id="cm-invalid" role="alert" hidden><strong>{T.invalidTitle}</strong> <span id="cm-invalid-msg" lang="zh-CN"></span><small>{T.invalidNote}</small></div>
+    <div class="cm-bottom">
+      <div class="cm-codewrap">
+        <CodeLive id="cm-code" file="public/downloads/campus/analysis.py" first={87} last={97} title={T.codeTitle} meta={T.codeMeta} label={T.codeLabel} />
+        <p class="cm-hint">{T.codeNote}</p>
+      </div>
+      <div class="cm-tests" id="cm-tests">
+        <div class="cm-th"><span>{T.testsTitle(tests.length)}</span><button type="button" class="cm-btn" id="cm-run" disabled>{T.run(tests.length)}</button></div>
+        <div class="cm-grid" id="cm-grid">
+          {tests.map((t, i) => <div class="cm-cell" data-test={t} data-status=""><span class="cm-ci">{String(i + 1).padStart(2, '0')}</span><span class="cm-cn">{t}</span><span class="cm-ck" aria-hidden="true"></span></div>)}
+        </div>
+        <div class="cm-tf"><span class="cm-cmd" id="cm-cmd">{T.cmd}</span><div class="cm-slam" id="cm-slam" role="status"></div></div>
+        <div class="cm-tflash"></div>
+      </div>
+    </div>
+  </div>
+  <p class="wrap cm-fallback" id="cm-fallback" hidden>{T.fallback} <a href="/downloads/campus/analysis.py">{T.download}</a> · <button type="button" class="cm-link" id="cm-retry">{T.retry}</button></p>
+</section>
+<script>
+  import { initCampusLive } from '../scripts/campus-live';
+  document.querySelectorAll<HTMLElement>('[data-campus-live]').forEach(initCampusLive);
+</script>
+<style>
+  .campus-live { --cm-line: color-mix(in srgb, var(--night-fg) 14%, transparent); padding-bottom: 32px; overflow-x: clip; }
+  .cm-intro { max-width: 60em; margin: 14px 0 18px; }
+  .cm-stage { position: relative; max-width: 1600px; margin-inline: auto; overflow: hidden; }
+  .cm-stage[hidden] { display: none; }
+  .cm-top { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 12px var(--gutter); border-bottom: 1px solid var(--cm-line); }
+  .cm-chip, .cm-tag { padding: 2px 8px; border: 1px solid color-mix(in srgb, var(--night-fg) 25%, transparent); font: 600 12px Consolas, 'Cascadia Mono', monospace; letter-spacing: .06em; color: var(--night-mute); }
+  .cm-chip.live { color: var(--night-fg); border-color: var(--red); }
+  .cm-tag { font-family: var(--font-body); letter-spacing: 0; color: var(--night-fg); border-color: color-mix(in srgb, var(--red) 60%, transparent); }
+  .cm-tag[hidden] { display: none; }
+  .cm-status { font-size: 13px; color: var(--night-mute); }
+  .cm-status.bad { color: var(--night-fg); padding: 2px 8px; background: color-mix(in srgb, var(--red) 30%, transparent); }
+  .cm-timing { margin-left: auto; font: 12px Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); }
+  .cm-start { padding: 28px var(--gutter); }
+  .cm-start p { margin-top: 8px; color: var(--night-mute); font-size: 13px; }
+  .cm-main { display: grid; grid-template-columns: 260px minmax(0, 1fr) 290px; border-bottom: 1px solid var(--cm-line); }
+  .cm-form { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 14px 16px 12px; border-right: 1px solid var(--cm-line); font-size: 12.5px; line-height: 1.5; color: var(--night-mute); }
+  .cm-fields, .cm-yes, .cm-q5 { display: flex; flex-direction: column; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+  .cm-fields:disabled, .cm-yes:disabled { opacity: .45; }
+  .cm-form label { display: grid; gap: 3px; color: var(--night-fg); }
+  .cm-form .cm-row { display: flex; align-items: flex-start; gap: 7px; cursor: pointer; }
+  .cm-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cm-qn { margin-right: 6px; font: 600 11.5px Consolas, monospace; color: var(--night-mute); }
+  .cm-form input:not([type=checkbox]), .cm-form select { width: 100%; padding: 5px 7px; border: 1.5px solid color-mix(in srgb, var(--night-fg) 30%, transparent); border-radius: 0; background: var(--night); color: var(--night-fg); font: inherit; font-size: 13px; color-scheme: dark; }
+  .cm-form input[type=checkbox] { margin: 3px 0 0; accent-color: var(--red); }
+  .cm-q5 legend { padding: 0; color: var(--night-fg); }
+  .cm-chk { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  .cm-form .cm-chk label { display: flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap; }
+  .cm-hint { font-size: 12px; line-height: 1.5; color: var(--night-mute); }
+  .cm-btns { display: grid; gap: 6px; margin-top: 4px; }
+  .cm-btn { padding: 7px 12px; border: 1.5px solid var(--night-fg); background: transparent; color: var(--night-fg); font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; }
+  .cm-btn.red { border-color: var(--red); }
+  .cm-btn:hover:not(:disabled) { background: var(--night-fg); color: var(--night); }
+  .cm-btn:disabled { opacity: .45; cursor: default; }
+  .cm-link { justify-self: start; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .cm-pipe { position: relative; min-width: 0; min-height: 440px; }   /* no clipping: the boot chips fly out to #cm-chip */
+  .cm-pipe :global(canvas) { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+  .cm-stats { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 14px 18px 12px; border-left: 1px solid var(--cm-line); font-size: 12px; }
+  .cm-lab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; line-height: 1.4; color: var(--night-mute); }
+  .cm-note { font-size: 11px; text-align: right; }
+  .cm-kpi { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
+  .cm-inc { font: 700 52px/1 var(--font-display); }
+  .cm-sl { font: 600 30px/1 var(--font-display); color: var(--night-mute); }
+  .cm-all { font: 700 30px/1 var(--font-display); color: var(--night-mute); }
+  .cm-yesrow { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+  .cm-yesv { font: 700 34px/1 var(--font-display); }
+  .cm-usub { font: 11px/1.35 Consolas, monospace; color: var(--night-mute); }
+  .cm-scenes { display: grid; gap: 4px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .cm-scenes li { display: grid; grid-template-columns: 76px 1fr 38px; gap: 8px; align-items: center; }
+  .cm-scenes li > span:first-child { color: var(--night-fg); white-space: nowrap; }
+  .cm-st { position: relative; height: 7px; overflow: hidden; background: color-mix(in srgb, var(--night-fg) 7%, transparent); }
+  .cm-st i { position: absolute; inset: 0; background: var(--night-fg); transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  .cm-sp { font: 11.5px Consolas, monospace; color: var(--night-mute); text-align: right; }
+  .cm-hist { position: relative; display: flex; align-items: flex-end; gap: 6px; height: 58px; margin: 16px 0 18px; }
+  .cm-hc { position: relative; flex: 1; height: 100%; }
+  .cm-hc i { position: absolute; inset: 0; background: color-mix(in srgb, var(--night-fg) 70%, transparent); transform: scaleY(0); transform-origin: 50% 100%; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  .cm-hc.med i { background: var(--red); }
+  .cm-hc em { position: absolute; left: 0; right: 0; bottom: -16px; font: 11px/1 Consolas, monospace; font-style: normal; color: var(--night-mute); text-align: center; }
+  .cm-hc b { position: absolute; left: 0; right: 0; bottom: 2px; font: 600 10.5px/1 Consolas, monospace; color: var(--night-fg); text-align: center; transition: bottom .45s cubic-bezier(.2,.8,.2,1); }
+  .cm-medl { position: absolute; top: -12px; bottom: -3px; z-index: 1; width: 0; border-left: 1.5px dashed var(--red); opacity: 0; pointer-events: none; transition: left .45s cubic-bezier(.2,.8,.2,1), opacity .3s; }
+  .cm-medv { font: 600 12px Consolas, monospace; color: var(--night-fg); }
+  .cm-pstatus { margin-top: auto; font-size: 11.5px; color: var(--night-mute); }
+  .cm-stats.stale > * { opacity: .5; transition: opacity .2s; }
+  .cm-lightnote { padding: 6px var(--gutter) 0; }
+  .cm-ledger { min-height: 34px; padding: 8px var(--gutter); border-bottom: 1px solid var(--cm-line); font: 12px Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); overflow-wrap: anywhere; }
+  .cm-invalid { margin: 10px var(--gutter) 0; padding: 10px 14px; border: 1.5px solid var(--red); background: color-mix(in srgb, var(--red) 18%, transparent); color: var(--night-fg); font-size: 13px; }
+  .cm-invalid[hidden] { display: none; }
+  .cm-invalid small { display: block; margin-top: 4px; font-size: 12px; color: var(--night-mute); }
+  .cm-bottom { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: 16px; padding: 14px 16px; }
+  .cm-codewrap { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .cm-tests { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 8px 12px; border: 1px solid var(--cm-line); overflow: hidden; }
+  .cm-th { display: flex; align-items: center; justify-content: space-between; gap: 10px; font: 11.5px Consolas, monospace; color: var(--night-fg); }
+  .cm-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .cm-cell { position: relative; min-height: 86px; padding: 5px 7px; border: 1px solid var(--cm-line); font: 10.5px/1.36 Consolas, monospace; color: var(--night-mute); overflow: hidden; overflow-wrap: anywhere; transition: border-color .2s, color .2s, background-color .25s; }
+  .cm-ci { display: block; margin-bottom: 4px; font: 700 15px/1 var(--font-display); }
+  .cm-ck { position: absolute; top: 2px; right: 6px; font: 700 16px/1.2 var(--font-body); color: var(--night-fg); }
+  .cm-cell[data-status="run"] { border-color: var(--red); color: var(--night-fg); }
+  .cm-cell[data-status="run"]::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 45%; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--red) 30%, transparent), transparent); animation: cm-scan .16s linear forwards; }
+  .cm-cell[data-status="ok"] { border-color: color-mix(in srgb, var(--night-fg) 55%, transparent); background: color-mix(in srgb, var(--night-fg) 5%, transparent); color: var(--night-fg); }
+  .cm-cell[data-status="fail"], .cm-cell[data-status="error"] { border-color: var(--red); background: color-mix(in srgb, var(--red) 16%, transparent); color: var(--night-fg); }
+  @keyframes cm-scan { from { transform: translateX(-100%); } to { transform: translateX(230%); } }
+  .cm-tf { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; font: 11.5px Consolas, monospace; color: var(--night-mute); }
+  .cm-cmd { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cm-slam { font: 700 26px/1 var(--font-display); color: var(--night-fg); white-space: nowrap; opacity: 0; transform-origin: 70% 50%; }
+  .cm-slam.go { animation: cm-slam .42s cubic-bezier(.2,1.3,.4,1) forwards; }
+  @keyframes cm-slam { 0% { opacity: 0; transform: scale(2.3); filter: blur(5px); } 50% { opacity: 1; transform: scale(.95); filter: blur(0); } 100% { opacity: 1; transform: none; } }
+  .cm-tflash { position: absolute; inset: 0; background: var(--night-fg); opacity: 0; pointer-events: none; }
+  .cm-tests.bad .cm-tflash { background: var(--red); }
+  .cm-tests.shk { animation: cm-shake .34s linear; }
+  .cm-tests.shk .cm-tflash { animation: cm-tflash .55s ease-out; }
+  @keyframes cm-shake { 0% { transform: none; } 14% { transform: translate(-6px, 2px); } 30% { transform: translate(5px, -2px); } 46% { transform: translate(-3px, 1px); } 62% { transform: translate(2px, -1px); } 80% { transform: translate(-1px, 0); } 100% { transform: none; } }
+  @keyframes cm-tflash { 0% { opacity: .2; } 100% { opacity: 0; } }
+  .cm-fallback { margin: 12px auto; }
+  @media (max-width: 1100px) {
+    .cm-main { grid-template-columns: 250px minmax(0, 1fr); }
+    .cm-stats { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; border-top: 1px solid var(--cm-line); }
+    .cm-bottom { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 800px) {
+    .cm-main { grid-template-columns: minmax(0, 1fr); }
+    .cm-form { border-right: 0; border-bottom: 1px solid var(--cm-line); }
+    .cm-pipe { min-height: 320px; }
+    .cm-stats { grid-template-columns: minmax(0, 1fr); }
+    .cm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cm-cell { min-height: 64px; }
+    .cm-tf { flex-wrap: wrap; }
+    .cm-slam { font-size: 20px; white-space: normal; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cm-slam.go { animation: none; opacity: 1; }
+    .cm-tests.shk, .cm-tests.shk .cm-tflash, .cm-cell[data-status="run"]::after { animation: none; }
+    .cm-st i, .cm-hc i, .cm-hc b, .cm-medl { transition: none; }
+  }
+</style>
