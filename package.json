@@ -12,7 +12,8 @@
     "insights:gen": "node tools/gen-insights.mjs",
     "quotadeck:shots": "node tools/quotadeck/run.mjs",
     "py:vendor": "node tools/py-vendor.mjs",
-    "job-agent:vendor": "node tools/job-agent-vendor.mjs"
+    "job-agent:vendor": "node tools/job-agent-vendor.mjs",
+    "quotadeck:vendor": "node tools/quotadeck-vendor.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

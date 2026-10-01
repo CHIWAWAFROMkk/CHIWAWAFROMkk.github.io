@@ -1,0 +1,42 @@
+{
+  "repository": "https://github.com/CHIWAWAFROMkk/quota-deck",
+  "commit": "e9557c62f00a085299e5d3d06e9259ed19688ef8",
+  "version": "0.5.0-rc.5",
+  "files": [
+    {
+      "path": "src/renderer/compact.html",
+      "bytes": 4885,
+      "sha256": "62b5644c2a9a2908e4e20dea80bbe1d3ae2356c41de176cd992e21742d1201df"
+    },
+    {
+      "path": "src/renderer/compact.css",
+      "bytes": 17112,
+      "sha256": "f65b53fc9a917afd10bb1486a98ac0c01a5ff7c5342b4c7e982a47c023e2de69"
+    },
+    {
+      "path": "src/renderer/compact.js",
+      "bytes": 21189,
+      "sha256": "5b296f470a60be4e5acf1b8f0217455e05442effa7c85bcbba5e5609b97b661b"
+    },
+    {
+      "path": "src/main/snapshot.cjs",
+      "bytes": 12840,
+      "sha256": "e20cce0f7973f73fefeafc746f3f2c80e8786f529f85c0241339b0f0751c00cc"
+    },
+    {
+      "path": "src/main/quota-history.cjs",
+      "bytes": 5263,
+      "sha256": "acc2c915830fc8460b1940c0198fc1a4d75fb8bbfb1bc2fd8774f12d8685a9ab"
+    },
+    {
+      "path": "src/main/model-guidance.cjs",
+      "bytes": 1039,
+      "sha256": "3dbcc119bd7aa0143c3c4f2a4da56f213fa4aadf56356843d76eee5bbb33f092"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1079,
+      "sha256": "fc032c113394ad99c97dbe132d670ce525a3bab8210e901cb715910991b1cbfd"
+    }
+  ]
+}
