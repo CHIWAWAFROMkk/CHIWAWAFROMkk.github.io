@@ -4,7 +4,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { noHorizontalOverflow } from './helpers';
 
 const PATH = '/projects/ai-campus/';
-test.describe.configure({ timeout: 120_000 });
+// The live demos run continuous canvas animation (and a Python runtime); run each file's tests one after another so
+// that sixteen parallel workers do not starve them of CPU and slow their real-time replays past the timeouts.
+test.describe.configure({ mode: 'default', timeout: 120_000 });
 const desktopOnly = (isMobile: boolean) => test.skip(isMobile, 'desktop flow; phones are covered by the start-button test');
 
 /** Opens the page and waits for the runtime and for the constructed sample to settle. */

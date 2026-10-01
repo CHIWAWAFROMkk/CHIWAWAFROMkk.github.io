@@ -1,4 +1,4 @@
-import { loadQuotaDeck, QD_DIR, HISTORY_FILE, type QuotaDeckMain } from './qd-load';
+import { loadQuotaDeck, historyFor, QD_DIR, HISTORY_FILE, type QuotaDeckMain } from './qd-load';
 import { createSim, H, M, REFRESH, PROVIDER_IDS, AGENT_FLOW, agentPhase, collabEnd, type AgentId, type LaneId } from './qd-sim';
 import { createBridge } from './qd-bridge';
 import { createTimeMachine, hhmm, countdown, type TmState } from './qd-timeline';
@@ -6,7 +6,14 @@ import { codeLive } from './code-live';
 import { QUOTA_TEXT } from './qd-live-text';
 
 declare global { interface Window { __quotaDeckBridge?: unknown; __quotaDeckFailed?: (message: string) => void } }
-const HOT = '#agentChoices, #providerList, #modelFilters, #modelSearch, #collabTask';
+/** compact.js rebuilds these with innerHTML on every snapshot; a focused control in them is found again by its key. */
+function focusKey(el: Element | null | undefined): string | null {
+  if (!el) return null;
+  if (el.matches('.provider-summary')) return `[data-provider="${el.closest('[data-provider]')?.getAttribute('data-provider')}"] .provider-summary`;
+  if (el.matches('#agentChoices input')) return `#agentChoices input[value="${(el as HTMLInputElement).value}"]`;
+  if (el.matches('#modelFilters [data-filter]')) return `#modelFilters [data-filter="${el.getAttribute('data-filter')}"]`;
+  return null;
+}
 const VERSION = '0.5.0-rc.5';
 const ALL_AGENTS = AGENT_FLOW.map(a => a.id) as AgentId[];
 const AGENTS_AVAILABLE = { codex: true, claude: true, antigravity: true, workbuddy: true };
@@ -38,9 +45,11 @@ export function initQuotaLive(root: HTMLElement): void {
   let collab: { at: number; agents: AgentId[] } | null = null, collabDone = 0, resets = 0;
   let estimate: TmState['estimate'] = null, samples: TmState['samples'] = [], sampleKey = '';
   let lastAt = NaN, lastProviders: any[] = [], wasDraining = false;
+  // quota-history.cjs line 50's series at QuotaDeck's last refresh: its length and its first sample's time.
+  let series = 0, seriesFrom = 0;
   // Pushes to the hosted UI wait while the visitor presses or edits something in it (compact.js rebuilds its lists with
   // innerHTML on every snapshot, which would swallow the click), and come at most twice a second.
-  let pendingUi: any = null, pointerDown = false, lastPush = 0, flushTimer = 0;
+  let pendingUi: any = null, pointerDown = false, aimedAt = 0, lastPush = 0, flushTimer = 0;
 
   /* ---------- QuotaDeck's refresh, on the simulated clock ---------- */
   async function refresh() {
@@ -65,29 +74,37 @@ export function initQuotaLive(root: HTMLElement): void {
   function readEstimate(agy: any) {
     const bucket = agy?.groups?.[0]?.buckets?.[0];
     if (!bucket) return;
-    const rows: { key: string; at: number; value: number }[] = JSON.parse(main!.fs.files.get(HISTORY_FILE) ?? '[]');
-    const mine = rows.filter(r => { const k = JSON.parse(r.key); return k[1] === 'antigravity' && k[3] === bucket.bucketId && k[4] === bucket.resetTime; });
+    // QuotaDeck's own instant: it records Date.parse(updatedAt), whole milliseconds, while frame times are fractional.
+    const now = Date.parse(agy.updatedAt), h = historyFor(main!.fs.files.get(HISTORY_FILE), 'antigravity', bucket, now);
     const broke = sampleKey !== '' && sampleKey !== bucket.resetTime;
     sampleKey = bucket.resetTime;
-    samples = mine.map(r => ({ at: r.at, value: r.value * 100 }));
+    samples = h.all.map(r => ({ at: r.at, value: r.value * 100 }));
+    series = h.series.length;
+    seriesFrom = h.series[0]?.at ?? now;
     const burn = Number.isFinite(bucket.burnPerHour) ? bucket.burnPerHour : null;
     const hoursLeft = Number.isFinite(bucket.estimatedHoursLeft) ? bucket.estimatedHoursLeft : null;
-    estimate = { at: sim.t, value: bucket.remainingFraction * 100, burn, hoursLeft, resetAt: Date.parse(bucket.resetTime) };
+    estimate = { at: now, value: bucket.remainingFraction * 100, burn, hoursLeft, resetAt: Date.parse(bucket.resetTime) };
     paintEstimate(broke);
   }
   function pushUi(next: any) {
     pendingUi = next;
-    const active = frame.contentDocument?.activeElement as Element | null | undefined;
-    if (pointerDown || active?.closest?.(HOT)) return;                    // sent when the press or the edit ends
-    const wait = 500 - (performance.now() - lastPush);
+    if (pointerDown) return;                                              // sent when the press ends
+    // The pointer over a control compact.js rebuilds: hold the push a moment so the target stays put while the visitor
+    // aims, but never more than 1.5 s, so a resting mouse cannot freeze the window.
+    const held = aimedAt ? 1500 - (performance.now() - aimedAt) : 0;
+    if (held > 0) { if (!flushTimer) flushTimer = window.setTimeout(() => { flushTimer = 0; if (pendingUi) pushUi(pendingUi); }, held); return; }
+    const wait = 1000 - (performance.now() - lastPush);                  // the window updates once a second
     if (wait > 0) { if (!flushTimer) flushTimer = window.setTimeout(() => { flushTimer = 0; if (pendingUi) pushUi(pendingUi); }, wait); return; }
-    lastPush = performance.now(); const snapshot = pendingUi; pendingUi = null; bridge.push(snapshot);
+    lastPush = performance.now(); const snapshot = pendingUi; pendingUi = null;
+    const doc = frame.contentDocument, key = doc?.hasFocus() ? focusKey(doc.activeElement) : null;
+    bridge.push(snapshot);
+    if (key) (doc!.querySelector(key) as HTMLElement | null)?.focus({ preventScroll: true });   // keep the keyboard where it was
   }
   // After pointerup the click is still to come; a synchronous re-render would remove its target first.
   const flushSoon = () => setTimeout(() => { if (pendingUi) pushUi(pendingUi); }, 0);
   function paintEstimate(broke: boolean) {
     // quota-history.cjs line 50: this key's rows within the last hour, before the current sample is pushed (line 63)
-    const e = estimate!, series = samples.filter(r => r.at >= e.at - H && r.at < e.at), n = series.length, untilReset = (e.resetAt - sim.t) / H;
+    const e = estimate!, n = series, untilReset = (e.resetAt - e.at) / H;
     const eta = $('qd-eta');
     if (sim.lanes[2].rem <= 0) eta.textContent = T.eta.exhausted;
     else if (e.burn === null) eta.textContent = T.eta.sampling(n);
@@ -98,7 +115,7 @@ export function initQuotaLive(root: HTMLElement): void {
     code.flash(50); code.count(50, T.code.samples(n));
     if (broke) { code.flash(54, 'red'); code.count(54, T.code.broke); }
     if (e.burn !== null && n >= 2) {
-      code.count(56, T.code.span(n, Math.round((e.at - series[0].at) / M)));
+      code.count(56, T.code.span(n, Math.round((e.at - seriesFrom) / M)));
       code.on(57); code.count(57, T.code.burn(e.burn.toFixed(1)));
       code.on(58); code.count(58, e.burn > 0 ? T.code.hours((e.value / e.burn).toFixed(1)) : '→ null');
       code.on(59); code.count(59, T.code.untilReset(untilReset.toFixed(1)));
@@ -122,7 +139,7 @@ export function initQuotaLive(root: HTMLElement): void {
   bridge.api.onCollaborationState(s => {
     if (!s.running && collab) {
       const finished = collab, btn = $<HTMLButtonElement>('qd-collab');
-      stage.dataset.collab = 'done'; btn.disabled = false; strip(true);
+      stage.dataset.collab = 'done'; btn.disabled = false; strip(true); stir();
       if (keepFocus && document.activeElement === document.body) btn.focus();
       keepFocus = false;
       setTimeout(() => { if (collab === finished) collab = null; }, 1500);   // only this run: a new one may have started
@@ -180,24 +197,28 @@ export function initQuotaLive(root: HTMLElement): void {
     wasDraining = draining;
   }
   function onReset(id: LaneId) { resets++; stage.dataset.resets = String(resets); tm.sweep(sim.lanes.find(l => l.id === id)!, sim.t); }
+  let lastDraw = 0, stirredAt = 0;
+  const stir = () => { stirredAt = performance.now(); };
   function frameLoop(now: number) {
-    raf = 0;
-    if (!visible || failed) return;
+    raf = requestAnimationFrame(frameLoop);
+    if (!visible || failed) { cancelAnimationFrame(raf); raf = 0; return; }
+    if (lastReal && now - lastReal < 15) return;                          // at most about 60 frames a second
     const dtReal = lastReal ? Math.min(100, now - lastReal) : 16; lastReal = now;   // a hidden tab never jumps hours ahead
     advance(dtReal);
     paintClock();
-    tm.draw(state(), now);
-    raf = requestAnimationFrame(frameLoop);
+    // Paused with nothing moving: the picture cannot change, so it is redrawn only twice a second.
+    const idle = speed === 0 && !collab && !sim.lanes.some(l => l.drop > 0 || l.agent) && now - stirredAt > 2000;
+    if (!idle || now - lastDraw > 500) { tm.draw(state(), now); lastDraw = now; }
   }
   const run = () => { if (!raf && visible && !failed) { lastReal = 0; raf = requestAnimationFrame(frameLoop); } };
 
   function setSpeed(v: number) {
-    speed = v;
+    speed = v; stir();
     root.querySelectorAll<HTMLButtonElement>('#qd-speeds [data-sp]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.sp) === v)));
     $('qd-clock').classList.toggle('fast', v === 600);
   }
   root.querySelectorAll<HTMLButtonElement>('#qd-speeds [data-sp]').forEach(b => { b.onclick = () => setSpeed(Number(b.dataset.sp)); });
-  $('qd-task').onclick = () => { sim.bigTask(); tm.shock(sim.lanes[0], performance.now()); };
+  $('qd-task').onclick = () => { sim.bigTask(); stir(); tm.shock(sim.lanes[0], performance.now()); };
   $('qd-collab').onclick = () => { void bridge.api.runCollaboration({ task: T.collabTask, agents: ALL_AGENTS }).catch(() => {}); };
 
   /* ---------- start: load QuotaDeck's code, host its UI, run ---------- */
@@ -233,9 +254,14 @@ export function initQuotaLive(root: HTMLElement): void {
     const w = frame.contentWindow!, d = frame.contentDocument!;
     w.addEventListener('pointerdown', () => { pointerDown = true; }, true);
     for (const t of ['pointerup', 'pointercancel']) w.addEventListener(t, () => { pointerDown = false; flushSoon(); }, true);
+    w.addEventListener('pointerover', e => {
+      const hot = !!(e.target as Element).closest?.('#providerList button, #agentChoices label, #modelFilters button');
+      if (!hot) aimedAt = 0; else if (!aimedAt) aimedAt = performance.now();   // the hold counts from when aiming began
+    }, true);
+    d.documentElement.addEventListener('pointerleave', () => { aimedAt = 0; });   // the pointer left the window
     d.addEventListener('focusout', flushSoon, true);
   });
-  new ResizeObserver(() => { const k = Math.min(0.8, $('qd-window').clientWidth / 520); frame.style.transform = `scale(${k})`; $('qd-window').style.height = `${840 * k}px`; tm.layout(); }).observe($('qd-window'));
+  new ResizeObserver(() => { const k = Math.min(0.8, $('qd-window').clientWidth / 520); frame.style.transform = `scale(${k})`; $('qd-window').style.height = `${840 * k}px`; tm.layout(); stir(); }).observe($('qd-window'));
   const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); void start(); } }, { rootMargin: '200px' });
   io.observe(stage);
 }

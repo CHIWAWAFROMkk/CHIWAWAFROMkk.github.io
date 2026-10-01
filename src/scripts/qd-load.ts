@@ -75,3 +75,13 @@ export async function loadQuotaDeck(fetchText: (path: string) => Promise<string>
   const { providerToUi, toUiSnapshot, createProviderReader, configureHistory, readProvider, relativeReset } = require('./snapshot.cjs');
   return { providerToUi, toUiSnapshot, createProviderReader, configureHistory, readProvider, relativeReset, fs };
 }
+
+export interface HistoryRow { key: string; at: number; value: number }
+/** QuotaDeck's samples for one provider bucket, read back from its own history file: all rows of the bucket's key (for
+ *  the timeline) and the series quota-history.cjs line 50 uses at `now` — the rows within the hour before the current
+ *  sample, which line 63 pushes only afterwards. `now` must be QuotaDeck's own instant, Date.parse(updatedAt). */
+export function historyFor(text: string | undefined, providerId: string, bucket: { bucketId: string; resetTime: string }, now: number) {
+  const rows: HistoryRow[] = JSON.parse(text ?? '[]');
+  const all = rows.filter(r => { const k = JSON.parse(r.key); return k[1] === providerId && k[3] === bucket.bucketId && k[4] === bucket.resetTime; });
+  return { all, series: all.filter(r => r.at >= now - 3_600_000 && r.at < now) };
+}

@@ -4,7 +4,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { noHorizontalOverflow } from './helpers';
 
 const PATH = '/projects/quota-deck/';
-test.describe.configure({ timeout: 120_000 });
+// The live demos run continuous canvas animation (and a Python runtime); run each file's tests one after another so
+// that sixteen parallel workers do not starve them of CPU and slow their real-time replays past the timeouts.
+test.describe.configure({ mode: 'default', timeout: 120_000 });
 const desktopOnly = (isMobile: boolean) => test.skip(isMobile, 'desktop flow; phones are covered by the layout test');
 
 async function live(page: Page, prefix = '') {
@@ -23,6 +25,28 @@ test('QuotaDeck\'s own tray UI renders the simulated quota', async ({ page, isMo
   await expect(frame(page).locator('#syncMeta')).toContainText('更新');
   await expect(frame(page).locator('[data-provider="workbuddy"] .state-word')).toHaveText('缓存数据');
   await expect(page.locator('.qd-apphead')).toContainText('演示数据 · 非真实额度');
+});
+
+test('opening a provider row keeps the window updating', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await frame(page).locator('[data-provider="codex"] .provider-summary').click();
+  await expect(frame(page).locator('[data-provider="codex"]')).toHaveClass(/open/);
+  const before = await frame(page).locator('#syncMeta').textContent();
+  await expect(frame(page).locator('#syncMeta')).not.toHaveText(before!, { timeout: 3_000 });
+  await expect(frame(page).locator('[data-provider="codex"]')).toHaveClass(/open/);
+});
+
+test('a control under the pointer is not rebuilt while the visitor aims at it', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  const f = frame(page);
+  await f.locator('[data-view="collab"]').click();
+  const box = f.locator('#agentChoices input[value="claude"]');
+  await box.hover();
+  const marked = await box.evaluate(el => { (el as any).__mark = 1; return true; });
+  await page.waitForTimeout(800);                                         // well inside the 1.5 s hold
+  expect(marked && await box.evaluate(el => (el as any).__mark === 1)).toBe(true);
 });
 
 test('the live source lines are quota-history.cjs 50–61, verbatim', async ({ page, isMobile }) => {
