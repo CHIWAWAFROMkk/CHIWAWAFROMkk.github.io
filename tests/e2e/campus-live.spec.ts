@@ -260,3 +260,12 @@ test('once the program runs, the live stage has no serious accessibility issue',
   const bad = violations.filter(v => v.impact === 'serious' || v.impact === 'critical');
   expect(bad.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([]);
 });
+test('the pipeline stops drawing once it is still, and wakes for the next answer', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await expect(page.locator('#cm-pipe')).toHaveAttribute('data-idle', 'true', { timeout: 5_000 });
+  await submit(page);
+  await expect(page.locator('#cm-pipe')).toHaveAttribute('data-idle', 'false');
+  await expect(page.locator('#cm-all')).toHaveText('37', { timeout: 15_000 });
+  await expect(page.locator('#cm-pipe')).toHaveAttribute('data-idle', 'true', { timeout: 5_000 });
+});

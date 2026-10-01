@@ -11,6 +11,9 @@ export interface Placed {
   note: [number, number] | null;
 }
 
+/** Effect levels, one notch below the approved prototype (user decision 2026-10-01). */
+export const CIRCUIT_FX = { electrons: 6, unknownElectrons: 1, tail: 5, arcs: 1, sparkEvery: 800, sparkBurst: 4 } as const;
+
 const LEFT = 20, RIGHT = 718, COL = 262, TOP = 50, LANE_FROM = 330, LANE_TO = 670;
 
 function orthogonal(y1: number, y2: number, xb: number): string {
@@ -136,7 +139,7 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
   function sample(p: SVGPathElement, tone: Tone, material: boolean): Sampled {
     const len = p.getTotalLength(), pts: number[] = [];
     for (let d = 0; d <= len; d += 3) { const q = p.getPointAtLength(d); pts.push(q.x, q.y); }
-    const n = tone === 'ok' ? 12 : tone === 'unknown' ? 2 : 0, u = new Float32Array(n), v = new Float32Array(n);
+    const n = tone === 'ok' ? CIRCUIT_FX.electrons : tone === 'unknown' ? CIRCUIT_FX.unknownElectrons : 0, u = new Float32Array(n), v = new Float32Array(n);
     for (let k = 0; k < n; k++) { u[k] = Math.random(); v[k] = tone === 'ok' ? 110 + Math.random() * 110 : 38; }
     return { pts: new Float32Array(pts), len, tone, u, v, surge: 0, material };
   }
@@ -159,6 +162,7 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
 
   function frame(now: number) {
     raf = requestAnimationFrame(frame);
+    if (last && now - last < 15) return;                                   // at most about 60 frames a second
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
     if (!visible || !placed) return;
     const rect = svg.getBoundingClientRect(), dpr = devicePixelRatio || 1, cw = Math.round(rect.width), ch = Math.round(rect.height);
@@ -183,10 +187,10 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
         const [hx, hy] = at(tr, tr.u[k]);
         g2.fillStyle = color(dim ? '--night-mute' : boost > 1 ? '--red' : '--night-fg', dim ? .06 : boost > 1 ? .16 : .1);
         g2.beginPath(); g2.arc(hx, hy, 6.5, 0, 6.3); g2.fill();
-        for (let j = 0; j < 7; j++) {
+        for (let j = 0; j < CIRCUIT_FX.tail; j++) {
           const u = tr.u[k] - j * 6 / tr.len; if (u < 0) break;
           const [x, y] = at(tr, u);
-          g2.fillStyle = color(dim ? '--night-mute' : '--night-fg', (dim ? .3 : boost > 1 ? .6 : .55) * (1 - j / 7));
+          g2.fillStyle = color(dim ? '--night-mute' : '--night-fg', (dim ? .3 : boost > 1 ? .6 : .55) * (1 - j / CIRCUIT_FX.tail));
           g2.beginPath(); g2.arc(x, y, 2.7 - j * .28, 0, 6.3); g2.fill();
         }
       }
@@ -195,7 +199,7 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
     if (fails.length) {
       if (now - arcAt > 60) {
         arcAt = now; arcs = [];
-        for (const f of fails) for (let a = 0; a < 2; a++) {
+        for (const f of fails) for (let a = 0; a < CIRCUIT_FX.arcs; a++) {
           const c = .5 + (Math.random() - .5) * .3, [x1, y1] = at(f, Math.max(0, c - .07)), [x2, y2] = at(f, Math.min(1, c + .07));
           const pts: [number, number][] = [[x1, y1]], nx = -(y2 - y1), ny = x2 - x1, nl = Math.hypot(nx, ny) || 1;
           for (let k = 1; k < 10; k++) { const t = k / 10, j = (Math.random() - .5) * 18; pts.push([x1 + (x2 - x1) * t + nx / nl * j, y1 + (y2 - y1) * t + ny / nl * j]); }
@@ -206,7 +210,7 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
         g2.strokeStyle = c; g2.lineWidth = w; g2.beginPath();
         pts.forEach(([x, y], k) => (k ? g2.lineTo(x, y) : g2.moveTo(x, y))); g2.stroke();
       }
-      if (now - sparkAt > 480) { sparkAt = now; for (const f of fails) { const [x, y] = at(f, .5); burstAt(x, y, 6); } }
+      if (now - sparkAt > CIRCUIT_FX.sparkEvery) { sparkAt = now; for (const f of fails) { const [x, y] = at(f, .5); burstAt(x, y, CIRCUIT_FX.sparkBurst); } }
     }
     for (let k = sparks.length - 1; k >= 0; k--) {
       const p = sparks[k]; p.vy += 420 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;

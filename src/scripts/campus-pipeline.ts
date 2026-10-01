@@ -27,6 +27,10 @@ export function matrixPitch(aw: number, ah: number, n: number): { pitch: number;
   return { pitch: p, cols: Math.max(1, Math.floor(aw / p)) };
 }
 
+/** Effect levels, one notch below the approved prototype (user decision 2026-10-01); idleAfter: ms of stillness before
+ *  the frame loop stops. */
+export const PIPE_FX = { sparkMin: 2, sparkRange: 2, glow: 0.25, idleAfter: 2000 } as const;
+
 const PMAX = 4096, SMAX = 1600, TMAX = 1024, TAU = Math.PI * 2, LIGHT_STRIDE = 5;
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 const fmt = (n: number) => n.toLocaleString('en-US');
@@ -203,7 +207,7 @@ export function createPipeline(host: HTMLElement, text: PipeText, o: PipeOptions
           pst[i] = 1; px[i] = GX[g]; pvx[i] = (Math.random() - .5) * 60; pvy[i] = -50 - Math.random() * 90;
           pbx[i] = (Math.random() - .5) * (binW - 12);
           heat[g] = Math.min(1, heat[g] + .45);
-          burst(GX[g], py[i], o.light ? 1 : 3 + ((Math.random() * 3) | 0));
+          burst(GX[g], py[i], o.light ? 1 : PIPE_FX.sparkMin + ((Math.random() * PIPE_FX.sparkRange) | 0));
         } else {
           tg[tHead] = g; ty[tHead] = py[i]; tt[tHead] = now; tHead = (tHead + 1) % TMAX;
           if (g === 3) {                                                // included.append(row)
@@ -285,7 +289,7 @@ export function createPipeline(host: HTMLElement, text: PipeText, o: PipeOptions
     g.fillStyle = rgba(FG, .18); g.fillRect(x - bw / 2 - 4, binBot, bw + 8, 1);
     if (binH[k] > .5) { g.fillStyle = barGrad!; g.fillRect(x - bw / 2, y, bw, binH[k]); }
     g.globalAlpha = .45 + p * .5; g.fillStyle = rgba(SOFT, 1); g.fillRect(x - bw / 2, y - 1, bw, 2); g.globalAlpha = 1;
-    if (p > .05) { g.globalCompositeOperation = 'lighter'; g.globalAlpha = p * .35; g.drawImage(SPR.glow, x - bw / 2 - 6, y - 10, bw + 12, 20); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; }
+    if (p > .05) { g.globalCompositeOperation = 'lighter'; g.globalAlpha = p * PIPE_FX.glow; g.drawImage(SPR.glow, x - bw / 2 - 6, y - 10, bw + 12, 20); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; }
     const n = Math.round(landed[k]);
     g.textAlign = 'center'; g.font = `700 ${narrow ? 18 : 24}px ${DISP}`; g.fillStyle = rgba(FG, n ? 1 : .35);
     g.fillText(fmt(n), x, y - 8);
@@ -317,7 +321,7 @@ export function createPipeline(host: HTMLElement, text: PipeText, o: PipeOptions
     for (let k = 0; k < cells.length; k++) {
       if (!lit[k] || !litAt[k]) continue;
       const age = now - litAt[k]; if (age > 650 || age < 0) continue;
-      g.globalAlpha = .35 * (1 - age / 650); g.drawImage(SPR.glow, cellX(k) - s - 3, cellY(k) - s - 3, 2 * s + 6, 2 * s + 6);
+      g.globalAlpha = PIPE_FX.glow * (1 - age / 650); g.drawImage(SPR.glow, cellX(k) - s - 3, cellY(k) - s - 3, 2 * s + 6, 2 * s + 6);
     }
     g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
     if (special !== null && cellOf[special] >= 0 && lit[cellOf[special]]) {
@@ -343,7 +347,7 @@ export function createPipeline(host: HTMLElement, text: PipeText, o: PipeOptions
     for (let i = 0; i < np; i++) if (pst[i] !== 1) g.drawImage(SPR.dot, px[i] - 8, py[i] - 8);
     g.globalAlpha = .5;
     for (let i = 0; i < np; i++) if (pst[i] === 1) g.drawImage(SPR.red, px[i] - 6, py[i] - 6, 12, 12);
-    if (special !== null) { g.globalAlpha = .35; for (let i = 0; i < np; i++) if (prow[i] === special) g.drawImage(SPR.big, px[i] - 22, py[i] - 22); }
+    if (special !== null) { g.globalAlpha = PIPE_FX.glow; for (let i = 0; i < np; i++) if (prow[i] === special) g.drawImage(SPR.big, px[i] - 22, py[i] - 22); }
     g.lineWidth = 1.3; g.lineCap = 'round';
     for (let j = 0; j < ns; j++) {
       g.globalAlpha = .6 * (sl[j] / sm[j]); g.strokeStyle = rgba(sc[j] ? SOFT : FG, 1);
@@ -378,18 +382,23 @@ export function createPipeline(host: HTMLElement, text: PipeText, o: PipeOptions
     else if (n > 1) { ring(cx, cy, 10, 120, 700, SOFT, now); matPulse = .6; }
     finish(true);
   }
+  let stillSince = 0;
   function frame(now: number) {
     raf = 0;
     if (!visible || o.reduced) return;
+    if (now - last < 15) { raf = requestAnimationFrame(frame); return; }  // at most about 60 frames a second
     if (!W) layout();
     if (W) {
       const dt = clamp((now - last) / 1000 || .016, .001, .033); last = now;
       emit(dt, now); update(dt, now); drawBase(now); drawFx(now); shakeStep(now);
       if (done && qi >= queue.length && np === 0) settle(now);
     }
+    // Nothing in flight, no sparks, rings or shake: once the glows have faded, stop until the next replay.
+    if (np || ns || rings.length || shDur || qi < queue.length || done) stillSince = now;
+    else if (now - stillSince > PIPE_FX.idleAfter) { host.dataset.idle = 'true'; return; }
     raf = requestAnimationFrame(frame);
   }
-  const run = () => { if (!raf && visible && !o.reduced) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  const run = () => { if (!raf && visible && !o.reduced) { host.dataset.idle = 'false'; last = performance.now(); stillSince = last; raf = requestAnimationFrame(frame); } };
   /** One static frame (reduced motion, off screen, or after a resize while idle). */
   function still() {
     if (!W) layout();

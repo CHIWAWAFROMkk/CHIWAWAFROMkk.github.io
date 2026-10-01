@@ -20,6 +20,9 @@ export interface TmOptions {
   onHit: () => void;
 }
 
+/** Effect levels, one notch below the approved prototype (user decision 2026-10-01). */
+export const TM_FX = { halo: 0.35, haloRed: 0.45, heads: 0.5, packets: 2, rings: 1, sparks: 48, shockSparks: 24 } as const;
+
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -66,7 +69,7 @@ export function createTimeMachine(body: HTMLElement, tl: HTMLCanvasElement, fx: 
     gr.addColorStop(0, rgba(c, a0)); gr.addColorStop(0.3, rgba(c, a0 * 0.38)); gr.addColorStop(1, rgba(c, 0));
     x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return s;
   };
-  const SPR = { codex: halo(FG, 0.5), claude: halo(MUTE, 0.5), antigravity: halo(RED, 0.6), red: halo(RED, 0.6) } as Record<string, HTMLCanvasElement>;
+  const SPR = { codex: halo(FG, TM_FX.halo), claude: halo(MUTE, TM_FX.halo), antigravity: halo(RED, TM_FX.haloRed), red: halo(RED, TM_FX.haloRed) } as Record<string, HTMLCanvasElement>;
 
   type Layout = { dpr: number; w: number; h: number; bw: number; bh: number; ox: number; oy: number; L: number; R: number; T: number; B: number; fill: CanvasGradient;
     nodes: { cx: number; x: number; y: number; w: number; h: number }[] };
@@ -89,7 +92,7 @@ export function createTimeMachine(body: HTMLElement, tl: HTMLCanvasElement, fx: 
   }
   const sweeps: { at: number; tr: number; id: LaneId }[] = [], rings: { at: number; x: number; y: number; delay: number; dur: number; max: number; lw: number; hit: boolean }[] = [];
   const floats: { at: number; x: number; y: number }[] = [], jumps = new Map<LaneId, { at: number; tr: number; from: number }>();
-  const SP = Array.from({ length: o.light ? 32 : 96 }, () => ({ life: 0, max: 1, x: 0, y: 0, vx: 0, vy: 0, c: FG }));
+  const SP = Array.from({ length: o.light ? 24 : TM_FX.sparks }, () => ({ life: 0, max: 1, x: 0, y: 0, vx: 0, vy: 0, c: FG }));
   let last = 0;
 
   function size(c: HTMLCanvasElement, w: number, h: number, dpr: number) {
@@ -273,7 +276,7 @@ export function createTimeMachine(body: HTMLElement, tl: HTMLCanvasElement, fx: 
     label(g, text.now, xn, B + 16, rgba(FG, 1), 'center', `600 11px ${BODY}`);
     if (!o.light) {
       g.globalCompositeOperation = 'lighter';
-      for (const l of s.lanes) { const y = Y(l.rem), sz = l.agent && !o.reduced ? 58 + 8 * Math.sin(now / 120) : 42; g.globalAlpha = 0.7; g.drawImage(SPR[l.id], xn - sz / 2, y - sz / 2, sz, sz); }
+      for (const l of s.lanes) { const y = Y(l.rem), sz = l.agent && !o.reduced ? 58 + 8 * Math.sin(now / 120) : 42; g.globalAlpha = TM_FX.heads; g.drawImage(SPR[l.id], xn - sz / 2, y - sz / 2, sz, sz); }
       g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
     }
     for (const l of s.lanes) {
@@ -334,7 +337,7 @@ export function createTimeMachine(body: HTMLElement, tl: HTMLCanvasElement, fx: 
       path(); gx.strokeStyle = rgba(RED, 0.14); gx.lineWidth = 5; gx.stroke();
       gx.globalCompositeOperation = 'lighter';
       gx.setLineDash([8, 10]); gx.lineDashOffset = -now * 0.09; gx.strokeStyle = rgba(SOFT, 0.7); gx.lineWidth = 1.8; path(); gx.stroke(); gx.setLineDash([]);
-      if (!o.light) for (let k = 0; k < 3; k++) { const q = along(b, ((now / 1100) + k / 3 + i * 0.17) % 1); gx.drawImage(SPR.red, q.x - 11, q.y - 11, 22, 22); }
+      if (!o.light) for (let k = 0; k < TM_FX.packets; k++) { const q = along(b, ((now / 1100) + k / TM_FX.packets + i * 0.17) % 1); gx.drawImage(SPR.red, q.x - 11, q.y - 11, 22, 22); }
       gx.globalCompositeOperation = 'source-over';
     } else {
       const k = clamp((el - ag.start - ag.run) / 0.9, 0, 1);
@@ -421,9 +424,9 @@ export function createTimeMachine(body: HTMLElement, tl: HTMLCanvasElement, fx: 
     shock(lane: Lane, now: number) {
       if (!lay || o.reduced) return;
       const x = lay.ox + lay.L + (lay.R - lay.L) * 10 / 13, y = lay.oy + lay.B - lane.rem / 100 * (lay.B - lay.T);
-      rings.push({ at: now, x, y, delay: 0, dur: 1300, max: 1000, lw: 6, hit: false }, { at: now, x, y, delay: 150, dur: 1150, max: 760, lw: 3, hit: true });
+      rings.push({ at: now, x, y, delay: 0, dur: 1300, max: 1000, lw: 6, hit: false });                 // TM_FX.rings: one
       floats.push({ at: now, x, y });
-      spark(x, y, o.light ? 12 : 44);
+      spark(x, y, o.light ? 8 : TM_FX.shockSparks);
     },
   };
 
