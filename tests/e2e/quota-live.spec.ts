@@ -30,7 +30,10 @@ test('QuotaDeck\'s own tray UI renders the simulated quota', async ({ page, isMo
 test('opening a provider row keeps the window updating', async ({ page, isMobile }) => {
   desktopOnly(!!isMobile);
   await live(page);
-  await frame(page).locator('[data-provider="codex"] .provider-summary').click();
+  // Opened from the keyboard: focus stays on the row (the condition that once froze the window), and the frequent
+  // rebuilds of the list cannot race a mouse click's actionability checks on a loaded machine.
+  await frame(page).locator('[data-provider="codex"] .provider-summary').focus();
+  await page.keyboard.press('Enter');
   await expect(frame(page).locator('[data-provider="codex"]')).toHaveClass(/open/);
   const before = await frame(page).locator('#syncMeta').textContent();
   await expect(frame(page).locator('#syncMeta')).not.toHaveText(before!, { timeout: 3_000 });
@@ -42,11 +45,15 @@ test('a control under the pointer is not rebuilt while the visitor aims at it', 
   await live(page);
   const f = frame(page);
   await f.locator('[data-view="collab"]').click();
-  const box = f.locator('#agentChoices input[value="claude"]');
-  await box.hover();
-  const marked = await box.evaluate(el => { (el as any).__mark = 1; return true; });
-  await page.waitForTimeout(800);                                         // well inside the 1.5 s hold
-  expect(marked && await box.evaluate(el => (el as any).__mark === 1)).toBe(true);
+  // Timed inside the page, from the pointer's arrival to the list's first rebuild, so a slow machine cannot fail it.
+  const gap = f.locator('#agentChoices').evaluate(el => new Promise<number>(resolve => {
+    let over = 0;
+    el.addEventListener('pointerover', () => { over ||= performance.now(); }, true);
+    new MutationObserver(() => { if (over) resolve(performance.now() - over); }).observe(el, { childList: true });
+    setTimeout(() => resolve(Infinity), 6000);
+  }));
+  await f.locator('#agentChoices input[value="claude"]').hover();
+  expect(await gap).toBeGreaterThan(1400);                                  // held for 1.5 s from the moment of aiming
 });
 
 test('the live source lines are quota-history.cjs 50–61, verbatim', async ({ page, isMobile }) => {
