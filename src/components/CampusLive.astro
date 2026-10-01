@@ -155,7 +155,7 @@ const tests = testNames(readFileSync('public/downloads/campus/test_analysis.py',
   .cm-sl { font: 600 30px/1 var(--font-display); color: var(--night-mute); }
   .cm-all { font: 700 30px/1 var(--font-display); color: var(--night-mute); }
   .cm-yesrow { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
-  .cm-yesv { font: 700 34px/1 var(--font-display); }
+  .cm-yesv { font: 700 34px/1 var(--font-display); white-space: nowrap; }   /* the share never breaks before its % */
   .cm-usub { font: 11px/1.35 Consolas, monospace; color: var(--night-mute); }
   .cm-scenes { display: grid; gap: 4px; margin: 4px 0 0; padding: 0; list-style: none; }
   .cm-scenes li { display: grid; grid-template-columns: 76px 1fr 38px; gap: 8px; align-items: center; }
