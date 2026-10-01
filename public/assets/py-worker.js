@@ -24,6 +24,7 @@ onmessage = async ({ data: m }) => {
     if (m.type === 'boot') {
       const t0 = performance.now();
       core = await import('./py-core.mjs');
+      const packages = m.packages ?? core.PACKAGES;
       // A cheap existence check first: a blocked or missing core file fails here at once.
       for (const f of CORE) {
         const r = await fetch(core.PYODIDE + f, { method: 'HEAD' });
@@ -32,7 +33,7 @@ onmessage = async ({ data: m }) => {
       const { loadPyodide } = await import(core.PYODIDE + 'pyodide.mjs');
       transferred();
       py = await core.boot(loadPyodide, core.PYODIDE, (step, info) =>
-        postMessage({ type: 'progress', step, ms: info.ms, bytes: transferred(), detail: info.python || core.PACKAGES.join(' · ') }));
+        postMessage({ type: 'progress', step, ms: info.ms, bytes: transferred(), detail: info.python || packages.join(' · ') }), packages);
       const t = performance.now(), modules = [];
       for (const bundle of m.bundles) {
         const manifest = await (await fetch(bundle + 'manifest.json')).json();
@@ -40,7 +41,11 @@ onmessage = async ({ data: m }) => {
         core.mount(py, await Promise.all(files.map(async f => ({ path: f.path, bytes: await bytesOf(bundle + f.path) }))));
         modules.push(...files.map(f => f.path.replace(/\.py$/, '').replace(/\//g, '.').replace(/\.__init__$/, '')));
       }
-      for (const url of m.files) core.mount(py, [{ path: url.slice(url.lastIndexOf('/') + 1), bytes: await bytesOf(url) }]);
+      for (const url of m.files) {
+        const name = url.slice(url.lastIndexOf('/') + 1);
+        core.mount(py, [{ path: name, bytes: await bytesOf(url) }]);
+        modules.push(name.replace(/.py$/, ''));
+      }
       for (const name of m.imports) py.pyimport(name);
       postMessage({ type: 'progress', step: 'sources', ms: performance.now() - t, bytes: transferred(), detail: String(modules.length), modules });
       booted = true;
@@ -48,7 +53,7 @@ onmessage = async ({ data: m }) => {
     } else if (m.type === 'call') {
       if (!py) throw Error('运行时尚未就绪');
       const t = performance.now();
-      const value = core.call(py, m.module, m.fn, m.args);
+      const value = core.call(py, m.module, m.fn, m.args, m.stream ? data => postMessage({ type: 'event', id: m.id, data }) : undefined);
       postMessage({ type: 'result', id: m.id, value, ms: performance.now() - t });
     }
   } catch (e) {

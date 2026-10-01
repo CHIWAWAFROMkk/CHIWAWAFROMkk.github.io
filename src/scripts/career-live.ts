@@ -92,7 +92,7 @@ export function initCareerLive(root: HTMLElement): void {
 
   async function start() {
     $('cl-start').hidden = true; lock(true); say(T.booting);
-    runtime = createPyRuntime({ bundles: ['/assets/py/job-agent/4397ded/'], files: ['/assets/py/career_bridge.py'], imports: ['career_bridge'] });
+    runtime = createPyRuntime({ bundles: ['/assets/py/job-agent/4397ded/'], files: ['/assets/py/career_bridge.py'], imports: ['career_bridge'], packages: ['pydantic', 'sqlite3'] });
     const view = bootView();
     try {
       const r = await runtime.boot(p => view.step(p));

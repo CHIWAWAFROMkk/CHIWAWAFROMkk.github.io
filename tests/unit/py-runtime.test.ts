@@ -61,4 +61,31 @@ describe('py runtime client', () => {
     await expect(b).resolves.toEqual({ value: { score: 59 }, ms: 2 });
     await expect(a).rejects.toThrow('ValueError: boom');
   });
+  it('names the packages a page needs in the boot request', async () => {
+    const w = new FakeWorker();
+    const rt = createPyRuntime({ ...OPTS, packages: [], makeWorker: () => w as unknown as Worker });
+    const ready = rt.boot(() => {});
+    expect(w.sent[0]).toEqual({ type: 'boot', ...OPTS, packages: [] });
+    w.emit({ type: 'ready', python: '3.13.2', pyodide: '0.29.5', ms: 1 });
+    await ready;
+  });
+  it('streams each pushed event to the call that asked for it, before its result', async () => {
+    const { w, rt } = setup();
+    const ready = rt.boot(() => {});
+    w.emit({ type: 'ready', python: '3.13.2', pyodide: '0.29.5', ms: 1 });
+    await ready;
+    const seen: unknown[] = [];
+    const a = rt.call('campus_bridge', 'run_tests', ['test_analysis'], e => seen.push(e));
+    const b = rt.call('campus_bridge', 'constructed', ['sample']);
+    const [ma, mb] = w.sent.slice(1);
+    expect([ma.stream, mb.stream]).toEqual([true, false]);
+    w.emit({ type: 'event', id: ma.id, data: { kind: 'start', name: 'test_a' } });
+    w.emit({ type: 'event', id: mb.id, data: { kind: 'stray' } });
+    w.emit({ type: 'event', id: ma.id, data: { kind: 'ok', name: 'test_a' } });
+    w.emit({ type: 'result', id: ma.id, value: { run: 1 }, ms: 1 });
+    await expect(a).resolves.toEqual({ value: { run: 1 }, ms: 1 });
+    expect(seen).toEqual([{ kind: 'start', name: 'test_a' }, { kind: 'ok', name: 'test_a' }]);
+    w.emit({ type: 'result', id: mb.id, value: [], ms: 1 });
+    await expect(b).resolves.toEqual({ value: [], ms: 1 });
+  });
 });
