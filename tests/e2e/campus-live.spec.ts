@@ -77,6 +77,28 @@ test('submitting again during the replay uses the next ID', async ({ page, isMob
   await expect(page.locator('#cm-id')).toHaveValue('V003');
 });
 
+test('keyboard: Enter on the submit button keeps focus there, so a second Enter submits again', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await page.locator('#cm-add').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#cm-all')).toHaveText('37', { timeout: 15_000 });
+  await expect(page.locator('#cm-add')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#cm-all')).toHaveText('38', { timeout: 15_000 });
+});
+
+test('keyboard: loading the sample moves focus to the stress test instead of dropping it', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await page.locator('#cm-clear').click();
+  await expect(page.locator('#cm-all')).toHaveText('0', { timeout: 15_000 });
+  await page.locator('#cm-sample').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#cm-all')).toHaveText('36', { timeout: 15_000 });
+  await expect(page.locator('#cm-stress')).toBeFocused();
+});
+
 test('the same ID twice: the program excludes both', async ({ page, isMobile }) => {
   desktopOnly(!!isMobile);
   await live(page);

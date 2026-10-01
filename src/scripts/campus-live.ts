@@ -58,10 +58,21 @@ export function initCampusLive(root: HTMLElement): void {
   let rows: Row[] = [], gates: Gate[] = [], constructed = false, sampleIn = false;
 
   const say = (text: string, bad = false) => { const s = $('cm-status'); s.textContent = text; s.classList.toggle('bad', bad); };
+  // Disabling a focused control drops focus to <body>; remember it, and give it back once the control works again (or,
+  // when the sample button stays disabled after loading, pass focus to the stress test next to it).
+  let held: HTMLElement | null = null;
   const sync = () => {
+    const active = document.activeElement as HTMLElement | null;
     $<HTMLFieldSetElement>('cm-fields').disabled = !ready || busy;
     $<HTMLButtonElement>('cm-sample').disabled = sampleIn;
     $<HTMLButtonElement>('cm-run').disabled = !ready || testing;
+    // Only a control this call just disabled is held, so focus is never pulled back to one the visitor has left.
+    if (active && root.contains(active)) held = active.matches(':disabled') ? active : null;
+    if (held && document.activeElement === document.body && !busy && !testing && ready) {
+      const target = held.matches(':disabled') ? $('cm-stress') : held;
+      held = null;
+      if (!target.matches(':disabled')) target.focus();
+    }
   };
 
   /* ---------- the questionnaire ---------- */
