@@ -1,4 +1,5 @@
-import { createPyRuntime, type PyRuntime, type PyProgress, type PyReady } from './py-runtime';
+import { createPyRuntime, type PyRuntime } from './py-runtime';
+import { bootView } from './py-boot-view';
 import { wire, capInfo, observation, MAX_DRAWN, type EngineResult } from './career-wire';
 import { createCircuit } from './career-circuit';
 import { codeLive } from './code-live';
@@ -45,55 +46,14 @@ export function initCareerLive(root: HTMLElement): void {
   $('cl-toggle-replay').onclick = () => (stage.hidden ? showLive() : showReplay(false));
   $('cl-retry').onclick = () => { runtime?.dispose(); runtime = null; ready = false; showLive(); };
 
-  /* ---------- boot: every number shown is measured or read from the manifests ---------- */
-  function bootView() {
-    const box = $('cl-boot'), log = $('cl-boot-log'), hex = $('cl-boot-hex'), mods = $('cl-boot-mods');
-    box.hidden = reduced; log.replaceChildren(); mods.replaceChildren(); hex.textContent = '';
-    const t0 = performance.now(), shown: string[] = [];
-    let lines: string[] = [], at = 0, modules: string[] = [];
-    // The stream is the SHA-256 of each file being loaded, as recorded in the vendored manifests.
-    void Promise.all(MANIFESTS.map(u => fetch(u).then(r => r.json()))).then(ms => {
-      lines = ms.flatMap(m => m.files.map((f: { name?: string; path?: string; sha256: string }) =>
-        `${f.sha256.slice(0, 8)} ${f.sha256.slice(8, 16)} ${f.sha256.slice(16, 24)} ${f.sha256.slice(24, 32)}  ${f.name ?? f.path}`));
-    }).catch(() => {});
-    const hx = window.setInterval(() => {
-      if (!lines.length) return;
-      shown.push(lines[at++ % lines.length]); if (shown.length > 40) shown.shift();
-      hex.textContent = `${T.hexTitle}\n${shown.join('\n')}`;
-    }, 60);
-    return {
-      step(p: PyProgress) {
-        const d = document.createElement('div');
-        d.textContent = T.bootLine(p.step, (performance.now() - t0) / 1000, p.bytes / 1048576, p.ms, p.detail);
-        log.append(d);
-        if (p.modules) modules = p.modules;
-      },
-      async done(r: PyReady) {
-        clearInterval(hx);
-        if (!reduced && !stage.hidden) {
-          for (const m of modules) { const c = document.createElement('span'); c.className = 'cl-mod'; c.textContent = m; mods.append(c); }
-          const chips = [...mods.children] as HTMLElement[];
-          for (const c of chips) { c.classList.add('in'); await wait(30); }
-          await wait(250);
-          const t = $('cl-chip').getBoundingClientRect(), tx = t.left + t.width / 2, ty = t.top + t.height / 2;
-          await Promise.all(chips.map((c, i) => {
-            const b = c.getBoundingClientRect();
-            return c.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${tx - b.left - b.width / 2}px, ${ty - b.top - b.height / 2}px) scale(.15)`, opacity: 0 }],
-              { duration: 500, delay: i * 20, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' }).finished;
-          }));
-        }
-        const d = document.createElement('div'); d.className = 'ready'; d.textContent = T.bootReady(r.python, r.ms / 1000); log.append(d);
-        if (!reduced) await wait(300);
-        box.hidden = true;
-      },
-      hide() { clearInterval(hx); box.hidden = true; },
-    };
-  }
-
   async function start() {
     $('cl-start').hidden = true; lock(true); say(T.booting);
     runtime = createPyRuntime({ bundles: ['/assets/py/job-agent/4397ded/'], files: ['/assets/py/career_bridge.py'], imports: ['career_bridge'], packages: ['pydantic', 'sqlite3'] });
-    const view = bootView();
+    const view = bootView({
+      root, prefix: 'cl', text: T, chip: $('cl-chip'), reduced, shown: () => !stage.hidden,
+      files: () => Promise.all(MANIFESTS.map(u => fetch(u).then(r => r.json()))).then(ms =>
+        ms.flatMap(m => m.files.map((f: { name?: string; path?: string; sha256: string }) => ({ name: f.name ?? f.path ?? '', sha256: f.sha256 })))),
+    });
     try {
       const r = await runtime.boot(p => view.step(p));
       await view.done(r);

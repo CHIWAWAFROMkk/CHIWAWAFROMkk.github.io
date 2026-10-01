@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 import CodeLive from './CodeLive.astro';
 import CareerDemo from './CareerDemo.astro';
+import PyBoot from './PyBoot.astro';
 import { LIVE_TEXT, DEMO_JD } from '../scripts/career-live-text';
 import type { Lang } from '../i18n';
 interface Props { lang: Lang }
@@ -52,10 +53,7 @@ const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes(
         <p class="cl-hint">{T.privacy}</p>
       </div>
       <div class="cl-circuit" id="cl-circuit">
-        <div class="cl-boot" id="cl-boot" hidden>
-          <pre class="cl-boot-hex" id="cl-boot-hex" aria-hidden="true"></pre>
-          <div><div class="cl-boot-log" id="cl-boot-log"></div><div class="cl-boot-mods" id="cl-boot-mods" aria-hidden="true"></div></div>
-        </div>
+        <PyBoot prefix="cl" />
       </div>
     </div>
     <div class="cl-bottom">
@@ -145,13 +143,6 @@ const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes(
   .cl-circuit :global(.cvia) { fill: var(--night); stroke: color-mix(in srgb, var(--night-fg) 45%, transparent); stroke-width: 1.5; }
   .cl-circuit :global(.cmark) { fill: var(--night-fg); font: 700 15px Consolas, monospace; }
   .cl-circuit :global(.ccharge) { fill: color-mix(in srgb, var(--night-fg) 18%, transparent); transform-box: fill-box; transform-origin: left center; }
-  .cl-boot { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; padding: 22px 26px; background: var(--night); font: 12.5px/1.8 Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); }
-  .cl-boot[hidden] { display: none; }
-  .cl-boot-hex { margin: 0; overflow: hidden; font-size: 11.5px; line-height: 1.6; color: color-mix(in srgb, var(--night-mute) 60%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, #000 25%, #000 80%, transparent); mask-image: linear-gradient(180deg, transparent, #000 25%, #000 80%, transparent); }
-  .cl-boot-log :global(.ready) { color: var(--night-fg); font-weight: 600; }
-  .cl-boot-mods { display: grid; grid-template-columns: repeat(3, max-content); gap: 6px 8px; margin-top: 16px; }
-  .cl-boot-mods :global(.cl-mod) { padding: 2px 7px; border: 1px solid color-mix(in srgb, var(--night-fg) 25%, transparent); color: var(--night-fg); font-size: 11px; opacity: 0; transform: scale(.6); }
-  .cl-boot-mods :global(.cl-mod.in) { opacity: 1; transform: none; transition: opacity .2s, transform .25s cubic-bezier(.2,.8,.2,1.3); }
   .cl-bottom { display: grid; grid-template-columns: 240px 190px minmax(0, 1fr); }
   .cl-kpi { position: relative; padding: 12px 18px 16px; border-right: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); overflow: hidden; }
   .cl-kl { font-size: 12px; color: var(--night-mute); }
@@ -175,8 +166,6 @@ const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes(
   @media (max-width: 800px) {
     .cl-main { grid-template-columns: minmax(0, 1fr); }
     .cl-side { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--night-fg) 14%, transparent); }
-    .cl-boot { grid-template-columns: minmax(0, 1fr); }
-    .cl-boot-hex { display: none; }
     .cl-bottom { grid-template-columns: 1fr 1fr; }
     .cl-codewrap { grid-column: 1 / -1; }
     .cl-kv { font-size: 64px; }

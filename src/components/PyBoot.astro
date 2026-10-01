@@ -1,0 +1,23 @@
+---
+/** The cold-boot overlay shared by the live demos: the SHA-256 of each file being loaded, measured log lines, module chips
+ *  that fly into the page's chip when the runtime is ready. Driven by src/scripts/py-boot-view.ts. */
+interface Props { prefix: string }
+const { prefix } = Astro.props;
+---
+<div class="pb" id={`${prefix}-boot`} hidden>
+  <pre class="pb-hex" id={`${prefix}-boot-hex`} aria-hidden="true"></pre>
+  <div><div class="pb-log" id={`${prefix}-boot-log`}></div><div class="pb-mods" id={`${prefix}-boot-mods`} aria-hidden="true"></div></div>
+</div>
+<style>
+  .pb { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; padding: 22px 26px; background: var(--night); font: 12.5px/1.8 Consolas, 'Cascadia Mono', monospace; color: var(--night-mute); }
+  .pb[hidden] { display: none; }
+  .pb-hex { margin: 0; overflow: hidden; font-size: 11.5px; line-height: 1.6; color: color-mix(in srgb, var(--night-mute) 60%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, #000 25%, #000 80%, transparent); mask-image: linear-gradient(180deg, transparent, #000 25%, #000 80%, transparent); }
+  .pb-log :global(.ready) { color: var(--night-fg); font-weight: 600; }
+  .pb-mods { display: grid; grid-template-columns: repeat(3, max-content); gap: 6px 8px; margin-top: 16px; }
+  .pb-mods :global(.pb-mod) { padding: 2px 7px; border: 1px solid color-mix(in srgb, var(--night-fg) 25%, transparent); color: var(--night-fg); font-size: 11px; opacity: 0; transform: scale(.6); }
+  .pb-mods :global(.pb-mod.in) { opacity: 1; transform: none; transition: opacity .2s, transform .25s cubic-bezier(.2,.8,.2,1.3); }
+  @media (max-width: 800px) {
+    .pb { grid-template-columns: minmax(0, 1fr); }
+    .pb-hex { display: none; }
+  }
+</style>
