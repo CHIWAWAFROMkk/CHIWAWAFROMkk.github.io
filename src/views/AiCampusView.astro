@@ -1,6 +1,6 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
-import CampusLive from '../components/CampusLive.astro';
+import EditionTeaser from '../components/EditionTeaser.astro';
 import CampusFramework from '../components/CampusFramework.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/ai-campus.zh.md';
@@ -12,7 +12,9 @@ const P = SITE.pages.aiCampus;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <ProjectLayout lang={lang} slug="ai-campus" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
-  <CampusLive slot="demo" lang={lang} />
-  <CampusFramework slot="demo" lang={lang} />
+  <Fragment slot="demo">
+    <CampusFramework lang={lang} />
+    <EditionTeaser which="campus" lang={lang} />
+  </Fragment>
   <Body />
 </ProjectLayout>

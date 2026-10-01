@@ -4,7 +4,7 @@ import { noHorizontalOverflow } from './helpers';
 
 const DEMO = JSON.parse(readFileSync('public/assets/job-agent-demo.json', 'utf8'));
 const sc = (id: string) => DEMO.scenarios.find((s: { id: string }) => s.id === id);
-const PATH = '/projects/ai-career/?engine=replay';
+const PATH = '/projects/ai-career/';
 async function ready(page: Page, prefix = '') {
   await page.goto(`${prefix}${PATH}`);
   await expect(page.locator('#agent-results')).toBeVisible({ timeout: 10000 });

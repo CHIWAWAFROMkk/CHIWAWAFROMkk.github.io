@@ -1,0 +1,26 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import CareerLive from '../components/CareerLive.astro';
+import CampusLive from '../components/CampusLive.astro';
+import CampusFramework from '../components/CampusFramework.astro';
+import QuotaLive from '../components/QuotaLive.astro';
+import QuotaShots from '../components/QuotaShots.astro';
+import { SITE } from '../data/site';
+import { EDITIONS, type EditionId } from '../data/editions';
+import { localizePath, type Lang } from '../i18n';
+interface Props { which: EditionId; lang: Lang }
+const { which, lang } = Astro.props;
+const E = EDITIONS[which], P = SITE.pages[E.page];
+---
+<ProjectLayout lang={lang} slug={`${E.slug}/live`} title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <Fragment slot="demo">
+    {which === 'career' && <CareerLive lang={lang} />}
+    {which === 'campus' && <CampusLive lang={lang} />}
+    {which === 'campus' && <CampusFramework lang={lang} />}
+    {which === 'quota' && <QuotaLive lang={lang} />}
+    {which === 'quota' && <QuotaShots lang={lang} />}
+  </Fragment>
+  <h2>{E.body.h2[lang]}</h2>
+  <p>{E.body.p[lang]}</p>
+  <p><a href={localizePath(`/projects/${E.slug}/`, lang)}>{E.back[lang]}</a></p>
+</ProjectLayout>

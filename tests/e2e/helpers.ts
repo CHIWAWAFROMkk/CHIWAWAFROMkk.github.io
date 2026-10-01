@@ -5,7 +5,8 @@ export const PHASE1_PAGES = ['/', '/brief/', '/projects/hris-workflow/', '/en/',
 export const PHASE2A_PAGES = ['/projects/', '/projects/campus-delivery/', '/projects/stock-data/', '/projects/stock-data/method/'].flatMap(p => [p, `/en${p}`]);
 export const INSIGHTS_PAGES = ['/projects/campus-delivery/insights/', '/en/projects/campus-delivery/insights/'];
 export const PHASE2B_PAGES = ['/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/'].flatMap(p => [p, `/en${p}`]);
-export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES, ...PHASE2B_PAGES];
+export const LIVE_PAGES = ['/projects/ai-career/live/', '/projects/quota-deck/live/', '/projects/ai-campus/live/'].flatMap(p => [p, `/en${p}`]);
+export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES, ...PHASE2B_PAGES, ...LIVE_PAGES];
 
 export const PHASE2_PENDING = new Set(
   ['/projects/mais-je-taime/', '/privacy/']

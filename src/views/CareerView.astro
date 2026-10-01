@@ -1,6 +1,7 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
-import CareerLive from '../components/CareerLive.astro';
+import CareerDemo from '../components/CareerDemo.astro';
+import EditionTeaser from '../components/EditionTeaser.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/ai-career.zh.md';
 import { Content as BodyEn } from '../copy/projects/ai-career.en.md';
@@ -11,6 +12,9 @@ const P = SITE.pages.career;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <ProjectLayout lang={lang} slug="ai-career" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
-  <CareerLive slot="demo" lang={lang} />
+  <Fragment slot="demo">
+    <CareerDemo lang={lang} />
+    <EditionTeaser which="career" lang={lang} />
+  </Fragment>
   <Body />
 </ProjectLayout>

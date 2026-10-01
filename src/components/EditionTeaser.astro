@@ -1,0 +1,21 @@
+---
+import { EDITIONS, type EditionId } from '../data/editions';
+import { localizePath, type Lang } from '../i18n';
+interface Props { which: EditionId; lang: Lang }
+const { which, lang } = Astro.props;
+const E = EDITIONS[which];
+---
+<div class="wrap">
+  <a class="edition-teaser" href={localizePath(`/projects/${E.slug}/live/`, lang)}>
+    <span class="edition-teaser__kicker">{E.teaser.kicker[lang]}</span>
+    <span class="edition-teaser__title">{E.teaser.title[lang]}</span>
+    <span class="edition-teaser__sub">{E.teaser.sub[lang]}</span>
+  </a>
+</div>
+<style>
+  .edition-teaser { display: grid; gap: 8px; max-width: 900px; margin: 32px 0 8px; padding: 24px 28px; background: var(--ink); color: var(--paper); text-decoration: none; transition: background-color 0.2s var(--ease); }
+  .edition-teaser:hover, .edition-teaser:focus-visible { background: var(--red-text); }
+  .edition-teaser__kicker { font: 700 12px/1 var(--font-display); letter-spacing: 0.24em; text-transform: uppercase; }
+  .edition-teaser__title { font: 900 clamp(22px, 2.6vw, 36px)/1.2 var(--font-cjk-bold); }
+  .edition-teaser__sub { font-size: 15px; opacity: 0.85; }
+</style>

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { noHorizontalOverflow } from './helpers';
 
-const PATH = '/projects/quota-deck/';
+const PATH = '/projects/quota-deck/live/';
 // The live demos run continuous canvas animation (and a Python runtime); run each file's tests one after another so
 // that sixteen parallel workers do not starve them of CPU and slow their real-time replays past the timeouts.
 test.describe.configure({ mode: 'default', timeout: 120_000 });

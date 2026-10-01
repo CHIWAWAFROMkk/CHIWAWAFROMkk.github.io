@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { noHorizontalOverflow } from './helpers';
 
-const PATH = '/projects/ai-career/';
+const PATH = '/projects/ai-career/live/';
 const JD2 = '岗位：数据分析实习生\n岗位要求：\n- 熟练使用 Python 和 SQL；\n- 每周至少 3 天；\n- 有数据可视化经验（Power BI 或 Tableau）；\n- 良好的沟通能力。';
 // The live demos run continuous canvas animation (and a Python runtime); run each file's tests one after another so
 // that sixteen parallel workers do not starve them of CPU and slow their real-time replays past the timeouts.

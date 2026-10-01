@@ -1,6 +1,6 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
-import QuotaLive from '../components/QuotaLive.astro';
+import EditionTeaser from '../components/EditionTeaser.astro';
 import QuotaShots from '../components/QuotaShots.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/quota-deck.zh.md';
@@ -12,7 +12,9 @@ const P = SITE.pages.quota;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <ProjectLayout lang={lang} slug="quota-deck" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
-  <QuotaLive slot="demo" lang={lang} />
-  <QuotaShots slot="demo" lang={lang} />
+  <Fragment slot="demo">
+    <QuotaShots lang={lang} />
+    <EditionTeaser which="quota" lang={lang} />
+  </Fragment>
   <Body />
 </ProjectLayout>
