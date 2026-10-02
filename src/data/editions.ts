@@ -21,7 +21,7 @@ export const EDITIONS: Record<EditionId, Edition> = {
     back: { zh: '← 回到简易版：个人求职 Agent', en: '← Back to the simple page: Personal Job Agent' },
     body: {
       h2: { zh: '这一页在运行什么', en: 'What runs on this page' },
-      p: { zh: '演示区里是公开仓库固定版本的求职引擎，原样复制、逐个文件核对校验值，由 Pyodide 在你的浏览器里运行。输入只在本机计算，不上传。运行时不可用时，下方是同一引擎预先算好的回放。', en: 'The demo runs the job agent engine from a pinned commit of the public repository, copied unchanged and checked file by file, inside your browser through Pyodide. Your input is computed locally and never uploaded. If the runtime cannot start, the replays below were computed by the same engine.' },
+      p: { zh: '演示区里是公开仓库固定版本的求职引擎，原样复制、逐个文件核对校验值，由 Pyodide 在你的浏览器里运行。输入只在本机计算，不上传。运行时不可用时，演示区会换成同一引擎预先算好的回放。', en: 'The demo runs the job agent engine from a pinned commit of the public repository, copied unchanged and checked file by file, inside your browser through Pyodide. Your input is computed locally and never uploaded. If the runtime cannot start, the demo area shows replays computed by the same engine.' },
     },
   },
   campus: {
@@ -47,7 +47,7 @@ export const EDITIONS: Record<EditionId, Edition> = {
     back: { zh: '← 回到简易版：QuotaDeck', en: '← Back to the simple page: QuotaDeck' },
     body: {
       h2: { zh: '这一页在运行什么', en: 'What runs on this page' },
-      p: { zh: '窗口是公开仓库固定版本的真实界面文件；界面数据和耗尽预测由 QuotaDeck 自己的代码算出。不读取你的电脑或任何账号，协作只走状态流程、不调用真实 Agent。演示不可用时，下方是桌面版的真实截图。', en: 'The window is the real interface of a pinned commit of the public repository; its data and the exhaustion forecast are computed by QuotaDeck\'s own code. Nothing on your computer or in any account is read, and the parallel run only walks the state flow — no real agent is called. If the demo cannot start, the real desktop screenshots below remain.' },
+      p: { zh: '窗口是公开仓库固定版本的真实界面文件；界面数据和耗尽预测由 QuotaDeck 自己的代码算出。不读取你的电脑或任何账号，协作只走状态流程、不调用真实 Agent。演示不可用时，演示区会换成桌面版的真实截图。', en: 'The window is the real interface of a pinned commit of the public repository; its data and the exhaustion forecast are computed by QuotaDeck\'s own code. Nothing on your computer or in any account is read, and the parallel run only walks the state flow — no real agent is called. If the demo cannot start, the demo area shows real desktop screenshots instead.' },
     },
   },
 };
