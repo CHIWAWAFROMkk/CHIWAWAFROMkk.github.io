@@ -52,7 +52,9 @@ test('a control under the pointer is not rebuilt while the visitor aims at it', 
     new MutationObserver(() => { if (over) resolve(performance.now() - over); }).observe(el, { childList: true });
     setTimeout(() => resolve(Infinity), 6000);
   }));
-  await f.locator('#agentChoices input[value="claude"]').hover();
+  // The container persists while compact.js rebuilds its contents, so hovering it cannot race a rebuild; the pointer
+  // lands on one of the agent labels inside.
+  await f.locator('#agentChoices').hover();
   expect(await gap).toBeGreaterThan(1400);                                  // held for 1.5 s from the moment of aiming
 });
 
