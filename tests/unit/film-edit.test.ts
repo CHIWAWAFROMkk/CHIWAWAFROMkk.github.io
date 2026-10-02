@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { EDIT, END, TRANSITIONS, BEATS, S16_START, slots } from '../../src/data/film-edit';
+import { FILM_SHOTS } from '../../src/data/film';
 
 const S = slots();
 const byId = new Map(S.map(s => [s.id, s]));
@@ -48,5 +49,12 @@ describe('the edit list', () => {
 
   it('keeps the raw rows unchanged', () => {
     expect(EDIT.find(r => r.id === 'S19')).toEqual({ id: 'S19', src: 'S19_即梦_01', inPt: 1.0, outPt: 4.4, start: 54.17, gray: false });
+  });
+
+  it('no shot card quotes a trimmed length that disagrees with the edit list it shows', () => {
+    for (const shot of FILM_SHOTS) {
+      const m = shot.made.zh.match(/截取前 ([\d.]+) 秒/);
+      if (m) expect(Number(m[1]), shot.id).toBe(byId.get(shot.id)!.outPt);
+    }
   });
 });

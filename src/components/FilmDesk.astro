@@ -64,7 +64,7 @@ const C = DESK.card;
       </div>
       {FILM_SHOTS.map(s => { const c = at.get(s.id); return (
         <article class="fd__card" data-fd-card={s.id} data-start={c ? c.start : undefined} hidden={s.id !== first} aria-labelledby={`fd-c-${s.id}`}>
-          <video data-src={`${M}/video/${s.file}.mp4`} poster={`${M}/video/${s.file}.webp`} width="960" height="540" muted loop playsinline preload="none" aria-label={`${s.id} ${s.title[lang]}`}></video>
+          <video data-src={`${M}/video/${s.file}.mp4`} poster={`${M}/video/${s.file}.webp`} width="960" height="540" controls muted loop playsinline preload="none" aria-label={`${s.id} ${s.title[lang]}`}></video>
           <div>
             <h3 id={`fd-c-${s.id}`}><span class="fd__id">{s.id}</span> {s.title[lang]}</h3>
             <p class="fd__meta">{s.made[lang]}</p>
@@ -108,6 +108,8 @@ const C = DESK.card;
   .fd__shot.is-gray { background: color-mix(in srgb, var(--mute) 28%, transparent); }
   .fd__shot.is-live { background: color-mix(in srgb, var(--ink) 34%, transparent); }
   .fd__shot[aria-pressed='true'] { outline: 2px solid var(--red); outline-offset: -2px; }
+  /* Keyboard focus must read differently from "pressed": the focusable block is always the pressed one (roving tabindex). */
+  .fd__shot:focus-visible { z-index: 1; outline: 3px solid var(--ink); outline-offset: 2px; }
   .fd__shot.is-narrow > span { display: none; }
   .fd__speed { color: var(--mute); font-size: 10px; }
   .fd__pad { position: absolute; top: 0; bottom: 0; display: block; padding: 0 4px; line-height: 50px; overflow: hidden; white-space: nowrap;

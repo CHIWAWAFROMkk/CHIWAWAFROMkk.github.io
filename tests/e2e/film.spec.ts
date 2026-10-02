@@ -168,3 +168,25 @@ test('a shot clicked while the film is still loading seeks once its metadata arr
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).readyState), { timeout: 10_000 }).toBeGreaterThanOrEqual(1);
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeCloseTo(43.88, 1);
 });
+
+test('shot-card clips have controls, so they can be paused — and played with reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await skipIntro(page);
+  await page.goto('/projects/mais-je-taime/');
+  await page.locator('[data-fd-shot="S04"]').click();
+  const clip = page.locator('[data-fd-card="S04"] video');
+  await expect(clip).toHaveAttribute('controls', '');
+  await clip.evaluate(v => { const el = v as HTMLVideoElement; el.muted = true; return el.play(); });
+  await expect.poll(() => clip.evaluate(v => (v as HTMLVideoElement).paused)).toBe(false);
+});
+
+test('keyboard focus on the shot track is distinguishable from the pressed shot', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'keyboard');
+  await skipIntro(page);
+  await page.goto('/projects/mais-je-taime/');
+  const ring = (sel: string) => page.locator(sel).evaluate(el => { const s = getComputedStyle(el); return `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}`; });
+  const pressedOnly = await ring('[data-fd-shot="S01"]');                 // pressed, not focused
+  await page.locator('[data-fd-shot="S01"]').focus();
+  await page.keyboard.press('ArrowRight');                               // keyboard focus → :focus-visible
+  expect(await ring('[data-fd-shot="S03"]')).not.toBe(pressedOnly);
+});
