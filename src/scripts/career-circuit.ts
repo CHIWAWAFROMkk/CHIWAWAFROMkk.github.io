@@ -1,4 +1,5 @@
 import type { CircuitModel, Tone } from './career-wire';
+import { frameCap } from './frame-cap';
 import type { Lang } from '../i18n';
 
 export interface Box { x: number; y: number; w: number; h: number }
@@ -97,7 +98,7 @@ const TEXT = {
 interface Sampled { pts: Float32Array; len: number; tone: Tone; u: Float32Array; v: Float32Array; surge: number; material: boolean }
 
 export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches, cap = frameCap();
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('aria-hidden', 'true');                 // empty until the first render gives it a name
   const canvas = document.createElement('canvas');
@@ -162,7 +163,7 @@ export function createCircuit(host: HTMLElement, lang: Lang): CircuitView {
 
   function frame(now: number) {
     raf = requestAnimationFrame(frame);
-    if (last && now - last < 15) return;                                   // at most about 60 frames a second
+    if (!cap(now)) return;                                                 // at most about 60 frames a second
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
     if (!visible || !placed) return;
     const rect = svg.getBoundingClientRect(), dpr = devicePixelRatio || 1, cw = Math.round(rect.width), ch = Math.round(rect.height);

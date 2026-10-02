@@ -3,6 +3,7 @@ import { createSim, H, M, REFRESH, PROVIDER_IDS, AGENT_FLOW, agentPhase, collabE
 import { createBridge } from './qd-bridge';
 import { createTimeMachine, hhmm, countdown, type TmState } from './qd-timeline';
 import { codeLive } from './code-live';
+import { frameCap } from './frame-cap';
 import { QUOTA_TEXT } from './qd-live-text';
 
 declare global { interface Window { __quotaDeckBridge?: unknown; __quotaDeckFailed?: (message: string) => void } }
@@ -198,11 +199,12 @@ export function initQuotaLive(root: HTMLElement): void {
   }
   function onReset(id: LaneId) { resets++; stage.dataset.resets = String(resets); tm.sweep(sim.lanes.find(l => l.id === id)!, sim.t); }
   let lastDraw = 0, stirredAt = 0;
+  const cap = frameCap();
   const stir = () => { stirredAt = performance.now(); };
   function frameLoop(now: number) {
     raf = requestAnimationFrame(frameLoop);
     if (!visible || failed) { cancelAnimationFrame(raf); raf = 0; return; }
-    if (lastReal && now - lastReal < 15) return;                          // at most about 60 frames a second
+    if (!cap(now)) return;                                                // at most about 60 frames a second
     const dtReal = lastReal ? Math.min(100, now - lastReal) : 16; lastReal = now;   // a hidden tab never jumps hours ahead
     advance(dtReal);
     paintClock();

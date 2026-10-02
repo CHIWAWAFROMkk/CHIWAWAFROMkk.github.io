@@ -1,4 +1,5 @@
 import type { Flow } from './campus-flow';
+import { frameCap } from './frame-cap';
 
 /** Canvas labels, per language. Gates follow analysis.py's order of exclusion. */
 export interface PipeText {
@@ -383,10 +384,11 @@ export function createPipeline(host: HTMLElement, text: PipeText, o: PipeOptions
     finish(true);
   }
   let stillSince = 0;
+  const cap = frameCap();
   function frame(now: number) {
     raf = 0;
     if (!visible || o.reduced) return;
-    if (now - last < 15) { raf = requestAnimationFrame(frame); return; }  // at most about 60 frames a second
+    if (!cap(now)) { raf = requestAnimationFrame(frame); return; }      // at most about 60 frames a second
     if (!W) layout();
     if (W) {
       const dt = clamp((now - last) / 1000 || .016, .001, .033); last = now;
