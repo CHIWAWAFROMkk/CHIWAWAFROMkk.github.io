@@ -1,0 +1,23 @@
+---
+import { FILM_TEXT } from '../data/film';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const R = FILM_TEXT.red;
+---
+<figure class="fr wrap" data-film>
+  <img src="/media/mais-je-taime/s04.webp" alt={R.alt[lang]} width="1200" height="675" decoding="async" />
+  <figcaption>
+    <h2>{R.h[lang]}</h2>
+    <p>{R.p[lang]}</p>
+    <small>{R.credit[lang]}</small>
+  </figcaption>
+</figure>
+<style>
+  .fr { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px clamp(24px, 4vw, 56px); align-items: end; margin: 0; padding-block: 48px; }
+  .fr img { display: block; width: 100%; height: auto; }
+  .fr h2 { margin-bottom: 14px; font-size: clamp(28px, 3.4vw, 48px); }
+  .fr p { max-width: 30em; }
+  .fr small { display: block; margin-top: 14px; color: var(--mute); font-size: 13px; }
+  @media (max-width: 760px) { .fr { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,20 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import FilmRed from '../components/FilmRed.astro';
+import FilmStory from '../components/FilmStory.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/mais-je-taime.zh.md';
+import { Content as BodyEn } from '../copy/projects/mais-je-taime.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.film;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout night lang={lang} slug="mais-je-taime" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <Fragment slot="demo">
+    <FilmRed lang={lang} />
+    <FilmStory lang={lang} />
+  </Fragment>
+  <Body />
+</ProjectLayout>

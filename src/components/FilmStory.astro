@@ -1,0 +1,97 @@
+---
+import { FILM_SHOTS, FILM_TEXT, ACTS, REVISIONS, REJECTS } from '../data/film';
+import { slots } from '../data/film-edit';
+import { clock } from '../scripts/film-desk';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = FILM_TEXT;
+const M = '/media/mais-je-taime';
+const cut = new Map(slots().map(s => [s.id, s]));
+const span = (id: string) => { const s = cut.get(id); return s ? `${clock(s.start)}–${clock(s.stop)}` : T.notInCut[lang]; };
+---
+<div class="fs" data-film>
+  <section class="wrap fs__rules" aria-labelledby="fs-rules">
+    <div class="section-head"><h2 id="fs-rules">{T.rules.h[lang]}</h2></div>
+    <div class="fs__cols">
+      <p class="fs__bgm">{T.rules.bgm[lang]}</p>
+      <div>{T.rules.items.map(it => <Fragment><h3>{it.h[lang]}</h3><p>{it.p[lang]}</p></Fragment>)}</div>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="fs-acts">
+    <div class="section-head"><h2 id="fs-acts">{T.acts[lang]}</h2></div>
+    {ACTS.map(a => (
+      <section class="fs__act" aria-labelledby={`fs-act-${a.key}`}>
+        <h3 id={`fs-act-${a.key}`}>{a.title[lang]}<span class="fs__meta"> · {a.look[lang]}</span></h3>
+        <ul class="fs__grid">
+          {FILM_SHOTS.filter(s => s.act === a.key).flatMap(s => s.frames.map((f, k) => (
+            <li class="fs__frame">
+              <img src={`${M}/${f.file}.webp`} alt={`${s.id} ${s.title[lang]}${f.tag ? ` · ${f.tag[lang]}` : ''}`} width="1200" height="675" loading="lazy" decoding="async" />
+              <p class="fs__meta">{s.id}{k === 0 ? ` · ${span(s.id)}` : ''}</p>
+              <p class="fs__name">{s.title[lang]}{f.tag ? ` · ${f.tag[lang]}` : ''}</p>
+              <p>{f.note[lang]}</p>
+            </li>
+          )))}
+        </ul>
+      </section>
+    ))}
+  </section>
+
+  <section class="wrap" aria-labelledby="fs-rev">
+    <div class="section-head"><h2 id="fs-rev">{T.revisions.h[lang]}</h2><span class="fs__meta">{T.revisions.meta[lang]}</span></div>
+    <p class="fs__lede">{T.revisions.lede[lang]}</p>
+    {REVISIONS.map(r => (
+      <article class="fs__rev" id={`rev-${r.key}`} aria-labelledby={`rev-${r.key}-h`}>
+        <h3 id={`rev-${r.key}-h`}>{r.title[lang]}<span class="fs__meta"> · {r.rule[lang]}</span></h3>
+        <ul class="fs__row">
+          {r.drafts.map((x, i) => (
+            <li class="fs__draft">
+              <img src={`${M}/${x.file}.webp`} alt={`${r.title[lang]} · ${T.draft[lang]} ${i + 1}`} width="800" height="450" loading="lazy" decoding="async" />
+              <p class="fs__meta">{T.draft[lang]} {i + 1}</p>
+              <p>{x.note[lang]}</p>
+            </li>
+          ))}
+          <li class="fs__final">
+            <img src={`${M}/${r.final.file}.webp`} alt={`${r.title[lang]} · ${T.final[lang]}`} width="1200" height="675" loading="lazy" decoding="async" />
+            <p class="fs__meta">{T.final[lang]}</p>
+            <p>{r.final.note[lang]}</p>
+          </li>
+        </ul>
+      </article>
+    ))}
+  </section>
+
+  <section class="wrap fs__rejects" aria-labelledby="fs-rej">
+    <div class="section-head"><h2 id="fs-rej">{T.rejects.h[lang]}</h2><span class="fs__meta">{T.rejects.meta[lang]}</span></div>
+    <ul class="fs__grid">
+      {REJECTS.map(r => (
+        <li>
+          <video src={`${M}/video/${r.file}.mp4`} poster={`${M}/video/${r.file}.webp`} width="960" height="540" controls muted playsinline preload="none" aria-label={r.title[lang]}></video>
+          <p class="fs__name">{r.title[lang]}</p>
+          <p>{r.note[lang]}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</div>
+<style>
+  .fs > section { padding-bottom: 48px; }
+  .fs__cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 16px clamp(24px, 4vw, 56px); padding-top: 20px; }
+  .fs__bgm { font: 500 clamp(17px, 1.5vw, 21px)/1.6 var(--font-body); }
+  .fs__cols h3 { margin: 18px 0 6px; font-size: 17px; }
+  .fs__cols h3:first-child { margin-top: 0; }
+  .fs__act { padding-top: 28px; }
+  .fs__act h3, .fs__rev h3 { margin-bottom: 14px; font-size: 18px; }
+  .fs__meta { color: var(--mute); font-size: 13px; font-weight: 400; }
+  .fs__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
+  .fs__grid img, .fs__grid video, .fs__row img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+  .fs__grid p, .fs__row p { margin: 6px 0 0; font-size: 14px; }
+  .fs__name { font-weight: 500; }
+  .fs__lede { max-width: 46em; margin: 16px 0 8px; }
+  .fs__rev { padding-top: 28px; }
+  .fs__row { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 16px; align-items: start; margin: 0; padding: 0; list-style: none; }
+  .fs__draft img { opacity: 0.85; filter: saturate(0.8); }
+  .fs__final img { outline: 2px solid var(--ink); outline-offset: 3px; }
+  @media (max-width: 760px) { .fs__cols { grid-template-columns: 1fr; } }
+</style>

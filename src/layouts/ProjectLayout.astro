@@ -4,8 +4,8 @@ import { SITE } from '../data/site';
 import { localizePath, type Lang, type Bi } from '../i18n';
 
 export interface Summary { task: Bi; mine: Bi; tools: Bi; evidence: Bi; status: Bi }
-interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi }
-const { lang, slug, title, lead, tags, summary, description } = Astro.props;
+interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean }
+const { lang, slug, title, lead, tags, summary, description, night = false } = Astro.props;
 const path = `/projects/${slug}/`;
 const order = SITE.projects;
 const i = order.findIndex(p => p.slug === slug);
@@ -14,7 +14,7 @@ const next = i >= 0 && i < order.length - 1 ? order[i + 1] : undefined;
 const S = SITE.summaryLabels;
 const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.tools, summary.tools], [S.evidence, summary.evidence], [S.status, summary.status]];
 ---
-<Base lang={lang} path={path} title={`${title[lang]} · ${SITE.name[lang]}`} description={description[lang]}>
+<Base lang={lang} path={path} night={night} title={`${title[lang]} · ${SITE.name[lang]}`} description={description[lang]}>
   <main id="main">
     <slot name="top" />
     <header class="p-head wrap">

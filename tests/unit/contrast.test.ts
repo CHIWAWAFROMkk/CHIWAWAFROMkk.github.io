@@ -13,6 +13,7 @@ describe('colour tokens', () => {
     ['red display type on paper', C.red, C.paper, 3],
     ['red display type on night', C.red, C.night, 3],
     ['redText focus ring on ink', C.redText, C.ink, 3],
+    ['red as small text on night (red-text on dark pages)', C.red, C.night, 4.5],
   ])('%s ≥ %s', (_name, fg, bg, min) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(min);
   });

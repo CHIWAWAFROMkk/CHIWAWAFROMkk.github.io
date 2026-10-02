@@ -12,11 +12,18 @@
   --font-cjk-bold: 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
   --font-body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei UI', sans-serif;
   --gutter: clamp(16px, 3vw, 44px);
+  /* Filled red behind white text. Resolved here at the root, so dark pages (which brighten --red-text for small red text)
+     keep the deeper red that white text needs. */
+  --red-fill: var(--red-text);
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; background: var(--paper); }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 300 16px/1.75 var(--font-body); overflow-wrap: anywhere; }
 body.night { background: var(--night); color: var(--night-fg); }
+/* Dark pages: the same components, inverted through the tokens. --rule and --hair are redefined because a custom
+   property that refers to another is resolved where it is declared (:root), not where it is used. */
+body.night { --paper: var(--night); --ink: var(--night-fg); --mute: var(--night-mute); --red-text: var(--red);
+  --rule: 1.5px solid var(--night-fg); --hair: 1px solid rgb(236 228 214 / 0.18); }
 h1, h2, h3 { margin: 0; font-family: var(--font-cjk-bold); font-weight: 900; line-height: 1.15; letter-spacing: -0.01em; }
 p, ul, ol, dl, dd { margin: 0; }
 a { color: inherit; }

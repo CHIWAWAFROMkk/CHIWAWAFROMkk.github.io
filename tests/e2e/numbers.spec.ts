@@ -3,10 +3,11 @@ import { PAGES, skipIntro } from './helpers';
 import { strayTokens } from '../unit/digits';
 import { factCorpus } from '../../src/data/facts';
 
-// [data-demo] holds fictional demo records ("page 2"); [data-reel] holds shot ids and a clip counter — identifiers, not claims.
+// [data-demo] holds fictional demo records ("page 2"); [data-reel] holds shot ids and a clip counter; [data-film] holds the
+// film's shot ids, timecodes, speeds and take counts — identifiers and edit data, not claims.
 // [data-insight-num] / [data-insight-data] hold query-derived numbers; insights.spec checks them against insights.json.
 // script/style are removed because a detached clone's innerText includes their source.
-const EXCLUDE = 'script, style, .prow__n, .door__index, [data-demo], [data-reel], [data-insight-num], [data-insight-data], .p-pager, .contact, .footer, .nav, .prose';
+const EXCLUDE = 'script, style, .prow__n, .door__index, [data-demo], [data-reel], [data-film], [data-insight-num], [data-insight-data], .p-pager, .contact, .footer, .nav, .prose';
 
 for (const p of PAGES) {
   test(`every number on ${p} comes from the fact ledger`, async ({ page, isMobile }) => {
