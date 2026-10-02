@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { PAGES, PHASE2_PENDING, skipIntro } from './helpers';
+import { PAGES, skipIntro } from './helpers';
 
-test('every internal link resolves (phase-2 pages excepted)', async ({ page, request, isMobile }) => {
+test('every internal link resolves', async ({ page, request, isMobile }) => {
   test.skip(!!isMobile, 'run once');
   test.setTimeout(120_000); // visits every page in turn; the default 30 s is too tight once the whole suite runs in parallel
   await skipIntro(page);
@@ -13,7 +13,6 @@ test('every internal link resolves (phase-2 pages excepted)', async ({ page, req
   }
   const broken: string[] = [];
   for (const h of found) {
-    if (PHASE2_PENDING.has(decodeURI(h))) continue;
     if ((await request.get(h)).status() !== 200) broken.push(h);
   }
   expect(broken).toEqual([]);

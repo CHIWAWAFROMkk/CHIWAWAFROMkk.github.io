@@ -7,12 +7,8 @@ export const INSIGHTS_PAGES = ['/projects/campus-delivery/insights/', '/en/proje
 export const PHASE2B_PAGES = ['/projects/ai-career/', '/projects/quota-deck/', '/projects/ai-campus/'].flatMap(p => [p, `/en${p}`]);
 export const LIVE_PAGES = ['/projects/ai-career/live/', '/projects/quota-deck/live/', '/projects/ai-campus/live/'].flatMap(p => [p, `/en${p}`]);
 export const FILM_PAGES = ['/projects/mais-je-taime/', '/en/projects/mais-je-taime/'];
-export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES, ...PHASE2B_PAGES, ...LIVE_PAGES, ...FILM_PAGES];
-
-export const PHASE2_PENDING = new Set(
-  ['/privacy/']
-    .flatMap(p => [p, `/en${p}`]),
-);
+export const PRIVACY_PAGES = ['/privacy/', '/en/privacy/'];
+export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES, ...PHASE2B_PAGES, ...LIVE_PAGES, ...FILM_PAGES, ...PRIVACY_PAGES];
 
 /** Mark the intro as seen before any page script runs. */
 export async function skipIntro(page: Page): Promise<void> {

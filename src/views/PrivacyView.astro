@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { Content as Zh } from '../copy/privacy.zh.md';
+import { Content as En } from '../copy/privacy.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.privacy;
+const Body = lang === 'zh' ? Zh : En;
+---
+<Base lang={lang} path="/privacy/" title={`${P.title[lang]} · ${SITE.name[lang]}`} description={P.description[lang]}>
+  <main id="main">
+    <header class="pv wrap"><h1>{P.title[lang]}</h1></header>
+    <article class="prose wrap"><Body /></article>
+  </main>
+</Base>
+<style>
+  .pv { padding-block: clamp(32px, 6vh, 72px) 8px; }
+  .pv h1 { font-size: clamp(36px, 5vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+</style>

@@ -191,6 +191,10 @@ export const SITE = {
         status: { zh: '60 秒成片完成：出片 23 段，成片用 22 段', en: '60-second film finished: 23 clips generated, 22 in the cut' },
       },
     },
+    privacy: {
+      title: { zh: '隐私与使用说明', en: 'Privacy & use' },
+      description: { zh: '本站如何处理你输入的数据、本地存储与网站访问，以及作品与范例的边界。', en: 'How this site handles what you enter, local storage and visits, and where the demos and samples end.' },
+    },
     aiCampus: {
       title: { zh: 'AI 校园应用研究', en: 'AI on Campus — Study' },
       lead: { zh: '当 AI 可以写出答案，我们怎样判断任务真的完成了？', en: 'When AI can write the answer, how do we know the task is really done?' },
