@@ -40,7 +40,7 @@ test.describe('cinema on desktop', () => {
     expect(Math.abs((await scrollLeft(page)) - held)).toBeLessThan(20);
     await pointAt(page, 0.02);
     await expect.poll(() => scrollLeft(page)).toBeLessThan(held - 100);
-    await expect(page.locator('[data-reel-count]')).toHaveText(/^\d\d \/ 12$/);
+    await expect(page.locator('[data-reel-count]')).toHaveText(/^\d\d \/ 23$/);
   });
 
   test('clips in view play, and the pause button stops every clip', async ({ page }) => {
@@ -80,7 +80,7 @@ test.describe('cinema without JavaScript', () => {
   test('shows every clip poster with a label, curtains open', async ({ page }) => {
     await page.goto('/brief/');
     const posters = await page.locator(`${reel} video`).evaluateAll(vs => vs.map(v => [v.getAttribute('poster'), v.getAttribute('aria-label')]));
-    expect(posters).toHaveLength(12);
+    expect(posters).toHaveLength(23);
     for (const [poster, label] of posters) {
       expect(poster).toMatch(/\.webp$/);
       expect((label ?? '').length).toBeGreaterThan(2);

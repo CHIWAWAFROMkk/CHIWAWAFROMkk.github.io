@@ -21,8 +21,8 @@ describe('fact ledger', () => {
   it('keeps scale numbers paired with their meaning', () => {
     expect(fact('F6').text.zh).toContain('2000');
     expect(fact('F6').text.zh).toContain('6,000+');
-    expect(fact('F8').text.zh).toMatch(/23.*12/);
-    expect(fact('F8').text.en).toMatch(/23.*12/);
+    expect(fact('F8').text.zh).toMatch(/23.*22/);
+    expect(fact('F8').text.en).toMatch(/23.*22/);
   });
 
   it('uses the confirmed availability', () => {

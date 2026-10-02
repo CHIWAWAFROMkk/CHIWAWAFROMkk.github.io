@@ -1,4 +1,5 @@
 import type { Bi } from '../i18n';
+import { FILM_SHOTS } from './film';
 
 export interface ProjectEntry {
   slug: string;
@@ -63,21 +64,8 @@ export const SITE = {
     play: { zh: '播放视频', en: 'Play videos' },
     hint: { zh: '把鼠标移到画面最右边，看后面的镜头', en: 'Move the pointer to the right edge to see more shots' },
     swipe: { zh: '左右滑动，看完所有镜头', en: 'Swipe sideways to see every shot' },
-    /** The 12 shots already rendered as video; titles from the storyboard page. */
-    clips: [
-      { shot: 'S01', file: 's01', title: { zh: '握枪的手', en: 'The hand on the gun' } },
-      { shot: 'S02', file: 's02', title: { zh: '警员停步', en: 'The officer stops' } },
-      { shot: 'S03', file: 's03', title: { zh: '高空垂直下降', en: 'Vertical drop from above' } },
-      { shot: 'S04', file: 's04', title: { zh: '舞池红裙', en: 'Red dress on the dance floor' } },
-      { shot: 'S05a', file: 's05a', title: { zh: '隔着人群对视', en: 'Eyes meet across the crowd' } },
-      { shot: 'S05b', file: 's05b', title: { zh: '手下的眼神', en: "The henchman's look" } },
-      { shot: 'S06', file: 's06', title: { zh: '共撑一把伞', en: 'Sharing one umbrella' } },
-      { shot: 'S07', file: 's07', title: { zh: '天台分烟', en: 'Sharing a cigarette on the roof' } },
-      { shot: 'S08', file: 's08', title: { zh: '描他的枪疤', en: 'Tracing his bullet scar' } },
-      { shot: 'S09', file: 's09', title: { zh: '戴上对戒', en: 'Putting on the rings' } },
-      { shot: 'S10', file: 's10', title: { zh: '百叶窗与耳麦', en: 'Blinds and an earpiece' } },
-      { shot: 'S16', file: 's16', title: { zh: '枪响，他倒下', en: 'The shot; he falls' } },
-    ],
+    /** Every generated shot, in story order (S02 included: it was generated, just not used in the cut). */
+    clips: FILM_SHOTS.map(s => ({ shot: s.id, file: s.file, title: s.title })),
   },
   projects: [
     project({ slug: 'hris-workflow', line: 'data', preview: '/assets/editorial/hris-flow.svg', inBrief: true,
@@ -123,7 +111,7 @@ export const SITE = {
     project({ slug: 'mais-je-taime', line: 'film', inBrief: true,
       title: { zh: "Mais je t'aime", en: "Mais je t'aime" },
       did: { zh: 'AI 短片的分镜、人物与道具连续性设计，按 BGM 卡点', en: 'Storyboard, character and prop continuity for an AI short, cut to the beat' },
-      status: { zh: '60 秒短片：计划 23 镜，已完成视频 12 镜 · 制作中', en: '60-second short: 23 shots planned, 12 rendered as video · in production' } }),
+      status: { zh: '成片完成 · AI 短片', en: 'Finished · AI short film' } }),
   ] satisfies ProjectEntry[],
   pages: {
     home: {
@@ -188,6 +176,19 @@ export const SITE = {
         tools: { zh: '代码借助 AI 编程工具编写；Electron 托盘窗口与 Node.js 连接器，读取数据和模型调用放在主进程，界面通过受限桥接请求操作。', en: 'The code was written with AI coding tools; an Electron tray window with Node.js connectors — data reads and model calls stay in the main process, and the interface acts through a restricted bridge.' },
         evidence: { zh: '本页的界面截图（本机运行，演示数据）、公开源码与自动检查。', en: 'Interface screenshots on this page (run locally, demo data), the public source and its automated checks.' },
         status: { zh: '个人项目，MIT 开源；当前为候选版，持续开发。截图不含真实额度。', en: 'Personal project, MIT licensed; currently a release candidate, in active development. The screenshots contain no real quota data.' },
+      },
+    },
+    film: {
+      title: { zh: "Mais je t'aime", en: "Mais je t'aime" },
+      lead: { zh: '他是黑帮少主，她是潜伏三年的卧底。雨夜码头，她开枪打死了他；扑过去才发现，他的枪是空的，攥紧的手心里是那枚对戒。', en: 'He is heir to a gang; she has been undercover beside him for three years. On a rainy dock she shoots him dead — and, reaching him, finds his gun was empty and their ring clenched in his hand.' },
+      description: { zh: "Mais je t'aime：60 秒 AI 短片。剪辑台按真实剪辑表展示每个镜头的起止、变速与转场，附分镜视频、返修记录与废片。", en: "Mais je t'aime: a 60-second AI short. The edit desk lays out every shot's timing, speed and transitions from the real edit list, with the clips, revision log and rejected takes." },
+      tags: [ { zh: 'AI 短片 · 个人作品', en: 'AI short film · personal work' }, { zh: 'GPT 图像 · 可灵 · 即梦 · Python', en: 'GPT Image · Kling · Jimeng · Python' } ],
+      summary: {
+        task: { zh: '用一首歌的时间讲完一个反转故事；每个画面由 AI 生成，但手、戒指、伤疤和时间线必须前后一致。', en: 'Tell a story with a twist in the length of one song; AI generates every picture, but hands, rings, scars and the timeline must stay consistent.' },
+        mine: { zh: '剧本、分镜、人物与道具连续性设定；逐张审图并写返修意见；按秒写图生视频提示词；用 Python 按 BGM 卡点剪辑合成。', en: 'Script, storyboard, character and prop continuity; reviewing every frame and writing the revision notes; second-by-second video prompts; the edit, cut to the beat in Python.' },
+        tools: { zh: 'GPT 图像生成首帧；可灵、即梦图生视频；Demucs 分离人声；Python、OpenCV、ffmpeg 剪辑、去色与合成音效。', en: 'GPT image generation for first frames; Kling and Jimeng for image-to-video; Demucs for stems; Python, OpenCV and ffmpeg for the edit, desaturation and sound effects.' },
+        evidence: { zh: '本页的成片与剪辑台（剪辑表、画面颜色与音轨波形都取自成片和剪辑脚本）、每段分镜视频、返修记录与废片。', en: 'The film and edit desk on this page (edit list, picture colour and waveform all taken from the film and its edit script), every clip, the revision log and the rejected takes.' },
+        status: { zh: '60 秒成片完成：出片 23 段，成片用 22 段', en: '60-second film finished: 23 clips generated, 22 in the cut' },
       },
     },
     aiCampus: {
