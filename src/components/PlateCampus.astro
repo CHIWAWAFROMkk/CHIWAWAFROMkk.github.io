@@ -1,0 +1,64 @@
+---
+import Plate from './Plate.astro';
+import { CAMPUS_PLATE as C } from '../data/plates';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = lang === 'zh'
+  ? { title: '四段时间：一个答案，还不是一次完成', source: '本研究的评价框架（任务成本的构成）', scale: '示意' }
+  : { title: 'Four stretches of time: an answer is not yet a finished task', source: "The study's evaluation frame (what a task costs)", scale: 'Schematic' };
+const total = C.stages.reduce((s, x) => s + x.weight, 0);
+const basis = (w: number) => `flex: ${w} 1 ${(w / total) * 100}%`;
+---
+<Plate lang={lang} kind="campus" no={3} title={T.title} source={T.source} scale={T.scale}>
+  <div class="pt">
+    <!-- What it looks like: the generation alone, drawn exactly above the stretch it occupies in the real task. -->
+    <p class="pt__label pl-word" style="--i:0">{C.seems[lang]}</p>
+    <div class="pt__track pt__seems">
+      {C.stages.map(s => s.key === 'wait'
+        ? <span class="pt__slot" style={basis(s.weight)}><span class="pt__gen pl-word" style="--i:1">{C.generate[lang]}</span><span class="pt__secs pl-word" style="--i:2">{C.seconds[lang]}</span><span class="pt__drop pl-word" style="--i:3" aria-hidden="true"></span></span>
+        : <span class="pt__slot" style={basis(s.weight)} aria-hidden="true"></span>)}
+    </div>
+
+    <p class="pt__label pl-word" style="--i:4">{C.counts[lang]}</p>
+    <ol class="pt__track pt__stages">
+      {C.stages.map((s, i) => (
+        <li class:list={['pt__stage', 'pl-line', `is-${s.key}`]} style={`--i:${5 + i * 2}; ${basis(s.weight)}`}>
+          <span>{s.label[lang]}</span>
+        </li>
+      ))}
+    </ol>
+
+    <p class="pt__verify pl-word" style="--i:13"><span aria-hidden="true">↑</span> {C.verify[lang]}</p>
+    <p class="pt__note pl-word" style="--i:14">{C.note[lang]}</p>
+  </div>
+</Plate>
+<style>
+  .pt { display: grid; grid-template-columns: minmax(5em, 8em) minmax(0, 1fr); gap: 10px 18px; align-items: center; }
+  .pt__label { color: var(--mute); font-size: 13px; }
+  .pt__track { display: flex; margin: 0; padding: 0; list-style: none; min-height: 48px; }
+  .pt__slot { position: relative; min-width: 0; }
+  .pt__seems .pt__slot { min-height: 48px; }
+  .pt__gen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 500; }
+  .pt__secs { position: absolute; left: calc(100% + 10px); top: 50%; translate: 0 -50%; color: var(--mute); font-size: 13px; white-space: nowrap; }
+  /* A dotted plumb line from the generation down into its stretch of the real task. */
+  .pt__drop { position: absolute; left: 50%; top: 100%; height: 10px; border-left: 1px dotted var(--ink); }
+  .pt__stage { display: flex; align-items: center; min-width: 0; padding: 0 10px; border: 1.5px solid var(--ink); border-left-width: 0; font-size: 14px; font-weight: 500; }
+  .pt__stage:first-child { border-left-width: 1.5px; }
+  .pt__stage span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pt__stage.is-wait { background: color-mix(in srgb, var(--ink) 10%, transparent); }
+  .pt__stage.is-verify { border: 3px solid var(--red); color: var(--red-text); }
+  .pt__verify { grid-column: 2; justify-self: end; color: var(--red-text); font-size: 14px; font-weight: 500; text-align: right; }
+  .pt__note { grid-column: 1 / -1; padding-top: 10px; border-top: var(--hair); color: var(--mute); font-size: 12px; }
+  @media (max-width: 640px) {
+    .pt { grid-template-columns: 1fr; }
+    .pt__seems .pt__slot:not(:has(.pt__gen)) { display: none; }
+    .pt__seems .pt__slot { flex: 0 0 7em !important; }
+    .pt__drop { display: none; }
+    .pt__stages { flex-direction: column; }
+    .pt__stage { flex: 0 0 auto !important; min-height: 40px; border-left-width: 1.5px; border-top-width: 0; }
+    .pt__stage:first-child { border-top-width: 1.5px; }
+    .pt__stage.is-verify { border-width: 3px; }
+    .pt__verify { grid-column: 1; justify-self: start; text-align: left; }
+  }
+</style>

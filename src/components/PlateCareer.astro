@@ -1,0 +1,69 @@
+---
+import Plate from './Plate.astro';
+import { careerPlate } from '../data/plates';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = careerPlate();
+const T = lang === 'zh'
+  ? { title: '红笔批改：证据在前，产出在后', reqs: '岗位要求', notes: '引擎的判定', source: `公开引擎 ${P.commit} 的固定回放（虚构岗位与候选人）`, scale: '真实数据',
+      foot: `材料包只引用已确认的证据 · 匹配分 ${P.score} · 推荐` }
+  : { title: 'Red-pen markup: evidence first, output second', reqs: 'Requirements', notes: "The engine's verdicts", source: `Fixed replay of the public engine at ${P.commit} (fictional role and candidate)`, scale: 'Real data',
+      foot: `The application pack cites confirmed evidence only · match ${P.score} · recommended` };
+const MARK = { pass: '✓', evidence: '→', unconfirmed: '?', open: '…' } as const;
+---
+<Plate lang={lang} kind="career" no={1} title={T.title} source={T.source} scale={T.scale}>
+  <div class="pc">
+    <p class="pc__role pl-word" style="--i:0">{P.role[lang]}</p>
+    <p class="pc__cols" aria-hidden="true"><span>{T.reqs}</span><span>{T.notes}</span></p>
+    <ol class="pc__rows">
+      {P.rows.map((r, i) => (
+        <li class:list={['pc__row', `is-${r.verdict}`]}>
+          <span class="pc__jd pl-word" style={`--i:${1 + i * 2}`}>
+            {r.jd[lang]}
+            {r.verdict === 'unconfirmed' && (
+              <svg class="pc__ring" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="pl-ring" pathLength="1" style={`--i:${2 + i * 2}`} d="M8 22 C 6 8, 40 3, 62 5 C 88 7, 98 16, 93 27 C 87 37, 46 39, 22 35 C 6 32, 2 22, 14 13" />
+              </svg>
+            )}
+          </span>
+          <span class="pc__lead pl-line" style={`--i:${2 + i * 2}`} aria-hidden="true"></span>
+          <span class="pc__note pl-word" style={`--i:${2 + i * 2}`}>
+            <span class="pc__mark" aria-hidden="true">{MARK[r.verdict]}</span> {r.note[lang]}
+            {r.fact && <span class="pc__fact"><code>{r.fact.id}</code>{r.fact.text[lang]}</span>}
+          </span>
+        </li>
+      ))}
+    </ol>
+    <p class="pc__foot pl-word" style={`--i:${2 + P.rows.length * 2}`}>{T.foot}</p>
+  </div>
+</Plate>
+<style>
+  .pc__role { font: 900 16px/1.4 var(--font-cjk-bold); }
+  .pc__cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(32px, 2fr) minmax(0, 6fr); margin-top: 18px; color: var(--mute); font-size: 12px; }
+  .pc__cols span:last-child { grid-column: 3; }
+  .pc__rows { margin: 6px 0 0; padding: 0; list-style: none; counter-reset: req; }
+  .pc__row { display: grid; grid-template-columns: minmax(0, 5fr) minmax(32px, 2fr) minmax(0, 6fr); align-items: center; padding-block: 12px; border-top: var(--hair); counter-increment: req; }
+  .pc__jd { position: relative; justify-self: start; padding: 2px 6px; font-weight: 500; }
+  .pc__jd::before { content: counter(req, decimal-leading-zero) '  '; color: var(--mute); font: 700 13px var(--font-display); white-space: pre; }
+  .pc__lead { height: 0; border-top: 1px dotted var(--mute); }
+  .pc__note { font-size: 14px; }
+  .pc__mark { display: inline-block; width: 1.2em; font-weight: 700; }
+  .is-evidence .pc__lead { border-top: 1.5px solid var(--ink); }
+  .pc__fact { display: block; margin-top: 6px; padding: 6px 10px; border: var(--hair); font-size: 13px; }
+  .pc__fact code { display: block; color: var(--mute); font: 11px Consolas, 'Cascadia Mono', monospace; }
+  .is-unconfirmed .pc__lead { border-top: 1.5px solid var(--red); }
+  .is-unconfirmed .pc__note { color: var(--red-text); font-weight: 500; }
+  .is-open .pc__note { color: var(--mute); }
+  .pc__ring { position: absolute; inset: -9px -14px; width: calc(100% + 28px); height: calc(100% + 18px); overflow: visible; pointer-events: none; }
+  .pc__ring path { fill: none; stroke: var(--red); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+  .pc__foot { display: inline-block; margin-top: 18px; padding-bottom: 4px; border-bottom: 2px solid var(--red); font-weight: 500; }
+  @media (max-width: 640px) {
+    .pc__cols { display: none; }
+    .pc__row { grid-template-columns: 1fr; gap: 6px; }
+    .pc__lead { display: none; }
+    .pc__note { margin-left: 14px; padding-left: 12px; border-left: 1px dotted var(--mute); }
+    .is-evidence .pc__note { border-left: 1.5px solid var(--ink); }
+    .is-unconfirmed .pc__note { border-left: 1.5px solid var(--red); }
+  }
+</style>

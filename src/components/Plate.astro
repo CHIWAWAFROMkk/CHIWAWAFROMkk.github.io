@@ -1,0 +1,45 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang; kind: 'career' | 'quota' | 'campus'; no: number; title: string; source: string; scale: string }
+const { lang, kind, no, title, source, scale } = Astro.props;
+const L = lang === 'zh'
+  ? { plate: '图版', source: '数据', drawn: '绘制', by: '代码生成 · 本站', scale: '比例' }
+  : { plate: 'Plate', source: 'Data', drawn: 'Drawn', by: 'Generated in code · this site', scale: 'Scale' };
+---
+<figure class="plate wrap" data-plate={kind} aria-labelledby={`plate-${kind}`}>
+  <div class="plate__sheet">
+    <figcaption class="plate__head"><span class="plate__no">{L.plate} {String(no).padStart(2, '0')}</span><span class="plate__title" id={`plate-${kind}`}>{title}</span></figcaption>
+    <div class="plate__body"><slot /></div>
+    <dl class="plate__block">
+      <div><dt>{L.source}</dt><dd>{source}</dd></div>
+      <div><dt>{L.drawn}</dt><dd>{L.by}</dd></div>
+      <div><dt>{L.scale}</dt><dd>{scale}</dd></div>
+    </dl>
+  </div>
+</figure>
+<script>
+  import { initPlate } from '../scripts/plate-dom';
+  document.querySelectorAll<HTMLElement>('[data-plate]').forEach(initPlate);
+</script>
+<style>
+  .plate { margin: 0; padding-block: 40px 8px; }
+  .plate__sheet { border: var(--rule); background: var(--paper); }
+  .plate__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; padding: 12px clamp(14px, 2.4vw, 28px); border-bottom: var(--rule); }
+  .plate__no { font: 700 15px/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--red-text); }
+  .plate__title { font: 900 clamp(18px, 1.7vw, 24px)/1.2 var(--font-cjk-bold); }
+  .plate__body { padding: clamp(18px, 3vw, 40px) clamp(14px, 2.4vw, 28px); }
+  .plate__block { display: grid; grid-template-columns: 2fr 1fr 1fr; margin: 0; border-top: var(--hair); font-size: 12px; }
+  .plate__block div { padding: 8px clamp(14px, 2.4vw, 28px); border-left: var(--hair); }
+  .plate__block div:first-child { border-left: 0; }
+  .plate__block dt { color: var(--mute); }
+  .plate__block dd { margin: 0; font-weight: 500; }
+  @media (max-width: 640px) { .plate__block { grid-template-columns: 1fr 1fr; } .plate__block div:first-child { grid-column: 1 / -1; border-bottom: var(--hair); } .plate__block div:nth-child(2) { border-left: 0; } }
+
+  /* Plotter: armed plates hide their strokes and words, and draw them in order (--i) once in view. */
+  .plate :global(.pl-line) { transform-origin: left center; transition: transform 0.55s var(--ease); transition-delay: calc(var(--i, 0) * 90ms); }
+  .plate :global(.pl-word) { transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); transition-delay: calc(var(--i, 0) * 90ms); }
+  .plate :global(.pl-ring) { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 0.7s var(--ease); transition-delay: calc(var(--i, 0) * 90ms); }
+  .plate.is-armed:not(.is-drawn) :global(.pl-line) { transform: scaleX(0); }
+  .plate.is-armed:not(.is-drawn) :global(.pl-word) { opacity: 0; transform: translateY(6px); }
+  .plate.is-armed:not(.is-drawn) :global(.pl-ring) { stroke-dashoffset: 1; }
+</style>

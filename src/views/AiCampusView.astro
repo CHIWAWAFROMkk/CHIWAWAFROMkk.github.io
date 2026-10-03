@@ -1,6 +1,7 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
 import EditionTeaser from '../components/EditionTeaser.astro';
+import PlateCampus from '../components/PlateCampus.astro';
 import CampusFramework from '../components/CampusFramework.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/ai-campus.zh.md';
@@ -15,6 +16,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   <Fragment slot="demo">
     <CampusFramework lang={lang} />
     <EditionTeaser which="campus" lang={lang} />
+    <PlateCampus lang={lang} />
   </Fragment>
   <Body />
 </ProjectLayout>

@@ -1,6 +1,3 @@
-![A desk of folders and blank forms](/assets/editorial/records-desk.webp)
-*AI-generated illustration · not a real project scene or product screenshot*
-
 Experience, job requirements and conditions still to confirm are laid side by side, so it is clear why the materials say what they say and what still needs checking.
 
 ## What the project solves

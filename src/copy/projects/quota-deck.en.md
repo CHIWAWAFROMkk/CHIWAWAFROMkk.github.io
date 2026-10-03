@@ -1,6 +1,3 @@
-![A data desk of a computer, spreadsheets and drawings](/assets/editorial/analysis-desk.webp)
-*AI-generated illustration · not a real project scene or product screenshot*
-
 One desktop entry point for quotas scattered across agents and APIs: first see how much is left, then open the models and their consumption multipliers, then hand a task to several local agents at once.
 
 ## From a model list to a usage decision

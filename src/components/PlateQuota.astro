@@ -1,0 +1,69 @@
+---
+import Plate from './Plate.astro';
+import { quotaPlate } from '../data/plates';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = quotaPlate();
+const nModels = P.perModel.length, nPools = P.pools.length;
+const T = lang === 'zh'
+  ? { title: '同一池水：额度按池显示，模型挂在池下', wrong: '按模型逐个列出', wrongNote: `看起来像 ${nModels} 份独立额度`, right: 'QuotaDeck：按额度池', rightNote: `${nPools} 个额度池，各显示一次`,
+      source: '网页演示所用模拟器的起始读数（演示数据）', scale: '真实数据' }
+  : { title: 'One pool of water: quota shown per pool, models hung beneath', wrong: 'Listed model by model', wrongNote: `Reads like ${nModels} separate quotas`, right: 'QuotaDeck: by pool', rightNote: `${nPools} pools, each shown once`,
+      source: 'Starting readings of the simulator the live demo runs (demo data)', scale: 'Real data' };
+---
+<Plate lang={lang} kind="quota" no={2} title={T.title} source={T.source} scale={T.scale}>
+  <div class="pq">
+    <section class="pq__side pq__wrong" aria-label={T.wrong}>
+      <h3 class="pq__h pl-word" style="--i:0">{T.wrong}</h3>
+      <ul class="pq__list">
+        {P.perModel.map((m, i) => (
+          <li class="pq__item pl-word" style={`--i:${1 + i * 0.5}`}>
+            <span class="pq__name">{m.model[lang]}</span>
+            <span class="pq__val">{m.value}</span>
+            <span class="pq__strike pl-line" style={`--i:${8 + i * 0.5}`} aria-hidden="true"></span>
+          </li>
+        ))}
+      </ul>
+      <p class="pq__note is-wrong pl-word" style="--i:14">✕ {T.wrongNote}</p>
+    </section>
+    <span class="pq__arrow pl-word" style="--i:15" aria-hidden="true">→</span>
+    <section class="pq__side" aria-label={T.right}>
+      <h3 class="pq__h pl-word" style="--i:15">{T.right}</h3>
+      <ul class="pq__pools">
+        {P.pools.map((p, i) => (
+          <li class="pq__pool pl-word" style={`--i:${16 + i}`}>
+            <p class="pq__pool-head"><strong>{p.provider}</strong><span>{p.label[lang]}</span><span class="pq__pool-val">{p.value}</span></p>
+            <span class="pq__bar" aria-hidden="true"><span class="pl-line" style={`--i:${17 + i}; width:${(p.fill ?? 1) * 100}%`} data-balance={p.fill === null ? '' : undefined}></span></span>
+            <ul class="pq__models">{p.models.map(m => <li>{m[lang]}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+      <p class="pq__note pl-word" style="--i:22">✓ {T.rightNote}</p>
+    </section>
+  </div>
+</Plate>
+<style>
+  .pq { display: grid; grid-template-columns: minmax(0, 4fr) auto minmax(0, 6fr); gap: 20px clamp(16px, 2.6vw, 36px); align-items: start; }
+  .pq__h { margin-bottom: 12px; font-size: 15px; }
+  .pq__list, .pq__pools, .pq__models { margin: 0; padding: 0; list-style: none; }
+  .pq__item { position: relative; display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-top: var(--hair); font-size: 13px; color: var(--mute); }
+  .pq__val { font-weight: 500; color: var(--ink); }
+  .pq__strike { position: absolute; left: 0; right: 0; top: calc(50% - 1px); height: 2px; background: var(--red); }
+  .pq__note { margin-top: 10px; font-size: 13px; font-weight: 500; }
+  .pq__note.is-wrong { color: var(--red-text); }
+  .pq__arrow { align-self: center; font: 700 clamp(28px, 3vw, 44px)/1 var(--font-display); color: var(--mute); }
+  .pq__pool { padding: 10px 0 12px; border-top: var(--rule); }
+  .pq__pool-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font-size: 13px; }
+  .pq__pool-head strong { font-weight: 900; font-family: var(--font-cjk-bold); font-size: 15px; }
+  .pq__pool-head span { color: var(--mute); }
+  .pq__pool-head .pq__pool-val { margin-left: auto; color: var(--ink); font: 700 18px/1 var(--font-display); letter-spacing: 0.02em; }
+  .pq__bar { position: relative; display: block; height: 8px; margin: 8px 0; background: color-mix(in srgb, var(--ink) 10%, transparent); }
+  .pq__bar > span { position: absolute; inset: 0 auto 0 0; background: var(--ink); }
+  .pq__bar > span[data-balance] { background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 6px); }
+  /* Models hang from the pool on hairlines. */
+  .pq__models { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 8px; }
+  .pq__models li { position: relative; padding: 2px 8px; border: var(--hair); font-size: 12px; }
+  .pq__models li::before { content: ''; position: absolute; left: 50%; bottom: 100%; height: 8px; border-left: var(--hair); }
+  @media (max-width: 760px) { .pq { grid-template-columns: 1fr; } .pq__arrow { transform: rotate(90deg); justify-self: start; } }
+</style>

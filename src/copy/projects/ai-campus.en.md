@@ -1,6 +1,3 @@
-![A campus walkway and library scene](/assets/editorial/campus-courtyard.webp)
-*AI-generated illustration · not a real project scene or product screenshot*
-
 A study that starts from university life: when AI can write the answer, how do we know the task is really done?
 
 ## An answer is not yet a finished task

@@ -1,6 +1,7 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
 import EditionTeaser from '../components/EditionTeaser.astro';
+import PlateQuota from '../components/PlateQuota.astro';
 import QuotaShots from '../components/QuotaShots.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/quota-deck.zh.md';
@@ -15,6 +16,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   <Fragment slot="demo">
     <QuotaShots lang={lang} />
     <EditionTeaser which="quota" lang={lang} />
+    <PlateQuota lang={lang} />
   </Fragment>
   <Body />
 </ProjectLayout>

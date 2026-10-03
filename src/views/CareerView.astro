@@ -2,6 +2,7 @@
 import ProjectLayout from '../layouts/ProjectLayout.astro';
 import CareerDemo from '../components/CareerDemo.astro';
 import EditionTeaser from '../components/EditionTeaser.astro';
+import PlateCareer from '../components/PlateCareer.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/ai-career.zh.md';
 import { Content as BodyEn } from '../copy/projects/ai-career.en.md';
@@ -15,6 +16,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   <Fragment slot="demo">
     <CareerDemo lang={lang} />
     <EditionTeaser which="career" lang={lang} />
+    <PlateCareer lang={lang} />
   </Fragment>
   <Body />
 </ProjectLayout>
