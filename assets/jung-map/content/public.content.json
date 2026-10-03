@@ -1,0 +1,167 @@
+{
+  "version": 2,
+  "status": "confirmed-by-user-overall",
+  "note": "用户在 2026-10-03 看过 7 站草稿后表示认可（「我喜欢，你继续」），属于整体认可、未逐条修改；用户随时可以改动或撤回任一条。my_take 只写来自用户回答的个人表述；suggestion 是 AI 提出的建议，不代表用户已经在做。七站顺序是作品的叙事安排，不是荣格的理论次序。source 的卷号与段号已于 2026-10-03 对照《荣格全集》（Hull 英译）扫描件的段号标记逐条核对：人格面具、投射、情结、阴影、阿尼玛与阿尼姆斯、自性六站的 source_verified 为 true；「他者的凝视」是叙事主题而非荣格术语，没有原书出处，保持 false 且页面标为叙事主题。核对依据的是扫描件的段号，不是纸书印刷页码。 emotions 为 2026-10-03 新增的情绪节点草稿，用户尚未确认（emotions_confirmed 为 false）；未确认时只有本机预览显示。",
+  "stations": [
+    {
+      "id": "persona",
+      "name_zh": "人格面具",
+      "name_en": "Persona",
+      "kind": "jung-concept",
+      "jung_concept": "Persona 指一个人在社会中呈现给他人的角色与形象，是集体心理的一部分，被体验为属于自己；它帮助人适应环境，但也可能被误当成全部的自己。",
+      "source": "荣格《自我与无意识的关系》，CW 7, §§243–247（核心定义 §245；另见 §305）",
+      "source_verified": true,
+      "my_take": "我很在意自己呈现出的样子：外貌、能力与自律。",
+      "suggestion": "可选尝试：把「我想呈现的样子」和「我实际需要的东西」分开写下来看看。",
+      "motion": "一排面具缓慢并立，镜头穿过时轻微偏移。",
+      "keyframes": [
+        "K1"
+      ],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "想被认可",
+        "疲于扮演",
+        "对自律的要求"
+      ],
+      "emotions_confirmed": false
+    },
+    {
+      "id": "gaze",
+      "name_zh": "他者的凝视",
+      "name_en": "The Gaze of the Other",
+      "kind": "narrative-theme",
+      "jung_concept": "这一站是作品的叙事主题，不是荣格的专门术语。它借用的意思是：自我形象的形成离不开他人的目光与回应。「凝视」一词在思想史上更常与萨特、拉康相关。",
+      "source": "叙事主题；灵感来自参考短片中的「他者」一词，与萨特、拉康的「凝视」概念相近，非荣格术语",
+      "source_verified": false,
+      "my_take": "我希望被认真看见，也希望在重要的关系里是特别的。",
+      "suggestion": "可选尝试：把「被认真对待」和「事事被优先」分开，直接说出自己的需要。",
+      "motion": "巨眼随镜头转动，视线始终对着观者。",
+      "keyframes": [
+        "K2"
+      ],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "渴望被看见",
+        "怕被看穿",
+        "想被优先"
+      ],
+      "emotions_confirmed": false
+    },
+    {
+      "id": "projection",
+      "name_zh": "投射",
+      "name_en": "Projection",
+      "kind": "jung-concept",
+      "jung_concept": "投射是一种无意识的自动过程：个体自己的无意识内容被体验为外部对象或他人的属性，因而被「看」在别人身上。内容可以是不愿承认的特质，也可以是尚未意识到的渴望。",
+      "source": "荣格《心理类型》，CW 6, §783（定义章）；《埃翁》，CW 9ii, §17（另见 §16）",
+      "source_verified": true,
+      "my_take": "我会羡慕别人，也会反感别人，这些反应值得我留意。",
+      "suggestion": "可选尝试：遇到强烈的羡慕或反感时，先问自己：这在说我的什么需要？",
+      "motion": "粒子被另一团粒子缓慢吸走。",
+      "keyframes": [],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "羡慕",
+        "反感",
+        "攀比"
+      ],
+      "emotions_confirmed": false
+    },
+    {
+      "id": "complex",
+      "name_zh": "情结",
+      "name_en": "Complex",
+      "kind": "jung-concept",
+      "jung_concept": "情结是围绕某种强烈情绪聚集的一组观念与意象，带有相对的自主性，被触动时会比平时更快、更强地接管反应。",
+      "source": "荣格《情结理论综述》，CW 8, §§200–201（情结的定义见 §201；「情结可以拥有我们」见 §200）",
+      "source_verified": true,
+      "my_take": "有些时刻我会强烈感到被忽视、被不公平对待、没有选择权，或付出没有回应。",
+      "suggestion": "可选尝试：感到情绪变强时先暂停、离开现场，平静后再沟通。",
+      "motion": "粒子被拉紧，随后向四周崩开。",
+      "keyframes": [
+        "K3",
+        "K4"
+      ],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "被忽视",
+        "不公平",
+        "没有选择权",
+        "付出没有回应"
+      ],
+      "emotions_confirmed": false
+    },
+    {
+      "id": "shadow",
+      "name_zh": "阴影",
+      "name_en": "Shadow",
+      "kind": "jung-concept",
+      "jung_concept": "阴影是个体不愿承认、被压抑或尚未发展的那部分人格，不只包含令人不安的特质，也可能包含未被使用的力量。",
+      "source": "荣格《埃翁》，CW 9ii, §§13–16（核心 §14）；《原型与集体无意识》，CW 9i, §45",
+      "source_verified": true,
+      "my_take": "我身上有我想改变的部分，我不想假装它不存在。",
+      "suggestion": "可选尝试：把「我做过需要改变的事」和「我整个人没有成长」分开看。",
+      "motion": "一团影子从人形边缘慢慢展开。",
+      "keyframes": [
+        "K5"
+      ],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "愤怒",
+        "羞愧",
+        "想改变的部分"
+      ],
+      "emotions_confirmed": false
+    },
+    {
+      "id": "anima",
+      "name_zh": "阿尼玛 / 阿尼姆斯",
+      "name_en": "Anima / Animus",
+      "kind": "jung-concept",
+      "jung_concept": "阿尼玛指男性心理中的内在女性形象，阿尼姆斯指女性心理中的内在男性形象，二者是意识与无意识之间的中介，常经由对异性的投射被体验。",
+      "source": "荣格《原型与集体无意识》，CW 9i, §66（阿尼玛是生命本身的原型）；《埃翁》，CW 9ii, §§28–29（阿尼姆斯）",
+      "source_verified": true,
+      "my_take": "亲密关系对我很重要，我希望在其中被认真对待。",
+      "suggestion": "可选尝试：分清我对关系的期待，哪些来自对方这个人，哪些来自我心里的形象。",
+      "motion": "两团粒子互相靠近，又保持一点距离。",
+      "keyframes": [],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "渴望亲近",
+        "怕失去",
+        "想被特别对待"
+      ],
+      "emotions_confirmed": false
+    },
+    {
+      "id": "self",
+      "name_zh": "自性",
+      "name_en": "The Self",
+      "kind": "jung-concept",
+      "jung_concept": "自性是心理的统摄性中心，是整体性的原型，涵盖意识与无意识的总和；它是个体化的目标，但这一过程贯穿一生，难以完全完成。",
+      "source": "荣格《埃翁》，CW 9ii, §9",
+      "source_verified": true,
+      "my_take": "我也有不需要证明什么的舒服时刻：雨声、昏暗的灯、音乐，以及作品完成时的满足。",
+      "suggestion": "可选尝试：给这些舒服的时刻留出固定的位置，让生活不只在追赶目标。",
+      "motion": "所有粒子收束成转身的人形，面向观者。",
+      "keyframes": [
+        "K6",
+        "K6b"
+      ],
+      "confirmed": true,
+      "confirmed_note": "用户 2026-10-03 整体认可草稿，未逐条修改",
+      "emotions": [
+        "平静",
+        "满足",
+        "舒服"
+      ],
+      "emotions_confirmed": false
+    }
+  ]
+}
