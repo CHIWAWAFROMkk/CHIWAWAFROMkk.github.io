@@ -1,0 +1,20 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import JungFilm from '../components/JungFilm.astro';
+import JungMap from '../components/JungMap.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/jung-self-map.zh.md';
+import { Content as BodyEn } from '../copy/projects/jung-self-map.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.jung;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout night lang={lang} slug="jung-self-map" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <Fragment slot="demo">
+    <JungFilm lang={lang} />
+    <JungMap lang={lang} />
+  </Fragment>
+  <Body />
+</ProjectLayout>

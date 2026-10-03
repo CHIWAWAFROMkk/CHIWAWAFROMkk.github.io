@@ -1,0 +1,21 @@
+---
+import { JUNG_TEXT } from '../data/jung';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = JUNG_TEXT.film;
+---
+<section class="jf night-zone" data-demo aria-labelledby="jf-h">
+  <div class="wrap">
+    <div class="section-head"><h2 id="jf-h">{T.h[lang]}</h2><span class="meta">{T.meta[lang]}</span></div>
+    <video class="jf__video" controls playsinline preload="metadata" width="1280" height="720" poster="/media/jung-self-map/poster.jpg" aria-label={T.label[lang]}>
+      <source src="/media/jung-self-map/jung-trailer.mp4" type="video/mp4" />
+    </video>
+    <p class="jf__note">{T.note[lang]}</p>
+  </div>
+</section>
+<style>
+  .jf { padding-block: 40px 56px; }
+  .jf__video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #000; }
+  .jf__note { max-width: 46em; margin-top: 14px; color: var(--night-mute); font-size: 14px; }
+</style>

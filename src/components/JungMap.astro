@@ -1,0 +1,47 @@
+---
+import { JUNG_TEXT } from '../data/jung';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = JUNG_TEXT.map;
+---
+<section class="jm night-zone" data-demo data-jung-map aria-labelledby="jm-h">
+  <div class="wrap">
+    <div class="section-head"><h2 id="jm-h">{T.h[lang]}</h2><span class="meta">{T.meta[lang]}</span></div>
+    <p class="jm__intro">{T.intro[lang]}</p>
+    <div class="jm__frame" data-state="idle">
+      <img class="jm__poster" src="/media/jung-self-map/map-poster.jpg" alt={T.posterAlt[lang]} width="1280" height="720" loading="lazy" decoding="async" />
+      <button type="button" class="jm__load" data-jm-load>{T.load[lang]}<small>{T.loadHint[lang]}</small></button>
+      <iframe id="jung-frame" title={T.frameTitle[lang]} data-src="/assets/jung-map/" allow="fullscreen" hidden></iframe>
+    </div>
+    <p class="jm__actions"><a href="/assets/jung-map/">{T.open[lang]} →</a></p>
+    <p class="jm__note">{T.note[lang]}</p>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-jung-map]').forEach(root => {
+    const frame = root.querySelector<HTMLElement>('.jm__frame')!;
+    const btn = root.querySelector<HTMLButtonElement>('[data-jm-load]')!;
+    const iframe = root.querySelector<HTMLIFrameElement>('#jung-frame')!;
+    btn.addEventListener('click', () => {
+      iframe.src = iframe.dataset.src!;
+      iframe.hidden = false;
+      frame.dataset.state = 'running';
+      btn.hidden = true;
+      root.querySelector('.jm__poster')?.setAttribute('hidden', '');
+    });
+  });
+</script>
+<style>
+  .jm { padding-block: 24px 56px; }
+  .jm__intro { max-width: 48em; margin-bottom: 20px; }
+  .jm__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #05070f; }
+  .jm__poster, .jm__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .jm__load { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: 4px; padding: 16px 28px; border: 1.5px solid var(--night-fg); background: var(--night); color: var(--night-fg); font: 700 20px/1.3 var(--font-body); cursor: pointer; }
+  .jm__load small { font-weight: 500; font-size: 13px; color: var(--night-mute); }
+  .jm__load:hover { background: var(--night-fg); color: var(--night); }
+  .jm__load:hover small { color: var(--night); }
+  .jm__actions { margin-top: 14px; font-weight: 500; }
+  .jm__note { max-width: 46em; margin-top: 8px; color: var(--night-mute); font-size: 14px; }
+  @media (max-width: 640px) { .jm__frame { aspect-ratio: 3 / 4; } .jm__poster { object-position: 40% 50%; } }
+</style>
