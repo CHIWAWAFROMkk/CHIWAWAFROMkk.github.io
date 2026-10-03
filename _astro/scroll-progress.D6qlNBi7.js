@@ -1,0 +1,1 @@
+function e(e,t,n,r=.85,i=.5){let a=n*r,o=n*i-t;return Math.min(1,Math.max(0,(a-e)/Math.max(1,a-o)))}export{e as t};

@@ -1,0 +1,1 @@
+import{n as e}from"./odometer-dom.h9iSZioL.js";var t=document.querySelectorAll(`.evidence .num[data-fact]`);if(`IntersectionObserver`in window){let n=new IntersectionObserver(t=>{for(let r of t){if(!r.isIntersecting)continue;n.unobserve(r.target);let t=r.target;e(t,t.textContent??``,200)}},{threshold:.4});t.forEach(e=>n.observe(e))}

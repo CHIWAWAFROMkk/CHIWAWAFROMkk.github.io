@@ -1,0 +1,1 @@
+var e=/\d[\d,]*(?:\.\d+)?/;function t(e,t){let n=e.includes(`.`)?e.split(`.`)[1].length:0,r=Number(e.replace(/,/g,``))*Math.max(0,t);return n?r.toFixed(n):Math.round(r).toLocaleString(`en-US`)}function n(n,r){return r>=1||n.includes(`:`)?n:n.replace(e,e=>t(e,r))}function r(n,r){return r>=1||n.includes(`:`)?n:n.replace(new RegExp(e,`g`),e=>t(e,r))}export{n,r as t};

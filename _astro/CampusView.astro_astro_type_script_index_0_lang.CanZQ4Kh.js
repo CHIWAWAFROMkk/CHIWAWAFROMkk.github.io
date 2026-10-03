@@ -1,0 +1,1 @@
+import{n as e}from"./motion-dom.CrIigkO0.js";var t=[...document.querySelectorAll(`article.prose h3`)];t.forEach(e=>e.classList.add(`decision`)),e(t.flatMap(e=>e.nextElementSibling?[e,e.nextElementSibling]:[e]),0);

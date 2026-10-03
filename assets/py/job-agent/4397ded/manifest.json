@@ -1,0 +1,96 @@
+{
+  "repository": "https://github.com/CHIWAWAFROMkk/personal-job-agent",
+  "commit": "4397ded9c603e7e26d3dc241eb910ce3ad0a749a",
+  "files": [
+    {
+      "path": "job_agent/__init__.py",
+      "bytes": 49,
+      "sha256": "0d209c3afdb65b856d10f0e8c52cd6c22c80c160b3aee28df9481f88de125a43"
+    },
+    {
+      "path": "job_agent/constants.py",
+      "bytes": 1954,
+      "sha256": "c314a0e9f6f492feec9a84fd8be591a417ca3f54bfa1fae5882b11513af9fe7c"
+    },
+    {
+      "path": "job_agent/models/__init__.py",
+      "bytes": 441,
+      "sha256": "413347fc20041115308883283df683975241e9a42c158049b1792e344ab78651"
+    },
+    {
+      "path": "job_agent/models/application.py",
+      "bytes": 1989,
+      "sha256": "d68c7a031a71eab5082fd16a4d20250634a52ae11876cc620c5846e6fdb50760"
+    },
+    {
+      "path": "job_agent/models/application_tracking.py",
+      "bytes": 1895,
+      "sha256": "b662c40ca3840219ebeff4ba2cac3f6b55914ebbbd240e40612ce6f9e5adccbd"
+    },
+    {
+      "path": "job_agent/models/base.py",
+      "bytes": 289,
+      "sha256": "5d8261a100a31f092256120e4a36ba6c390d49a7cd3bf065e01814585fd14664"
+    },
+    {
+      "path": "job_agent/models/commute.py",
+      "bytes": 884,
+      "sha256": "0a2c443bb4e1eecf81c4ed0b17afeedff7dabfe47e2434d4dea7a15d70b85a8f"
+    },
+    {
+      "path": "job_agent/models/interview_debrief.py",
+      "bytes": 1974,
+      "sha256": "bfa233a4a1be09fdfa23567ecbe35e884a9d2c727a1d793f0e32b0ac2f91c6ec"
+    },
+    {
+      "path": "job_agent/models/job.py",
+      "bytes": 4247,
+      "sha256": "8734e178fe7b308eaa80207d07282a4088b7aa858ec021c1a74057af3140285b"
+    },
+    {
+      "path": "job_agent/models/job_record.py",
+      "bytes": 4198,
+      "sha256": "f5e4b064c12d9631a4921479894d5d2d4f443c47c9785bf089b5a0a0e7aaf705"
+    },
+    {
+      "path": "job_agent/models/profile.py",
+      "bytes": 11340,
+      "sha256": "5da0eb566c561de44e8e5cd6b001b9104a0ab06516021576c444f43cb1f599a1"
+    },
+    {
+      "path": "job_agent/services/__init__.py",
+      "bytes": 29,
+      "sha256": "ac74225afed0c30c874dafb9fa708dfeab2d64ebe9b488a345e7e3119a6092fa"
+    },
+    {
+      "path": "job_agent/services/application_pack.py",
+      "bytes": 31014,
+      "sha256": "8001a6ff063f5b6ef88ae891d38c0a109b1372a517ffb5f531f92ddc5ad1028b"
+    },
+    {
+      "path": "job_agent/services/job_repository.py",
+      "bytes": 71347,
+      "sha256": "517c60385d3a2dc711c189a502662426eaa795e47104fcaa09cec2d08b4ba197"
+    },
+    {
+      "path": "job_agent/services/local_matcher.py",
+      "bytes": 27162,
+      "sha256": "c3cb04e8bd74c988ea0e532f630dbf54c1cc04324018b87d132f685cba36a509"
+    },
+    {
+      "path": "job_agent/services/tracking_parser.py",
+      "bytes": 10534,
+      "sha256": "f084237da843c0bd01bfc71a9be40de5f20625e0b0611903aef9397edaf6b668"
+    },
+    {
+      "path": "tests/helpers.py",
+      "bytes": 2530,
+      "sha256": "066315919394f35fcaf25d1f07ae81fce2b57f93c7d7f3f6e4cddd6449402ec9"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1111,
+      "sha256": "8be20ee3b1fe97faac840bf30dfe00bbe0cde0a379d3e481066cdcb8bebff224"
+    }
+  ]
+}

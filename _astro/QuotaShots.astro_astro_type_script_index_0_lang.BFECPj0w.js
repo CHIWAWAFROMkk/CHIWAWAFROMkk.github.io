@@ -1,0 +1,1 @@
+import{n as e}from"./motion-dom.CrIigkO0.js";e(document.querySelectorAll(`.qshots figure`),140);

@@ -1,0 +1,1 @@
+function e(e=60){let t=1e3/e,n=NaN;return e=>Number.isNaN(n)?(n=e,!0):e-n<t-1?!1:(n+=Math.floor((e-n+1)/t)*t,!0)}export{e as t};
