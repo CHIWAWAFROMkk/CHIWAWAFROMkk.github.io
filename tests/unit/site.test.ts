@@ -30,9 +30,9 @@ describe('SITE copy', () => {
     }
   });
 
-  it('brief lists five data projects and one film', () => {
+  it('brief lists six data projects and one film', () => {
     const inBrief = SITE.projects.filter(p => p.inBrief);
-    expect(inBrief.filter(p => p.line === 'data')).toHaveLength(5);
+    expect(inBrief.filter(p => p.line === 'data')).toHaveLength(6);
     expect(inBrief.filter(p => p.line === 'film')).toHaveLength(1);
   });
 
