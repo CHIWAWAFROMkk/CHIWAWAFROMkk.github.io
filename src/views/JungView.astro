@@ -2,6 +2,7 @@
 import ProjectLayout from '../layouts/ProjectLayout.astro';
 import JungFilm from '../components/JungFilm.astro';
 import JungMap from '../components/JungMap.astro';
+import JungHandbook from '../components/JungHandbook.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/jung-self-map.zh.md';
 import { Content as BodyEn } from '../copy/projects/jung-self-map.en.md';
@@ -17,4 +18,5 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
     <JungMap lang={lang} />
   </Fragment>
   <Body />
+  <JungHandbook lang={lang} />
 </ProjectLayout>

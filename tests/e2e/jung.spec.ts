@@ -55,8 +55,20 @@ test('the English Jung page carries no Chinese', async ({ page, isMobile }) => {
   expect(text.match(/[一-鿿]+/g) ?? []).toEqual([]);
 });
 
-test('the page states that the film uses no unlicensed music', async ({ page }) => {
+test('the page credits the licensed music', async ({ page }) => {
   await skipIntro(page);
   await page.goto('/projects/jung-self-map/');
-  await expect(page.locator('.prose')).toContainText('没有使用未获授权的音乐');
+  await expect(page.locator('.prose')).toContainText('Alone Again');
+  await expect(page.locator('.prose')).not.toContainText('待取得授权');
 });
+
+for (const lang of ['zh', 'en'] as const) {
+  test(`the handbook (${lang}) has seven stations, each with a source, and marks the narrative theme`, async ({ page }) => {
+    await skipIntro(page);
+    await page.goto(`${lang === 'en' ? '/en' : ''}/projects/jung-self-map/`);
+    const items = page.locator('#handbook .hb__item');
+    await expect(items).toHaveCount(7);
+    await expect(page.locator('#handbook .hb__src')).toHaveCount(7);
+    await expect(page.locator('#handbook .hb__tag').nth(1)).toHaveText(lang === 'zh' ? '叙事主题' : 'Narrative theme');
+  });
+}

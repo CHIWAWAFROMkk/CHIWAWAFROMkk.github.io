@@ -285,8 +285,8 @@ export const SITE = {
         task: { zh: '把人格面具、他者的凝视、投射、情结、阴影、阿尼玛与阿尼姆斯、自性连成一条通向“我”的路线；既能操作，也能当短片看。', en: 'Join persona, the gaze of the other, projection, complex, shadow, anima and animus, and the self into one route that ends at “me” — something you can operate, and something you can watch as a film.' },
         mine: { zh: '写文案并逐条核对引文出处；设计星图的路线、镜头与交互；用数据驱动的方式写剪辑、字幕与混音；挑选并审阅 AI 生成的画面与口播。', en: 'Wrote the copy and checked each quotation against its source; designed the map’s route, camera and interaction; wrote the edit, subtitles and mix as data-driven code; chose and reviewed the AI-generated pictures and voice.' },
         tools: { zh: 'GPT 图像生成关键帧；即梦 Seedance 生成口播；Three.js 与 WebGL 着色器做星图与成片渲染；Python、numpy、ffmpeg 做剪辑数据、混音与合成。', en: 'GPT image generation for keyframes; Jimeng Seedance for the voice-over; Three.js and WebGL shaders for the map and the film render; Python, numpy and ffmpeg for the edit data, mix and encode.' },
-        evidence: { zh: '本页的短片与星图都能直接播放、操作；五句引文附出处；星图中每条出处的核对状态逐条标注。', en: 'The film and the map on this page play and respond directly; each of the five quotations carries its source; the map marks the verification status of every citation.' },
-        status: { zh: '短片与星图已完成；配乐待取得授权后更新，当前为合成底乐。', en: 'Film and map finished; the music will be updated once a licence is secured — the current version uses a synthesized bed.' },
+        evidence: { zh: '本页的短片与星图都能直接播放、操作；五句引文与手册中的每个概念都附出处，核对状态逐条标注。', en: 'The film and the map on this page play and respond directly; the five quotations and every concept in the handbook carry their sources, with verification status marked one by one.' },
+        status: { zh: '短片、星图与自我探究手册均已完成。', en: 'Film, map and self-inquiry handbook are finished.' },
       },
     },
     hris: {

@@ -1,0 +1,50 @@
+---
+import { HANDBOOK } from '../data/jung-handbook';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = HANDBOOK.labels;
+---
+<section class="hb" id="handbook" aria-labelledby="hb-h">
+  <h2 id="hb-h">{HANDBOOK.title[lang]}</h2>
+  <p class="hb__intro">{HANDBOOK.intro[lang]}</p>
+  <ol class="hb__list">
+    {HANDBOOK.entries.map(e => (
+      <li class="hb__item">
+        <header class="hb__head">
+          <h3>{e.name[lang]}</h3>
+          <span class="hb__tag">{(e.narrative ? L.narrative : L.concept_tag)[lang]}</span>
+        </header>
+        <div class="hb__grid">
+          <div class="hb__col">
+            <h4>{L.concept[lang]}</h4>
+            <p>{e.concept[lang]}</p>
+            <p class="hb__src"><span>{L.source[lang]}</span> {e.source[lang]}</p>
+          </div>
+          <div class="hb__col">
+            <h4>{L.mine[lang]}</h4>
+            <p>{e.mine[lang]}</p>
+            <h4>{L.try[lang]}</h4>
+            <p>{e.try[lang]}</p>
+          </div>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+<style>
+  .hb { margin-top: 56px; padding-top: 32px; border-top: var(--rule); }
+  .hb__intro { max-width: 46em; margin-bottom: 24px; }
+  .hb__list { display: grid; margin: 0; padding: 0; list-style: none; counter-reset: station; }
+  .hb__item { padding-block: 24px; border-top: var(--hair); counter-increment: station; }
+  .hb__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 14px; }
+  .hb__head h3 { margin: 0; font-size: clamp(22px, 2.4vw, 30px); }
+  .hb__head h3::before { content: counter(station, decimal-leading-zero) '  '; color: var(--red-text); font-size: 0.6em; letter-spacing: 0.06em; }
+  .hb__tag { padding: 2px 10px; border: 1.5px solid var(--ink); font-size: 13px; font-weight: 500; }
+  .hb__grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px clamp(24px, 4vw, 56px); }
+  .hb__col h4 { margin: 0 0 4px; color: var(--mute); font: 700 13px/1.6 var(--font-body); letter-spacing: 0.04em; }
+  .hb__col p { max-width: 38em; margin-bottom: 14px; }
+  .hb__src { color: var(--mute); font-size: 14px; }
+  .hb__src span { font-weight: 700; margin-right: 6px; }
+  @media (max-width: 760px) { .hb__grid { grid-template-columns: 1fr; } }
+</style>
