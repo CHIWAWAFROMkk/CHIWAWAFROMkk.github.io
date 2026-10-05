@@ -24,6 +24,8 @@ export function validateContent(data) {
     if (typeof s.emotions_confirmed !== 'boolean') errors.push(`${s.id}.emotions_confirmed 不是布尔值`);
     if (typeof s.confirmed !== 'boolean') errors.push(`${s.id}.confirmed 不是布尔值`);
     if (typeof s.source_verified !== 'boolean') errors.push(`${s.id}.source_verified 不是布尔值`);
+    for (const f of ['jung_concept_en', 'source_en', 'my_take_en', 'suggestion_en'])   // 英文字段可选；给了就必须是非空字符串
+      if (f in s && (typeof s[f] !== 'string' || !s[f].trim())) errors.push(`${s.id}.${f} 必须是非空字符串`);
   });
   return { ok: errors.length === 0, errors };
 }
