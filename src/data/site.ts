@@ -203,13 +203,13 @@ export const SITE = {
       title: { zh: 'AI 校园应用研究', en: 'AI on Campus — Study' },
       lead: { zh: '当 AI 可以写出答案，我们怎样判断任务真的完成了？', en: 'When AI can write the answer, how do we know the task is really done?' },
       description: { zh: 'AI 在校园生活与现实生活中的应用研究：文献综合、场景分析与五段式任务评估框架，附问卷、统计程序与证据台账。', en: 'A study of AI in campus and everyday life: literature synthesis, scenario analysis and a five-stage task evaluation framework, with the questionnaire, analysis program and evidence ledger.' },
-      tags: [ { zh: '大创项目 · 2024.03—2024.07', en: 'Student research · 2024.03—2024.07' }, { zh: '校级大学生创新创业项目一等奖（项目组长）', en: 'First Prize, university student innovation programme (team lead)' } ],
+      tags: [ { zh: '大创项目 · 2024.03—2024.07', en: 'Student research · 2024.03—2024.07' }, { zh: '校级大学生创新创业项目一等奖（项目组长）', en: 'First Prize, university student innovation programme (team lead)' }, { zh: '公开版 · 重建材料', en: 'Public edition · rebuilt materials' } ],
       summary: {
         task: { zh: '从大学生活里的具体任务出发，研究 AI 在哪些场景可用，以及"感觉有帮助"是否意味着任务做得更好。', en: 'Start from concrete tasks in student life and ask where AI helps — and whether "it felt helpful" means the task was done better.' },
-        mine: { zh: '项目组长：梳理文献、设计研究方案与问卷，编写数据校验与统计程序，提炼五段式任务评估框架。', en: 'Team lead: reviewed the literature, designed the study and questionnaire, wrote the data-checking and statistics program, and distilled the five-stage task evaluation framework.' },
+        mine: { zh: '原项目（项目组长）：组织团队，设计问卷，清洗数据并做交叉统计，撰写研究报告并答辩。公开重建：原始问卷、数据与文稿没有保留，我根据回忆和现有材料重新整理文献综合、问卷口径和五段式任务评估框架，并编写数据校验与统计程序。', en: 'Original project (team lead): organised the team, designed the questionnaire, cleaned the data and ran cross-tabulations, wrote the report and defended it. Public rebuild: the original questionnaire, data and paper were not kept, so from memory and surviving materials I re-assembled the literature synthesis, the questionnaire definitions and the five-stage evaluation framework, and wrote the data-checking and statistics program.' },
         tools: { zh: 'Python 标准库校验字段、日期、枚举与评分并做统计，程序与测试一起公开；文献与产品发布信息来自公开资料。', en: 'The Python standard library checks fields, dates, categories and ratings and computes the statistics, published with its tests; literature and product-release facts come from public sources.' },
         evidence: { zh: '研究稿、文献证据台账、问卷与统计口径、分析程序与测试。', en: 'The research paper, the evidence ledger, the questionnaire with its definitions, and the analysis program with tests.' },
-        status: { zh: '已完成，获校级一等奖；研究成果为文献综合与任务评估框架，公开版不含原始问卷数据。', en: 'Finished, awarded a university first prize; the outcome is a literature synthesis and an evaluation framework — the public version contains no raw survey data.' },
+        status: { zh: '原项目已结题，获校级一等奖；本页是为作品集重建的公开版本，不含任何原始问卷数据，也不沿用当年的样本数或统计结论。', en: 'The original project is finished and won a university first prize; this page is a public edition rebuilt for the portfolio — it contains no raw survey data and reuses none of the original sample sizes or statistics.' },
       },
     },
     careerLive: {

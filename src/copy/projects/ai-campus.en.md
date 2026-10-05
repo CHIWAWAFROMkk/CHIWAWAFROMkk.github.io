@@ -1,5 +1,10 @@
 A study that starts from university life: when AI can write the answer, how do we know the task is really done?
 
+## What dates from 2024, and what from 2026
+
+- **The original project (2024.03—2024.07)**: the research topic, the team and the award. As team lead I organised the team, designed the questionnaire, cleaned the data and ran cross-tabulations, and wrote and defended the report. The originals (questionnaire, data, report) were not kept.
+- **The 2026 public rebuild**: every download on this page — the research paper, the evidence ledger (literature searched in September 2026), the questionnaire definitions, and the analysis program with its tests — was re-assembled for the portfolio. None of it is an original from 2024, and none of the original sample sizes or statistics are reused.
+
 ## An answer is not yet a finished task
 
 Writing a notice, explaining a concept, planning an event. The most ordinary campus tasks often carry dates, conditions and responsibilities at once. After the text is generated, someone still has to check what it left out.
