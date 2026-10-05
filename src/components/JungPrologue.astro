@@ -1,5 +1,6 @@
 ---
 import { PROLOGUE_FRAMES, PROLOGUE_TEXT as T } from '../data/jung-prologue';
+import Magnet from './rb/Magnet.astro';
 import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -14,8 +15,8 @@ const first = PROLOGUE_FRAMES[0];
     <p class="jp__big" lang="en"><span class="jp__line"><span>JUNG</span></span><span class="jp__line"><span>× ME</span></span></p>
     <p class="jp__sub">{T.sub[lang]}</p>
     <div class="jp__actions">
-      <a class="jp__btn" href="#jf-h">{T.film[lang]}</a>
-      <button type="button" class="jp__btn jp__btn--ghost" data-jp-map>{T.map[lang]}</button>
+      <Magnet><a class="jp__btn" href="#jf-h">{T.film[lang]}</a></Magnet>
+      <Magnet><button type="button" class="jp__btn jp__btn--ghost" data-jp-map>{T.map[lang]}</button></Magnet>
     </div>
   </div>
   <p class="jp__quote" data-jp-quote aria-hidden="true"><span class="jp__q" data-q="en"></span><span class="jp__q" data-q="zh"></span></p>

@@ -6,7 +6,10 @@ const { lang } = Astro.props;
 const R = FILM_TEXT.red;
 ---
 <figure class="fr wrap" data-film>
-  <img src="/media/mais-je-taime/s04.webp" alt={R.alt[lang]} width="1200" height="675" decoding="async" />
+  <div class="fr__frame" data-fm="bloom">
+    <img class="fm-still" src="/media/mais-je-taime/s04.webp" alt={R.alt[lang]} width="1200" height="675" decoding="async" />
+    <img class="fm-mono" src="/media/mais-je-taime/s04.webp" alt="" aria-hidden="true" width="1200" height="675" decoding="async" />
+  </div>
   <figcaption>
     <h2>{R.h[lang]}</h2>
     <p>{R.p[lang]}</p>

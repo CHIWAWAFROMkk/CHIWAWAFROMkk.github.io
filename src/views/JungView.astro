@@ -4,6 +4,7 @@ import JungPrologue from '../components/JungPrologue.astro';
 import JungFilm from '../components/JungFilm.astro';
 import JungMap from '../components/JungMap.astro';
 import JungHandbook from '../components/JungHandbook.astro';
+import FilmMotion from '../components/FilmMotion.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/jung-self-map.zh.md';
 import { Content as BodyEn } from '../copy/projects/jung-self-map.en.md';
@@ -13,7 +14,7 @@ const { lang } = Astro.props;
 const P = SITE.pages.jung;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
-<ProjectLayout night motion={false} lang={lang} slug="jung-self-map" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout night deferTitle lang={lang} slug="jung-self-map" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <JungPrologue slot="top" lang={lang} />
   <Fragment slot="demo">
     <JungFilm lang={lang} />
@@ -21,6 +22,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   </Fragment>
   <Body />
   <JungHandbook lang={lang} />
+  <FilmMotion />
 </ProjectLayout>
 <script>
   import { reveal } from '../scripts/motion-dom';

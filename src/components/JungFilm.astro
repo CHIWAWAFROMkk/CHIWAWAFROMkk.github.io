@@ -8,9 +8,11 @@ const T = JUNG_TEXT.film;
 <section class="jf night-zone" data-demo aria-labelledby="jf-h">
   <div class="wrap">
     <div class="section-head"><h2 id="jf-h">{T.h[lang]}</h2><span class="meta">{T.meta[lang]}</span></div>
+    <div class="jf__frame" data-fm="letterbox">
     <video class="jf__video" controls playsinline preload="metadata" width="1280" height="720" poster="/media/jung-self-map/poster.jpg" aria-label={T.label[lang]}>
       <source src="/media/jung-self-map/jung-trailer.mp4" type="video/mp4" />
     </video>
+    </div>
     <p class="jf__note">{T.note[lang]}</p>
   </div>
 </section>
