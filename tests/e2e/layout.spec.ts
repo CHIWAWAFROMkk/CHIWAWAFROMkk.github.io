@@ -21,3 +21,16 @@ for (const p of PAGES) {
     await page.screenshot({ path: `test-results/screens/${name}.png`, fullPage: true });
   });
 }
+
+for (const path of ['/brief/', '/projects/']) {
+  test(`on a wide screen the project rows line up with the page above them (${path})`, async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'wide desktop only');
+    await page.setViewportSize({ width: 1920, height: 1000 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });                 // measure where the rows rest, not mid-entrance
+    await page.addInitScript(() => { try { localStorage.setItem('hyj-intro-seen', '1'); } catch { /* storage blocked */ } });
+    await page.goto(path);
+    const left = (sel: string) => page.locator(sel).first().evaluate(el => Math.round(el.getBoundingClientRect().left));
+    const heading = await left('main h1'), row = await left('a.prow > .prow__n');
+    expect(Math.abs(row - heading)).toBeLessThanOrEqual(1);
+  });
+}

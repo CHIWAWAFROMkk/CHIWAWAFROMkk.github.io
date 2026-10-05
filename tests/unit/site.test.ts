@@ -30,10 +30,10 @@ describe('SITE copy', () => {
     }
   });
 
-  it('brief lists six data projects and one film', () => {
+  it('brief lists five data projects and two films', () => {
     const inBrief = SITE.projects.filter(p => p.inBrief);
-    expect(inBrief.filter(p => p.line === 'data')).toHaveLength(6);
-    expect(inBrief.filter(p => p.line === 'film')).toHaveLength(1);
+    expect(inBrief.filter(p => p.line === 'data')).toHaveLength(5);
+    expect(inBrief.filter(p => p.line === 'film')).toHaveLength(2);
   });
 
   it('never claims the unsupported 70% metric', () => {

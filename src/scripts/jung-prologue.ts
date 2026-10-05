@@ -1,7 +1,7 @@
 /** The Jung page's opening: the film's keyframes composited live in WebGL2 — the same idea as the film's renderer
  *  (two layers, crossfade or push-through, slow push-in), plus a little paint grain and a vignette.
  *  Falls back to the still picture when motion is reduced, WebGL2 is missing, the context is lost, or the device is slow. */
-import { shotAt } from './jung-prologue-timeline';
+import { shotAt, segmentProgress } from './jung-prologue-timeline';
 import { frameCap } from './frame-cap';
 import { PROBE_START, probeStep, decideQuality, type Probe } from './cinema/quality';
 
@@ -55,7 +55,8 @@ async function loadImage(src: string): Promise<HTMLImageElement> {
 export async function startJungPrologue(root: HTMLElement, frames: Frame[], lang: 'zh' | 'en'): Promise<void> {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;          // stays on the still picture
   const canvas = root.querySelector<HTMLCanvasElement>('canvas')!;
-  const quoteEl = root.querySelector<HTMLElement>('[data-jp-quote]');
+  const qEn = root.querySelector<HTMLElement>('[data-q="en"]'), qZh = root.querySelector<HTMLElement>('[data-q="zh"]');
+  const bars = [...root.querySelectorAll<HTMLElement>('[data-jp-bar] b')];
   const fpsEl = root.querySelector<HTMLElement>('[data-jp-fps]');
   const gl = canvas.getContext('webgl2', { antialias: false, alpha: false, premultipliedAlpha: false });
   if (!gl) return;
@@ -114,7 +115,13 @@ export async function startJungPrologue(root: HTMLElement, frames: Frame[], lang
 
   const cap = frameCap(60);
   let clock = 0, last = performance.now(), lastQuote = -1, probe: Probe = PROBE_START, frames60 = 0, fpsT = 0;
-  const lines = frames.map(f => (f.quote ? (lang === 'zh' ? `${f.quote.en}\n${f.quote.zh}` : f.quote.en) : ''));
+  // A line rises into place as it appears: the English first, the Chinese a beat later (Chinese page only).
+  const place = (el: HTMLElement | null, q: number) => {
+    if (!el) return;
+    el.style.opacity = q.toFixed(3);
+    el.style.transform = `translateY(${((1 - q) * 10).toFixed(2)}px)`;
+    el.style.letterSpacing = `${((1 - q) * 0.06).toFixed(4)}em`;
+  };
 
   const draw = (now: number) => {
     if (stopped) return;
@@ -143,9 +150,17 @@ export async function startJungPrologue(root: HTMLElement, frames: Frame[], lang
     gl.uniform1f(U.time, clock);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-    if (quoteEl) {
-      if (s.a !== lastQuote) { quoteEl.textContent = lines[s.a]; lastQuote = s.a; }
-      quoteEl.style.opacity = String(lines[s.a] ? s.quote : 0);
+    if (s.a !== lastQuote) {
+      const q = frames[s.a].quote;
+      if (qEn) qEn.textContent = q ? q.en : '';
+      if (qZh) qZh.textContent = q && lang === 'zh' ? q.zh : '';
+      lastQuote = s.a;
+    }
+    {
+      const q = frames[s.a].quote ? s.quote : 0;
+      place(qEn, q);
+      place(qZh, Math.min(1, Math.max(0, q * 1.35 - 0.35)));
+      segmentProgress(clock, frames.length).forEach((v, i) => { if (bars[i]) bars[i].style.transform = `scaleX(${v.toFixed(4)})`; });
     }
     root.dataset.shot = String(s.a);
     if (root.dataset.state !== 'live') { root.dataset.state = 'live'; canvas.dataset.ready = ''; }

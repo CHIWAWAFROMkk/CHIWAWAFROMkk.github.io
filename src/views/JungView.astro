@@ -22,3 +22,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   <Body />
   <JungHandbook lang={lang} />
 </ProjectLayout>
+<script>
+  import { reveal } from '../scripts/motion-dom';
+  reveal(document.querySelectorAll('.prose table tbody tr'), 70);
+</script>

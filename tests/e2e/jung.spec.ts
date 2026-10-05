@@ -170,3 +170,41 @@ test('the English page opens the map in English: station names, text and control
   expect(story).toContain('Narrative theme');
   await expect(inner.locator('#btn-over')).toHaveText('Back to the map');
 });
+
+// ---- Motion polish: nothing is left hidden, nothing jumps ----
+test('with reduced motion every quotation row and handbook station is visible at once', async ({ page }) => {
+  await skipIntro(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/projects/jung-self-map/');
+  await page.waitForTimeout(600);
+  for (const sel of ['.prose table tbody tr', '#handbook .hb__item']) {
+    const hidden = await page.locator(sel).evaluateAll(els => els.filter(el => getComputedStyle(el).opacity !== '1').length);
+    expect(hidden, sel).toBe(0);
+  }
+  await expect(page.locator('.jp__line > span').first()).toBeVisible();
+});
+
+test('the opening shows a six-part progress bar that fills with its clock', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await skipIntro(page);
+  await page.goto('/projects/jung-self-map/');
+  test.skip(!(await hasWebGL2(page)), 'no WebGL2 in this browser');
+  const jp = page.locator('[data-jung-prologue]');
+  await expect(jp).toHaveAttribute('data-state', 'live', { timeout: 10000 });
+  await expect(page.locator('[data-jp-bar] b')).toHaveCount(6);
+  await expect.poll(() => page.locator('[data-jp-bar] b').first().evaluate(el => new DOMMatrix(getComputedStyle(el).transform).a), { timeout: 8000 }).toBeGreaterThan(0.2);
+  await expect.poll(() => page.locator('[data-q="en"]').evaluate(el => Number(getComputedStyle(el).opacity)), { timeout: 8000 }).toBeGreaterThan(0.5);
+});
+
+test('scrolling through the page causes no layout shift', async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as unknown as { __cls: number }).__cls = 0;
+    new PerformanceObserver(list => {
+      for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+    }).observe({ type: 'layout-shift', buffered: true });
+  });
+  await skipIntro(page);
+  await page.goto('/projects/jung-self-map/');
+  for (let y = 0; y < 6; y++) { await page.mouse.wheel(0, 900); await page.waitForTimeout(250); }
+  expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBeLessThan(0.1);
+});

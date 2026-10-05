@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shotAt, HOLD, TRANS, PERIOD, KINDS } from '../../src/scripts/jung-prologue-timeline';
+import { shotAt, segmentProgress, HOLD, TRANS, PERIOD, KINDS } from '../../src/scripts/jung-prologue-timeline';
 import { PROLOGUE_FRAMES } from '../../src/data/jung-prologue';
 
 const N = PROLOGUE_FRAMES.length;
@@ -91,5 +91,21 @@ describe('the opening’s frames and lines', () => {
       'Whoever looks into the mirror of the water will see first of all his own face.',
     ]);
     for (const f of PROLOGUE_FRAMES) if (f.quote) expect(f.quote.zh.length).toBeGreaterThan(4);
+  });
+});
+
+describe('the opening’s progress bar', () => {
+  it('fills the pictures already shown, part of the current one, none of the rest', () => {
+    const p = segmentProgress(2 * PERIOD + PERIOD / 2, N);
+    expect(p).toHaveLength(N);
+    expect(p.slice(0, 2)).toEqual([1, 1]);
+    expect(p[2]).toBeCloseTo(0.5, 5);
+    expect(p.slice(3)).toEqual([0, 0, 0]);
+  });
+
+  it('starts empty and starts over with each loop', () => {
+    expect(segmentProgress(0, N)).toEqual([0, 0, 0, 0, 0, 0]);
+    const a = segmentProgress(N * PERIOD + 1, N), b = segmentProgress(1, N);
+    a.forEach((v, i) => expect(v).toBeCloseTo(b[i], 9));
   });
 });

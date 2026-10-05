@@ -108,14 +108,14 @@ export const SITE = {
       title: { zh: 'CSV 数据分析工具', en: 'CSV Analysis Tool' },
       did: { zh: '上传表格即可检查缺失与重复、查看统计与分布', en: 'Upload a table to check gaps and duplicates and see its statistics' },
       status: { zh: '原型 · 构造样本', en: 'Prototype · synthetic sample' } }),
-    project({ slug: 'jung-self-map', line: 'data', preview: '/assets/editorial/jung-map.svg', inBrief: true,
-      title: { zh: '荣格 × 我', en: 'Jung × Me' },
-      did: { zh: '把六个荣格概念和一个叙事主题做成一张能操作的三维星图和一部短片，画面与口播由 AI 生成，剪辑、渲染与混音由代码完成', en: 'Six Jungian concepts and one narrative theme as an interactive 3D star map and a short film: AI-generated pictures and voice, with editing, rendering and mixing done in code' },
-      status: { zh: '个人作品 · 短片与星图可直接体验', en: 'Personal work · film and map ready to explore' } }),
     project({ slug: 'mais-je-taime', line: 'film', inBrief: true,
       title: { zh: "Mais je t'aime", en: "Mais je t'aime" },
       did: { zh: 'AI 短片的分镜、人物与道具连续性设计，按 BGM 卡点', en: 'Storyboard, character and prop continuity for an AI short, cut to the beat' },
       status: { zh: '成片完成 · AI 短片', en: 'Finished · AI short film' } }),
+    project({ slug: 'jung-self-map', line: 'film', preview: '/assets/editorial/jung-map.svg', inBrief: true,
+      title: { zh: '荣格 × 我', en: 'Jung × Me' },
+      did: { zh: '把六个荣格概念和一个叙事主题做成一张能操作的三维星图和一部短片，画面与口播由 AI 生成，剪辑、渲染与混音由代码完成', en: 'Six Jungian concepts and one narrative theme as an interactive 3D star map and a short film: AI-generated pictures and voice, with editing, rendering and mixing done in code' },
+      status: { zh: '个人作品 · 短片与星图可直接体验', en: 'Personal work · film and map ready to explore' } }),
   ] satisfies ProjectEntry[],
   pages: {
     home: {

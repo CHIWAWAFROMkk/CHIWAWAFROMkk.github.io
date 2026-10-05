@@ -45,3 +45,13 @@ export function shotAt(t: number, n: number): Shot {
   const quote = u >= HOLD ? 0 : Math.min(smooth((u - 0.5) / 0.6), smooth((HOLD - u) / 0.6));
   return { a, b, mix: p, zoomA, zoomB, quote, kind };
 }
+
+/** The progress bar: 1 for pictures already shown in this loop, the share of its period for the current one, 0 for the rest. */
+export function segmentProgress(t: number, n: number): number[] {
+  const loop = n * PERIOD;
+  let local = t % loop;
+  if (local < 0) local += loop;
+  const a = Math.min(n - 1, Math.floor(local / PERIOD + 1e-9));
+  const within = Math.min(1, Math.max(0, (local - a * PERIOD) / PERIOD));
+  return Array.from({ length: n }, (_, i) => (i < a ? 1 : i === a ? within : 0));
+}

@@ -9,6 +9,8 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
     expect(await page.locator('a.prow').evaluateAll(as => as.map(a => a.getAttribute('href')))).toEqual(data);
     const film = page.locator('.night-zone a[href$="/projects/mais-je-taime/"]');
     await expect(film).toBeVisible();
+    await expect(page.locator('.night-zone a[href$="/projects/jung-self-map/"]')).toBeVisible();   // AI film, not a data tool
+    await expect(page.locator('.night-zone a[href$="/projects/jung-self-map/"] img')).toHaveCount(4);
     await expect(page.locator('header.nav a[aria-current="page"]')).toHaveText(SITE.nav.projects[lang]);
     expect(await noHorizontalOverflow(page)).toBe(true);
   });

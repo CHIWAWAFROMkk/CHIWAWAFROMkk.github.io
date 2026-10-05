@@ -11,21 +11,26 @@ const first = PROLOGUE_FRAMES[0];
   <canvas class="jp__canvas" aria-hidden="true"></canvas>
   <div class="jp__veil" aria-hidden="true"></div>
   <div class="jp__text wrap">
-    <p class="jp__big" lang="en">JUNG<br />× ME</p>
+    <p class="jp__big" lang="en"><span class="jp__line"><span>JUNG</span></span><span class="jp__line"><span>× ME</span></span></p>
     <p class="jp__sub">{T.sub[lang]}</p>
     <div class="jp__actions">
       <a class="jp__btn" href="#jf-h">{T.film[lang]}</a>
       <button type="button" class="jp__btn jp__btn--ghost" data-jp-map>{T.map[lang]}</button>
     </div>
   </div>
-  <p class="jp__quote" data-jp-quote aria-hidden="true"></p>
+  <p class="jp__quote" data-jp-quote aria-hidden="true"><span class="jp__q" data-q="en"></span><span class="jp__q" data-q="zh"></span></p>
+  <div class="jp__bar" aria-hidden="true" data-jp-bar>{PROLOGUE_FRAMES.map(() => <i><b></b></i>)}</div>
   <p class="jp__hud" aria-hidden="true" data-demo>WEBGL2 · 6 KEYFRAMES · <b data-jp-fps>--</b> FPS</p>
 </section>
 <script>
   import { startJungPrologue } from '../scripts/jung-prologue';
   import { PROLOGUE_FRAMES } from '../data/jung-prologue';
+  import { onScroll } from '../scripts/motion-dom';
   const root = document.querySelector<HTMLElement>('[data-jung-prologue]');
   if (root) {
+    // Scrolling away: the picture dims and recedes a little, so the page below takes over gently.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+      onScroll(() => root.style.setProperty('--leave', Math.min(1, Math.max(0, scrollY / Math.max(1, root.offsetHeight))).toFixed(3)));
     startJungPrologue(root, PROLOGUE_FRAMES, root.dataset.lang === 'en' ? 'en' : 'zh').catch(() => { root.dataset.state = 'static'; });
     root.querySelector('[data-jp-map]')?.addEventListener('click', () => {
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -37,31 +42,48 @@ const first = PROLOGUE_FRAMES[0];
 </script>
 <style>
   .jp { position: relative; height: min(calc(100svh - 68px), 980px); min-height: 520px; overflow: hidden; background: var(--night); color: var(--night-fg); isolation: isolate; }
-  .jp__still, .jp__canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .jp__still { filter: brightness(0.62); transition: opacity 0.8s var(--ease); }
+  .jp__still, .jp__canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(calc(1 + var(--leave, 0) * 0.05)); transform-origin: 60% 45%; }
+  .jp__canvas { filter: brightness(calc(1 - var(--leave, 0) * 0.5)); }
+  .jp__still { filter: brightness(calc(0.62 - var(--leave, 0) * 0.3)); transition: opacity 0.8s var(--ease); }
   .jp__canvas { opacity: 0; transition: opacity 0.8s var(--ease); }
   .jp[data-state='live'] .jp__canvas { opacity: 1; }
   .jp[data-state='live'] .jp__still { opacity: 0; }
   .jp__veil { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(10 9 8 / 0.78) 0%, rgb(10 9 8 / 0.35) 45%, rgb(10 9 8 / 0) 70%), linear-gradient(0deg, rgb(10 9 8 / 0.7) 0%, rgb(10 9 8 / 0) 30%); }
   .jp__text { position: relative; z-index: 1; display: grid; align-content: center; gap: 22px; height: 100%; }
-  .jp__big { margin: 0; font: 700 clamp(84px, 15vw, 230px)/0.84 var(--font-display); letter-spacing: -0.02em; text-transform: uppercase; animation: jp-rise 1s cubic-bezier(.2,.8,.2,1) both; }
+  .jp__big { margin: 0; font: 700 clamp(84px, 15vw, 230px)/0.84 var(--font-display); letter-spacing: -0.02em; text-transform: uppercase; }
+  /* Each line rises once from behind an invisible edge (a mask), the second a beat after the first. */
+  .jp__line { display: block; overflow: hidden; padding-bottom: 0.04em; }
+  .jp__line > span { display: block; animation: jp-up 1s cubic-bezier(.2,.8,.2,1) 0.1s both; }
+  .jp__line + .jp__line > span { animation-delay: 0.26s; }
+  .jp__sub, .jp__actions { animation: jp-fade 0.9s cubic-bezier(.2,.8,.2,1) 0.5s both; }
   .jp__sub { max-width: 26em; margin: 0; font: 500 clamp(17px, 1.6vw, 22px)/1.5 var(--font-body); }
   .jp__actions { display: flex; flex-wrap: wrap; gap: 12px; }
-  .jp__btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border: 1.5px solid var(--night-fg); background: var(--night-fg); color: var(--night); font: 700 16px/1 var(--font-body); text-decoration: none; cursor: pointer; }
-  .jp__btn--ghost { background: transparent; color: var(--night-fg); }
-  .jp__btn:hover { background: var(--red); border-color: var(--red); color: var(--night-fg); }
-  .jp__quote { position: absolute; z-index: 1; right: var(--gutter); bottom: 64px; max-width: min(40em, 52%); margin: 0; white-space: pre-line; text-align: right; font: italic 400 clamp(15px, 1.25vw, 19px)/1.6 Georgia, 'Songti SC', serif; opacity: 0; text-shadow: 0 2px 14px rgb(5 7 15 / 0.9); }
+  /* Hover: vermilion sweeps in from the left (colour only, the button keeps its size and place). */
+  .jp__btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border: 1.5px solid var(--night-fg); background: linear-gradient(var(--red), var(--red)) left / 0% 100% no-repeat, var(--night-fg); color: var(--night); font: 700 16px/1 var(--font-body); text-decoration: none; cursor: pointer; transition: background-size 0.45s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease); }
+  .jp__btn--ghost { background-color: transparent; color: var(--night-fg); }
+  .jp__btn:hover, .jp__btn:focus-visible { background-size: 100% 100%; border-color: var(--red); color: var(--night-fg); }
+  .jp__quote { position: absolute; z-index: 1; right: var(--gutter); bottom: 72px; display: grid; justify-items: end; gap: 2px; max-width: min(40em, 52%); margin: 0; text-align: right; font: italic 400 clamp(15px, 1.25vw, 19px)/1.6 Georgia, 'Songti SC', serif; text-shadow: 0 2px 14px rgb(5 7 15 / 0.9); }
+  .jp__q { display: block; opacity: 0; will-change: transform, opacity; }
+  .jp__q:empty { display: none; }
+  /* The progress bar: one segment per picture, filled by the opening's own clock. */
+  .jp__bar { position: absolute; z-index: 1; right: var(--gutter); bottom: 46px; display: grid; grid-template-columns: repeat(6, 28px); gap: 6px; }
+  .jp__bar i { display: block; height: 2px; background: rgb(236 228 214 / 0.18); overflow: hidden; }
+  .jp__bar b { display: block; height: 100%; background: var(--night-fg); transform: scaleX(0); transform-origin: left; }
+  .jp[data-state='static'] .jp__bar { display: none; }
   .jp__hud { position: absolute; z-index: 1; right: var(--gutter); bottom: 22px; margin: 0; color: var(--night-mute); font: 500 12px/1 var(--font-body); letter-spacing: 0.12em; }
   .jp[data-state='static'] .jp__hud { display: none; }
   .jp__skip { position: absolute; z-index: 2; left: var(--gutter); top: 12px; padding: 8px 12px; background: var(--night-fg); color: var(--night); transform: translateY(-200%); }
   .jp__skip:focus { transform: none; }
-  @keyframes jp-rise { from { transform: translateY(0.35em); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes jp-up { from { transform: translateY(105%); } to { transform: none; } }
+  @keyframes jp-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   @media (max-width: 760px) {
     .jp { height: max(520px, calc(100svh - 104px)); }
     .jp__still, .jp__canvas { object-position: 60% 50%; }
     .jp__text { align-content: end; }
     .jp__veil { background: linear-gradient(0deg, rgb(10 9 8 / 0.85) 0%, rgb(10 9 8 / 0.25) 60%, rgb(10 9 8 / 0) 100%); }
-    .jp__quote { left: var(--gutter); right: var(--gutter); top: 20px; bottom: auto; max-width: none; text-align: left; font-size: 14px; }
+    .jp__quote { left: var(--gutter); right: var(--gutter); top: 20px; bottom: auto; max-width: none; justify-items: start; text-align: left; font-size: 14px; }
+    .jp__bar { left: var(--gutter); right: auto; bottom: 24px; grid-template-columns: repeat(6, 22px); }
+    .jp__hud { bottom: 18px; }
     .jp__text { padding-bottom: 64px; }
   }
 </style>
