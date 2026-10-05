@@ -1,0 +1,16 @@
+<script>
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-section-reveals]')];
+  // Astro may hoist a component script even when its layout branch is false.
+  // Pages opting out therefore fetch neither this helper nor the GSAP engine.
+  if (roots.length) {
+    let cancelled = false;
+    let cleanups: Array<() => void> = [];
+    window.addEventListener('pagehide', () => {
+      cancelled = true;
+      cleanups.forEach(cleanup => cleanup());
+    }, { once: true });
+    import('../scripts/motion/sections').then(({ initSectionReveals }) => {
+      if (!cancelled) cleanups = roots.map(initSectionReveals);
+    }).catch(() => { /* The original headings stay readable when enhancement cannot load. */ });
+  }
+</script>

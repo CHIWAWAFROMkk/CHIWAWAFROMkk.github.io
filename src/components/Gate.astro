@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../data/site';
+import Magnet from './rb/Magnet';
 import { localizePath, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -10,7 +11,7 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
     <a class:list={['door', { 'door--ink': i === 1 }]} href={localizePath(d.href, lang)}>
       <span class="door__index">{d.index}</span>
       <span class="door__big" aria-hidden="true">{d.big}</span>
-      <span class="door__title">{d.title[lang]}<span class="door__arrow" aria-hidden="true">→</span></span>
+      <span class="door__title">{d.title[lang]}<Magnet client:visible className="door__magnet"><span class="door__arrow" aria-hidden="true">→</span></Magnet></span>
       <span class="door__desc">{d.desc[lang]}</span>
     </a>
   ))}
@@ -28,12 +29,12 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
   .door__index { font: 700 14px/1 var(--font-display); letter-spacing: 0.2em; }
   .door__big { align-self: end; font: 700 clamp(88px, 13vw, 200px)/0.8 var(--font-display); }
   .door__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4em; font: 900 clamp(22px, 2.4vw, 34px)/1.2 var(--font-cjk-bold); }
-  .door__arrow { color: var(--red); transition: transform 0.3s var(--ease); }
+  .door__arrow { color: var(--red); }
+  .door :global(.door__magnet) { margin-left: 0.1em; }
   .door__desc { color: var(--mute); font-size: 15px; }
   .door--ink .door__desc { color: var(--night-mute); }
   .door:hover { background: #e6e5de; }
   .door--ink:hover { background: #222; }
-  .door:hover .door__arrow, .door:focus-visible .door__arrow { transform: translateX(8px); }
   .door:focus-visible { outline-offset: -8px; }
   @media (max-width: 640px) {
     .gate { grid-template-columns: 1fr; }

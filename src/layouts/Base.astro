@@ -48,6 +48,15 @@ const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/o
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/assets/fonts/BarlowCondensed-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/assets/fonts.css" />
+    <script is:inline>
+      /* A missing or slow island must never leave a heading hidden. */
+      (function () {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var d = document.documentElement;
+        d.classList.add('motion-ok');
+        setTimeout(function () { d.classList.add('motion-timeout'); }, 2500);
+      })();
+    </script>
     {intro && (
       <script is:inline>
         (function () {

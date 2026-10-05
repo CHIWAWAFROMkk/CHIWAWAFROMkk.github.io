@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectRow from '../components/ProjectRow.astro';
+import SplitText from '../components/rb/SplitText';
+import ScrollReveal from '../components/rb/ScrollReveal';
+import SpotlightCard from '../components/rb/SpotlightCard';
 import { SITE } from '../data/site';
 import { filmEntries } from '../data/film-zone';
 import { localizePath, type Lang } from '../i18n';
@@ -14,16 +17,17 @@ const films = filmEntries(lang);
   <main id="main" class="i-main">
     <div class="i-bgword" aria-hidden="true" data-bgword>PROJECTS</div>
     <header class="i-head wrap">
-      <h1>{P.title[lang]}</h1>
+      <h1><SplitText client:load text={P.title[lang]} /></h1>
       <p>{P.lead[lang]}</p>
     </header>
     <section aria-labelledby="i-data">
-      <div class="wrap"><div class="section-head"><h2 id="i-data">{P.data[lang]}</h2></div></div>
+      <div class="wrap"><div class="section-head"><h2 id="i-data"><ScrollReveal client:visible={{ rootMargin: '200px' }} text={P.data[lang]} /></h2></div></div>
       {data.map((p, i) => <ProjectRow lang={lang} project={p} index={i} motion />)}
     </section>
     <section class="night-zone i-film" aria-labelledby="i-film">
-      <div class="wrap"><div class="section-head"><h2 id="i-film">{P.film[lang]}</h2></div></div>
+      <div class="wrap"><div class="section-head"><h2 id="i-film"><ScrollReveal client:visible={{ rootMargin: '200px' }} text={P.film[lang]} /></h2></div></div>
       {films.map(({ project: film, stills, status }) => (
+        <SpotlightCard client:visible tone="night">
         <a class="i-film__link" href={localizePath(film.href, lang)}>
           <ul class="i-film__strip">
             {stills.map(c => <li><img src={c.src} alt={c.alt} width="960" height="540" loading="lazy" decoding="async" /></li>)}
@@ -34,6 +38,7 @@ const films = filmEntries(lang);
             <span class="i-film__status">{status}</span>
           </span>
         </a>
+        </SpotlightCard>
       ))}
     </section>
   </main>

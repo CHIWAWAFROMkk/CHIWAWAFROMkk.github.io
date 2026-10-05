@@ -1,10 +1,12 @@
 ---
 import type { ProjectEntry } from '../data/site';
+import SpotlightCard from './rb/SpotlightCard';
 import { localizePath, type Lang } from '../i18n';
 /** motion: the projects index's slide-in, hover sweep and preview; other pages (the overview) keep the plain row. */
 interface Props { lang: Lang; project: ProjectEntry; index: number; motion?: boolean }
 const { lang, project, index, motion = false } = Astro.props;
 ---
+<SpotlightCard client:visible tone="paper">
 <a class="prow" href={localizePath(project.href, lang)} data-motion={motion ? '' : undefined}>
   <span class="prow__n">{String(index + 1).padStart(2, '0')}</span>
   <span class="prow__title">{project.title[lang]}</span>
@@ -13,6 +15,7 @@ const { lang, project, index, motion = false } = Astro.props;
   <span class="prow__arrow" aria-hidden="true">→</span>
   {motion && project.preview && <img class="prow__preview" src={project.preview} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
 </a>
+</SpotlightCard>
 <script>
   import { reveal } from '../scripts/motion-dom';
   const rows = document.querySelectorAll<HTMLElement>('a.prow[data-motion]');
@@ -26,6 +29,7 @@ const { lang, project, index, motion = false } = Astro.props;
   }
 </script>
 <style>
+  :global(.card-spotlight:has(.prow:hover)), :global(.card-spotlight:has(.prow:focus-visible)) { --spot: rgb(236 228 214 / 0.12); }
   .prow { position: relative; display: grid; grid-template-columns: 3ch minmax(10em, 1fr) 2fr minmax(9em, 1fr) 2ch; gap: 8px clamp(14px, 2vw, 32px); align-items: baseline; padding: 18px max(var(--gutter), calc((100% - 1600px) / 2 + var(--gutter))); border-bottom: var(--hair); text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease), opacity 0.6s var(--ease) var(--d, 0ms), transform 0.6s var(--ease) var(--d, 0ms); }
   .prow[data-motion]:global(.reveal):not(:global(.is-in)) { opacity: 0; transform: translateX(-28px); }
   .prow[data-motion]::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.45s var(--ease); }

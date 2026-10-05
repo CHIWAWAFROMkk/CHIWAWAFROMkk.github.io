@@ -13,7 +13,7 @@ const { lang } = Astro.props;
 const P = SITE.pages.jung;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
-<ProjectLayout night lang={lang} slug="jung-self-map" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout night motion={false} lang={lang} slug="jung-self-map" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <JungPrologue slot="top" lang={lang} />
   <Fragment slot="demo">
     <JungFilm lang={lang} />

@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../data/site';
+import Magnet from './rb/Magnet';
 import type { Lang } from '../i18n';
 interface Props { lang: Lang; variant?: 'bar' | 'red' }
 const { lang, variant = 'bar' } = Astro.props;
@@ -7,8 +8,8 @@ const { lang, variant = 'bar' } = Astro.props;
 <section class:list={['contact', `contact--${variant}`]} aria-label={SITE.contact.heading[lang]}>
   <div class="wrap contact__in">
     {variant === 'red' && <p class="contact__h">{SITE.contact.heading[lang]}</p>}
-    <a class="contact__mail" href={`mailto:${SITE.email}`}>{SITE.email}</a>
-    <a class="contact__cv" href={SITE.resume[lang]} download>{SITE.nav.resume[lang]} <span aria-hidden="true">↓</span></a>
+    <Magnet client:visible><a class="contact__mail" href={`mailto:${SITE.email}`}>{SITE.email}</a></Magnet>
+    <Magnet client:visible><a class="contact__cv" href={SITE.resume[lang]} download>{SITE.nav.resume[lang]} <span aria-hidden="true">↓</span></a></Magnet>
   </div>
 </section>
 <style>

@@ -1,11 +1,14 @@
 ---
 import Base from './Base.astro';
+import SectionReveals from '../components/SectionReveals.astro';
+import SplitText from '../components/rb/SplitText';
+import ScrollReveal from '../components/rb/ScrollReveal';
 import { SITE } from '../data/site';
 import { localizePath, type Lang, type Bi } from '../i18n';
 
 export interface Summary { task: Bi; mine: Bi; tools: Bi; evidence: Bi; status: Bi }
-interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean }
-const { lang, slug, title, lead, tags, summary, description, night = false } = Astro.props;
+interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean; motion?: boolean; deferTitle?: boolean }
+const { lang, slug, title, lead, tags, summary, description, night = false, motion = true, deferTitle = false } = Astro.props;
 const path = `/projects/${slug}/`;
 const order = SITE.projects;
 const i = order.findIndex(p => p.slug === slug);
@@ -15,12 +18,12 @@ const S = SITE.summaryLabels;
 const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.tools, summary.tools], [S.evidence, summary.evidence], [S.status, summary.status]];
 ---
 <Base lang={lang} path={path} night={night} title={`${title[lang]} · ${SITE.name[lang]}`} description={description[lang]}>
-  <main id="main">
+  <main id="main" data-section-reveals={motion ? '' : undefined}>
     <slot name="top" />
     <header class="p-head wrap">
       <ul class="p-tags">{tags.map(t => <li>{t[lang]}</li>)}</ul>
-      <h1 class="p-title">{title[lang]}</h1>
-      <p class="p-lead">{lead[lang]}</p>
+      <h1 class="p-title">{motion ? <SplitText client:load text={title[lang]} deferUntilVisible={deferTitle} /> : title[lang]}</h1>
+      <p class="p-lead">{motion ? <ScrollReveal client:visible={{ rootMargin: '200px' }} text={lead[lang]} /> : lead[lang]}</p>
     </header>
     <section class="p-summary wrap" aria-labelledby="p-summary-h">
       <h2 id="p-summary-h" class="label">{S.heading[lang]}</h2>
@@ -33,6 +36,7 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
       {next && <a href={localizePath(next.href, lang)}>{next.title[lang]} →</a>}
     </nav>
   </main>
+  {motion && <SectionReveals />}
 </Base>
 <style>
   .p-head { display: grid; gap: 18px; padding-block: clamp(32px, 6vh, 72px) 36px; border-bottom: var(--rule); }

@@ -13,7 +13,7 @@ const { lang } = Astro.props;
 const P = SITE.pages.insights;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
-<ProjectLayout lang={lang} slug="campus-delivery/insights" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout deferTitle lang={lang} slug="campus-delivery/insights" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <InsightsPrologue slot="top" lang={lang} />
   <Fragment slot="demo">
     <InsightsStory lang={lang} />

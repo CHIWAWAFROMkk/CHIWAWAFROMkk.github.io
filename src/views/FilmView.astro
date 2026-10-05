@@ -12,7 +12,7 @@ const { lang } = Astro.props;
 const P = SITE.pages.film;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
-<ProjectLayout night lang={lang} slug="mais-je-taime" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout night motion={false} lang={lang} slug="mais-je-taime" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <Fragment slot="demo">
     <FilmRed lang={lang} />
     <FilmDesk lang={lang} />

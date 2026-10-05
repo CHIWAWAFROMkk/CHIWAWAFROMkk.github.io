@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import SectionReveals from '../components/SectionReveals.astro';
+import SplitText from '../components/rb/SplitText';
 import { SITE } from '../data/site';
 import { Content as Zh } from '../copy/privacy.zh.md';
 import { Content as En } from '../copy/privacy.en.md';
@@ -10,10 +12,11 @@ const P = SITE.pages.privacy;
 const Body = lang === 'zh' ? Zh : En;
 ---
 <Base lang={lang} path="/privacy/" title={`${P.title[lang]} · ${SITE.name[lang]}`} description={P.description[lang]}>
-  <main id="main">
-    <header class="pv wrap"><h1>{P.title[lang]}</h1></header>
+  <main id="main" data-section-reveals>
+    <header class="pv wrap"><h1><SplitText client:load text={P.title[lang]} /></h1></header>
     <article class="prose wrap"><Body /></article>
   </main>
+  <SectionReveals />
 </Base>
 <style>
   .pv { padding-block: clamp(32px, 6vh, 72px) 8px; }

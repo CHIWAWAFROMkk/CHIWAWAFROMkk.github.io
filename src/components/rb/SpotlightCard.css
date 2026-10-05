@@ -1,0 +1,8 @@
+/* Light only; the child retains its own layout, border and typography. */
+.card-spotlight { position: relative; --mouse-x: 50%; --mouse-y: 50%; }
+.card-spotlight__light { position: absolute; inset: 0; overflow: clip; pointer-events: none; z-index: 2; opacity: 0; transition: opacity .2s cubic-bezier(.2,.8,.2,1); }
+.card-spotlight__light::before { content: ''; position: absolute; left: 0; top: 0; width: 720px; height: 720px; background: radial-gradient(circle, var(--spot), transparent 70%); transform: translate(calc(var(--mouse-x) - 360px), calc(var(--mouse-y) - 360px)); }
+.card-spotlight--paper { --spot: rgb(15 15 15 / .06); }
+.card-spotlight--night { --spot: rgb(236 228 214 / .10); }
+.card-spotlight:hover > .card-spotlight__light { opacity: 1; }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .card-spotlight__light { display: none; } }

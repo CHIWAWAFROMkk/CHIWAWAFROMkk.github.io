@@ -4,6 +4,8 @@ import EvidenceRow from '../components/EvidenceRow.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import FilmReel from '../components/FilmReel.astro';
 import ContactBar from '../components/ContactBar.astro';
+import SplitText from '../components/rb/SplitText';
+import ScrollReveal from '../components/rb/ScrollReveal';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
 import { localizePath, type Lang } from '../i18n';
@@ -18,7 +20,7 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
 <Base lang={lang} path="/brief/" title={meta.title[lang]} description={meta.description[lang]}>
   <main id="main">
     <header class="b-id wrap">
-      <h1 class="b-id__name">{SITE.name[lang]}</h1>
+      <h1 class="b-id__name"><SplitText client:load text={SITE.name[lang]} /></h1>
       <div class="b-id__text">
         <p class="b-id__line">{fact('F1').text[lang]}</p>
         <p class="b-id__avail">{fact('F3').text[lang]}</p>
@@ -26,12 +28,12 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
     </header>
 
     <section class="wrap" aria-labelledby="b-exp">
-      <div class="section-head"><h2 id="b-exp">{B.experience[lang]}</h2></div>
+      <div class="section-head"><h2 id="b-exp"><ScrollReveal client:visible={{ rootMargin: '200px' }} text={B.experience[lang]} /></h2></div>
       <EvidenceRow lang={lang} factId="F6" context="F5" />
     </section>
 
     <section class="wrap" aria-labelledby="b-edu">
-      <div class="section-head"><h2 id="b-edu">{B.education[lang]}</h2></div>
+      <div class="section-head"><h2 id="b-edu"><ScrollReveal client:visible={{ rootMargin: '200px' }} text={B.education[lang]} /></h2></div>
       <ul class="b-edu">
         <li>{fact('F2').text[lang]}</li>
         <li>{fact('F10').text[lang]}</li>
@@ -39,7 +41,7 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
     </section>
 
     <section aria-labelledby="b-proj">
-      <div class="wrap"><div class="section-head"><h2 id="b-proj">{B.projects[lang]}</h2></div></div>
+      <div class="wrap"><div class="section-head"><h2 id="b-proj"><ScrollReveal client:visible={{ rootMargin: '200px' }} text={B.projects[lang]} /></h2></div></div>
       {dataProjects.map((p, i) => <ProjectRow lang={lang} project={p} index={i} />)}
     </section>
 

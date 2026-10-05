@@ -23,7 +23,10 @@ const rows = (v: Rows) => v.slice(0, 50);
 <section class="cockpit night-zone" data-cockpit data-insight-data data-lang={lang} aria-labelledby="ck-h">
   <div class="wrap">
     <div class="section-head"><h2 id="ck-h">{T.title}</h2><span class="label">{T.kicker}</span></div>
-    <p id="ck-status" class="ck-status" role="status" aria-live="polite">{T.idle}</p>
+    <div class="ck-status-space">
+      <p class="ck-status ck-status-reserve" aria-hidden="true">{T.idle}</p>
+      <p id="ck-status" class="ck-status" role="status" aria-live="polite">{T.idle}</p>
+    </div>
     <form id="ck-form" class="ck-form">
       <fieldset class="ck-weeks">
         <legend>{T.weeks}</legend>
@@ -75,7 +78,11 @@ const rows = (v: Rows) => v.slice(0, 50);
 </script>
 <style>
   .cockpit { padding-bottom: 56px; }
-  .ck-status { margin: 18px 0; color: var(--night-mute); font-size: 14px; }
+  /* Keep the responsive idle copy's natural space through short status changes.
+     The live cell may still grow for longer errors, at every viewport width. */
+  .ck-status-space { display: grid; grid-template-columns: minmax(0, 1fr); margin: 18px 0; }
+  .ck-status { grid-area: 1 / 1; margin: 0; color: var(--night-mute); font-size: 14px; }
+  .ck-status-reserve { visibility: hidden; pointer-events: none; user-select: none; }
   .ck-status[data-error='true'] { color: var(--night-fg); border-left: 3px solid var(--red); padding-left: 10px; }
   .ck-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr) auto; gap: 16px 28px; align-items: start; }
   fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
