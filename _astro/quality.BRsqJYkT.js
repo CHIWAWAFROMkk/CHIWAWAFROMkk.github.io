@@ -1,0 +1,1 @@
+function e(e,t){return e<800||t?5e4:2e5}function t(e){return e<20?`static`:e<40?`reduced`:`full`}var n={frames:0,time:0,done:!1};function r(e,t){if(e.done||t<=0||t>100)return{next:e,fps:null};let n={frames:e.frames+1,time:e.time+t,done:!1};return n.frames>=90||n.time>=2e3?{next:{...n,done:!0},fps:n.frames*1e3/n.time}:{next:n,fps:null}}export{r as i,t as n,e as r,n as t};
