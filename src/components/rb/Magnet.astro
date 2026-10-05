@@ -1,0 +1,11 @@
+---
+/* Adapted from React Bits — Magnet (ts-default); behaviour in scripts/motion/pointer.ts.
+ * Copyright (c) 2026 David Haz. MIT + Commons Clause; see LICENSE.md. */
+interface Props { className?: string; padding?: number; strength?: number }
+const { className = '', padding, strength } = Astro.props;
+---
+<span class:list={['magnet', className]} data-padding={padding} data-strength={strength} style="display:inline-block"><span style="display:inline-block;transition:transform 0.2s cubic-bezier(.2,.8,.2,1)"><slot /></span></span>
+<script>
+  import { enhancePointer } from '../../scripts/motion/pointer';
+  enhancePointer();
+</script>

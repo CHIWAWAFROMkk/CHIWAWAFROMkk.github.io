@@ -1,12 +1,12 @@
 ---
 import type { ProjectEntry } from '../data/site';
-import SpotlightCard from './rb/SpotlightCard';
+import SpotlightCard from './rb/SpotlightCard.astro';
 import { localizePath, type Lang } from '../i18n';
 /** motion: the projects index's slide-in, hover sweep and preview; other pages (the overview) keep the plain row. */
 interface Props { lang: Lang; project: ProjectEntry; index: number; motion?: boolean }
 const { lang, project, index, motion = false } = Astro.props;
 ---
-<SpotlightCard client:visible tone="paper">
+<SpotlightCard tone="paper">
 <a class="prow" href={localizePath(project.href, lang)} data-motion={motion ? '' : undefined}>
   <span class="prow__n">{String(index + 1).padStart(2, '0')}</span>
   <span class="prow__title">{project.title[lang]}</span>

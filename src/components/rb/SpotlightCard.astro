@@ -1,0 +1,12 @@
+---
+/* Adapted from React Bits — SpotlightCard (ts-default); behaviour in scripts/motion/pointer.ts.
+ * Copyright (c) 2026 David Haz. MIT + Commons Clause; see LICENSE.md. */
+import './SpotlightCard.css';
+interface Props { className?: string; tone?: 'paper' | 'night' }
+const { className = '', tone = 'paper' } = Astro.props;
+---
+<div class:list={['card-spotlight', `card-spotlight--${tone}`, className]}><slot /><span class="card-spotlight__light" aria-hidden="true"></span></div>
+<script>
+  import { enhancePointer } from '../../scripts/motion/pointer';
+  enhancePointer();
+</script>

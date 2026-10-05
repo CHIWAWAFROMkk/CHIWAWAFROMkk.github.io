@@ -1,8 +1,8 @@
 ---
 import Base from './Base.astro';
 import SectionReveals from '../components/SectionReveals.astro';
-import SplitText from '../components/rb/SplitText';
-import ScrollReveal from '../components/rb/ScrollReveal';
+import SplitText from '../components/rb/SplitText.astro';
+import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import { SITE } from '../data/site';
 import { localizePath, type Lang, type Bi } from '../i18n';
 
@@ -22,8 +22,8 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
     <slot name="top" />
     <header class="p-head wrap">
       <ul class="p-tags">{tags.map(t => <li>{t[lang]}</li>)}</ul>
-      <h1 class="p-title">{motion ? <SplitText client:load text={title[lang]} deferUntilVisible={deferTitle} /> : title[lang]}</h1>
-      <p class="p-lead">{motion ? <ScrollReveal client:visible={{ rootMargin: '200px' }} text={lead[lang]} /> : lead[lang]}</p>
+      <h1 class="p-title">{motion ? <SplitText text={title[lang]} deferUntilVisible={deferTitle} /> : title[lang]}</h1>
+      <p class="p-lead">{motion ? <ScrollReveal text={lead[lang]} /> : lead[lang]}</p>
     </header>
     <section class="p-summary wrap" aria-labelledby="p-summary-h">
       <h2 id="p-summary-h" class="label">{S.heading[lang]}</h2>
@@ -52,5 +52,9 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
   .p-pager { display: flex; justify-content: space-between; gap: 16px; padding-block: 28px; border-top: var(--rule); font-weight: 500; }
   .p-pager a { text-decoration: none; }
   .p-pager a:hover { text-decoration: underline; text-underline-offset: 6px; }
-  @media (max-width: 640px) { .p-row { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    .p-row { grid-template-columns: 1fr; }
+    /* One tag per line: the row's height no longer depends on whether the web font has arrived. */
+    .p-tags { flex-direction: column; align-items: flex-start; }
+  }
 </style>

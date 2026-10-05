@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { gzipSync } from 'node:zlib';
+import { motionBudget, recordSplits } from './motion-budget';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
@@ -87,37 +87,17 @@ test.describe('motion batch 2', () => {
     }
   });
 
-  test('initial React graphs stay under 70 KiB; GSAP reported separately', async ({ page, request, isMobile }) => {
+  test('project pages load no React; own motion scripts under 15 KiB, GSAP reported separately', async ({ page, request, isMobile }) => {
     test.skip(!!isMobile, 'same emitted graph');
     test.setTimeout(90000);
-    const budgets: { path: string; reactBytes: number; gsapBytes: number; chunks: string[] }[] = [];
+    const budgets = [];
     for (const path of MOTION_PROJECT_PAGES) {
-      const requested = new Set<string>();
-      const onRequest = (r: import('@playwright/test').Request) => { if (r.resourceType() === 'script') requested.add(new URL(r.url()).pathname); };
-      page.on('request', onRequest);
-      await page.goto(path, { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(1000);
-      const roots = await page.locator('astro-island').evaluateAll(els => els.flatMap(el => [el.getAttribute('renderer-url'), el.getAttribute('component-url')]).filter(Boolean) as string[]);
-      const seen = new Set<string>(); let bytes = 0, engine = 0;
-      const visit = async (url: string) => {
-        const pathname = new URL(url, 'http://localhost').pathname;
-        if (seen.has(pathname) || !requested.has(pathname)) return;
-        seen.add(pathname);
-        const response = await request.get(pathname);
-        expect(response.ok()).toBe(true);
-        const body = await response.body();
-        if (/\/gsap\.[^/]+\.js$/.test(pathname)) engine += gzipSync(body).length;
-        else bytes += gzipSync(body).length;
-        for (const match of body.toString().matchAll(/["'`](\.\/[^"'`]+\.js)["'`]/g)) await visit(new URL(match[1], `http://localhost${pathname}`).pathname);
-      };
-      for (const root of roots) await visit(root);
-      expect([...seen].some(url => /\/react\./.test(url)), path).toBe(true);
-      const budget = { path, reactBytes: bytes, gsapBytes: engine, chunks: [...seen] };
+      const budget = await motionBudget(page, request, path);
       budgets.push(budget);
       test.info().annotations.push({ type: 'budget', description: JSON.stringify(budget) });
-      expect(bytes, path).toBeLessThanOrEqual(70 * 1024);
-      expect(bytes + engine, path).toBeLessThanOrEqual(125 * 1024);
-      page.off('request', onRequest);
+      expect(budget.react, path).toEqual([]);
+      expect(budget.motion, path).toBeLessThanOrEqual(15 * 1024);
+      expect(budget.gsap, path).toBeLessThanOrEqual(55 * 1024);
     }
     await writeFile(resolve(captures, 'budgets.json'), JSON.stringify(budgets, null, 2));
   });
@@ -125,24 +105,24 @@ test.describe('motion batch 2', () => {
   test('English long headings fit 320px while splitting', async ({ page }) => {
     test.setTimeout(60000);
     await page.setViewportSize({ width: 320, height: 844 });
+    const split = await recordSplits(page);
     for (const path of MOTION_PROJECT_PAGES.filter(path => path.startsWith('/en/') && !path.includes('/insights/'))) {
       await page.goto(path, { waitUntil: 'domcontentloaded' });
       await expect(page.locator('main h1 .split-parent')).toHaveAttribute('data-split-ready', '');
-      expect(await page.locator('h1 .split-word').count(), path).toBeGreaterThan(0);
-      expect(await page.locator('h1 .split-word').evaluateAll(words => words.some(word => {
-        const b = word.getBoundingClientRect(), p = word.closest('h1')!.getBoundingClientRect();
-        return b.left < p.left - 1 || b.right > p.right + 1;
-      })), path).toBe(false);
+      const shot = await split();
+      expect(shot.kind, path).toBe('word');
+      expect(shot.clipped, path).toBe(false);
     }
   });
 
   test('mixed Chinese headings keep Latin words together during animation', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    const split = await recordSplits(page);
     for (const [slug, word, title] of [['campus-delivery', 'SQL', '校园外卖 SQL 工作台'], ['ai-career', 'Agent', '个人求职 Agent'], ['ai-campus/live', 'AI', 'AI 校园应用研究（完整版）']]) {
       await page.goto(`/projects/${slug}/`, { waitUntil: 'domcontentloaded' });
       await expect(page.locator('h1 .split-parent')).toHaveAttribute('data-split-ready', '');
-      const units = await page.locator('h1 .split-char').allTextContents();
-      expect(units, slug).toContain(word);
+      const shot = await split();
+      expect(shot.units, slug).toContain(word);
       await expect(page.locator('h1 .split-parent')).toHaveText(title);
     }
   });

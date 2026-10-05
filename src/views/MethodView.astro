@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import SectionReveals from '../components/SectionReveals.astro';
-import SplitText from '../components/rb/SplitText';
+import SplitText from '../components/rb/SplitText.astro';
 import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/stock-data-method.zh.md';
 import { Content as BodyEn } from '../copy/projects/stock-data-method.en.md';
@@ -13,7 +13,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <Base lang={lang} path="/projects/stock-data/method/" title={P.title[lang]} description={P.description[lang]}>
   <main id="main" data-section-reveals>
-    <header class="m-head wrap"><h1><SplitText client:load text={P.heading[lang]} /></h1></header>
+    <header class="m-head wrap"><h1><SplitText text={P.heading[lang]} /></h1></header>
     <article class="prose wrap"><Body /></article>
   </main>
   <SectionReveals />

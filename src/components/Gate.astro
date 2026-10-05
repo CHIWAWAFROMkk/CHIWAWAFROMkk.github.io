@@ -1,6 +1,6 @@
 ---
 import { SITE } from '../data/site';
-import Magnet from './rb/Magnet';
+import Magnet from './rb/Magnet.astro';
 import { localizePath, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -11,7 +11,7 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
     <a class:list={['door', { 'door--ink': i === 1 }]} href={localizePath(d.href, lang)}>
       <span class="door__index">{d.index}</span>
       <span class="door__big" aria-hidden="true">{d.big}</span>
-      <span class="door__title">{d.title[lang]}<Magnet client:visible className="door__magnet"><span class="door__arrow" aria-hidden="true">→</span></Magnet></span>
+      <span class="door__title">{d.title[lang]}<Magnet className="door__magnet"><span class="door__arrow" aria-hidden="true">→</span></Magnet></span>
       <span class="door__desc">{d.desc[lang]}</span>
     </a>
   ))}

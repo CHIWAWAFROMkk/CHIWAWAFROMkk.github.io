@@ -1,0 +1,12 @@
+---
+/* Adapted from React Bits — SplitText (ts-default); behaviour in scripts/motion/split-title.ts.
+ * Copyright (c) 2026 David Haz. MIT + Commons Clause; see LICENSE.md.
+ * The heading text is server-rendered whole; the enhancer splits it only while it animates. */
+interface Props { text: string; className?: string; deferUntilVisible?: boolean }
+const { text, className = '', deferUntilVisible = false } = Astro.props;
+---
+<span class:list={['split-parent', className]} data-split-deferred={deferUntilVisible ? '' : undefined} style="display:block;overflow:clip;padding-bottom:0.06em">{text}</span>
+<script>
+  import { initSplitTitle } from '../../scripts/motion/split-title';
+  for (const el of document.querySelectorAll<HTMLElement>('.split-parent')) initSplitTitle(el);
+</script>

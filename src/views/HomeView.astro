@@ -4,7 +4,7 @@ import LangSwitch from '../components/LangSwitch.astro';
 import Gate from '../components/Gate.astro';
 import ContactBar from '../components/ContactBar.astro';
 import Intro from '../components/Intro.astro';
-import SplitText from '../components/rb/SplitText';
+import SplitText from '../components/rb/SplitText.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
 import type { Lang } from '../i18n';
@@ -16,7 +16,7 @@ const meta = SITE.pages.home;
   <main id="main" class="home">
     <header class="home__id wrap">
       <div class="home__top">
-        <h1 class="home__name"><SplitText client:load text={SITE.name[lang]} /></h1>
+        <h1 class="home__name"><SplitText text={SITE.name[lang]} /></h1>
         <LangSwitch lang={lang} path="/" />
       </div>
       <p class="home__line">{fact('F1').text[lang]}</p>
