@@ -1,3 +1,5 @@
+import { T, pick } from './i18n.js';
+
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let sections = [];
 let last = '';
@@ -7,16 +9,18 @@ export function buildStory(stations, imageNames = []) {
   const root = document.getElementById('story');
   root.innerHTML = stations.map((s, i) => {
     const imgs = s.keyframes.filter(k => imageNames.includes(k))
-      .map(k => `<img src="./assets/${k}.webp" alt="${esc(s.name_zh)}的画面（${k}）" loading="lazy">`).join('');
-    const kind = s.kind === 'jung-concept' ? '荣格概念' : '叙事主题';
-    const src = s.source_verified || s.kind !== 'jung-concept' ? s.source : `${s.source}（出处待对原文核对）`;   // 叙事主题没有荣格原书出处，不需要核对
-    return `<section class="station" data-i="${i}" aria-label="${esc(s.name_zh)}">
+      .map(k => `<img src="./assets/${k}.webp" alt="${esc(T.imgAlt(pick(s, 'name_zh'), k))}" loading="lazy">`).join('');
+    const kind = s.kind === 'jung-concept' ? T.concept : T.theme;
+    const source = pick(s, 'source');
+    const src = s.source_verified || s.kind !== 'jung-concept' ? source : `${source}${T.pending}`;   // 叙事主题没有荣格原书出处，不需要核对
+    const name = pick(s, 'name_zh'), take = s.my_take ? pick(s, 'my_take') : '', tryIt = s.suggestion ? pick(s, 'suggestion') : '';
+    return `<section class="station" data-i="${i}" aria-label="${esc(name)}">
       ${imgs}<p class="kind">${String(i + 1).padStart(2, '0')} · ${kind}</p>
-      <h2>${esc(s.name_zh)}</h2><p class="en" lang="en">${esc(s.name_en)}</p>
-      <p class="concept">${esc(s.jung_concept)}</p>
-      ${s.my_take ? `<p class="take">${esc(s.my_take)}</p>` : ''}
-      ${s.suggestion ? `<p class="try">${esc(s.suggestion)}</p>` : ''}
-      <p class="src">出处：${esc(src)}</p></section>`;
+      <h2>${esc(name)}</h2>${name === s.name_en ? '' : `<p class="en" lang="en">${esc(s.name_en)}</p>`}
+      <p class="concept">${esc(pick(s, 'jung_concept'))}</p>
+      ${take ? `<p class="take" data-label="${esc(T.take)}">${esc(take)}</p>` : ''}
+      ${tryIt ? `<p class="try">${esc(tryIt)}</p>` : ''}
+      <p class="src">${esc(T.source)}${esc(src)}</p></section>`;
   }).join('');
   sections = [...root.querySelectorAll('.station')];
   last = '';

@@ -9,6 +9,9 @@ import { createPost } from './post.js';
 import { createRoute } from './route.js';
 import { createController } from './camera.js';
 import { createUI } from './ui.js';
+import { T, applyStatic } from './i18n.js';
+
+applyStatic();
 
 const params = new URLSearchParams(location.search);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -41,13 +44,13 @@ try {
       done(tier);
     } catch (e) {
       console.warn('三维视图启动失败，改用静态版：', e);
-      fail('三维视图暂时无法加载，已切换为静态阅读版。');
+      fail(T.fail3d);
       done('none');
     }
   }
 } catch (e) {
   console.warn(e);
-  fail('内容加载失败，请稍后重试。');
+  fail(T.failContent);
   done('none');
 }
 
@@ -159,4 +162,6 @@ async function start(stations, manifest) {
     setPaused(!e.data.visible);
   });
   Object.defineProperty(api, 'paused', { get: () => paused, configurable: true });
+  // 接收器装好后主动向父页面要一次当前状态：父页面更早发出的通知可能在这之前就丢了
+  if (parent !== window) parent.postMessage({ type: 'jung-map:ready' }, location.origin);
 }

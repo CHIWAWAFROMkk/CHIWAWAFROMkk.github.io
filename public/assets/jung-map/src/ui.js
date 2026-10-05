@@ -1,4 +1,5 @@
 import { minimapPoint, spiralPoint } from './layout.js';
+import { pick } from './i18n.js';
 
 // 左侧列表、站名标签、情绪标签、小地图、站内按钮、键盘
 export function createUI({ stations, controller }) {
@@ -7,9 +8,9 @@ export function createUI({ stations, controller }) {
   let ctrlShown = null;
   const mg = mini.getContext('2d');
 
-  nav.innerHTML = stations.map((s, i) => `<button type="button" data-i="${i}">${String(i + 1).padStart(2, '0')}　${s.name_zh}</button>`).join('');
+  nav.innerHTML = stations.map((s, i) => `<button type="button" data-i="${i}">${String(i + 1).padStart(2, '0')}　${pick(s, 'name_zh')}</button>`).join('');
   nav.addEventListener('click', e => { const b = e.target.closest('button'); if (b) controller.goTo(Number(b.dataset.i)); });
-  labels.innerHTML = stations.map((s, i) => `<div class="lbl" data-i="${i}">${s.name_zh}<small>${String(i + 1).padStart(2, '0')}</small></div>`).join('');
+  labels.innerHTML = stations.map((s, i) => `<div class="lbl" data-i="${i}">${pick(s, 'name_zh')}<small>${String(i + 1).padStart(2, '0')}</small></div>`).join('');
   emos.innerHTML = stations.map((s, i) => s.emotions.map((e, k) => `<div class="emo" data-i="${i}" data-k="${k}">${e}</div>`).join('')).join('');
   const lblEls = [...labels.children], emoEls = [...emos.children], navBtns = [...nav.querySelectorAll('button')];
 

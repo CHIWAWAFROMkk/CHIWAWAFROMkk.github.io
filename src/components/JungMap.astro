@@ -4,6 +4,7 @@ import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const T = JUNG_TEXT.map;
+const MAP = lang === 'en' ? '/assets/jung-map/?lang=en' : '/assets/jung-map/';   // the map speaks the page's language
 ---
 <section class="jm night-zone" data-demo data-jung-map aria-labelledby="jm-h">
   <div class="wrap">
@@ -12,9 +13,9 @@ const T = JUNG_TEXT.map;
     <div class="jm__frame" data-state="idle">
       <img class="jm__poster" src="/media/jung-self-map/map-poster.jpg" alt={T.posterAlt[lang]} width="1280" height="720" loading="lazy" decoding="async" />
       <button type="button" class="jm__load" data-jm-load>{T.load[lang]}<small>{T.loadHint[lang]}</small></button>
-      <iframe id="jung-frame" title={T.frameTitle[lang]} data-src="/assets/jung-map/" allow="fullscreen" hidden></iframe>
+      <iframe id="jung-frame" title={T.frameTitle[lang]} data-src={MAP} allow="fullscreen" hidden></iframe>
     </div>
-    <p class="jm__actions"><a href="/assets/jung-map/">{T.open[lang]} →</a></p>
+    <p class="jm__actions"><a href={MAP}>{T.open[lang]} →</a></p>
     <p class="jm__note">{T.note[lang]}</p>
   </div>
 </section>
@@ -29,6 +30,8 @@ const T = JUNG_TEXT.map;
     new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; tell(); }, { threshold: 0 }).observe(frame);
     document.addEventListener('visibilitychange', tell);
     iframe.addEventListener('load', tell);
+    // The map asks once its listener is ready (a notice sent before that would be lost).
+    addEventListener('message', e => { if (e.origin === location.origin && e.source === iframe.contentWindow && e.data?.type === 'jung-map:ready') tell(); });
     btn.addEventListener('click', () => {
       iframe.src = iframe.dataset.src!;
       iframe.hidden = false;

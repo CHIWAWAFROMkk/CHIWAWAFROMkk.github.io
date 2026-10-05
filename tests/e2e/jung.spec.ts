@@ -22,8 +22,9 @@ for (const lang of ['zh', 'en'] as const) {
     expect(await frame.getAttribute('src')).toBeNull();                       // nothing heavy before the click
     await page.locator('[data-jm-load]').click();
     await expect(frame).toBeVisible();
-    await expect(frame).toHaveAttribute('src', '/assets/jung-map/');
-    expect((await request.get('/assets/jung-map/')).status()).toBe(200);
+    const map = lang === 'en' ? '/assets/jung-map/?lang=en' : '/assets/jung-map/';
+    await expect(frame).toHaveAttribute('src', map);
+    expect((await request.get(map)).status()).toBe(200);
     const inner = page.frameLocator('#jung-frame');
     await expect(inner.locator('#story .station').first()).toBeAttached({ timeout: 15000 });
   });
@@ -138,9 +139,8 @@ test('the map stops drawing when scrolled out of view and resumes when it comes 
   await page.locator('[data-jm-load]').click();
   const inner = page.frameLocator('#jung-frame');
   await expect(inner.locator('#story .station').first()).toBeAttached({ timeout: 15000 });
-  const frame = page.frame({ url: /\/assets\/jung-map\/$/ })!;
-  await expect.poll(() => frame.evaluate(() => (window as unknown as { __jung: { paused?: boolean } }).__jung.paused)).toBe(false);
-  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => window.scrollTo(0, 0));                    // right away: the map may still be starting
+  const frame = page.frame({ url: /\/assets\/jung-map\/(\?.*)?$/ })!;
   await expect.poll(() => frame.evaluate(() => (window as unknown as { __jung: { paused?: boolean } }).__jung.paused)).toBe(true);
   await page.locator('#jung-frame').scrollIntoViewIfNeeded();
   await expect.poll(() => frame.evaluate(() => (window as unknown as { __jung: { paused?: boolean } }).__jung.paused)).toBe(false);
@@ -154,4 +154,19 @@ test('in the overview, the hidden station buttons are out of the tab order', asy
   await expect(page.locator('#ctrl')).toHaveJSProperty('inert', false, { timeout: 10000 });
   await page.keyboard.press('Escape');
   await expect(page.locator('#ctrl')).toHaveJSProperty('inert', true, { timeout: 10000 });
+});
+
+test('the English page opens the map in English: station names, text and controls', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await skipIntro(page);
+  await page.goto('/en/projects/jung-self-map/');
+  await page.locator('[data-jm-load]').click();
+  const inner = page.frameLocator('#jung-frame');
+  await expect(inner.locator('#story .station').first()).toBeAttached({ timeout: 15000 });
+  await expect(inner.locator('html')).toHaveAttribute('lang', 'en');
+  const story = await inner.locator('#story').evaluate(el => el.textContent ?? '');
+  expect(story.match(/[一-鿿]+/g) ?? []).toEqual([]);
+  expect(story).toContain('Persona');
+  expect(story).toContain('Narrative theme');
+  await expect(inner.locator('#btn-over')).toHaveText('Back to the map');
 });

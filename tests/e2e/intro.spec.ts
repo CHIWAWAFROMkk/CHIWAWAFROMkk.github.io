@@ -47,7 +47,7 @@ test.describe('intro', () => {
     const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
     // Astro's bundled stylesheet comes after the inline guess, so delaying it holds back the intro module but not the 3 s failsafe.
     await page.route('**/_astro/*.css', async r => { await delay(2600); await r.continue(); });
-    await page.route('**/BarlowCondensed-Bold.ttf', async r => { await delay(3200); await r.continue(); });
+    await page.route('**/BarlowCondensed-Bold.woff2', async r => { await delay(3200); await r.continue(); });
     await page.goto('/', { waitUntil: 'commit' });
     await page.waitForFunction(() => document.readyState !== 'loading' || document.documentElement.classList.contains('intro-pending'));
     await page.waitForFunction(() => !document.documentElement.classList.contains('intro-pending'), null, { timeout: 6000 });
