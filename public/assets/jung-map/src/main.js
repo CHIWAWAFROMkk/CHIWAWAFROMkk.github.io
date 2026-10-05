@@ -116,7 +116,7 @@ async function start(stations, manifest) {
   addEventListener('resize', resize); resize();
 
   let last = performance.now(), time = 0, reveal = reduced ? 1 : 0;
-  renderer.setAnimationLoop(now => {
+  const tick = now => {
     const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now;
     if (!reduced) time += dt;                                         // 减少动态：冻结装饰性动画的时间
     reveal = reduced ? 1 : Math.min(1, reveal + dt / 3.5);            // 开场组装
@@ -143,5 +143,20 @@ async function start(stations, manifest) {
     ui.update({ screen, emoScreen, focus: st.focus, mode: st.mode, visited, arrival });
 
     post ? post.render(scene, camera, time) : renderer.render(scene, camera);
+  };
+  renderer.setAnimationLoop(tick);
+
+  // 嵌在作品集页面里时，父页面会告诉我们是否在视口内：离屏就停止绘制，回来时从原状态继续（相机与已访问记录都保留）
+  let paused = false;
+  const setPaused = p => {
+    if (p === paused) return;
+    paused = p;
+    if (p) renderer.setAnimationLoop(null);
+    else { last = performance.now(); renderer.setAnimationLoop(tick); }
+  };
+  addEventListener('message', e => {
+    if (e.origin !== location.origin || !e.data || e.data.type !== 'jung-map:visibility') return;
+    setPaused(!e.data.visible);
   });
+  Object.defineProperty(api, 'paused', { get: () => paused, configurable: true });
 }

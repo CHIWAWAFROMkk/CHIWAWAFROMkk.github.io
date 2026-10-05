@@ -23,6 +23,12 @@ const T = JUNG_TEXT.map;
     const frame = root.querySelector<HTMLElement>('.jm__frame')!;
     const btn = root.querySelector<HTMLButtonElement>('[data-jm-load]')!;
     const iframe = root.querySelector<HTMLIFrameElement>('#jung-frame')!;
+    // Tell the map whether it is on screen, so it stops drawing while the reader is elsewhere on the page.
+    let onScreen = true;
+    const tell = () => iframe.contentWindow?.postMessage({ type: 'jung-map:visibility', visible: onScreen && !document.hidden }, location.origin);
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; tell(); }, { threshold: 0 }).observe(frame);
+    document.addEventListener('visibilitychange', tell);
+    iframe.addEventListener('load', tell);
     btn.addEventListener('click', () => {
       iframe.src = iframe.dataset.src!;
       iframe.hidden = false;

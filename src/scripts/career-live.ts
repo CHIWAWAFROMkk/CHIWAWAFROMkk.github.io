@@ -230,8 +230,9 @@ export function initCareerLive(root: HTMLElement): void {
   /* ---------- when to start ---------- */
   renderCand();
   lock(true);
+  $('cl-start-btn').onclick = () => void start();          // bound before any early return: the replay entry can switch to live later
   if (new URLSearchParams(location.search).get('engine') === 'replay') { showReplay(false); return; }
-  if (light) { $('cl-start').hidden = false; $('cl-start-btn').onclick = () => void start(); return; }
+  if (light) { $('cl-start').hidden = false; return; }
   const io = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) { io.disconnect(); void start(); } }, { threshold: 0.2 });
   io.observe(stage);
 }

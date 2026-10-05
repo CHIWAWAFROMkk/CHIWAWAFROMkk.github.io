@@ -10,6 +10,17 @@ const facts = deriveFacts(data.results as unknown as Results);
 const P = C.prologue;
 ---
 <section class="prologue" data-prologue data-state="static" data-label={formatFact(facts.orders, 'en')} aria-label={P.label[lang]}>
+  <script is:inline>
+    /* Before the first paint: if the film will run, reserve its full layout now, so going live later moves nothing on screen. */
+    (function () {
+      var r = document.currentScript && document.currentScript.parentElement;
+      if (!r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      try {
+        var gl = document.createElement('canvas').getContext('webgl2');
+        if (gl) { r.dataset.state = 'pending'; var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
+      } catch (e) { /* stays static */ }
+    })();
+  </script>
   <a class="prologue__skip" href="#p-summary-h">{P.skip[lang]}</a>
   <div class="prologue__static wrap">
     <p class="prologue__big"><InsightText text={C.hero.big[lang]} facts={facts} lang={lang} /></p>
@@ -47,7 +58,11 @@ const P = C.prologue;
   .prologue__stick { display: none; }
   .prologue__skip { position: absolute; left: 6vw; top: 18px; z-index: 3; font-size: 13px; color: inherit; }
   .prologue[data-state='static'] .prologue__skip:not(:focus) { width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .prologue[data-state='live'] { height: 460vh; background: var(--night); color: var(--night-fg); }
+  .prologue[data-state='live'], .prologue[data-state='pending'] { height: 460vh; background: var(--night); color: var(--night-fg); }
+  /* Pending: the opening's words wait on the film's dark stage, in the place the film will take. */
+  .prologue[data-state='pending'] .prologue__static { position: sticky; top: 0; height: 100vh; }
+  .prologue[data-state='pending'] .prologue__big :global(.inum) { color: var(--night-fg); }
+  .prologue[data-state='pending'] .prologue__sub { color: var(--night-mute); }
   .prologue[data-state='live'] .prologue__static { display: none; }
   .prologue[data-state='live'] .prologue__stick { display: block; position: sticky; top: 0; height: 100vh; overflow: hidden; }
   .prologue[data-state='live'] :focus-visible { outline-color: var(--night-fg); }

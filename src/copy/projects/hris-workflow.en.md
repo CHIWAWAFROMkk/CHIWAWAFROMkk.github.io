@@ -20,7 +20,7 @@ The original approach started from the folder. But the file order did not match 
 
 ## From first version to enterprise design
 
-| | First version (personal) | Enterprise design |
+| Aspect | First version (personal) | Enterprise design |
 |---|---|---|
 | Tools | OpenClaw calling the DeepSeek and GPT APIs | Microsoft 365: Excel, SharePoint, Power Automate, AI Builder |
 | Focus | A first working version for extracting and backfilling record fields | Use company-approved storage, permissions and review; separate recognition, review and write-back |

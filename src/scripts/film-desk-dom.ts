@@ -26,6 +26,12 @@ export function initFilmDesk(root: HTMLElement): void {
   };
   const select = (id: string, focus = false) => {
     current = id;
+    // Posters of hidden cards are only fetched for the card being shown and its two neighbours (the next step is instant).
+    const at = cards.findIndex(c => c.dataset.fdCard === id);
+    for (const c of [cards[at - 1], cards[at], cards[at + 1]]) {
+      const v = c?.querySelector('video');
+      if (v && !v.getAttribute('poster') && v.dataset.poster) v.poster = v.dataset.poster;
+    }
     for (const c of cards) {
       const on = c.dataset.fdCard === id;
       c.hidden = !on;

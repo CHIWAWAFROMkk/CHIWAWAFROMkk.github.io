@@ -50,8 +50,8 @@ export function initLab(root: HTMLElement): void {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  async function load(text: string, name: string) {
-    const ticket = ++generation;
+  /** `ticket` is taken when the user acts (before any read or fetch), so a slow earlier request can never overwrite a later one. */
+  async function load(text: string, name: string, ticket = ++generation) {
     try {
       const next: Source = parseCSV(text, $<HTMLSelectElement>('delimiter').value);
       let digest = T.hashUnavailable;
@@ -161,14 +161,16 @@ export function initLab(root: HTMLElement): void {
     const file = input.files?.[0];
     if (!file) return;
     if (file.size > LIMIT) { message(localizeError('文件超过 2 MB，请先拆分。原有结果未改变。', lang, CSV_ERRORS), true); return; }
-    try { const text = new TextDecoder('utf-8', { fatal: true }).decode(await file.arrayBuffer()); await load(text, file.name); }
-    catch { message(T.utf8Error, true); }
+    const ticket = ++generation;
+    try { const text = new TextDecoder('utf-8', { fatal: true }).decode(await file.arrayBuffer()); await load(text, file.name, ticket); }
+    catch { if (ticket === generation) message(T.utf8Error, true); }
     input.value = '';
   };
   $('paste-run').onclick = () => load($<HTMLTextAreaElement>('paste').value, T.pasteName);
   $('example').onclick = async () => {
-    try { message(T.exampleLoading); const response = await fetch('/assets/sample.csv'); if (!response.ok) throw Error(); await load(await response.text(), 'sample.csv'); }
-    catch { message(T.exampleError, true); }
+    const ticket = ++generation;
+    try { message(T.exampleLoading); const response = await fetch('/assets/sample.csv'); if (!response.ok) throw Error(); const text = await response.text(); if (ticket === generation) await load(text, 'sample.csv', ticket); }
+    catch { if (ticket === generation) message(T.exampleError, true); }
   };
   /** Toggling a cleaning option first shows which preview rows go (struck out or sinking), then renders the new state. */
   const toggle = () => {

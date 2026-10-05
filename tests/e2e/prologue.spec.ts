@@ -121,3 +121,18 @@ test('pinch-zoom stays available over the film', async ({ page }) => {
   await page.goto(PATH);
   expect(await page.locator('[data-prologue] canvas').evaluate(c => getComputedStyle(c).touchAction)).toContain('pinch-zoom');
 });
+
+test('going live moves nothing on screen: the film layout is reserved before the first paint', async ({ page, isMobile }) => {
+  await page.addInitScript(() => {
+    (window as unknown as { __cls: number }).__cls = 0;
+    new PerformanceObserver(list => {
+      for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+    }).observe({ type: 'layout-shift', buffered: true });
+  });
+  await page.goto(PATH);
+  test.skip(!(await hasWebGL2(page)), 'no WebGL2 in this browser');
+  await expect(page.locator('[data-prologue]')).toHaveAttribute('data-state', 'live', { timeout: 10000 });
+  await page.waitForTimeout(800);
+  const cls = await page.evaluate(() => (window as unknown as { __cls: number }).__cls);
+  expect(cls, isMobile ? 'mobile' : 'desktop').toBeLessThan(0.1);
+});

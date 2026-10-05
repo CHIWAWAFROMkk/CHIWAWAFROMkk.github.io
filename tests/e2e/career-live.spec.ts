@@ -264,3 +264,14 @@ test('the boot byte stream shows the real SHA-256 of the files being loaded', as
   await live(page);
   await expect(page.locator('#cl-boot-hex')).toContainText(wasm);
 });
+
+test('phones that open the replay entry can still switch to the live engine and start it', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'phone flow');
+  await page.goto(`${PATH}?engine=replay`);
+  await expect(page.locator('#cl-replay')).toBeVisible();
+  await page.locator('#cl-toggle-replay').click();
+  await expect(page.locator('#cl-start-btn')).toBeVisible();
+  await page.locator('#cl-start-btn').click();
+  await expect(page.locator('#cl-chip')).toHaveClass(/live/, { timeout: 90_000 });
+  await expect(page.locator('#cl-score')).toHaveText('84', { timeout: 20_000 });
+});

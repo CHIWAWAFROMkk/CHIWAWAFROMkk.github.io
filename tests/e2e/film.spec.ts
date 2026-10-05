@@ -20,7 +20,7 @@ for (const lang of ['zh', 'en'] as const) {
     await skipIntro(page);
     await page.goto(PATH);
     const urls = await page.locator('[data-film] img, [data-film] video').evaluateAll(els => els.flatMap(el =>
-      [el.getAttribute('src'), el.getAttribute('poster'), el.getAttribute('data-src')].filter((u): u is string => !!u)));
+      [el.getAttribute('src'), el.getAttribute('poster'), el.getAttribute('data-src'), el.getAttribute('data-poster')].filter((u): u is string => !!u)));
     expect(urls.length).toBeGreaterThanOrEqual(60);   // 1 opening still, 25 frames, 28 drafts and finals, 5 rejects with posters
     for (const u of new Set(urls)) expect((await request.get(u)).status(), u).toBe(200);
   });
@@ -189,4 +189,18 @@ test('keyboard focus on the shot track is distinguishable from the pressed shot'
   await page.locator('[data-fd-shot="S01"]').focus();
   await page.keyboard.press('ArrowRight');                               // keyboard focus → :focus-visible
   expect(await ring('[data-fd-shot="S03"]')).not.toBe(pressedOnly);
+});
+
+test('hidden shot cards do not download their posters until they come near', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  const webp: string[] = [];
+  page.on('request', r => { if (/\/video\/s\d+[a-z]?\.webp$/.test(r.url())) webp.push(r.url()); });
+  await skipIntro(page);
+  await page.goto('/projects/mais-je-taime/');
+  await page.waitForTimeout(1500);
+  const hiddenWithPoster = await page.locator('[data-fd-card][hidden] video[poster]').count();
+  expect(hiddenWithPoster).toBeLessThanOrEqual(2);
+  await page.locator('[data-fd-step="1"]').click();
+  const shown = page.locator('[data-fd-card]:not([hidden]) video');
+  await expect(shown).toHaveAttribute('poster', /\.webp$/);
 });

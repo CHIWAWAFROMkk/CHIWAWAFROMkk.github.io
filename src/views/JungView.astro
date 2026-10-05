@@ -1,5 +1,6 @@
 ---
 import ProjectLayout from '../layouts/ProjectLayout.astro';
+import JungPrologue from '../components/JungPrologue.astro';
 import JungFilm from '../components/JungFilm.astro';
 import JungMap from '../components/JungMap.astro';
 import JungHandbook from '../components/JungHandbook.astro';
@@ -13,6 +14,7 @@ const P = SITE.pages.jung;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
 <ProjectLayout night lang={lang} slug="jung-self-map" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <JungPrologue slot="top" lang={lang} />
   <Fragment slot="demo">
     <JungFilm lang={lang} />
     <JungMap lang={lang} />

@@ -61,8 +61,8 @@ const TABLES = ['matches', 'gates', 'review'] as const;
   .career__intro { max-width: 52em; margin: 16px 0 8px; font-size: 16px; }
   .meta { color: var(--mute); font-size: 14px; }
   .career__controls { display: flex; flex-wrap: wrap; gap: 16px 28px; margin: 18px 0; }
-  label { display: grid; justify-items: start; gap: 6px; font-weight: 500; font-size: 14px; }
-  select { min-width: 12em; padding: 9px 10px; border: 1.5px solid var(--ink); background: #fff; font: inherit; font-size: 16px; border-radius: 0; color: var(--ink); }
+  label { display: grid; justify-items: start; gap: 6px; min-width: 0; max-width: 100%; font-weight: 500; font-size: 14px; }
+  select { min-width: min(12em, 100%); max-width: 100%; padding: 9px 10px; border: 1.5px solid var(--ink); background: #fff; font: inherit; font-size: 16px; border-radius: 0; color: var(--ink); }
   .notice { padding: 10px 14px; border-left: 4px solid var(--ink); background: #fff; font-size: 14px; }
   button { padding: 9px 16px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 700; cursor: pointer; border-radius: 0; }
   button.secondary { background: transparent; color: var(--ink); }

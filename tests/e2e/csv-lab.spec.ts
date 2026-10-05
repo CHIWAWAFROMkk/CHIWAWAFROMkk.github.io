@@ -33,3 +33,19 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
     });
   });
 }
+
+test('a late sample response never overwrites data the visitor pasted meanwhile', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  let release!: () => void;
+  const gate = new Promise<void>(r => { release = r; });
+  await page.route('**/assets/sample.csv', async route => { await gate; await route.continue(); });
+  await page.goto('/projects/stock-data/');
+  await page.locator('.paste-box summary').click();
+  await page.locator('#paste').fill('x,y\n1,2\n3,4');
+  await page.locator('#paste-run').click();
+  await expect(metric(page, 0)).toHaveText('2');
+  release();
+  await page.waitForTimeout(800);                                   // the held sample arrives after the visitor's data
+  await expect(metric(page, 0)).toHaveText('2');
+  await expect(page.locator('#source-label')).not.toContainText('sample.csv');
+});

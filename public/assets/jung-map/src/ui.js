@@ -4,6 +4,7 @@ import { minimapPoint, spiralPoint } from './layout.js';
 export function createUI({ stations, controller }) {
   const nav = document.getElementById('nav'), labels = document.getElementById('labels'), emos = document.getElementById('emos');
   const mini = document.getElementById('mini'), ctrl = document.getElementById('ctrl'), hint = document.getElementById('hint');
+  let ctrlShown = null;
   const mg = mini.getContext('2d');
 
   nav.innerHTML = stations.map((s, i) => `<button type="button" data-i="${i}">${String(i + 1).padStart(2, '0')}　${s.name_zh}</button>`).join('');
@@ -51,7 +52,14 @@ export function createUI({ stations, controller }) {
         if (on) { el.style.left = `${p.x}px`; el.style.top = `${p.y}px`; el.style.opacity = String(arrival); }
       });
       navBtns.forEach((b, i) => b.setAttribute('aria-current', String(i === focus)));
-      ctrl.classList.toggle('on', focus >= 0 && mode === 'station');
+      const ctrlOn = focus >= 0 && mode === 'station';
+      if (ctrlOn !== ctrlShown) {                                  // 只在状态变化时改 DOM（这里每帧都会被调用）
+        ctrlShown = ctrlOn;
+        ctrl.classList.toggle('on', ctrlOn);
+        // 透明的按钮不能留在 Tab 顺序里：隐藏时整组设为 inert；若焦点正好在组内，把它交给当前站的导航按钮
+        if (!ctrlOn && ctrl.contains(document.activeElement)) (navBtns[Math.max(0, focus)] || navBtns[0])?.focus();
+        ctrl.inert = !ctrlOn;
+      }
       hint.classList.toggle('off', !overview);
       drawMini(focus, visited);
     },

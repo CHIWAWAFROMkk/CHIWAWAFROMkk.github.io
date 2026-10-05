@@ -10,12 +10,14 @@ interface Target { tex: WebGLTexture; fbo: WebGLFramebuffer; w: number; h: numbe
 
 /** Upgrades the static prologue to the particle film when this device can take it; otherwise the static opening stays. */
 export function startPrologue(root: HTMLElement, data: PrologueData): void {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // The inline check may have reserved the film's layout ('pending'); any early exit gives it back.
+  const bail = () => { if (root.dataset.state === 'pending') keepAnchor(root, () => { root.dataset.state = 'static'; }); };
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return bail();
   const canvas = root.querySelector<HTMLCanvasElement>('canvas');
-  if (!canvas) return;
+  if (!canvas) return bail();
   let gl: WebGL2RenderingContext | null = null;
   try { gl = canvas.getContext('webgl2', { antialias: false, alpha: false, powerPreference: 'high-performance' }); } catch { gl = null; }
-  if (!gl) return;
+  if (!gl) return bail();
   const ctx = gl;
   const later = (fn: () => void) => ('requestIdleCallback' in window ? window.requestIdleCallback(fn, { timeout: 600 }) : window.setTimeout(fn, 60));
   later(() => { build(root, canvas, ctx, data).catch(err => { console.error(err); toStatic(root, ctx); }); });

@@ -20,7 +20,7 @@
 
 ## 从初版到企业方案
 
-| | 初版实践（个人） | 企业版方案 |
+| 维度 | 初版实践（个人） | 企业版方案 |
 |---|---|---|
 | 工具 | OpenClaw 调用 DeepSeek 与 GPT API | Microsoft 365：Excel、SharePoint、Power Automate、AI Builder |
 | 重点 | 围绕档案信息提取与补录需求，做出初级版本 | 接入企业批准的数据存储、权限和审核机制，把识别、审核与写回分开 |

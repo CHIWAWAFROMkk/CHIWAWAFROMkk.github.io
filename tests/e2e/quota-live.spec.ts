@@ -233,3 +233,28 @@ test('the live stage has no serious accessibility issue', async ({ page, isMobil
   const bad = violations.filter(v => v.impact === 'serious' || v.impact === 'critical');
   expect(bad.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([]);
 });
+
+test('the faint helper text in the tray reaches 4.5:1 on its paper, without touching the vendored files', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  const ratio = await frame(page).locator('.topbar p').evaluate(el => {
+    const rgb = (s: string) => s.match(/\d+(\.\d+)?/g)!.slice(0, 3).map(Number);
+    const lum = (c: number[]) => { const [r, g, b] = c.map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+    let bgEl: Element | null = el; let bg = 'rgba(0, 0, 0, 0)';
+    while (bgEl && /rgba\(0, 0, 0, 0\)|transparent/.test(bg)) { bg = getComputedStyle(bgEl).backgroundColor; bgEl = bgEl.parentElement; }
+    const a = lum(rgb(getComputedStyle(el).color)), b = lum(rgb(bg));
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  });
+  expect(ratio).toBeGreaterThanOrEqual(4.5);
+});
+
+test('choosing a model filter with the keyboard keeps focus on that filter', async ({ page, isMobile }) => {
+  desktopOnly(!!isMobile);
+  await live(page);
+  await frame(page).locator('[data-view="models"]').click();
+  const codexFilter = frame(page).locator('#modelFilters [data-filter="codex"]');
+  await codexFilter.focus();
+  await codexFilter.press('Enter');
+  await expect(frame(page).locator('#modelFilters [data-filter="codex"]')).toBeFocused();
+  await expect(frame(page).locator('#modelFilters [data-filter="codex"]')).toHaveClass(/active/);
+});

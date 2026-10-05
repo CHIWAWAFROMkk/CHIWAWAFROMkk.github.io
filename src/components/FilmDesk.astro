@@ -64,7 +64,7 @@ const C = DESK.card;
       </div>
       {FILM_SHOTS.map(s => { const c = at.get(s.id); return (
         <article class="fd__card" data-fd-card={s.id} data-start={c ? c.start : undefined} hidden={s.id !== first} aria-labelledby={`fd-c-${s.id}`}>
-          <video data-src={`${M}/video/${s.file}.mp4`} poster={`${M}/video/${s.file}.webp`} width="960" height="540" controls muted loop playsinline preload="none" aria-label={`${s.id} ${s.title[lang]}`}></video>
+          <video data-src={`${M}/video/${s.file}.mp4`} poster={s.id === first ? `${M}/video/${s.file}.webp` : undefined} data-poster={`${M}/video/${s.file}.webp`} width="960" height="540" controls muted loop playsinline preload="none" aria-label={`${s.id} ${s.title[lang]}`}></video>
           <div>
             <h3 id={`fd-c-${s.id}`}><span class="fd__id">{s.id}</span> {s.title[lang]}</h3>
             <p class="fd__meta">{s.made[lang]}</p>

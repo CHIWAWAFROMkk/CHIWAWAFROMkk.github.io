@@ -110,7 +110,7 @@ export const SITE = {
       status: { zh: '原型 · 构造样本', en: 'Prototype · synthetic sample' } }),
     project({ slug: 'jung-self-map', line: 'data', preview: '/assets/editorial/jung-map.svg', inBrief: true,
       title: { zh: '荣格 × 我', en: 'Jung × Me' },
-      did: { zh: '把荣格的七个概念做成一张能操作的三维星图和一部短片，画面与口播由 AI 生成，剪辑、渲染与混音由代码完成', en: 'Seven Jungian concepts as an interactive 3D star map and a short film: AI-generated pictures and voice, with editing, rendering and mixing done in code' },
+      did: { zh: '把六个荣格概念和一个叙事主题做成一张能操作的三维星图和一部短片，画面与口播由 AI 生成，剪辑、渲染与混音由代码完成', en: 'Six Jungian concepts and one narrative theme as an interactive 3D star map and a short film: AI-generated pictures and voice, with editing, rendering and mixing done in code' },
       status: { zh: '个人作品 · 短片与星图可直接体验', en: 'Personal work · film and map ready to explore' } }),
     project({ slug: 'mais-je-taime', line: 'film', inBrief: true,
       title: { zh: "Mais je t'aime", en: "Mais je t'aime" },
@@ -278,8 +278,8 @@ export const SITE = {
     },
     jung: {
       title: { zh: '荣格 × 我', en: 'Jung × Me' },
-      lead: { zh: '用荣格的七个概念，沿一条下潜的路线走到“我”。同一份内容，做成一张能操作的三维星图，和一部短片。', en: 'Seven Jungian concepts along one descending route, ending at “me”. One body of content, made as an interactive 3D star map and as a short film.' },
-      description: { zh: '荣格 × 我：七个荣格概念做成可操作的三维星图和一部短片；AI 生成画面与口播，剪辑、渲染与混音由代码完成，五句引文均附出处。', en: 'Jung × Me: seven Jungian concepts as an interactive 3D star map and a short film. AI-generated pictures and voice; editing, rendering and mixing done in code; every quotation sourced.' },
+      lead: { zh: '用六个荣格概念和一个叙事主题，沿一条下潜的路线走到“我”。同一份内容，做成一张能操作的三维星图，和一部短片。', en: 'Six Jungian concepts and one narrative theme along one descending route, ending at “me”. One body of content, made as an interactive 3D star map and as a short film.' },
+      description: { zh: '荣格 × 我：六个荣格概念和一个叙事主题，做成可操作的三维星图和一部短片；AI 生成画面与口播，剪辑、渲染与混音由代码完成，五句引文均附出处。', en: 'Jung × Me: six Jungian concepts and one narrative theme as an interactive 3D star map and a short film. AI-generated pictures and voice; editing, rendering and mixing done in code; every quotation sourced.' },
       tags: [ { zh: '个人作品 · AI 辅助创作', en: 'Personal work · AI-assisted' }, { zh: 'Three.js · WebGL · Python · ffmpeg', en: 'Three.js · WebGL · Python · ffmpeg' } ],
       summary: {
         task: { zh: '把人格面具、他者的凝视、投射、情结、阴影、阿尼玛与阿尼姆斯、自性连成一条通向“我”的路线；既能操作，也能当短片看。', en: 'Join persona, the gaze of the other, projection, complex, shadow, anima and animus, and the self into one route that ends at “me” — something you can operate, and something you can watch as a film.' },

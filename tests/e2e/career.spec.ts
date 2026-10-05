@@ -101,3 +101,10 @@ test('an unchanged indicator stays still while a changed one spins', async ({ pa
   expect(sc('4-1').match.overall_score).toBe(sc('4-0').match.overall_score);
   expect(spinning).toEqual([false, true, false]);
 });
+
+test('the English page fits a 320px phone: no control pushes the page sideways', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto('/en/projects/ai-career/');
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+});
