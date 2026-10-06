@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { chromium, test, expect, type Page } from '@playwright/test';
 
 /* Batch 4: the light pages' motion made visible — doors, summary rows, count-ups,
    section rules, programs powering on, the trailing preview. */
@@ -61,6 +61,34 @@ test.describe('motion batch 4: the light pages', () => {
     await expect(head.locator('h2')).toHaveAttribute('data-section-motion', '');
   });
 
+  test('unfinished headings show after a real back-forward cache restore', async ({ baseURL, isMobile }) => {
+    test.skip(!!isMobile, 'the desktop Edge cache path is covered here');
+    const browser = await chromium.launch({ channel: 'msedge', ignoreDefaultArgs: ['--disable-back-forward-cache'] });
+    try {
+      const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+      const cachedPage = await context.newPage();
+      await cachedPage.addInitScript(() => {
+        localStorage.setItem('hyj-intro-seen', '1');
+        addEventListener('pageshow', event => {
+          if (event.persisted) document.documentElement.dataset.bfcacheRestored = 'true';
+        });
+      });
+      await cachedPage.goto(baseURL + '/projects/campus-delivery/', { waitUntil: 'networkidle' });
+      const heading = cachedPage.locator('article.prose h2[data-m-head="plain"].m-armed:not(.m-in)').first();
+      await expect(heading).toBeAttached();
+      const title = await heading.textContent();
+      await cachedPage.goto(baseURL + '/privacy/', { waitUntil: 'networkidle' });
+      await cachedPage.goBack({ waitUntil: 'commit' });
+      await expect(cachedPage.locator('html')).toHaveAttribute('data-bfcache-restored', 'true');
+      const restored = cachedPage.locator('article.prose h2').filter({ hasText: title! }).first();
+      await restored.scrollIntoViewIfNeeded();
+      await expect(restored).not.toHaveClass(/m-armed/);
+      await expect(restored).toHaveCSS('opacity', '1');
+    } finally {
+      await browser.close();
+    }
+  });
+
   test('a program below the fold powers on with a red sweep, then its parts rise', async ({ page }) => {
     await page.goto('/projects/campus-delivery/');
     const boot = page.locator('[data-m-boot="line"].m-armed').first();
@@ -90,6 +118,38 @@ test.describe('motion batch 4: the light pages', () => {
     expect(y2 - y1).toBeGreaterThan(20);
   });
 
+  test('a keyboard-focused preview stays inside a narrow desktop viewport', async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'touch has no preview');
+    await page.setViewportSize({ width: 640, height: 900 });
+    await page.goto('/projects/');
+    const row = page.locator('a.prow').nth(1);
+    const preview = row.locator('.prow__preview');
+    const inside = async (width: number) => {
+      const box = (await preview.boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(width);
+    };
+    await row.focus();
+    await expect(preview).toHaveCSS('opacity', '1');
+    await inside(640);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const rowBox = (await row.boundingBox())!;
+    await page.mouse.move(1000, rowBox.y + rowBox.height / 2);
+    await expect.poll(() => row.evaluate(el => Number.parseInt(el.style.getPropertyValue('--px')))).toBeGreaterThan(640);
+    await page.setViewportSize({ width: 640, height: 900 });
+    await row.focus();
+    await expect.poll(async () => {
+      const box = (await preview.boundingBox())!;
+      return box.x + box.width;
+    }).toBeLessThanOrEqual(640);
+    await page.setViewportSize({ width: 320, height: 900 });
+    await expect.poll(async () => {
+      const box = (await preview.boundingBox())!;
+      return box.x + box.width;
+    }).toBeLessThanOrEqual(320);
+    await inside(320);
+  });
+
   test('reduced motion: nothing is ever armed and every part shows at once', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const path of ['/', '/projects/hris-workflow/', '/projects/campus-delivery/', '/en/projects/']) {
@@ -109,6 +169,33 @@ test.describe('motion batch 4: the light pages', () => {
       expect(await shown(), `${path} at the deadline`).toBe(true);
       await page.waitForTimeout(1200);                                  // the late script has run
       expect(await shown(), `${path} after the late script`).toBe(true);
+    }
+  });
+
+  test('a late program script does not hide a visible workbench', async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'the desktop fold boundary is covered here');
+    let release!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    await page.route(/\/_astro\/ProjectMotion\.astro_[^/]+\.js$/, async route => {
+      await gate;
+      await route.continue();
+    });
+    try {
+      await page.goto('/projects/campus-delivery/', { waitUntil: 'commit' });
+      await page.waitForFunction(() => document.documentElement.classList.contains('motion-timeout'));
+      const workbench = page.locator('main div[data-demo] > section').first();
+      await workbench.waitFor({ state: 'attached' });
+      await workbench.evaluate(el => scrollTo(0, el.getBoundingClientRect().top + scrollY - innerHeight * 0.85));
+      const top = await workbench.evaluate(el => el.getBoundingClientRect().top);
+      expect(top).toBeGreaterThan(720);
+      expect(top).toBeLessThan(900);
+      expect(await workbench.locator('> *').first().evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+      release();
+      await expect.poll(() => workbench.evaluate(el => el.hasAttribute('data-m-boot'))).toBe(true);
+      await expect(workbench).not.toHaveClass(/m-armed/);
+      expect(await workbench.locator('> *').first().evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+    } finally {
+      release();
     }
   });
 

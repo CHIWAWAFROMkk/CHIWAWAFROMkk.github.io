@@ -35,11 +35,21 @@ export interface ArmOptions { margin?: string; fold?: number; onArm?: (el: HTMLE
 /** Arms the elements below the fold and plays each once as it scrolls into view. */
 export function armOnScroll(els: Iterable<HTMLElement>, { margin = '0px 0px -12% 0px', fold = 1, onArm }: ArmOptions = {}): () => void {
   if (!prefersMotion() || !('IntersectionObserver' in window)) return () => {};
-  const below = [...els].filter(el => el.getBoundingClientRect().top >= innerHeight * fold);
+  const late = !introPending() && document.documentElement.classList.contains('motion-timeout');
+  const below = [...els].filter(el => {
+    const top = el.getBoundingClientRect().top;
+    return top >= innerHeight * fold && (!late || top >= innerHeight);
+  });
   for (const el of below) { el.classList.add('m-armed'); onArm?.(el); }
   const io = observe(below, margin);
   const off = settleOnReduce(below, () => io.disconnect());
-  return () => { io.disconnect(); off(); };
+  return () => {
+    io.disconnect();
+    off();
+    // pagehide can put this document in bfcache. With no observer after restore,
+    // an unfinished start state would otherwise keep its content invisible.
+    for (const el of below) el.classList.remove('m-armed');
+  };
 }
 
 export interface StageOptions { delay?: number; step?: number; margin?: string }
