@@ -18,7 +18,7 @@ test('hovering a row shows its preview beside the pointer', async ({ page, isMob
   await expect(preview).toHaveAttribute('src', '/assets/previews/campus-insights.svg');
   await row.hover({ position: { x: 200, y: 20 } });
   await expect.poll(() => preview.evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
-  const x = await row.evaluate(el => getComputedStyle(el).getPropertyValue('--x'));
+  const x = await row.evaluate(el => getComputedStyle(el).getPropertyValue('--px'));
   expect(parseFloat(x)).toBeGreaterThan(150);
 });
 

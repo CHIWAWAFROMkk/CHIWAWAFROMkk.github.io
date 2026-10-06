@@ -18,13 +18,18 @@ const { lang, project, index, motion = false } = Astro.props;
 </SpotlightCard>
 <script>
   import { reveal } from '../scripts/motion-dom';
+  import { initCountUp } from '../scripts/countup-dom';
   const rows = document.querySelectorAll<HTMLElement>('a.prow[data-motion]');
   reveal(rows, 60);
-  // The preview follows the pointer within the row, kept clear of the right edge.
+  // Each number ticks up to its place as its row slides in: 00 → 07.
+  const numbers = [...rows].map(row => row.querySelector<HTMLElement>('.prow__n')).filter((n): n is HTMLElement => !!n);
+  initCountUp(numbers, (final, k) => String(Math.round(Number(final) * k)).padStart(final.length, '0'));
+  // The preview trails the pointer on both axes through transform, so following it never moves layout.
   for (const row of rows) {
     row.addEventListener('pointermove', e => {
       const r = row.getBoundingClientRect();
-      row.style.setProperty('--x', `${Math.min(e.clientX - r.left, r.width - 340)}px`);
+      row.style.setProperty('--px', `${Math.max(0, Math.min(e.clientX - r.left, r.width - 340))}px`);
+      row.style.setProperty('--py', `${Math.round(e.clientY - r.top - r.height / 2)}px`);
     });
   }
 </script>
@@ -43,9 +48,9 @@ const { lang, project, index, motion = false } = Astro.props;
   .prow__status { font-size: 13px; color: var(--mute); }
   .prow:hover .prow__status, .prow[data-motion]:focus-visible .prow__status { color: var(--night-mute); }
   .prow__arrow { color: var(--red); }
-  .prow__preview { position: absolute; z-index: 3; top: 50%; left: clamp(0px, var(--x, 58%), calc(100% - 340px)); width: 300px; height: auto; border: var(--rule); background: var(--paper); pointer-events: none; opacity: 0; transform: translate(24px, -50%) scale(0.96); transition: opacity 0.2s var(--ease), transform 0.2s var(--ease); }
+  .prow__preview { position: absolute; z-index: 3; top: 50%; left: 0; width: 300px; height: auto; border: var(--rule); background: var(--paper); pointer-events: none; opacity: 0; transform: translate(calc(var(--px, 58vw) + 24px), calc(-50% + var(--py, 0px))) scale(0.96); transition: opacity 0.2s var(--ease), transform 0.45s var(--ease); }
   @media (hover: hover) and (pointer: fine) {
-    .prow:hover .prow__preview, .prow:focus .prow__preview { opacity: 1; transform: translate(24px, -50%) scale(1); }
+    .prow:hover .prow__preview, .prow:focus .prow__preview { opacity: 1; transform: translate(calc(var(--px, 58vw) + 24px), calc(-50% + var(--py, 0px))) scale(1); }
   }
   @media not ((hover: hover) and (pointer: fine)) { .prow__preview { display: none; } }
   @media (max-width: 800px) {

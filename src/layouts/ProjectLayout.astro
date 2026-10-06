@@ -1,6 +1,8 @@
 ---
 import Base from './Base.astro';
 import SectionReveals from '../components/SectionReveals.astro';
+import ProjectMotion from '../components/ProjectMotion.astro';
+import { countableSegments } from '../scripts/motion/countable';
 import SplitText from '../components/rb/SplitText.astro';
 import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import { SITE } from '../data/site';
@@ -27,7 +29,7 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
     </header>
     <section class="p-summary wrap" aria-labelledby="p-summary-h">
       <h2 id="p-summary-h" class="label">{S.heading[lang]}</h2>
-      <dl>{rows.map(([k, v]) => <div class="p-row"><dt>{k[lang]}</dt><dd>{v[lang]}</dd></div>)}</dl>
+      <dl>{rows.map(([k, v]) => <div class="p-row" data-m-pre={motion ? '' : undefined}><dt>{k[lang]}</dt><dd>{motion ? countableSegments(v[lang]).map(s => s.count ? <span class="p-count" data-count>{s.text}</span> : s.text) : v[lang]}</dd></div>)}</dl>
     </section>
     <slot name="demo" />
     <article class="prose wrap"><slot /></article>
@@ -37,6 +39,7 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
     </nav>
   </main>
   {motion && <SectionReveals />}
+  {motion && <ProjectMotion />}
 </Base>
 <style>
   .p-head { display: grid; gap: 18px; padding-block: clamp(32px, 6vh, 72px) 36px; border-bottom: var(--rule); }
@@ -49,6 +52,19 @@ const rows: [Bi, Bi][] = [[S.task, summary.task], [S.mine, summary.mine], [S.too
   .p-row { display: grid; grid-template-columns: minmax(7em, 14em) 1fr; gap: 8px 32px; padding-block: 14px; border-top: var(--hair); }
   .p-row dt { font: 900 16px/1.6 var(--font-cjk-bold); }
   .p-row dd { max-width: 48em; }
+  .p-count { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  /* Summary rows (ProjectMotion): held before the script, then the rule draws, the label and the text follow. */
+  :global(html.motion-ok:not(.motion-timeout)) .p-row[data-m-pre]:not(:global(.m-armed)) { border-top-color: transparent; }
+  :global(html.motion-ok:not(.motion-timeout)) .p-row[data-m-pre]:not(:global(.m-armed)) > * { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .p-row:global(.m-armed) { position: relative; border-top-color: transparent; }
+    .p-row:global(.m-armed)::before { content: ''; position: absolute; left: 0; right: 0; top: -1px; border-top: var(--hair); transform: scaleX(0); transform-origin: left; }
+    .p-row:global(.m-armed) dt { opacity: 0; transform: translateX(-10px); }
+    .p-row:global(.m-armed) dd { opacity: 0; transform: translateY(8px); }
+    .p-row:global(.m-armed.m-in)::before { transform: none; transition: transform 0.8s var(--ease) var(--m-d, 0ms); }
+    .p-row:global(.m-armed.m-in) dt { opacity: 1; transform: none; transition: opacity 0.6s var(--ease) calc(var(--m-d, 0ms) + 120ms), transform 0.8s var(--ease) calc(var(--m-d, 0ms) + 120ms); }
+    .p-row:global(.m-armed.m-in) dd { opacity: 1; transform: none; transition: opacity 0.6s var(--ease) calc(var(--m-d, 0ms) + 220ms), transform 0.8s var(--ease) calc(var(--m-d, 0ms) + 220ms); }
+  }
   .p-pager { display: flex; justify-content: space-between; gap: 16px; padding-block: 28px; border-top: var(--rule); font-weight: 500; }
   .p-pager a { text-decoration: none; }
   .p-pager a:hover { text-decoration: underline; text-underline-offset: 6px; }

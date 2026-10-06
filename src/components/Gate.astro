@@ -9,17 +9,23 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
 <nav class="gate" aria-label={SITE.gate.label[lang]}>
   {doors.map((d, i) => (
     <a class:list={['door', { 'door--ink': i === 1 }]} href={localizePath(d.href, lang)}>
-      <span class="door__index">{d.index}</span>
-      <span class="door__big" aria-hidden="true">{d.big}</span>
-      <span class="door__title">{d.title[lang]}<Magnet className="door__magnet"><span class="door__arrow" aria-hidden="true">→</span></Magnet></span>
-      <span class="door__desc">{d.desc[lang]}</span>
+      <span class="door__index" data-m-pre>{d.index}</span>
+      <span class="door__big" aria-hidden="true" data-m-pre>{d.big}</span>
+      <span class="door__title" data-m-pre>{d.title[lang]}<Magnet className="door__magnet"><span class="door__arrow" aria-hidden="true">→</span></Magnet></span>
+      <span class="door__desc" data-m-pre>{d.desc[lang]}</span>
     </a>
   ))}
 </nav>
 <script>
   import { initDoorTransition } from '../scripts/door-transition-dom';
+  import { stage } from '../scripts/motion/arm';
   const gate = document.querySelector<HTMLElement>('.gate');
-  if (gate) initDoorTransition(gate);
+  if (gate) {
+    initDoorTransition(gate);
+    // After the name: both big words rise one after the other, then each door's title and line follow.
+    const parts = (cls: string) => [...gate.querySelectorAll<HTMLElement>(`.${cls}[data-m-pre]`)];
+    stage([...parts('door__big'), ...parts('door__index'), ...parts('door__title'), ...parts('door__desc')], { delay: 420, step: 90 });
+  }
 </script>
 <style>
   .gate { display: grid; grid-template-columns: 1fr 1fr; border-block: var(--rule); }
@@ -32,6 +38,12 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
   .door__arrow { color: var(--red); }
   .door :global(.door__magnet) { margin-left: 0.1em; }
   .door__desc { color: var(--mute); font-size: 15px; }
+  :global(html.motion-ok:not(.motion-timeout)) .door [data-m-pre]:not(:global(.m-armed)) { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .door :global(.m-armed) { opacity: 0; transform: translateY(14px); }
+    .door .door__big:global(.m-armed) { transform: translateY(0.3em); }
+    .door :global(.m-armed.m-in) { opacity: 1; transform: none; transition: opacity 0.7s var(--ease) var(--m-d, 0ms), transform 1s var(--ease) var(--m-d, 0ms); }
+  }
   .door--ink .door__desc { color: var(--night-mute); }
   .door:hover { background: #e6e5de; }
   .door--ink:hover { background: #222; }

@@ -76,11 +76,10 @@ export function initScrollReveal(el: HTMLElement, { splitText = true, preserveVi
         scrollTrigger: { trigger: el, start: 'top 94%', once: true },
         onComplete: finish,
       });
-      timeline.fromTo(el, { rotate: 1.5, transformOrigin: '0% 50%' }, {
-        rotate: 0, duration: MOTION.reveal, ease: 'site',
-      }, 0).fromTo(parts, { opacity: .15 }, {
-        opacity: 1, duration: MOTION.reveal,
-        stagger: { each: MOTION.staggerChar, amount: Math.min(parts.length * MOTION.staggerChar, .5) },
+      // Each word (or character, in Chinese) rises a little and fades in, left to right.
+      timeline.fromTo(parts, { opacity: 0, yPercent: 40 }, {
+        opacity: 1, yPercent: 0, duration: MOTION.title,
+        stagger: { each: MOTION.staggerChar, amount: Math.min(parts.length * MOTION.staggerChar, .7) },
         ease: 'site',
       }, 0);
     }, el);

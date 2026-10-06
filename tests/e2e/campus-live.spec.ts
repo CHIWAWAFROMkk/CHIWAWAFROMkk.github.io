@@ -256,6 +256,7 @@ test('phones wait for the start button before downloading the runtime', async ({
 test('once the program runs, the live stage has no serious accessibility issue', async ({ page, isMobile }) => {
   desktopOnly(!!isMobile);
   await live(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });   // contrast is a content check, not measured mid-fade
   const { violations } = await new AxeBuilder({ page }).include('#cm-stage').analyze();
   const bad = violations.filter(v => v.impact === 'serious' || v.impact === 'critical');
   expect(bad.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([]);

@@ -14,6 +14,7 @@ for (const p of PAGES) {
   test(`every number on ${p} comes from the fact ledger`, async ({ page, isMobile }) => {
     test.skip(!!isMobile, 'run once');
     await skipIntro(page);
+    await page.emulateMedia({ reducedMotion: 'reduce' });       // content, not motion: no number is read mid-count
     await page.goto(p);
     const text = await page.locator('main').evaluate((main, sel) => {
       const clone = main.cloneNode(true) as HTMLElement;

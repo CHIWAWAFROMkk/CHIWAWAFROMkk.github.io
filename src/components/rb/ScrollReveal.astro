@@ -7,5 +7,13 @@ const { text, className = '' } = Astro.props;
 <span class:list={['scroll-reveal', className]} style="display:inline-block">{text}</span>
 <script>
   import { initScrollReveal } from '../../scripts/motion/reveal';
-  for (const el of document.querySelectorAll<HTMLElement>('.scroll-reveal')) initScrollReveal(el);
+  import { initHeadReveals } from '../../scripts/motion/heads';
+  const heads: HTMLElement[] = [];
+  for (const el of document.querySelectorAll<HTMLElement>('.scroll-reveal')) {
+    const heading = el.closest<HTMLElement>('h2');
+    // A section heading draws its rule and rises with the shared heading motion; a lead reveals word by word.
+    if (heading) heads.push(heading);
+    else initScrollReveal(el);
+  }
+  initHeadReveals(heads);
 </script>

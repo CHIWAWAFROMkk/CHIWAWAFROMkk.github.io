@@ -1,0 +1,27 @@
+<script>
+  import { stage, armOnScroll } from '../scripts/motion/arm';
+  import { initCountUp } from '../scripts/countup-dom';
+  // The one-minute summary writes itself in: each row's rule draws, then its label, then its text.
+  stage(document.querySelectorAll<HTMLElement>('.p-row[data-m-pre]'), { delay: 380, step: 90 });
+  // Counts begin as their row arrives rather than behind it.
+  // The count keeps the original's format: "2000" never passes through "1,260".
+  const sameFormat = (final: string, k: number) => {
+    const v = Math.round(Number(final.replace(/,/g, '')) * k);
+    return final.includes(',') ? v.toLocaleString('en-US') : String(v);
+  };
+  setTimeout(() => initCountUp(document.querySelectorAll<HTMLElement>('.p-row [data-count]'), sameFormat), 650);
+  // Programs power on as they scroll in (light pages; the film pages have their own picture motion).
+  if (!document.body.classList.contains('night')) {
+    const boots = [...document.querySelectorAll<HTMLElement>('main section[data-demo], main div[data-demo] > section, main .qshots, main .framework')];
+    for (const el of boots) {
+      const cs = getComputedStyle(el);
+      // The sweep needs el as a containing block: only where that cannot move anything inside.
+      const anchored = cs.position === 'relative'
+        || (cs.position === 'static' && ![...el.querySelectorAll('*')].some(n => /^(absolute|fixed)$/.test(getComputedStyle(n).position)));
+      el.dataset.mBoot = anchored && getComputedStyle(el, '::before').content === 'none' ? 'line' : '';
+      [...el.children].forEach((child, i) => (child as HTMLElement).style.setProperty('--m-i', String(Math.min(i, 6))));
+    }
+    // A program whose top only peeks into the bottom fifth of the first screen still powers on.
+    armOnScroll(boots, { margin: '0px 0px -15% 0px', fold: 0.8 });
+  }
+</script>

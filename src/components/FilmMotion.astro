@@ -3,26 +3,22 @@
   initFilmMotion();
 </script>
 <style is:global>
-  /* Bloom: the grayscale copy sits over the colour still and fades out once. */
   [data-fm='bloom'] { position: relative; overflow: clip; }
   [data-fm='bloom'] .fm-mono { position: absolute; inset: 0; width: 100%; height: 100%; filter: grayscale(1) brightness(0.92); opacity: 0; pointer-events: none; }
   [data-fm='bloom'] .fm-still { transform-origin: 50% 60%; }
-  [data-fm='bloom'].fm-armed .fm-mono { opacity: 1; }
-  [data-fm='bloom'].fm-armed .fm-still, [data-fm='bloom'].fm-armed .fm-mono { transform: scale(1.035); }
-  [data-fm='bloom'].fm-in .fm-mono { opacity: 0; transition: opacity 1.6s var(--ease) 0.35s, transform 1.8s var(--ease); }
-  [data-fm='bloom'].fm-in .fm-still, [data-fm='bloom'].fm-in .fm-mono { transform: none; }
-  [data-fm='bloom'].fm-in .fm-still { transition: transform 1.8s var(--ease); }
-
-  /* Letterbox: two bars cover 12% top and bottom, then retract to the full frame. */
   [data-fm='letterbox'] { position: relative; }
-  [data-fm='letterbox']::before, [data-fm='letterbox']::after { content: ''; position: absolute; left: 0; right: 0; height: 12.5%; z-index: 1; background: var(--night); pointer-events: none; transform: scaleY(0); }
-  [data-fm='letterbox']::before { top: 0; transform-origin: top; }
-  [data-fm='letterbox']::after { bottom: 0; transform-origin: bottom; }
-  [data-fm='letterbox'].fm-armed::before, [data-fm='letterbox'].fm-armed::after { transform: scaleY(1); }
-  [data-fm='letterbox'].fm-in::before, [data-fm='letterbox'].fm-in::after { transform: scaleY(0); transition: transform 1.1s var(--ease) 0.15s; }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Bloom: the grayscale copy sits over the colour still and fades out once. */
+    [data-fm='bloom'].m-armed .fm-mono { opacity: 1; }
+    [data-fm='bloom'].m-armed .fm-still, [data-fm='bloom'].m-armed .fm-mono { transform: scale(1.035); }
+    [data-fm='bloom'].m-armed.m-in .fm-mono { opacity: 0; transition: opacity 1.6s var(--ease) 0.35s, transform 1.8s var(--ease); }
+    [data-fm='bloom'].m-armed.m-in .fm-still, [data-fm='bloom'].m-armed.m-in .fm-mono { transform: none; }
+    [data-fm='bloom'].m-armed.m-in .fm-still { transition: transform 1.8s var(--ease); }
 
-  @media (prefers-reduced-motion: reduce) {
-    [data-fm] .fm-mono, [data-fm]::before, [data-fm]::after { display: none; }
-    [data-fm] .fm-still { transform: none !important; }
+    /* Letterbox: two bars cover 12.5% top and bottom, then retract to the full frame. */
+    [data-fm='letterbox'].m-armed::before, [data-fm='letterbox'].m-armed::after { content: ''; position: absolute; left: 0; right: 0; height: 12.5%; z-index: 1; background: var(--night); pointer-events: none; transform: scaleY(1); }
+    [data-fm='letterbox'].m-armed::before { top: 0; transform-origin: top; }
+    [data-fm='letterbox'].m-armed::after { bottom: 0; transform-origin: bottom; }
+    [data-fm='letterbox'].m-armed.m-in::before, [data-fm='letterbox'].m-armed.m-in::after { transform: scaleY(0); transition: transform 1.1s var(--ease) 0.15s; }
   }
 </style>

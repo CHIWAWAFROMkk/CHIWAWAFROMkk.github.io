@@ -40,13 +40,13 @@ test.describe('motion batch 3: the film pages', () => {
   test('the S04 still starts in black and white and lets the one red bloom once seen', async ({ page }) => {
     await page.goto(FILM[0]);
     const frame = page.locator('[data-fm="bloom"]');
-    await expect(frame).toHaveClass(/fm-armed/);
+    await expect(frame).toHaveClass(/m-armed/);
     const mono = frame.locator('.fm-mono');
     expect(await mono.evaluate(el => getComputedStyle(el).opacity)).toBe('1');
     await expect(mono).toHaveAttribute('aria-hidden', 'true');
     await expect(mono).toHaveAttribute('alt', '');
     await frame.scrollIntoViewIfNeeded();
-    await expect(frame).toHaveClass(/fm-in/);
+    await expect(frame).toHaveClass(/m-in/);
     await expect.poll(() => mono.evaluate(el => Number(getComputedStyle(el).opacity)), { timeout: 5000 }).toBe(0);
     await expect.poll(() => frame.locator('.fm-still').evaluate(el => getComputedStyle(el).transform), { timeout: 5000 }).toBe('none');
   });
@@ -54,7 +54,7 @@ test.describe('motion batch 3: the film pages', () => {
   test('the Jung film opens from letterbox bars to the full frame', async ({ page }) => {
     await page.goto(JUNG[0]);
     const sel = '[data-fm="letterbox"]';
-    await expect(page.locator(sel)).toHaveClass(/fm-armed/);
+    await expect(page.locator(sel)).toHaveClass(/m-armed/);
     expect(await scaleY(page, sel, '::before')).toBe(1);
     await page.locator(sel).scrollIntoViewIfNeeded();
     await expect.poll(() => scaleY(page, sel, '::before'), { timeout: 5000 }).toBe(0);
@@ -66,7 +66,7 @@ test.describe('motion batch 3: the film pages', () => {
     await page.setViewportSize({ width: 1440, height: 4000 });
     await page.goto(FILM[0]);
     await page.waitForTimeout(400);
-    await expect(page.locator('[data-fm="bloom"]')).not.toHaveClass(/fm-armed/);
+    await expect(page.locator('[data-fm="bloom"]')).not.toHaveClass(/m-armed/);
     expect(await page.locator('[data-fm="bloom"] .fm-mono').evaluate(el => getComputedStyle(el).opacity)).toBe('0');
   });
 
@@ -74,15 +74,15 @@ test.describe('motion batch 3: the film pages', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const path of [FILM[0], JUNG[0]]) {
       await page.goto(path);
-      await expect(page.locator('[data-fm].fm-armed')).toHaveCount(0);
+      await expect(page.locator('[data-fm].m-armed')).toHaveCount(0);
     }
-    expect(await page.locator('[data-fm="letterbox"]').evaluate(el => getComputedStyle(el, '::before').display)).toBe('none');
+    expect(await page.locator('[data-fm="letterbox"]').evaluate(el => getComputedStyle(el, '::before').content)).toBe('none');
     const context = await browser.newContext({ javaScriptEnabled: false });
     const plain = await context.newPage();
     await plain.goto(baseURL + FILM[0]);
     expect(await plain.locator('[data-fm="bloom"] .fm-mono').evaluate(el => getComputedStyle(el).opacity)).toBe('0');
     await plain.goto(baseURL + JUNG[0]);
-    expect(await plain.locator('[data-fm="letterbox"]').evaluate(el => new DOMMatrix(getComputedStyle(el, '::before').transform).d)).toBe(0);
+    expect(await plain.locator('[data-fm="letterbox"]').evaluate(el => getComputedStyle(el, '::before').content)).toBe('none');
     await context.close();
   });
 
@@ -93,16 +93,16 @@ test.describe('motion batch 3: the film pages', () => {
       HTMLCanvasElement.prototype.getContext = function (type: string, ...rest: unknown[]) { return type === 'webgl2' ? null : orig.call(this, type, ...rest); };
     });
     await page.goto(JUNG[0]);
+    await page.waitForTimeout(1800);                                  // the opening's own fade-in has settled: stable coordinates
     const magnet = page.locator('.jp__actions .magnet').first();
     await expect(magnet).toHaveAttribute('data-magnet-ready', '');
     const box = (await magnet.boundingBox())!;
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.move(box.x + box.width - 2, box.y + box.height - 2);
-    await page.waitForTimeout(500);
-    const offset = await magnet.locator(':scope > span').evaluate(el => { const m = new DOMMatrix(getComputedStyle(el).transform); return Math.hypot(m.e, m.f); });
-    expect(offset).toBeLessThanOrEqual(6.01);
-    if (isMobile) expect(offset).toBe(0);
-    else expect(offset).toBeGreaterThan(1);
+    const offset = () => magnet.locator(':scope > span').evaluate(el => { const m = new DOMMatrix(getComputedStyle(el).transform); return Math.hypot(m.e, m.f); });
+    if (isMobile) { await page.waitForTimeout(500); expect(await offset()).toBe(0); }
+    else await expect.poll(offset, { timeout: 4000 }).toBeGreaterThan(1);
+    expect(await offset()).toBeLessThanOrEqual(6.01);
     await expect(page.locator('.jp__btn').first()).toHaveAttribute('href', '#jf-h');
   });
 

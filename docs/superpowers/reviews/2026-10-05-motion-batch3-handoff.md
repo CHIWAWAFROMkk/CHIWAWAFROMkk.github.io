@@ -43,3 +43,18 @@
 - `npx vitest run`：304 项通过。
 - `npx playwright test`：790 项通过，222 项按设计跳过，0 项失败（Edge，桌面加手机两种视口）。
 - 新增 `tests/e2e/motion-batch3.spec.ts`，30 项。
+
+## 第四批：把第一、二批的动效做得看得见（Claude，同日）
+
+针对"GPT 版效果太淡、只集中在首屏第一秒"：
+- 共用调度 `src/scripts/motion/arm.ts`：`armOnScroll`（只给首屏以下的元素设起始状态 `.m-armed`，滚入后加 `.m-in`）和 `stage`（首屏编排；遮罩未退或已过 2.5 秒保险线时不再隐藏已可见内容）。
+- 段落标题（`heads.ts`）：分隔线从左画出，标题和旁注从下方升起；`reveal.ts` 的导语改为逐字/词升起。
+- 项目页摘要五行依次展开（线→标签→内容），"约 2000 名员工"这类数量从 0 数到实际值（`countable.ts` 只数"数字+量词"，年份、日期、百分比、小数不动；格式保持原样，不会经过"1,260"）。
+- 首页两扇门在姓名之后依次升起（`Gate.astro`）。
+- 项目页的程序区进入视口时，顶部红线扫过、内容分层升起（`ProjectMotion.astro`，仅浅色页）。
+- 项目列表：编号数到位；悬停预览改为 transform 跟随鼠标的横纵两个方向（变量由 `--x` 改为 `--px`/`--py`）。
+- 影像页的 `film-motion.ts` 改用同一套 `arm.ts`，class 统一为 `m-armed`/`m-in`。
+
+测试：`tests/e2e/motion-batch4.spec.ts`（15 项）；`numbers.spec.ts` 与四处 axe 无障碍测试改为在"减少动态"下运行（它们检查内容，不应在淡入途中取色）；磁吸测试等入场动画结束后再取坐标。全量 805 通过、0 失败。
+
+建议重点检查：`prefers-reduced-motion` 在页面打开后切换；慢网下 `ProjectMotion` 脚本在 2.5 秒后才到；`.p-row` 的 `::before` 画线在高分屏上的 1px 对齐；`countup-dom` 在窄屏遇到会换行的数字时保持静态（属原有保护）。
