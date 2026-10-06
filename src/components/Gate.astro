@@ -41,7 +41,7 @@ const doors = [SITE.gate.brief, SITE.gate.projects];
   :global(html.motion-ok:not(.motion-timeout)) .door [data-m-pre]:not(:global(.m-armed)) { opacity: 0; }
   @media (prefers-reduced-motion: no-preference) {
     .door :global(.m-armed) { opacity: 0; transform: translateY(14px); }
-    .door .door__big:global(.m-armed) { transform: translateY(0.3em); }
+    .door .door__big:global(.m-armed:not(.m-in)) { transform: translateY(0.3em); }
     .door :global(.m-armed.m-in) { opacity: 1; transform: none; transition: opacity 0.7s var(--ease) var(--m-d, 0ms), transform 1s var(--ease) var(--m-d, 0ms); }
   }
   .door--ink .door__desc { color: var(--night-mute); }

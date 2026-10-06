@@ -15,7 +15,7 @@ const scaleX = (page: Page, sel: string) => page.locator(sel).first().evaluate(e
 test.describe('motion batch 4: the light pages', () => {
   test.beforeEach(async ({ page }) => { await skipIntro(page); });
 
-  test('home: the doors rise in order after the name and end fully shown', async ({ page }) => {
+  test('home: the doors rise in order after the name and end fully shown', async ({ page, isMobile }) => {
     await page.goto('/');
     const parts = page.locator('.door [data-m-pre]');
     await expect(parts).toHaveCount(8);
@@ -23,6 +23,17 @@ test.describe('motion batch 4: the light pages', () => {
     const delays = await page.locator('.door .door__big').evaluateAll(els => els.map(el => parseInt(getComputedStyle(el).getPropertyValue('--m-d'))));
     expect(delays[1]).toBeGreaterThan(delays[0]);
     await expect.poll(() => allShown(page, '.door [data-m-pre]'), { timeout: 4000 }).toBe(true);
+    await expect.poll(() => page.locator('.door__big').evaluateAll(els => els.every(el => getComputedStyle(el).transform === 'none')), { timeout: 4000 }).toBe(true);
+    const titlesClear = () => page.locator('.door').evaluateAll(doors => doors.every(door => {
+      const big = door.querySelector('.door__big')!.getBoundingClientRect();
+      const title = door.querySelector('.door__title')!.getBoundingClientRect();
+      return big.bottom <= title.top;
+    }));
+    expect(await titlesClear()).toBe(true);
+    if (!isMobile) {
+      await page.setViewportSize({ width: 1814, height: 660 });
+      expect(await titlesClear()).toBe(true);
+    }
     await page.locator('a.door').first().click();
     await expect(page).toHaveURL(/\/brief\/$/);
   });
