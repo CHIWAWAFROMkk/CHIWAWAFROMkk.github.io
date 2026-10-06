@@ -1,0 +1,197 @@
+{
+ "size": [
+  1672,
+  941
+ ],
+ "props": [
+  {
+   "id": "window",
+   "color": "#ff2626",
+   "anchor": [
+    250,
+    205
+   ],
+   "area": 183810
+  },
+  {
+   "id": "tools",
+   "color": "#6693ff",
+   "anchor": [
+    1090,
+    97
+   ],
+   "area": 61159
+  },
+  {
+   "id": "photo",
+   "color": "#7cbf1d",
+   "anchor": [
+    1472,
+    69
+   ],
+   "area": 6859
+  },
+  {
+   "id": "trophy",
+   "color": "#bf4db1",
+   "anchor": [
+    1595,
+    61
+   ],
+   "area": 4727
+  },
+  {
+   "id": "helmet",
+   "color": "#26ffdb",
+   "anchor": [
+    749,
+    217
+   ],
+   "area": 14782
+  },
+  {
+   "id": "reactor",
+   "color": "#ffb966",
+   "anchor": [
+    1074,
+    252
+   ],
+   "area": 14066
+  },
+  {
+   "id": "glove",
+   "color": "#451dbf",
+   "anchor": [
+    1244,
+    244
+   ],
+   "area": 10373
+  },
+  {
+   "id": "potatogun",
+   "color": "#51bf4d",
+   "anchor": [
+    1488,
+    255
+   ],
+   "area": 17485
+  },
+  {
+   "id": "jarvis",
+   "color": "#ff266f",
+   "anchor": [
+    714,
+    405
+   ],
+   "area": 65123
+  },
+  {
+   "id": "pepper",
+   "color": "#66c6ff",
+   "anchor": [
+    168,
+    466
+   ],
+   "area": 38003
+  },
+  {
+   "id": "decanter",
+   "color": "#b2bf1d",
+   "anchor": [
+    375,
+    514
+   ],
+   "area": 32140
+  },
+  {
+   "id": "magazines",
+   "color": "#26ff92",
+   "anchor": [
+    162,
+    706
+   ],
+   "area": 53440
+  },
+  {
+   "id": "sunglasses",
+   "color": "#ff8666",
+   "anchor": [
+    425,
+    699
+   ],
+   "area": 7933
+  },
+  {
+   "id": "holo",
+   "color": "#1d2bbf",
+   "anchor": [
+    785,
+    596
+   ],
+   "area": 25580
+  },
+  {
+   "id": "nameplate",
+   "color": "#ff26b7",
+   "anchor": [
+    813,
+    806
+   ],
+   "area": 28549
+  },
+  {
+   "id": "nanotools",
+   "color": "#66f9ff",
+   "anchor": [
+    1131,
+    525
+   ],
+   "area": 21088
+  },
+  {
+   "id": "labelmaker",
+   "color": "#bf961d",
+   "anchor": [
+    1283,
+    536
+   ],
+   "area": 8625
+  },
+  {
+   "id": "elixir",
+   "color": "#814dbf",
+   "anchor": [
+    1428,
+    561
+   ],
+   "area": 16774
+  },
+  {
+   "id": "phone",
+   "color": "#26ff4a",
+   "anchor": [
+    1159,
+    699
+   ],
+   "area": 12582
+  },
+  {
+   "id": "burger",
+   "color": "#1d61bf",
+   "anchor": [
+    1526,
+    741
+   ],
+   "area": 49888
+  },
+  {
+   "id": "kid",
+   "color": "#9ebf4d",
+   "anchor": [
+    1586,
+    496
+   ],
+   "area": 28156
+  }
+ ]
+}

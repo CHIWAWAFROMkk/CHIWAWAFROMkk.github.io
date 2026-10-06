@@ -21,7 +21,7 @@ const { lang, path, title, description, nav = true, footer = true, intro = false
 const origin = 'https://chiwawafromkk.github.io';
 const canonical = origin + localizePath(path, lang);
 /** Share cards: projects with a picture of their own use it; every other page uses the home page's opening. */
-const SHARE: [string, string][] = [['/projects/jung-self-map/', '/og/jung-self-map.jpg'], ['/projects/mais-je-taime/', '/og/mais-je-taime.jpg']];
+const SHARE: [string, string][] = [['/projects/jung-self-map/', '/og/jung-self-map.jpg'], ['/projects/mais-je-taime/', '/og/mais-je-taime.jpg'], ['/projects/stark-desk/', '/og/stark-desk.jpg']];
 const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/og/default.jpg');
 ---
 <!doctype html>

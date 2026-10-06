@@ -116,6 +116,10 @@ export const SITE = {
       title: { zh: '荣格 × 我', en: 'Jung × Me' },
       did: { zh: '把六个荣格概念和一个叙事主题做成一张能操作的三维星图和一部短片，画面与口播由 AI 生成，剪辑、渲染与混音由代码完成', en: 'Six Jungian concepts and one narrative theme as an interactive 3D star map and a short film: AI-generated pictures and voice, with editing, rendering and mixing done in code' },
       status: { zh: '个人作品 · 短片与星图可直接体验', en: 'Personal work · film and map ready to explore' } }),
+    project({ slug: 'stark-desk', line: 'film', preview: '/media/stark-desk/poster.webp', inBrief: false,
+      title: { zh: '天才的工作台', en: "A Genius's Desk" },
+      did: { zh: '一张 AI 生成、能点能玩的工作台：21 个物件各有动作，十种画风宇宙一键切换，遮罩由视觉模型从最终画面切出', en: 'An AI-painted desk you can play with: 21 objects with their own actions, ten art-style universes, and click masks cut from the final image by vision models' },
+      status: { zh: '个人作品 · 可直接体验', en: 'Personal work · ready to play' } }),
   ] satisfies ProjectEntry[],
   pages: {
     home: {
@@ -287,6 +291,19 @@ export const SITE = {
         tools: { zh: 'GPT 图像生成关键帧；即梦 Seedance 生成口播；Three.js 与 WebGL 着色器做星图与成片渲染；Python、numpy、ffmpeg 做剪辑数据、混音与合成。', en: 'GPT image generation for keyframes; Jimeng Seedance for the voice-over; Three.js and WebGL shaders for the map and the film render; Python, numpy and ffmpeg for the edit data, mix and encode.' },
         evidence: { zh: '本页的短片与星图都能直接播放、操作；五句引文与手册中的每个概念都附出处，核对状态逐条标注。', en: 'The film and the map on this page play and respond directly; the five quotations and every concept in the handbook carry their sources, with verification status marked one by one.' },
         status: { zh: '短片、星图与自我探究手册均已完成。', en: 'Film, map and self-inquiry handbook are finished.' },
+      },
+    },
+    stark: {
+      title: { zh: '天才的工作台', en: "A Genius's Desk" },
+      lead: { zh: '一张以钢铁侠为灵感的工作台：每件东西都能点，每次点击都有回应，还能在十个画风宇宙之间切换。', en: 'A desk inspired by Iron Man: everything on it can be clicked, every click answers back, and the whole scene can jump between ten art-style universes.' },
+      description: { zh: '天才的工作台：AI 生成画面，开放词汇检测与 SAM 从最终画面切出点击遮罩，WebGL 深度视差，21 个物件各有动作，十种画风宇宙一键切换。', en: "A Genius's Desk: AI-generated pictures, click masks cut from the final image with open-vocabulary detection and SAM, WebGL depth parallax, 21 objects with their own actions and ten switchable art-style universes." },
+      tags: [ { zh: '个人作品 · AI 辅助创作 · 同人', en: 'Personal work · AI-assisted · fan work' }, { zh: 'GPT 图像生成 · SAM · WebGL · Web Audio', en: 'GPT image generation · SAM · WebGL · Web Audio' } ],
+      summary: {
+        task: { zh: '参考一个蜘蛛侠主题的个人网站，做一张更丰富的钢铁侠工作台：物件要符合人物的自负、洁癖和爱吃汉堡，画面要有质感，而且每个物件都要能准确点中。', en: 'Starting from a Spider-Man themed personal site, build a richer Iron Man desk: the objects should fit the character (vanity, neatness, a weakness for burgers), the picture should feel real, and every object must be precisely clickable.' },
+        mine: { zh: '设计物件清单、人设彩蛋和十个宇宙的画风；写生图提示词并反复修改摆放与比例；设计“遮罩跟着最终画面走”的切割流程并逐张人工核对；写全部交互、音效和测试。', en: 'Designed the object list, the character details and the ten art styles; wrote and revised the image prompts for layout and scale; designed a pipeline where the click mask follows the final picture, checking every mask by eye; wrote all the interaction, sound and tests.' },
+        tools: { zh: 'GPT 图像生成画面并按参考图重绘十种画风；开放词汇检测（OWL）找物件、SAM（Segment Anything）切轮廓、Depth Anything 估算景深；WebGL 着色器做视差，Web Audio 实时合成全部音效；Claude Code 协助编程。', en: 'GPT image generation for the scene and for re-painting it in ten styles from a reference; open-vocabulary detection (OWL) to find objects, SAM (Segment Anything) to cut outlines, Depth Anything for depth; a WebGL shader for parallax and Web Audio for every sound effect; Claude Code as a coding assistant.' },
+        evidence: { zh: '本页的工作台可以直接操作；十个宇宙、HUD、全部物件动作都能当场验证。切割、图层与交互都有自动化测试（Python 与浏览器端到端，覆盖桌面和手机）。', en: 'The desk on this page is fully interactive; all ten universes, the HUD and every object action can be checked on the spot. Segmentation, layers and interaction are covered by automated tests (Python and end-to-end, on desktop and phone).' },
+        status: { zh: '已完成，可直接体验。人物与道具为原创造型，不使用漫威的名称、标志或电影素材。', en: 'Finished and playable. Characters and props are original designs; no Marvel names, logos or film material are used.' },
       },
     },
     hris: {

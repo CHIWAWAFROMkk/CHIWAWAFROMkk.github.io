@@ -1,0 +1,18 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import StarkDesk from '../components/StarkDesk.astro';
+import { SITE } from '../data/site';
+import { Content as BodyZh } from '../copy/projects/stark-desk.zh.md';
+import { Content as BodyEn } from '../copy/projects/stark-desk.en.md';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const P = SITE.pages.stark;
+const Body = lang === 'zh' ? BodyZh : BodyEn;
+---
+<ProjectLayout night lang={lang} slug="stark-desk" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+  <Fragment slot="demo">
+    <StarkDesk lang={lang} />
+  </Fragment>
+  <Body />
+</ProjectLayout>

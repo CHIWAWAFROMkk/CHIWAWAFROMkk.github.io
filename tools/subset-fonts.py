@@ -18,7 +18,7 @@ from fontTools.varLib.instancer import instantiateVariableFont
 ROOT = Path(__file__).resolve().parent.parent
 DIST, FONTS = ROOT / "dist", ROOT / "public" / "assets" / "fonts"
 TEXT = {".html", ".js", ".mjs", ".json", ".md", ".csv", ".txt", ".sql", ".py", ".svg", ".css"}
-SKIP = ("vendor", "fonts")                       # third-party runtimes and the fonts themselves carry no page text
+SKIP = ("vendor", "fonts", "stark-desk")         # third-party runtimes, the fonts themselves, and the desk app (it uses system fonts) carry no page text
 WEIGHTS = (300, 500)
 LATIN = set(range(0x20, 0x7F)) | set(range(0xA0, 0x100)) | {0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2026, 0x2192, 0x2190, 0x2191, 0x2193, 0x00D7, 0x2212}
 

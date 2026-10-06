@@ -1,0 +1,64 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const DESK = '/assets/stark-desk/';
+const T = {
+  h: { zh: '直接体验', en: 'Play with it' },
+  meta: { zh: '21 个物件 · 10 个宇宙', en: '21 objects · 10 universes' },
+  intro: {
+    zh: '点任意物件看它的动作；点头盔戴上 HUD；点左下角的宇宙编号打开宇宙地图，或用键盘 ← → 切换。打开声音体验更完整。',
+    en: 'Click any object to see what it does; click the helmet to wear the HUD; open the universe map from the code in the lower left, or switch with ← →. Best with sound on. The desk itself is in Chinese.',
+  },
+  posterAlt: { zh: '天才的工作台：大理石桌面上的金色头盔、全息投影、甜甜圈汉堡和响铃的手机', en: "A genius's desk: a gold helmet, a hologram, a donut burger and a ringing phone on a marble desk" },
+  load: { zh: '打开工作台', en: 'Open the desk' },
+  loadHint: { zh: '约 2 MB，点击后加载', en: 'About 2 MB, loads on click' },
+  frameTitle: { zh: '天才的工作台（可交互）', en: "A Genius's Desk (interactive)" },
+  open: { zh: '全屏打开', en: 'Open full screen' },
+  note: {
+    zh: '画面为 AI 生成，人物与道具为原创造型；台词与问答均为预先写好的文字，页面不调用任何 AI 接口，也不记录你的点击。',
+    en: 'The pictures are AI-generated and every character and prop is an original design. All lines and answers are pre-written: the page calls no AI service and does not record your clicks.',
+  },
+};
+---
+<section class="sd night-zone" data-demo data-stark-desk aria-labelledby="sd-h">
+  <div class="wrap">
+    <div class="section-head"><h2 id="sd-h">{T.h[lang]}</h2><span class="meta">{T.meta[lang]}</span></div>
+    <p class="sd__intro">{T.intro[lang]}</p>
+    <div class="sd__frame" data-state="idle">
+      <img class="sd__poster" src="/media/stark-desk/poster.webp" alt={T.posterAlt[lang]} width="1600" height="900" loading="lazy" decoding="async" />
+      <button type="button" class="sd__load" data-sd-load>{T.load[lang]}<small>{T.loadHint[lang]}</small></button>
+      <iframe id="stark-frame" title={T.frameTitle[lang]} data-src={DESK} allow="fullscreen; autoplay" hidden></iframe>
+    </div>
+    <p class="sd__actions"><a href={DESK}>{T.open[lang]} →</a></p>
+    <p class="sd__note">{T.note[lang]}</p>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-stark-desk]').forEach(root => {
+    const frame = root.querySelector<HTMLElement>('.sd__frame')!;
+    const btn = root.querySelector<HTMLButtonElement>('[data-sd-load]')!;
+    const iframe = root.querySelector<HTMLIFrameElement>('#stark-frame')!;
+    btn.addEventListener('click', () => {
+      iframe.src = iframe.dataset.src!;
+      iframe.hidden = false;
+      frame.dataset.state = 'running';
+      btn.hidden = true;
+      root.querySelector('.sd__poster')?.setAttribute('hidden', '');
+      iframe.focus();
+    });
+  });
+</script>
+<style>
+  .sd { padding-block: 24px 56px; }
+  .sd__intro { max-width: 48em; margin-bottom: 20px; }
+  .sd__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #0b0f16; }
+  .sd__poster, .sd__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .sd__load { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: 4px; padding: 16px 28px; border: 1.5px solid var(--night-fg); background: var(--night); color: var(--night-fg); font: 700 20px/1.3 var(--font-body); cursor: pointer; }
+  .sd__load small { font-weight: 500; font-size: 13px; color: var(--night-mute); }
+  .sd__load:hover { background: var(--night-fg); color: var(--night); }
+  .sd__load:hover small { color: var(--night); }
+  .sd__actions { margin-top: 14px; font-weight: 500; }
+  .sd__note { max-width: 46em; margin-top: 8px; color: var(--night-mute); font-size: 14px; }
+  @media (max-width: 640px) { .sd__frame { aspect-ratio: 3 / 4; } .sd__poster { object-position: 50% 50%; } }
+</style>
