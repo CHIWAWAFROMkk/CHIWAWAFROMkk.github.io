@@ -1,0 +1,1 @@
+import{t as e}from"./text-motion.Rp4-fmLW.js";for(let t of document.querySelectorAll(`.split-parent`))e(t);

@@ -1,1 +1,0 @@
-import{n as e}from"./motion-dom.CrIigkO0.js";var t=document.querySelectorAll(`a.prow[data-motion]`);e(t,60);for(let e of t)e.addEventListener(`pointermove`,t=>{let n=e.getBoundingClientRect();e.style.setProperty(`--x`,`${Math.min(t.clientX-n.left,n.width-340)}px`)});

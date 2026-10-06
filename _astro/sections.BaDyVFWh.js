@@ -1,0 +1,1 @@
+import{t as e}from"./heads.p4RB4S9M.js";function t(t){let n=[];for(let e of t.querySelectorAll(`h2`))e.closest(`[data-section-reveals]`)===t&&(e.closest(`.sr, [aria-hidden="true"], [hidden], [data-motion-exclude], .scroll-reveal`)||e.querySelector(`.scroll-reveal`)||e.hasAttribute(`data-section-motion`)||n.push(e));return e(n)}export{t as initSectionReveals};

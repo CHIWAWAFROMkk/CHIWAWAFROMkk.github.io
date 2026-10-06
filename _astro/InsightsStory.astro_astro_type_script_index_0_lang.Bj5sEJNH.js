@@ -1,1 +1,0 @@
-import{c as e,t}from"./morph-dom.DvgUgMJG.js";import{t as n}from"./insights.yw1tnCcR.js";import{t as r}from"./countup-dom.eQuRHVza.js";var i=document.querySelector(`[data-stage]`),a=[...document.querySelectorAll(`[data-chapter-section]`)];i&&a.length&&t(i,a,e(n.results).map(e=>e.marks)),r(document.querySelectorAll(`[data-story] [data-insight-num]`));

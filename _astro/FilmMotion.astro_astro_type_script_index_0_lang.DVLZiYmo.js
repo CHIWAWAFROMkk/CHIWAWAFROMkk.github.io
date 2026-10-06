@@ -1,0 +1,1 @@
+import{t as e}from"./arm.B2Ge0ndG.js";function t(t=document){return e(t.querySelectorAll(`[data-fm]`),{margin:`0px 0px -22% 0px`})}t();

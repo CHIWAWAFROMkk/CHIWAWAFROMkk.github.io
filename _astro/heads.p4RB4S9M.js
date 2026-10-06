@@ -1,0 +1,1 @@
+import{t as e}from"./arm.B2Ge0ndG.js";function t(t){let n=[];for(let e of t){let t=e.closest(`.section-head`),r=t&&t.querySelector(`h2`)===e?t:e;r.hasAttribute(`data-m-head`)||(r.dataset.mHead=r===e?`plain`:`rule`,n.push(r))}return e(n,{onArm:e=>{let t=e.matches(`h2`)?e:e.querySelector(`h2`);t&&(t.dataset.sectionMotion=``)}})}export{t};
