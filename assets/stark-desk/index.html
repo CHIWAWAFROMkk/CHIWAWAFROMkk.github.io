@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stark Desk</title>
-  <script type="module" crossorigin src="./assets/index-IZ99e6nF.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-C91OeBs_.css">
+  <script type="module" crossorigin src="./assets/index-DPjU3YFV.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-ZEhUxrwx.css">
 </head>
 <body>
   <div id="stage" aria-label="天才的工作台">
@@ -32,8 +32,29 @@
     <div class="hud-right"><span class="hud-clock"></span><span>J.A.R.V.I.S. ONLINE</span><span>ESC · 摘下头盔</span><span>← → · 切换宇宙</span></div>
     <div class="hud-boxes"></div>
     <div class="hud-boot" hidden></div>
+    <button id="train-start" type="button">掌心炮训练 · 30 秒</button>
   </div>
+  <div id="drones"></div>
+  <div id="train-hud" role="status" hidden></div>
+  <section id="train-result" role="dialog" aria-labelledby="tr-h" hidden>
+    <h2 id="tr-h">训练结束</h2>
+    <p class="tr-score"><span id="tr-score">0</span> 分</p>
+    <p class="tr-best" id="tr-best"></p>
+    <p class="tr-verdict" id="tr-verdict"></p>
+    <div class="tr-btns"><button id="tr-again" type="button">再来一次</button><button id="tr-close" type="button">收工</button></div>
+  </section>
   <div id="reticle" hidden></div>
+  <section id="cover" role="dialog" aria-modal="true" aria-labelledby="cover-h" hidden>
+    <button id="cover-close" type="button" aria-label="关闭">×</button>
+    <h2 id="cover-h">本期封面：你</h2>
+    <p class="cover-sub">写下名字，生成一张属于你的《GENIUS QUARTERLY》封面。名字只在你的浏览器里处理，不会上传。</p>
+    <form id="cover-form" autocomplete="off">
+      <input id="cover-name" type="text" maxlength="24" placeholder="你的名字（最多 12 个字）" aria-label="名字" />
+      <button id="cover-make" type="submit">生成封面</button>
+    </form>
+    <img id="cover-img" alt="" hidden />
+    <button id="cover-save" type="button" hidden>下载封面</button>
+  </section>
   <section id="map" role="dialog" aria-label="宇宙地图" hidden>
     <h2>多元宇宙 · 选择目的地</h2>
     <div class="map-grid"></div>
@@ -72,6 +93,7 @@
     <p id="panel-answer" aria-live="polite" hidden></p>
     <ul id="panel-items" hidden></ul>
     <button id="panel-copy" type="button" hidden></button>
+    <button id="cover-open" type="button" hidden>让我上封面</button>
   </section>
 </body>
 </html>
