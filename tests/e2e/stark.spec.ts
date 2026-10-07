@@ -50,3 +50,14 @@ for (const lang of ['zh', 'en'] as const) {
     await expect(page.locator('.night-zone a[href$="/projects/stark-desk/"]')).toContainText('Stark Has a Warm Heart');
   });
 }
+
+for (const lang of ['zh', 'en'] as const) {
+  test(`the one-minute overview links to the desk (${lang})`, async ({ page }) => {
+    await skipIntro(page);
+    await page.goto(`${lang === 'en' ? '/en' : ''}/brief/`);
+    const link = page.locator('a[href$="/projects/stark-desk/"]').first();
+    await expect(link).toBeAttached();
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+  });
+}

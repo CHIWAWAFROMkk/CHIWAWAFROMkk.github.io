@@ -116,7 +116,7 @@ export const SITE = {
       title: { zh: '荣格 × 我', en: 'Jung × Me' },
       did: { zh: '把六个荣格概念和一个叙事主题做成一张能操作的三维星图和一部短片，画面与口播由 AI 生成，剪辑、渲染与混音由代码完成', en: 'Six Jungian concepts and one narrative theme as an interactive 3D star map and a short film: AI-generated pictures and voice, with editing, rendering and mixing done in code' },
       status: { zh: '个人作品 · 短片与星图可直接体验', en: 'Personal work · film and map ready to explore' } }),
-    project({ slug: 'stark-desk', line: 'film', preview: '/media/stark-desk/poster.webp', inBrief: false,
+    project({ slug: 'stark-desk', line: 'film', preview: '/media/stark-desk/poster.webp', inBrief: true,
       title: { zh: 'Stark Has a Warm Heart', en: 'Stark Has a Warm Heart' },
       did: { zh: '一张 AI 生成、能点能玩的工作台：21 个物件各有动作，十种画风宇宙一键切换；自负与洁癖之下，藏着找得到的温度', en: 'An AI-painted desk you can play with: 21 objects with their own actions and ten art-style universes; under the vanity and the neatness, a warmth you can find' },
       status: { zh: '个人作品 · 可直接体验', en: 'Personal work · ready to play' } }),
