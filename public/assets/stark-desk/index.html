@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stark Desk</title>
-  <script type="module" crossorigin src="./assets/index-DPjU3YFV.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-ZEhUxrwx.css">
+  <script type="module" crossorigin src="./assets/index-BWMzSi_4.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BG9vpL5Y.css">
 </head>
 <body>
   <div id="stage" aria-label="天才的工作台">
@@ -88,8 +88,15 @@
   <section id="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title" hidden>
     <button id="panel-close" aria-label="关闭">×</button>
     <h2 id="panel-title"></h2>
+    <div id="holo3d" hidden><canvas aria-label="纳米战甲手套的三维模型，可以拖动旋转"></canvas><span class="holo3d-hint">拖动旋转</span></div>
     <p id="panel-body"></p>
     <div id="panel-qa" hidden></div>
+    <form id="jarvis-form" autocomplete="off" hidden>
+      <input id="jarvis-input" type="text" maxlength="60" placeholder="对贾维斯说，比如「去水墨宇宙」" aria-label="给贾维斯的指令" />
+      <button id="jarvis-mic" type="button" aria-label="语音输入" title="语音输入" hidden><svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="1" width="6" height="9" rx="3"/><path d="M1.5 7.5a5.5 5.5 0 0 0 11 0M7 13v2.5"/></svg></button>
+      <button id="jarvis-send" type="submit">发送</button>
+    </form>
+    <p id="jarvis-note" hidden>语音由你的浏览器识别；这张桌子本身不调用任何 AI 接口。</p>
     <p id="panel-answer" aria-live="polite" hidden></p>
     <ul id="panel-items" hidden></ul>
     <button id="panel-copy" type="button" hidden></button>
