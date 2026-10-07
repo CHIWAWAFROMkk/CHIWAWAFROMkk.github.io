@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stark Desk</title>
+  <script type="module" crossorigin src="./assets/index-IZ99e6nF.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C91OeBs_.css">
+</head>
+<body>
+  <div id="stage" aria-label="天才的工作台">
+    <div id="world">
+      <img id="render" alt="天才的工作台" draggable="false" />
+      <canvas id="parallax" hidden></canvas>
+      <div id="patches"></div>
+      <div id="liftwrap" hidden>
+        <div id="under"></div>
+        <img id="lift" alt="" draggable="false" />
+      </div>
+    </div>
+  </div>
+  <div id="tint"></div>
+  <div id="glow"></div>
+  <canvas id="fx"></canvas>
+  <div id="fxlayer"></div>
+  <div id="flash"></div>
+  <div id="stickers"></div>
+  <div id="hud" hidden>
+    <div class="hud-vignette"></div><div class="hud-scan"></div><div class="hud-rim"></div>
+    <div class="hud-top"></div>
+    <div class="hud-left"><span>PWR 400%</span><span class="hud-meter"><i></i></span><span>ALT 312 m</span><span class="hud-uni"></span></div>
+    <div class="hud-right"><span class="hud-clock"></span><span>J.A.R.V.I.S. ONLINE</span><span>ESC · 摘下头盔</span><span>← → · 切换宇宙</span></div>
+    <div class="hud-boxes"></div>
+    <div class="hud-boot" hidden></div>
+  </div>
+  <div id="reticle" hidden></div>
+  <section id="map" role="dialog" aria-label="宇宙地图" hidden>
+    <h2>多元宇宙 · 选择目的地</h2>
+    <div class="map-grid"></div>
+  </section>
+  <div id="achievement" role="status" hidden>
+    <b>成就解锁 · 天才的全部收藏</b>
+    <span>21 件物件全部找到了。他说：「我就知道你会。」</span>
+  </div>
+  <div id="tooltip" role="status" hidden></div>
+  <p id="subtitle" aria-live="polite" hidden></p>
+  <div id="call" role="dialog" aria-label="来电" hidden>
+    <div class="call-name">Happy</div>
+    <div class="call-sub">来电 · 第 7 次</div>
+    <div class="call-btns">
+      <button id="call-decline" type="button">挂断</button>
+      <button id="call-answer" type="button">接听</button>
+    </div>
+  </div>
+  <div id="lightbox" hidden>
+    <img id="lightbox-img" alt="" />
+    <p id="lightbox-cap"></p>
+  </div>
+  <button id="badge" type="button" aria-haspopup="dialog" title="打开宇宙地图"></button>
+  <div id="topbar">
+    <span id="progress" aria-live="polite"></span>
+    <button id="mute" type="button" aria-pressed="false" aria-label="静音">🔊</button>
+  </div>
+  <div id="toast" role="status" hidden></div>
+  <div id="hint" hidden>← 拖动查看整张桌子 →</div>
+  <p id="error" hidden>渲染图加载失败，请刷新重试</p>
+  <section id="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title" hidden>
+    <button id="panel-close" aria-label="关闭">×</button>
+    <h2 id="panel-title"></h2>
+    <p id="panel-body"></p>
+    <div id="panel-qa" hidden></div>
+    <p id="panel-answer" aria-live="polite" hidden></p>
+    <ul id="panel-items" hidden></ul>
+    <button id="panel-copy" type="button" hidden></button>
+  </section>
+</body>
+</html>
