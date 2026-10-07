@@ -2,12 +2,12 @@
 
 | Object | Click it and… |
 |---|---|
-| Gold helmet | Put on the HUD: every object gets a lock box and a scan label, and the pointer becomes a repulsor reticle |
+| Gold helmet | Put on the HUD: every object gets a lock box and a scan label, and the pointer becomes a repulsor reticle; from the HUD you can also start a timed repulsor training round against flying drones |
 | Phone with a call from Happy | It buzzes and rings; answer and Happy speaks, then hands over my email |
 | Donut burger | It really loses a bite, and the scale reading drops |
 | Potato cannon | A potato arcs across the desk |
 | Nanotech hologram | My projects assemble one by one as a hologram |
-| *GENIUS QUARTERLY* magazine | My experience, written as a cover story |
+| *GENIUS QUARTERLY* magazine | My experience, written as a cover story; you can also type your name and get a cover starring you, with your run on the desk, as a download |
 | A dozen more | Repulsor beam, reactor overload, laser engraving, tool calibration, label stickers, tinted sunglasses… |
 
 ## How it was made
