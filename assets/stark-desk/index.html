@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stark Desk</title>
-  <script type="module" crossorigin src="./assets/index-CWorv-tl.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BG9vpL5Y.css">
+  <title>Stark Has a Warm Heart</title>
+  <script type="module" crossorigin src="./assets/index-DN-wtQvN.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-qFO-XnZi.css">
 </head>
 <body>
   <div id="stage" aria-label="天才的工作台">
@@ -13,6 +13,8 @@
       <img id="render" alt="天才的工作台" draggable="false" />
       <canvas id="parallax" hidden></canvas>
       <div id="patches"></div>
+      <div id="heartglow" aria-hidden="true"></div>
+      <div id="heartcore" aria-hidden="true"></div>
       <div id="liftwrap" hidden>
         <div id="under"></div>
         <img id="lift" alt="" draggable="false" />
@@ -44,6 +46,8 @@
     <div class="tr-btns"><button id="tr-again" type="button">再来一次</button><button id="tr-close" type="button">收工</button></div>
   </section>
   <div id="reticle" hidden></div>
+  <div id="warm-reveal" role="status" hidden><b>Stark has a warm heart.</b><span>六处温度，全部找到了。</span></div>
+  <div id="intro" hidden><div class="intro-beat"></div><h1>STARK HAS A WARM HEART</h1><p>点击任意处进入</p></div>
   <section id="cover" role="dialog" aria-modal="true" aria-labelledby="cover-h" hidden>
     <button id="cover-close" type="button" aria-label="关闭">×</button>
     <h2 id="cover-h">本期封面：你</h2>
@@ -79,6 +83,7 @@
   </div>
   <button id="badge" type="button" aria-haspopup="dialog" title="打开宇宙地图"></button>
   <div id="topbar">
+    <span id="heart" aria-live="polite" title="找到藏着他温度的六件东西"></span>
     <span id="progress" aria-live="polite"></span>
     <button id="mute" type="button" aria-pressed="false" aria-label="静音">🔊</button>
   </div>
