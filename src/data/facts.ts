@@ -29,7 +29,7 @@ export const FACTS: Record<FactId, Fact> = {
   F10: { id: 'F10', text: { zh: 'CET-6 550 分', en: 'CET-6: 550' }, scope: '教育', source: RESUME, confirmed: '2026-09-19', public: true },
   F11: { id: 'F11', text: { zh: '2026.08 至今', en: '2026.08 – present' }, scope: '求职 Agent 项目时间', source: RESUME, confirmed: '2026-09-19', public: true },
   F12: { id: 'F12', text: { zh: '2024.03—2024.07', en: '2024.03—2024.07' }, scope: 'AI 校园研究项目时间', source: RESUME, confirmed: '2026-09-19', public: true },
-  F13: { id: 'F13', figure: '21', text: { zh: '21 个物件 · 10 个宇宙', en: '21 objects · 10 universes' }, scope: '天才的工作台：可点击物件数与画风宇宙数', source: 'ironman-desk 仓库 2641bdf：prompts/objects.json 21 项、web/src/content.json universes 10 项', confirmed: '2026-10-06', public: true },
+  F13: { id: 'F13', figure: '21', text: { zh: '21 个物件 · 10 个宇宙', en: '21 objects · 10 universes' }, scope: 'Stark Has a Warm Heart：可点击物件数与画风宇宙数', source: 'ironman-desk 仓库 2641bdf：prompts/objects.json 21 项、web/src/content.json universes 10 项', confirmed: '2026-10-06', public: true },
 };
 
 export function fact(id: FactId): Fact {

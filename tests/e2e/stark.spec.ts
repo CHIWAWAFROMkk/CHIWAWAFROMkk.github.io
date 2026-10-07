@@ -39,3 +39,14 @@ test('Stark desk page shares its own image', async ({ page }) => {
   await page.goto('/projects/stark-desk/');
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/og\/stark-desk\.jpg$/);
 });
+
+for (const lang of ['zh', 'en'] as const) {
+  test(`the project is called Stark Has a Warm Heart (${lang})`, async ({ page }) => {
+    await skipIntro(page);
+    await page.goto(`${lang === 'en' ? '/en' : ''}/projects/stark-desk/`);
+    await expect(page.locator('h1')).toContainText('Stark Has a Warm Heart');
+    await expect(page).toHaveTitle(/Stark Has a Warm Heart/);
+    await page.goto(`${lang === 'en' ? '/en' : ''}/projects/`);
+    await expect(page.locator('.night-zone a[href$="/projects/stark-desk/"]')).toContainText('Stark Has a Warm Heart');
+  });
+}

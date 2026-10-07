@@ -11,6 +11,10 @@
 | *GENIUS QUARTERLY* magazine | My experience, written as a cover story; you can also type your name and get a cover starring you, with your run on the desk, as a download |
 | A dozen more | Repulsor beam, reactor overload, laser engraving, tool calibration, label stickers, tinted sunglasses… |
 
+## A warm heart
+
+The name comes from the desk's hidden thread: vanity, neatness and perfectionism are out in the open, while the tenderness sits in the corners. Pepper's photo, the intern's photo, the potato cannon a Tennessee kid built, Happy's call, the chlorophyll drink he forces down to live a little longer, and the reactor itself — each one you find raises the heart rate in the lower right, and the reactor's core shifts from cold cyan to warm amber. Find all six and the title rises while JARVIS says: “Sir, your heart rate… is warm.”
+
 ## How it was made
 
 - **Pictures:** generated with GPT image generation. The first version looked generated and the layout felt staged, so I rewrote the prompt to group things by use (exhibits on the cabinet behind, everyday items within reach of the right hand, a clear working area in the middle), gave every object its real size, and switched the style to interior photography. The other nine universes are re-painted from the first picture as a reference, so the composition barely moves and objects stay in place when you switch. The default workshop also follows your local time, with day, dusk and night versions re-painted the same way, and JARVIS can switch between them.
