@@ -22,11 +22,11 @@ The original approach started from the folder. But the file order did not match 
 
 | Aspect | First version (personal practice) | Second version | Final version (delivered) |
 |---|---|---|---|
-| Tools | OpenClaw calling DeepSeek and ChatGPT | Local OCR + DeepSeek | Copilot + Power Automate, Excel for checks |
+| Tools | OpenClaw calling DeepSeek and ChatGPT | Local OCR + DeepSeek | Copilot + Power Automate with SharePoint and AI Builder, Excel for checks |
 | Focus | A first working version for extracting and backfilling record fields | Text recognition switched to local OCR | Run in the company-approved environment with review; keep recognition, review and write-back separate |
 | Result | Matching rules, four statuses, a review sheet and write-back conditions | — | Ran in the company-approved environment; handed over to my mentor before I left |
 
-The enterprise version is designed as four flows: **create tasks** (read the roster, fix the original order, one queue item per employee) → **match and extract** (employee ID, name, text recognition, identity check, candidates) → **review and write back** (HR confirms field by field; only empty cells are written; read back afterwards) → **summarise and resume** (recover interrupted tasks; output no-file, exception and done lists in the original order).
+The enterprise version runs as four flows: **create tasks** (read the roster, fix the original order, one queue item per employee) → **match and extract** (employee ID, name, text recognition, identity check, candidates) → **review and write back** (HR confirms field by field; only empty cells are written; read back afterwards) → **summarise and resume** (recover interrupted tasks; output no-file, exception and done lists in the original order).
 
 | File status | How it is decided | What happens |
 |---|---|---|
@@ -46,4 +46,4 @@ Files with the same name, duplicate IDs, conflicting versions or unknown ownersh
 
 ## Download
 
-- [Enterprise design document (Markdown, in Chinese)](/downloads/hris/HRIS方案.md): step-by-step setup of the four Power Automate flows, Excel and SharePoint schemas, connector list and acceptance cases.
+- [Enterprise version document (Markdown, in Chinese)](/downloads/hris/HRIS方案.md): step-by-step setup of the four Power Automate flows, Excel and SharePoint schemas, connector list and acceptance cases.
