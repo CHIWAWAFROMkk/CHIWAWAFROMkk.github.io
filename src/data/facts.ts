@@ -1,6 +1,6 @@
 import type { Bi } from '../i18n';
 
-export type FactId = 'F1' | 'F2' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'F10' | 'F11' | 'F12' | 'F13';
+export type FactId = 'F1' | 'F2' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'F10' | 'F11' | 'F12' | 'F13' | 'F14';
 
 export interface Fact {
   id: FactId;
@@ -21,7 +21,7 @@ export const FACTS: Record<FactId, Fact> = {
   F2: { id: 'F2', text: { zh: '上海立信会计金融学院 · 行政管理本科 · 2027 届', en: 'Shanghai Lixin University of Accounting and Finance · BA in Public Administration · Class of 2027' }, scope: '教育', source: RESUME, confirmed: '2026-09-19', public: true },
   F3: { id: 'F3', text: { zh: '可立即到岗 · 每周 5 天 · 可连续实习 3 个月以上', en: 'Available now · 5 days a week · 3+ months' }, scope: '求职条件', source: '用户（本次对话，更正此前的"4–5 天"，与中文简历一致）', confirmed: '2026-09-28', public: true },
   F4: { id: 'F4', text: { zh: '专业排名前 5%（获校级奖学金）', en: 'Top 5% of major (university scholarship)' }, scope: '教育；用户 2026-09-28 要求不在网站和英文简历上展示', source: RESUME, confirmed: '2026-09-28', public: false },
-  F5: { id: 'F5', text: { zh: '丹纳赫（上海）企业管理有限公司 · HR 与人才数据实习生 · 2026.03—2026.06', en: 'Danaher (Shanghai) Enterprise Management Co., Ltd. · HR & Talent Data Intern · 2026.03—2026.06' }, scope: '实习；派遣单位为薪得付信息技术（上海）有限公司，派遣服务期至 2026.07，同一段实习', source: RESUME, confirmed: '2026-09-19', public: true },
+  F5: { id: 'F5', text: { zh: '丹纳赫（上海）企业管理有限公司 · HR 与人才数据实习生 · 2026.03—2026.08', en: 'Danaher (Shanghai) Enterprise Management Co., Ltd. · HR & Talent Data Intern · 2026.03—2026.08' }, scope: '实习；派遣单位为薪得付信息技术（上海）有限公司，同一段实习；结束月份由用户 2026-10-08 更正为 08', source: RESUME, confirmed: '2026-10-08', public: true },
   F6: { id: 'F6', figure: '2000', text: { zh: '核查约 2000 名员工的档案主数据 · 所在 CDP 系统覆盖 6,000+ 员工', en: 'Reviewed master records for about 2000 employees · in a CDP system covering 6,000+ staff' }, scope: '个人工作范围（约 2000 名）与系统规模（6,000+）分开写', source: '用户确认"约 2000 名员工"与"逾 2000 条关键字段"都成立', confirmed: '2026-09-28', public: true },
   F7: { id: 'F7', figure: '8', text: { zh: '8 张业务表', en: '8 business tables' }, scope: '课程设计的数据库规模，只出现在 SQL 项目', source: 'legacy/assets/delivery-schema.sql（8 条 CREATE TABLE）', confirmed: '2026-09-28', public: true },
   F8: { id: 'F8', figure: '23', text: { zh: '60 秒成片完成：出片 23 段，成片用 22 段', en: '60-second film finished: 23 clips generated, 22 in the cut' }, scope: '成片状态；出片数与成片所用镜头数同时出现', source: 'edit_60s.py 的 SHOTS（22 镜）与 origin/main 90cd241（23 段分镜视频 + 成片）', confirmed: '2026-10-02', public: true },
@@ -30,6 +30,7 @@ export const FACTS: Record<FactId, Fact> = {
   F11: { id: 'F11', text: { zh: '2026.08 至今', en: '2026.08 – present' }, scope: '求职 Agent 项目时间', source: RESUME, confirmed: '2026-09-19', public: true },
   F12: { id: 'F12', text: { zh: '2024.03—2024.07', en: '2024.03—2024.07' }, scope: 'AI 校园研究项目时间', source: RESUME, confirmed: '2026-09-19', public: true },
   F13: { id: 'F13', figure: '21', text: { zh: '21 个物件 · 10 个宇宙', en: '21 objects · 10 universes' }, scope: 'Stark Has a Warm Heart：可点击物件数与画风宇宙数', source: 'ironman-desk 仓库 2641bdf：prompts/objects.json 21 项、web/src/content.json universes 10 项', confirmed: '2026-10-06', public: true },
+  F14: { id: 'F14', text: { zh: '员工档案补录工作流 · 2026.06—08 · 三个版本，最终版在公司环境运行', en: 'Records backfill workflow · 2026.06–08 · three versions, the final one ran at the company' }, scope: '丹纳赫实习期间工作流的迭代时间与交付状态', source: '用户口述（2026-10-08）', confirmed: '2026-10-08', public: true },
 };
 
 export function fact(id: FactId): Fact {
