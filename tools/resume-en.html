@@ -1,64 +1,29 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Yanjun He — Résumé</title>
-<style>
-  @page { size: A4; margin: 12mm 15mm; }
-  p { margin: 0 0 2px; }
-  body { margin: 0; font: 9.6pt/1.4 "Segoe UI", Arial, sans-serif; color: #111; }
-  h1 { margin: 0; font-size: 22pt; letter-spacing: -0.01em; }
-  .target { margin: 2px 0 4px; font-weight: 700; }
-  .meta { color: #333; }
-  h2 { margin: 11px 0 5px; padding-bottom: 3px; border-bottom: 1.5px solid #111; font-size: 12pt; text-transform: uppercase; letter-spacing: 0.06em; }
-  .row { display: flex; justify-content: space-between; gap: 12px; font-weight: 700; }
-  .row span:last-child { white-space: nowrap; }
-  .sub { color: #333; margin-bottom: 3px; }
-  ul { margin: 3px 0 8px; padding-left: 16px; }
-  li { margin-bottom: 2px; }
-</style>
-</head>
-<body>
-  <h1>Yanjun He</h1>
-  <p class="target">Target roles: AI Product Operations | LLM Prompt Assistant | HR &amp; Talent Data Operations</p>
-  <p class="meta">+86 199 2155 2388 | 2806660493@qq.com | Shanghai | Portfolio: chiwawafromkk.github.io</p>
-  <p class="meta">Class of 2027 (BA) | Available now | 5 days a week | 3+ months</p>
-
-  <h2>Education</h2>
-  <div class="row"><span>Shanghai Lixin University of Accounting and Finance | BA, Public Administration</span><span>Sep 2023 – Jun 2027 (expected)</span></div>
-  <ul>
-    <li>Core courses: Human Resource Management, Management Psychology, Organizational Behavior, Management Information Systems.</li>
-    <li>English: CET-6, 550. Comfortable reading English material and handling cross-border business email.</li>
-  </ul>
-
-  <h2>Internship</h2>
-  <div class="row"><span>Danaher (Shanghai) Enterprise Management Co., Ltd. (Fortune 500) | HR &amp; Talent Data Intern</span><span>Mar 2026 – Jun 2026</span></div>
-  <p class="sub">Placed through 薪得付信息技术（上海）有限公司 (staffing agency); service period Mar – Jul 2026 — one internship.</p>
-  <ul>
-    <li><strong>Master data at scale:</strong> On the CDP HR core system covering 6,000+ employees in China, independently reviewed and batch-validated employee master records for about 2000 employees (2,000+ key fields), keeping HR data complete and accurate.</li>
-    <li><strong>Cross-regional coordination:</strong> For missing or abnormal documents across regional branches, worked with dozens of regional HR contacts, built a standard chase-and-backfill tracker, and followed up labor-contract filing and new-hire records.</li>
-    <li><strong>Compliance and reporting:</strong> Helped review safety-compliance rules and checks; produced multi-dimensional statistics and visual reports with advanced Excel functions and PivotTables for management and team reviews.</li>
-    <li><strong>Recognition:</strong> On my own initiative, brought AI office tools into document summarizing and data cleaning; gradually took over CDP maintenance and broader HR operations; recognized by the HRBP and invited to extend the internship.</li>
-  </ul>
-
-  <h2>Projects</h2>
-  <div class="row"><span>Personal job-search assistant on LLMs and a local workflow | Product planning &amp; prompt design</span><span>Aug 2026 – present</span></div>
-  <ul>
-    <li><strong>Problem and scope:</strong> For non-technical job seekers facing low-yield mass applications, slow extraction of key job requirements and generic outreach, planned an end-to-end workbench from job collection and structured parsing to personalized materials.</li>
-    <li><strong>Prompt engineering:</strong> Built on DeepSeek; designed a prompt pipeline for extracting information from Chinese job descriptions; iterated three outreach templates (skills match / ready to contribute / self-driven growth), optimizing for first-reply rate.</li>
-    <li><strong>Safety by design:</strong> "AI prepares, the person decides" — sensitive data stays local and private, with a hard-pause mechanism balancing automation and privacy.</li>
-  </ul>
-  <div class="row"><span>Generative AI in campus and office use — empirical study | Team lead, student innovation project</span><span>Mar 2024 – Jul 2024</span></div>
-  <ul>
-    <li>Led the team studying generative AI in study and office scenarios; collected domestic and international tool cases; built the survey framework and led data cleaning.</li>
-    <li>Summarized findings with cross-tab statistics, wrote a report of about 10,000 Chinese characters and presented at the defense; the project won First Prize in the university's student innovation programme.</li>
-  </ul>
-
-  <h2>Campus &amp; Skills</h2>
-  <div class="row"><span>Student Union, New Media Operations | Core member</span><span>Sep 2023 – Jul 2025</span></div>
-  <ul>
-    <li>Planned topics, wrote and laid out WeChat official-account posts; supported publicity and coordination for large campus events.</li>
-    <li>Skills: Excel (VLOOKUP/XLOOKUP, PivotTables, charts), advanced Word layout; SQL basics; Python data libraries (Pandas/NumPy). Completed Alibaba Cloud "AI New Force" training.</li>
-  </ul>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Yanjun He - Resume</title><style>
+@page { size: A4 portrait; margin: 8mm 12mm 8mm 12mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; font-size: 9.5pt; line-height: 1.34; color: #1a1a1a; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.header { border-bottom: 1.5px solid #111; padding-bottom: 4px; margin-bottom: 5px; }
+.header-layout { display: flex; justify-content: space-between; gap: 12px; }
+.header-text { flex: 1; }
+.photo-box { flex-shrink: 0; width: 24mm; height: 31mm; border: 1px solid #c8d1d9; border-radius: 2px; overflow: hidden; }
+.photo-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.name-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+.name { font-size: 17pt; font-weight: 800; letter-spacing: 1.2px; color: #000; }
+.target-role { font-size: 9.5pt; font-weight: 700; color: #0f4c81; }
+.contact-line { display: flex; flex-wrap: wrap; gap: 6px; font-size: 9pt; color: #333; margin-bottom: 3.5px; }
+.contact-line a { color: #0f4c81; text-decoration: none; }
+.summary-box { background: #f7f9fa; border-left: 3px solid #0f4c81; padding: 3.5px 6px; font-size: 9pt; color: #222; line-height: 1.34; }
+.section { margin-bottom: 4.5px; }
+.section-title { font-size: 10pt; font-weight: 800; color: #0f4c81; border-bottom: 1px solid #d0d7de; padding-bottom: 1px; margin-bottom: 3.5px; letter-spacing: 0.5px; }
+.item-header { display: flex; justify-content: flex-start; align-items: baseline; gap: 14px; font-weight: 700; margin-top: 3px; margin-bottom: 1.5px; }
+.item-role { color: #333; font-weight: 600; }
+.item-date { color: #555; font-size: 9pt; font-weight: 500; white-space: nowrap; margin-left: auto; }
+ul.bullets { list-style-type: disc; padding-left: 13px; margin-bottom: 2.5px; }
+ul.bullets li { margin-bottom: 1.4px; text-align: justify; }
+b { color: #051b2c; font-weight: 700; }
+.row { margin-bottom: 1.6px; text-align: justify; }
+a { color: #0f4c81; text-decoration: none; }
+</style></head><body><div class="header"><div class="header-layout"><div class="header-text">
+<div class="name-row"><span class="name">Yanjun He</span><span class="target-role">Target: AIGC / AI Creative-Tool Operations Intern (Content / Creator Operations)</span></div>
+<div class="contact-line"><span>Shanghai</span><span>•</span><span>Class of 2027 (BA, in progress)</span><span>•</span><span>Available now · 5 days a week · 3+ months</span><span>•</span><span>Phone: 19921552388</span><span>•</span><span>Email: 2806660493@qq.com</span><span>•</span><span>Portfolio: <a href="https://chiwawafromkk.github.io/">chiwawafromkk.github.io</a></span></div>
+<div class="summary-box">Made AI short films and interactive works, and delivered a data workflow in a company setting. Seeking an AIGC content / creator operations internship.</div></div></div></div><div class="section"><div class="section-title">EDUCATION</div><div class="item-header"><span>Shanghai Lixin University of Accounting and Finance</span><span class="item-role">BA, Administrative Management</span><span class="item-date">Sep 2023 – Jun 2027 (expected)</span></div><div class="row"><b>English</b>: CET-6 550; CET-4 passed</div><div class="row"><b>Courses</b>: Python Programming Fundamentals; Python Quantitative Portfolio Management (team lead, 95/100)</div><div class="row"><b>Honors</b>: First Prize, University-level Student Innovation and Entrepreneurship Project (generative AI campus study, team lead)</div></div><div class="section"><div class="section-title">INTERNSHIP</div><div class="item-header"><span>Danaher (Shanghai) Enterprise Management Co., Ltd. (dispatched via Xindefu)</span><span class="item-role">Project Assistant, HR Digitalization</span><span class="item-date">Mar 2026 – Aug 2026</span></div><ul class="bullets"><li><b>Employee master-data governance</b>: In a CDP master-data system covering 6,000+ employees in China, checked and updated master data for about 2,000 employees; worked with regional HR teams to chase missing or abnormal records and get files completed.</li><li><b>Batch record-filling workflow</b>: Designed and used a batch workflow (Copilot reads scanned forms, Power Automate looks up by employee ID and enters data, Excel holds the data); approved by company IT and my mentor, ran in the company environment, measured 400+ forms a day including manual review (about 100–200 a day by hand), and handed over to my mentor.</li><li><b>Data and reporting</b>: Used Excel to organize and analyze compliance and HR data and produce visual reports; recognized by the HRBP and invited to extend the internship.</li></ul></div><div class="section"><div class="section-title">CAMPUS</div><div class="item-header"><span>Shanghai Lixin University of Accounting and Finance · New Media Operations Department</span><span class="item-role">Member</span><span class="item-date">Sep 2023 – Jul 2025</span></div><ul class="bullets"><li>Wrote articles for the official WeChat account, and handled the student-information entry system and campus-card services.</li></ul><div class="item-header"><span>Shanghai Lixin University of Accounting and Finance · Student Union</span><span class="item-role">Member</span><span class="item-date">Sep 2023 – Jul 2025</span></div><ul class="bullets"><li>Planned and organized the year-end event and other departmental events, coordinating resources to keep them moving.</li></ul></div><div class="section"><div class="section-title">PROJECTS & WORKS</div><div class="item-header"><span>MaisJeTaime (60-second AI short film) <a href="https://chiwawafromkk.github.io/projects/mais-je-taime/">Page</a></span><span class="item-role">Script · sourcing · editing</span><span class="item-date">Sep 2026</span></div><ul class="bullets"><li>Wrote the script, chose the source material, decided the edit and generated the shots; GPT made the first frames, Kling / Jimeng (Seedance) turned images into video, and the edit ran on Python / ffmpeg scripts written with AI assistance. 23 clips generated, 22 used in the final cut, 1080p.</li></ul><div class="item-header"><span>Jung × Me (short film + 3D star map + handbook) <a href="https://chiwawafromkk.github.io/projects/jung-self-map/">Page</a></span><span class="item-role">Theme · art direction · review</span><span class="item-date">Oct 2026</span></div><ul class="bullets"><li>Set the theme and direction, chose the painting-style reference and the Seedance-generated voice-over, and confirmed each item. Web film 49.7 s; 3D star map with 7 stations. Copy and development done by AI.</li></ul><div class="item-header"><span>Stark Has a Warm Heart (an interactive work inspired by Iron Man) <a href="https://chiwawafromkk.github.io/projects/stark-desk/">Page</a></span><span class="item-role">Direction · quality bar · review</span><span class="item-date">Oct 2026</span></div><ul class="bullets"><li>Set the direction and the quality bar (beat the reference video, with real texture), specified the content and reviewed over many rounds; 21 interactive objects and 10 art-style universes. Images made through Codex; development done by AI.</li></ul><div class="item-header"><span>Personal Job Agent <a href="https://github.com/CHIWAWAFROMkk/personal-job-agent">GitHub</a></span><span class="item-role">Product design · use · acceptance</span><span class="item-date">Aug 2026 – present</span></div><ul class="bullets"><li>Designed and accepted a Windows local-first job-search agent. Principle: cite only confirmed facts, and let the person decide on final submission. Front and back end built with AI coding tools such as Claude Code.</li></ul></div><div class="section"><div class="section-title">SKILLS</div><div class="row"><b>AI creation</b>: GPT image generation, Kling, Jimeng (Seedance); Remotion, HyperFrames, local whisper (installed and tested).</div><div class="row"><b>Office & data</b>: Excel (PivotTables, functions, charts); Python (Pandas, NumPy); SQL (basic); Microsoft 365 Copilot, Power Automate.</div><div class="row"><b>AI tools</b>: ChatGPT, Claude Code, Gemini, Kimi, DeepSeek, GLM.</div></div></body></html>
