@@ -74,7 +74,7 @@ export const SITE = {
       status: { zh: '已结束 · 企业流程为方案设计', en: 'Finished · enterprise flow is a design' } }),
     project({ slug: 'campus-delivery', line: 'data', preview: '/assets/editorial/delivery-relations.svg', inBrief: true,
       title: { zh: '校园外卖 SQL 工作台', en: 'Campus Delivery SQL Lab' },
-      did: { zh: '独立完成的课程设计：8 张业务表、事务与复合外键，可在浏览器里直接运行', en: 'Solo course project: 8 business tables with transactions and composite keys, runnable in the browser' },
+      did: { zh: '个人负责的课程设计：8 张业务表、事务与复合外键；可在浏览器里运行的工作台借助 AI 编程工具开发', en: 'A course project I was responsible for: 8 business tables with transactions and composite keys; the in-browser lab was built with AI coding tools' },
       status: { zh: '课程设计 · 可在线运行', en: 'Course project · runs online' } }),
     project({ slug: 'campus-delivery/insights', line: 'data', preview: '/assets/previews/campus-insights.svg', inBrief: false,
       title: { zh: '校园外卖经营分析（进阶版）', en: 'Campus Delivery Insights (advanced)' },
@@ -141,7 +141,7 @@ export const SITE = {
       tags: [ { zh: '课程设计', en: 'Course project' }, { zh: 'SQLite · sql.js · Web Worker', en: 'SQLite · sql.js · Web Worker' } ],
       summary: {
         task: { zh: '用一个校园外卖场景，把下单、库存、支付、配送和退款设计成相互约束、可以查询的关系数据库，再用 SQL 做经营分析。', en: 'Model campus food delivery — ordering, stock, payment, delivery and refunds — as a relational database whose records constrain each other, then analyse it with SQL.' },
-        mine: { zh: '独立完成：8 张业务表的建模、约束与触发器、下单与退款事务、业务查询和经营分析结论，并把数据库放进浏览器做成可操作的工作台。', en: 'On my own: modelled the 8 business tables, constraints and triggers, the order and refund transactions, the business queries and findings, and put the database in the browser as a working lab.' },
+        mine: { zh: '课程设计由我个人负责：8 张业务表的建模、约束与触发器、下单与退款事务、业务查询和经营分析结论。把数据库放进浏览器的在线工作台由我设计并验收，开发借助 AI 编程工具完成。', en: 'I was personally responsible for the course project: modelling the 8 business tables, constraints and triggers, the order and refund transactions, the business queries and findings. I designed and reviewed the in-browser lab; it was built with AI coding tools.' },
         tools: { zh: 'SQLite；sql.js（WebAssembly）让它在浏览器里运行，查询放在 Web Worker 里执行并有超时保护。', en: 'SQLite; sql.js (WebAssembly) runs it in the browser, with queries in a Web Worker behind a timeout.' },
         evidence: { zh: '本页的 SQL 工作台（可运行查询、下单、退款）、建表与数据 SQL、完整源码包。', en: 'The SQL lab on this page (run queries, place and refund orders), the schema and data SQL, and the full source package.' },
         status: { zh: '课程设计，已完成；演示数据为合成数据。', en: 'Course project, finished; the demo data is synthetic.' },
