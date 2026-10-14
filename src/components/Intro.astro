@@ -1,16 +1,21 @@
 ---
 import { SITE } from '../data/site';
+import { introLetterDelay } from '../scripts/intro';
 import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const words = SITE.intro.words;
 ---
 <div class="intro" hidden data-intro tabindex="-1">
-  <div class="intro__words" aria-hidden="true">
-    {SITE.intro.words.map(w => (
-      <div class="intro__word"><b>{w.word}</b><span>{w.caption[lang]}</span></div>
+  <div class="intro__stage" aria-hidden="true">
+    {words.map((w, i) => (
+      <div class="intro__line" style={`--caret-on:${introLetterDelay(i, 0)}s;--caret-off:${i < words.length - 1 ? introLetterDelay(i + 1, 0) : 9}s`}>
+        <b>{[...w.word].map((ch, k) => <span style={`--d:${introLetterDelay(i, k)}s`}>{ch}</span>)}<i class="intro__caret"></i></b>
+        <span class="intro__cap" style={`--d:${introLetterDelay(i, 0) + 0.25}s`}>{w.caption[lang]}</span>
+      </div>
     ))}
   </div>
-  <div class="intro__wipe" aria-hidden="true"></div>
+  <svg class="intro__trace" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M 72 78 C 52 78, 40 30, 8 10" pathLength="1" /></svg>
   <button type="button" class="intro__skip" data-intro-skip>{SITE.intro.skip[lang]} <kbd>Esc</kbd></button>
 </div>
 <script>
@@ -21,19 +26,32 @@ const { lang } = Astro.props;
 <style>
   .intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; background: var(--paper); outline: none; }
   :global(html.intro-pending) .intro, .intro.is-playing { display: block; }
-  .intro__word { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
-  .intro__word b { font: 700 min(38vw, 56vh)/0.8 var(--font-display); color: var(--ink); }
-  .intro__word:nth-child(2) b { color: var(--red); }
-  .intro__word span { margin-top: 3vh; font: 700 clamp(14px, 1.4vw, 20px)/1 var(--font-cjk-bold); letter-spacing: 0.3em; }
-  .intro__wipe { position: absolute; inset: 0; background: var(--red); transform: scaleX(0); transform-origin: left; }
+  .intro__stage { position: absolute; inset: 0; display: grid; align-content: center; gap: 2vh; padding-inline: var(--gutter); }
+  .intro__line { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 0 24px; }
+  .intro__line b { position: relative; font: 700 min(14vw, 19vh)/0.88 var(--font-display); color: var(--ink); white-space: nowrap; }
+  .intro__line:nth-child(2) b { color: var(--red); }
+  .intro__line b > span { opacity: 0; }
+  .intro__cap { padding-bottom: 1.2vh; font: 700 clamp(12px, 1.2vw, 18px)/1 var(--font-cjk-bold); letter-spacing: 0.3em; opacity: 0; }
+  .intro__caret { display: inline-block; width: 0.08em; height: 0.72em; margin-left: 0.06em; background: var(--red); opacity: 0; }
+  .intro__trace { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .intro__trace path { fill: none; stroke: var(--red); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
   .intro__skip { position: absolute; right: var(--gutter); bottom: 24px; z-index: 2; padding: 8px 14px; border: 1.5px solid var(--ink); background: var(--paper); font-weight: 700; cursor: pointer; }
   .intro__skip kbd { margin-left: 6px; font: 700 11px/1 var(--font-display); letter-spacing: 0.1em; }
-  .is-playing { animation: intro-lift 0.5s 1.85s cubic-bezier(.7, 0, .2, 1) forwards; }
-  .is-playing .intro__word:nth-child(1) { animation: intro-flash 0.5s 0.05s both; }
-  .is-playing .intro__word:nth-child(2) { animation: intro-flash 0.5s 0.5s both; }
-  .is-playing .intro__word:nth-child(3) { animation: intro-flash 0.5s 0.95s both; }
-  .is-playing .intro__wipe { animation: intro-wipe 0.45s 1.4s cubic-bezier(.7, 0, .2, 1) forwards; }
-  @keyframes intro-flash { 0% { opacity: 0; transform: scale(1.1); } 14% { opacity: 1; transform: none; } 82% { opacity: 1; } 100% { opacity: 0; } }
-  @keyframes intro-wipe { to { transform: scaleX(1); } }
+
+  /* Full: letters stream in like tokens, a caret rides the current line, the trace draws towards the name, the cover lifts. */
+  .is-playing:not(.is-gentle) { animation: intro-lift 0.5s 1.9s cubic-bezier(.7, 0, .2, 1) forwards; }
+  .is-playing:not(.is-gentle) .intro__line b > span { animation: intro-token 0.12s var(--d) steps(1) forwards; }
+  .is-playing:not(.is-gentle) .intro__cap { animation: intro-fade 0.3s var(--d) var(--ease) forwards; }
+  .is-playing:not(.is-gentle) .intro__caret { animation: intro-caret 0.24s var(--caret-on) steps(1) infinite, intro-caret-off 0.01s var(--caret-off) forwards; }
+  .is-playing:not(.is-gentle) .intro__trace path { animation: intro-draw 0.4s 1.45s cubic-bezier(.6, 0, .2, 1) forwards; }
+  /* Gentle: everything at once, a fade in and out; nothing travels. */
+  .is-gentle .intro__line b > span, .is-gentle .intro__cap { opacity: 1; }
+  .is-playing.is-gentle { animation: intro-gentle 0.8s var(--ease) forwards; }
+  @keyframes intro-token { to { opacity: 1; } }
+  @keyframes intro-fade { to { opacity: 1; } }
+  @keyframes intro-caret { 0% { opacity: 1; } 50% { opacity: 0; } }
+  @keyframes intro-caret-off { to { visibility: hidden; } }
+  @keyframes intro-draw { to { stroke-dashoffset: 0; } }
   @keyframes intro-lift { to { transform: translateY(-100%); } }
+  @keyframes intro-gentle { 0% { opacity: 0; } 30%, 60% { opacity: 1; } 100% { opacity: 0; } }
 </style>

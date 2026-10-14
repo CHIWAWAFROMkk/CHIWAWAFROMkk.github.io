@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { motionOff } from './helpers';
 
 const overlay = '[data-intro]';
 
@@ -68,11 +69,37 @@ test.describe('intro', () => {
     await expect(page.locator('.home__name')).toBeVisible();
   });
 
-  test('reduced motion: no intro', async ({ page }) => {
+  test('reduced motion: a short fade instead', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.locator(overlay)).toHaveClass(/is-gentle/);
+    await expect(page.locator(overlay)).toBeHidden({ timeout: 1500 });
+    await expect(page.locator('.home__name')).toBeVisible();
+  });
+
+  test('Escape skips the gentle intro', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.locator(overlay)).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator(overlay)).toBeHidden({ timeout: 300 });
+  });
+
+  test('motion off: no intro', async ({ page }) => {
+    await motionOff(page);
     await page.goto('/');
     await expect(page.locator(overlay)).toBeHidden();
     await expect(page.locator('.home__name')).toBeVisible();
+  });
+
+  test('letters stream in and the trace draws before the cover lifts', async ({ page }) => {
+    await page.goto('/');
+    const first = page.locator('.intro__line').first().locator('b > span').first();
+    const last = page.locator('.intro__line').last().locator('b > span').last();
+    await expect.poll(() => first.evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+    expect(await last.evaluate(el => getComputedStyle(el).opacity)).toBe('0');
+    // Sample densely: the line finishes at about 1.85 s and the cover hides at 2.4 s, which resets the computed value.
+    await expect.poll(() => page.locator('.intro__trace path').evaluate(el => parseFloat(getComputedStyle(el).strokeDashoffset)), { timeout: 2500, intervals: [50] }).toBeLessThan(0.05);
   });
 
   test('storage blocked: intro still plays once and the page works', async ({ page }) => {
@@ -88,8 +115,8 @@ test.describe('intro', () => {
   });
 
   test('intro script crashes: the page is uncovered within 3 seconds', async ({ page }) => {
-    // matchMedia throwing makes the inline guess fall back to "first visit" and makes the intro module crash before it can lift the cover.
-    await page.addInitScript(() => { window.matchMedia = () => { throw new Error('boom'); }; });
+    // document.fonts throwing makes the intro module crash before it can lift the cover.
+    await page.addInitScript(() => { Object.defineProperty(Document.prototype, 'fonts', { get() { throw new Error('boom'); } }); });
     await page.goto('/');
     expect(await page.evaluate(() => document.documentElement.classList.contains('intro-pending'))).toBe(true);
     await page.waitForTimeout(3200);

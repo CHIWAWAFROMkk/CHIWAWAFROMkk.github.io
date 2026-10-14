@@ -1,13 +1,27 @@
 import { describe, it, expect, vi } from 'vitest';
-import { shouldPlayIntro, readSeen, markSeen, withTimeout, SEEN_KEY } from '../../src/scripts/intro';
+import { introMode, introLetterDelay, INTRO_MS, INTRO_GENTLE_MS, readSeen, markSeen, withTimeout, SEEN_KEY } from '../../src/scripts/intro';
 
-describe('shouldPlayIntro', () => {
-  it('plays only on a first visit with motion allowed and fonts ready', () => {
-    expect(shouldPlayIntro({ seen: false, reducedMotion: false, fontsReady: true })).toBe(true);
-    expect(shouldPlayIntro({ seen: true, reducedMotion: false, fontsReady: true })).toBe(false);
-    expect(shouldPlayIntro({ seen: false, reducedMotion: true, fontsReady: true })).toBe(false);
-    expect(shouldPlayIntro({ seen: false, reducedMotion: false, fontsReady: false })).toBe(false);
+describe('introMode', () => {
+  const base = { seen: false, tier: 'full' as const, fontsReady: true };
+  it('plays the full intro on a first visit', () => expect(introMode(base)).toBe('full'));
+  it('lite devices still get the full intro (it is CSS only)', () => expect(introMode({ ...base, tier: 'lite' })).toBe('full'));
+  it('reduced motion gets the short fade', () => expect(introMode({ ...base, tier: 'gentle' })).toBe('gentle'));
+  it('never when seen, off, or the display font is late', () => {
+    expect(introMode({ ...base, seen: true })).toBeNull();
+    expect(introMode({ ...base, tier: 'off' })).toBeNull();
+    expect(introMode({ ...base, fontsReady: false })).toBeNull();
   });
+});
+
+describe('streamed letters', () => {
+  it('each line starts after the previous one and letters stream in order', () => {
+    expect(introLetterDelay(0, 0)).toBeLessThan(introLetterDelay(0, 1));
+    expect(introLetterDelay(0, 7)).toBeLessThan(introLetterDelay(1, 0));
+  });
+  it('the last letter of FILM lands before the trace starts drawing', () => {
+    expect(introLetterDelay(2, 3)).toBeLessThan(1.45);
+  });
+  it('gentle is a third of the full intro', () => expect(INTRO_GENTLE_MS * 3).toBe(INTRO_MS));
 });
 
 describe('storage helpers', () => {

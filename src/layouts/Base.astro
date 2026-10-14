@@ -71,7 +71,7 @@ const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/o
         (function () {
           var d = document.documentElement;
           try {
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            if (d.dataset.motion === 'off') return;
             if (localStorage.getItem('hyj-intro-seen') === '1') return;
           } catch (e) { /* storage blocked: treat as first visit */ }
           d.classList.add('intro-pending');

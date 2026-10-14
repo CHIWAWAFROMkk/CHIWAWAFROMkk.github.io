@@ -41,9 +41,9 @@ export const SITE = {
   intro: {
     skip: { zh: '跳过', en: 'Skip' },
     words: [
-      { word: 'DATA', caption: { zh: 'HR 数据', en: 'HR data' } },
-      { word: 'AI', caption: { zh: 'AI 应用', en: 'Applied AI' } },
-      { word: 'FILM', caption: { zh: 'AI 影像', en: 'AI film' } },
+      { word: 'WORKFLOW', caption: { zh: 'Agent 工作流', en: 'Agent workflows' } },
+      { word: 'PRODUCT', caption: { zh: 'AI 产品', en: 'AI products' } },
+      { word: 'FILM', caption: { zh: 'AIGC 影像', en: 'AIGC film' } },
     ],
   },
   contact: { heading: { zh: '聊聊？', en: "Let's talk." } },
