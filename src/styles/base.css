@@ -142,3 +142,8 @@ html[data-motion='off'] *, html[data-motion='off'] *::before, html[data-motion='
 html[data-motion='gentle'] .reveal, html[data-motion='gentle'] .m-armed, html[data-motion='gentle'] .m-armed > * { transform: none !important; }
 html[data-motion='gentle'] .reveal:not(.is-in), html[data-motion='gentle'] .m-armed:not(.m-in) { opacity: 0; }
 html[data-motion='gentle'] .reveal.is-in, html[data-motion='gentle'] .m-armed.m-in { opacity: 1; transition: opacity 0.7s var(--ease) var(--d, var(--m-d, 0ms)); }
+
+/* Film zones come up from black (scripts/night-entry.ts). */
+.night-zone.has-dim { position: relative; }
+.night-dim { position: absolute; inset: 0; z-index: 5; background: var(--night); pointer-events: none; transition: opacity 0.9s var(--ease) 0.15s; }
+.night-zone.is-lit > .night-dim { opacity: 0; }

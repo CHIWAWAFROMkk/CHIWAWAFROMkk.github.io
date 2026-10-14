@@ -93,8 +93,10 @@ const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/o
     <script>
       import { initRise } from '../scripts/rise';
       import { watchFps } from '../scripts/motion/tier';
+      import { initNightEntry } from '../scripts/night-entry';
       initRise();
       watchFps();
+      initNightEntry();
     </script>
   </body>
 </html>
