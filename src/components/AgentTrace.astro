@@ -1,0 +1,42 @@
+---
+import { traceNodes, edgePath, TRACE_VIEW, TRACE_ALPHA } from '../scripts/agent-trace';
+import { SITE } from '../data/site';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const nodes = traceNodes(SITE.trace.length);
+---
+<div class="trace" aria-hidden="true" data-trace style={`--trace-alpha:${TRACE_ALPHA}`}>
+  <svg viewBox={`0 0 ${TRACE_VIEW.w} ${TRACE_VIEW.h}`} preserveAspectRatio="xMaxYMid meet">
+    {nodes.slice(1).map((b, i) => <path class="trace__edge" d={edgePath(nodes[i], b)} />)}
+    {nodes.map((p, i) => (
+      <g transform={`translate(${p.x} ${p.y})`}>
+        <g class="trace__node">
+          <rect x="-7" y="-7" width="14" height="14" />
+          <text class="trace__label" y={i % 2 === 0 ? -18 : 30} text-anchor="middle">{SITE.trace[i][lang]}</text>
+          <text class="trace__tick" x="13" y="5">✓</text>
+        </g>
+      </g>
+    ))}
+    <circle class="trace__pulse" r="4.5" cx={nodes[0].x} cy={nodes[0].y} />
+  </svg>
+</div>
+<script>
+  import { initAgentTrace } from '../scripts/agent-trace-dom';
+  const root = document.querySelector<HTMLElement>('[data-trace]');
+  if (root) initAgentTrace(root);
+</script>
+<style>
+  .trace { position: absolute; z-index: 0; top: clamp(64px, 10vh, 120px); right: var(--gutter); width: min(42vw, 600px); pointer-events: none; }
+  .trace svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .trace__edge { fill: none; stroke: var(--ink); stroke-opacity: var(--trace-alpha); stroke-width: 1.5; transition: stroke 0.4s var(--ease), stroke-opacity 0.4s var(--ease); }
+  .trace__edge.is-lit { stroke: var(--red); stroke-opacity: 1; }
+  .trace__node rect { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; transition: fill 0.3s var(--ease); }
+  .trace__node.is-done rect { fill: var(--ink); }
+  .trace__label { font: 500 13px/1 var(--font-body); fill: var(--mute); }
+  .trace__tick { font: 700 13px/1 var(--font-display); fill: var(--red-text); opacity: 0; transition: opacity 0.3s var(--ease); }
+  .trace__node.is-done .trace__tick { opacity: 1; }
+  .trace__pulse { fill: var(--red); opacity: 0; }
+  /* Phones: the diagram follows the text instead of sitting behind it. */
+  @media (max-width: 800px) { .trace { position: static; order: 10; width: 100%; margin-top: 4px; } }
+</style>

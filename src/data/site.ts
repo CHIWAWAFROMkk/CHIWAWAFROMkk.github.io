@@ -38,6 +38,14 @@ export const SITE = {
     brief: { index: '01', big: '1:00', href: '/brief/', title: { zh: '一分钟了解我', en: 'Know me in a minute' }, desc: { zh: '经历、项目、影像与联系方式', en: 'Experience, projects, film and contact' } },
     projects: { index: '02', big: 'ALL', href: '/projects/', title: { zh: '查看项目与演示', en: 'See projects & demos' }, desc: { zh: '过程与取舍、在线演示、源码下载', en: 'Process, live demos and source code' } },
   },
+  /** The home page's agent run, step by step (AgentTrace). */
+  trace: [
+    { zh: '输入', en: 'Input' },
+    { zh: '规则', en: 'Rules' },
+    { zh: '证据', en: 'Evidence' },
+    { zh: '判断', en: 'Judgement' },
+    { zh: '输出', en: 'Output' },
+  ],
   intro: {
     skip: { zh: '跳过', en: 'Skip' },
     words: [

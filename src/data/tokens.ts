@@ -30,3 +30,10 @@ export function cssVars(): string {
     .map(([k, v]) => `--${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}:${v}`)
     .join(';');
 }
+
+/** fg laid over bg at the given opacity, as #rrggbb (used to check that decorative lines stay visible). */
+export function blend(fg: string, bg: string, alpha: number): string {
+  const ch = (hex: string) => { const n = parseInt(hex.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const [f, b] = [ch(fg), ch(bg)];
+  return '#' + f.map((v, i) => Math.round(v * alpha + b[i] * (1 - alpha)).toString(16).padStart(2, '0')).join('');
+}

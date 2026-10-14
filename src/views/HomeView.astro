@@ -4,6 +4,7 @@ import LangSwitch from '../components/LangSwitch.astro';
 import Gate from '../components/Gate.astro';
 import ContactBar from '../components/ContactBar.astro';
 import Intro from '../components/Intro.astro';
+import AgentTrace from '../components/AgentTrace.astro';
 import SplitText from '../components/rb/SplitText.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
@@ -15,6 +16,7 @@ const meta = SITE.pages.home;
 <Base lang={lang} path="/" title={meta.title[lang]} description={meta.description[lang]} nav={false} footer={false} intro>
   <main id="main" class="home">
     <header class="home__id wrap">
+      <AgentTrace lang={lang} />
       <div class="home__top">
         <h1 class="home__name"><SplitText text={SITE.name[lang]} /></h1>
         <LangSwitch lang={lang} path="/" />
@@ -33,6 +35,8 @@ const meta = SITE.pages.home;
   .home { flex: 1; display: flex; flex-direction: column; }
   .home > :global(.gate) { flex: 1; }
   .home__top { margin-bottom: 6px; }
+  .home__id { position: relative; }
+  .home__id > :not(.trace) { position: relative; z-index: 1; }
   .home__id { width: 100%; display: grid; gap: 10px; padding-block: clamp(20px, 4vh, 44px) clamp(24px, 4vh, 40px); }
   .home__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
   .home__name { font-size: clamp(56px, 9vw, 132px); line-height: 0.95; letter-spacing: -0.05em; }
@@ -40,4 +44,6 @@ const meta = SITE.pages.home;
   .home__line { max-width: 34em; font: 500 clamp(18px, 1.8vw, 26px)/1.5 var(--font-body); }
   .home__meta { color: var(--mute); font-size: 15px; }
   .home__avail { justify-self: start; padding: 4px 10px; background: var(--ink); color: var(--paper); font-weight: 500; font-size: 14px; }
+  /* After the base .home__line rule so it wins: keeps the line clear of the diagram (at 1440 px the line ends near 764 px, the diagram starts at 796 px). */
+  @media (min-width: 801px) { .home__line { max-width: min(34em, 50vw); } }
 </style>
