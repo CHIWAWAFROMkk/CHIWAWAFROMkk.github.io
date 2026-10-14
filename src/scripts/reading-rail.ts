@@ -19,19 +19,27 @@ export function initReadingRail(nav: HTMLElement, bar: HTMLElement): void {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = `#${s.id}`;
-    a.textContent = s.dataset.rail || s.querySelector('h2')?.textContent?.trim() || '';
+    // The name sits in a span that ignores the pointer, so only the 10 px node takes clicks.
+    const label = document.createElement('span');
+    label.className = 'rail__label';
+    label.textContent = s.dataset.rail || s.querySelector('h2')?.textContent?.trim() || '';
+    a.append(label);
     li.append(a);
     list.append(li);
     return a;
   });
   nav.hidden = false;
   bar.hidden = false;
+  const nights = [...document.querySelectorAll<HTMLElement>('.night-zone')];
   let frame = 0;
   const update = () => {
     frame = 0;
     const i = activeIndex(sections.map(s => s.getBoundingClientRect().top), innerHeight * 0.4);
     links.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
     nav.style.setProperty('--progress', String(Math.max(0, i) / (links.length - 1)));
+    // Over a film zone the rail steps aside: ink nodes vanish on the dark ground, and the cinema uses the screen edges.
+    const r = nav.getBoundingClientRect();
+    nav.classList.toggle('is-over-night', nights.some(z => { const b = z.getBoundingClientRect(); return b.top < r.bottom && b.bottom > r.top; }));
     const max = document.documentElement.scrollHeight - innerHeight;
     bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
   };

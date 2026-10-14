@@ -31,3 +31,13 @@ test('project pages list the summary and the prose headings', async ({ page, isM
   const n = await page.locator('article.prose h2').count();
   await expect(page.locator('[data-rail-nav] a')).toHaveCount(n + 1);
 });
+
+test('the rail steps aside over the film zone, where the cinema uses the screen edges', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop rail');
+  await page.goto('/brief/');
+  const nav = page.locator('[data-rail-nav]');
+  await expect(nav).not.toHaveClass(/is-over-night/);
+  await page.locator('.b-film').evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY));
+  await expect(nav).toHaveClass(/is-over-night/);
+  expect(await nav.evaluate(el => getComputedStyle(el).pointerEvents)).toBe('none');
+});
