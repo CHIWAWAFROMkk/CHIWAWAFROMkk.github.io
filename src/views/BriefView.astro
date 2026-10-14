@@ -6,6 +6,7 @@ import FilmReel from '../components/FilmReel.astro';
 import ContactBar from '../components/ContactBar.astro';
 import SplitText from '../components/rb/SplitText.astro';
 import StreamText from '../components/StreamText.astro';
+import ReadingRail from '../components/ReadingRail.astro';
 import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
@@ -29,12 +30,12 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
       </div>
     </header>
 
-    <section class="wrap" aria-labelledby="b-exp">
+    <section class="wrap" aria-labelledby="b-exp" data-rail="">
       <div class="section-head"><h2 id="b-exp"><ScrollReveal text={B.experience[lang]} /></h2></div>
       <EvidenceRow lang={lang} factId="F6" context="F5" />
     </section>
 
-    <section class="wrap" aria-labelledby="b-edu">
+    <section class="wrap" aria-labelledby="b-edu" data-rail="">
       <div class="section-head"><h2 id="b-edu"><ScrollReveal text={B.education[lang]} /></h2></div>
       <ul class="b-edu">
         <li>{fact('F2').text[lang]}</li>
@@ -42,12 +43,12 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
       </ul>
     </section>
 
-    <section aria-labelledby="b-proj">
+    <section aria-labelledby="b-proj" data-rail="">
       <div class="wrap"><div class="section-head"><h2 id="b-proj"><ScrollReveal text={B.projects[lang]} /></h2></div></div>
       {dataProjects.map((p, i) => <ProjectRow lang={lang} project={p} index={i} />)}
     </section>
 
-    <section class="night-zone b-film" aria-labelledby="b-film">
+    <section class="night-zone b-film" aria-labelledby="b-film" data-rail="">
       <FilmReel lang={lang} heading={B.film[lang]} headingId="b-film" />
       {films.map(({ project: film, status }) => (
         <a class="b-film__row wrap" href={localizePath(film.href, lang)}>
@@ -58,6 +59,7 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
       ))}
     </section>
   </main>
+  <ReadingRail lang={lang} />
   <ContactBar lang={lang} variant="red" />
 </Base>
 <style>

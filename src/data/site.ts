@@ -83,6 +83,7 @@ export const SITE = {
     read: { zh: '看过程与取舍', en: 'Process & trade-offs' },
     run: { zh: '在浏览器里运行', en: 'Run it in your browser' },
   },
+  rail: { label: { zh: '本页章节', en: 'On this page' } },
   pager: { label: { zh: '上一个 / 下一个项目', en: 'Previous / next project' } },
   film: {
     pause: { zh: '暂停视频', en: 'Pause videos' },

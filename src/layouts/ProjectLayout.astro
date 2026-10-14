@@ -5,6 +5,7 @@ import ProjectMotion from '../components/ProjectMotion.astro';
 import { countableSegments } from '../scripts/motion/countable';
 import SplitText from '../components/rb/SplitText.astro';
 import StreamText from '../components/StreamText.astro';
+import ReadingRail from '../components/ReadingRail.astro';
 import { SITE } from '../data/site';
 import { trackProjects } from '../data/tracks';
 import { localizePath, type Lang, type Bi } from '../i18n';
@@ -34,12 +35,13 @@ const rows: [Bi, Bi, Bi?][] = [
       <h1 class="p-title">{motion ? <SplitText text={title[lang]} deferUntilVisible={deferTitle} /> : title[lang]}</h1>
       <p class="p-lead">{motion ? <StreamText text={lead[lang]} /> : lead[lang]}</p>
     </header>
-    <section class="p-summary wrap" aria-labelledby="p-summary-h">
+    <section class="p-summary wrap" aria-labelledby="p-summary-h" data-rail={S.heading[lang]}>
       <h2 id="p-summary-h" class="label">{S.heading[lang]}</h2>
       <dl>{rows.map(([k, v, next]) => <div class="p-row" data-m-pre={motion ? '' : undefined}><dt>{k[lang]}</dt><dd>{motion ? countableSegments(v[lang]).map(s => s.count ? <span class="p-count" data-count>{s.text}</span> : s.text) : v[lang]}{next && <span class="p-next"> {next[lang]}</span>}</dd></div>)}</dl>
     </section>
     <slot name="demo" />
     <article class="prose wrap"><slot /></article>
+    <ReadingRail lang={lang} />
     <nav class="p-pager wrap" aria-label={SITE.pager.label[lang]}>
       {prev ? <a href={localizePath(prev.href, lang)}>← {prev.title[lang]}</a> : <span></span>}
       {next && <a href={localizePath(next.href, lang)}>{next.title[lang]} →</a>}
