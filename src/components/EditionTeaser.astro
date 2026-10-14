@@ -1,12 +1,13 @@
 ---
 import { EDITIONS, type EditionId } from '../data/editions';
-import { localizePath, type Lang } from '../i18n';
-interface Props { which: EditionId; lang: Lang }
-const { which, lang } = Astro.props;
+import { trackPath, type Lang } from '../i18n';
+import type { Track } from '../data/tracks';
+interface Props { which: EditionId; lang: Lang; track?: Track }
+const { which, lang, track = 'ai' } = Astro.props;
 const E = EDITIONS[which];
 ---
 <div class="wrap">
-  <a class="edition-teaser" href={localizePath(`/projects/${E.slug}/live/`, lang)}>
+  <a class="edition-teaser" href={trackPath(track, `/projects/${E.slug}/live/`, lang)}>
     <span class="edition-teaser__kicker">{E.teaser.kicker[lang]}</span>
     <span class="edition-teaser__title">{E.teaser.title[lang]}</span>
     <span class="edition-teaser__sub">{E.teaser.sub[lang]}</span>

@@ -1,12 +1,13 @@
 ---
-import { localizePath, type Lang } from '../i18n';
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+import { trackPath, type Lang } from '../i18n';
+import type { Track } from '../data/tracks';
+interface Props { lang: Lang; track?: Track }
+const { lang, track = 'ai' } = Astro.props;
 const T = lang === 'zh'
   ? { kicker: '进阶版', title: '一个学期的经营分析 →', sub: '同一套表结构放大到一个学期，用 SQL 回答五个经营问题，还能在驾驶舱里自己筛选。' }
   : { kicker: 'Advanced edition', title: 'A full term of business analysis →', sub: 'The same schema scaled to a whole term: five business questions answered in SQL, plus a dashboard you can filter.' };
 ---
-<a class="teaser" href={localizePath('/projects/campus-delivery/insights/', lang)}>
+<a class="teaser" href={trackPath(track, '/projects/campus-delivery/insights/', lang)}>
   <span class="teaser__kicker">{T.kicker}</span>
   <span class="teaser__title">{T.title}</span>
   <span class="teaser__sub">{T.sub}</span>

@@ -8,12 +8,13 @@ import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/campus-insights.zh.md';
 import { Content as BodyEn } from '../copy/projects/campus-insights.en.md';
 import type { Lang } from '../i18n';
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+import type { Track } from '../data/tracks';
+interface Props { lang: Lang; track?: Track }
+const { lang, track = 'ai' } = Astro.props;
 const P = SITE.pages.insights;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
-<ProjectLayout deferTitle lang={lang} slug="campus-delivery/insights" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout track={track} deferTitle lang={lang} slug="campus-delivery/insights" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <InsightsPrologue slot="top" lang={lang} />
   <Fragment slot="demo">
     <InsightsStory lang={lang} />

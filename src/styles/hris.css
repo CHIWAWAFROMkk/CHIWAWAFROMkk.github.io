@@ -29,3 +29,23 @@ html[data-track='hris'][data-theme='dark'] [data-demo] { --paper: #f4f3ef; --car
   .hris .h-top__nav { overflow-x: auto; }
   .hris .h-foot > * { border-right: 0; border-bottom: var(--hair); }
 }
+
+/* Project pages in the HRIS track: the shared ProjectLayout markup in V3's structure. */
+.hris .p-hris .p-head { padding: 48px 32px 36px; border-bottom: var(--hair); }
+.hris .p-hris .p-tags li { border: var(--hair); font-family: var(--font-mono); font-size: 13px; }
+.hris .p-hris .p-title { font: 700 clamp(34px, 5vw, 64px)/1.08 var(--font-display); letter-spacing: -0.03em; }
+.hris .p-hris .p-lead { color: var(--mute); }
+.hris .p-hris .p-summary { padding: 0; }
+.hris .p-hris .p-summary h2.label { padding: 18px 32px; margin: 0; border-bottom: var(--hair); background: var(--card); font-family: var(--font-mono); letter-spacing: 0.04em; text-transform: none; }
+.hris .p-hris .p-row { grid-template-columns: 260px 1fr; gap: 0; padding: 0; border-top: 0; border-bottom: var(--hair); }
+.hris .p-hris .p-row dt { padding: 20px 24px; border-right: var(--hair); font: 600 15px/1.6 var(--font-body); }
+.hris .p-hris .p-row dd { padding: 20px 32px; }
+.hris .p-hris .prose { padding-inline: 32px; }
+.hris .p-hris .prose h2 { font: 700 24px/1.3 var(--font-body); }
+.hris .p-hris .p-pager { border-top: var(--hair); font-family: var(--font-mono); font-size: 14px; }
+.hris .edition-teaser, .hris .teaser { background: var(--ink); color: var(--paper); }
+@media (max-width: 640px) {
+  .hris .p-hris .p-row { grid-template-columns: 1fr; }
+  .hris .p-hris .p-row dt { border-right: 0; border-bottom: var(--hair); }
+  .hris .p-hris .p-head, .hris .p-hris .p-row dd, .hris .p-hris .prose { padding-inline: 20px; }
+}

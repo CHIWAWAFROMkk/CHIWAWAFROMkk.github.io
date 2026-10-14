@@ -8,12 +8,13 @@ import QuotaShots from '../components/QuotaShots.astro';
 import LivePreview from '../components/LivePreview.astro';
 import { SITE } from '../data/site';
 import { EDITIONS, type EditionId } from '../data/editions';
-import { localizePath, type Lang } from '../i18n';
-interface Props { which: EditionId; lang: Lang }
-const { which, lang } = Astro.props;
+import { trackPath, type Lang } from '../i18n';
+import type { Track } from '../data/tracks';
+interface Props { which: EditionId; lang: Lang; track?: Track }
+const { which, lang, track = 'ai' } = Astro.props;
 const E = EDITIONS[which], P = SITE.pages[E.page];
 ---
-<ProjectLayout lang={lang} slug={`${E.slug}/live`} title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout track={track} lang={lang} slug={`${E.slug}/live`} title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <Fragment slot="demo">
     <LivePreview which={which} lang={lang} />
     {which === 'career' && <CareerLive lang={lang} />}
@@ -24,5 +25,5 @@ const E = EDITIONS[which], P = SITE.pages[E.page];
   </Fragment>
   <h2>{E.body.h2[lang]}</h2>
   <p>{E.body.p[lang]}</p>
-  <p><a href={localizePath(`/projects/${E.slug}/`, lang)}>{E.back[lang]}</a></p>
+  <p><a href={trackPath(track, `/projects/${E.slug}/`, lang)}>{E.back[lang]}</a></p>
 </ProjectLayout>

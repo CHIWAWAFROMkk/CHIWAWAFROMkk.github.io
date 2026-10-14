@@ -1,5 +1,6 @@
 ---
 import Base from './Base.astro';
+import HrisBase from './HrisBase.astro';
 import SectionReveals from '../components/SectionReveals.astro';
 import ProjectMotion from '../components/ProjectMotion.astro';
 import { countableSegments } from '../scripts/motion/countable';
@@ -8,14 +9,15 @@ import StreamText from '../components/StreamText.astro';
 import ReadingRail from '../components/ReadingRail.astro';
 import { SITE } from '../data/site';
 import { trackProjects } from '../data/tracks';
-import { localizePath, type Lang, type Bi } from '../i18n';
+import type { Track } from '../data/tracks';
+import { trackPath, type Lang, type Bi } from '../i18n';
 
 export interface Summary { task: Bi; tradeoff?: Bi; mine: Bi; tools: Bi; evidence: Bi; status: Bi; next?: Bi }
-interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean; motion?: boolean; deferTitle?: boolean }
-const { lang, slug, title, lead, tags, summary, description, night = false, motion = true, deferTitle = false } = Astro.props;
+interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean; motion?: boolean; deferTitle?: boolean; track?: Track }
+const { lang, slug, title, lead, tags, summary, description, night = false, motion = true, deferTitle = false, track = 'ai' } = Astro.props;
 const path = `/projects/${slug}/`;
 // Pager order is the main site's order, then the films; the CSV tool and the live editions sit outside it.
-const order = [...trackProjects('ai'), ...SITE.projects.filter(p => p.line === 'film')];
+const order = track === 'hris' ? trackProjects('hris') : [...trackProjects('ai'), ...SITE.projects.filter(p => p.line === 'film')];
 const i = order.findIndex(p => p.slug === slug);
 const prev = i > 0 ? order[i - 1] : undefined;
 const next = i >= 0 && i < order.length - 1 ? order[i + 1] : undefined;
@@ -26,9 +28,13 @@ const rows: [Bi, Bi, Bi?][] = [
   [S.mine, summary.mine], [S.tools, summary.tools], [S.evidence, summary.evidence],
   [summary.next ? S.statusNext : S.status, summary.status, summary.next],
 ];
+const Shell = track === 'hris' ? HrisBase : Base;
+const shellProps = track === 'hris'
+  ? { lang, path, title: `${title[lang]} · ${SITE.name[lang]}`, description: description[lang] }
+  : { lang, path, night, title: `${title[lang]} · ${SITE.name[lang]}`, description: description[lang] };
 ---
-<Base lang={lang} path={path} night={night} title={`${title[lang]} · ${SITE.name[lang]}`} description={description[lang]}>
-  <main id="main" data-section-reveals={motion ? '' : undefined}>
+<Shell {...shellProps}>
+  <main id="main" class:list={[{ 'p-hris': track === 'hris' }]} data-section-reveals={motion ? '' : undefined}>
     <slot name="top" />
     <header class="p-head wrap">
       <ul class="p-tags">{tags.map(t => <li>{t[lang]}</li>)}</ul>
@@ -42,14 +48,14 @@ const rows: [Bi, Bi, Bi?][] = [
     <slot name="demo" />
     <article class="prose wrap"><slot /></article>
     <nav class="p-pager wrap" aria-label={SITE.pager.label[lang]}>
-      {prev ? <a href={localizePath(prev.href, lang)}>← {prev.title[lang]}</a> : <span></span>}
-      {next && <a href={localizePath(next.href, lang)}>{next.title[lang]} →</a>}
+      {prev ? <a href={trackPath(track, prev.href, lang)}>← {prev.title[lang]}</a> : <span></span>}
+      {next && <a href={trackPath(track, next.href, lang)}>{next.title[lang]} →</a>}
     </nav>
   </main>
   <ReadingRail lang={lang} />
   {motion && <SectionReveals />}
   {motion && <ProjectMotion />}
-</Base>
+</Shell>
 <style>
   .p-head { display: grid; gap: 18px; padding-block: clamp(32px, 6vh, 72px) 36px; border-bottom: var(--rule); }
   .p-tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }

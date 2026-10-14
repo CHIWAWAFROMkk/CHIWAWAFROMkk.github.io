@@ -7,15 +7,16 @@ import { SITE } from '../data/site';
 import { Content as BodyZh } from '../copy/projects/ai-campus.zh.md';
 import { Content as BodyEn } from '../copy/projects/ai-campus.en.md';
 import type { Lang } from '../i18n';
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+import type { Track } from '../data/tracks';
+interface Props { lang: Lang; track?: Track }
+const { lang, track = 'ai' } = Astro.props;
 const P = SITE.pages.aiCampus;
 const Body = lang === 'zh' ? BodyZh : BodyEn;
 ---
-<ProjectLayout lang={lang} slug="ai-campus" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
+<ProjectLayout track={track} lang={lang} slug="ai-campus" title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <Fragment slot="demo">
     <CampusFramework lang={lang} />
-    <EditionTeaser which="campus" lang={lang} />
+    <EditionTeaser which="campus" lang={lang} track={track} />
     <PlateCampus lang={lang} />
   </Fragment>
   <Body />
