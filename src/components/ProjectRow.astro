@@ -1,12 +1,16 @@
 ---
 import type { ProjectEntry } from '../data/site';
+import { SITE } from '../data/site';
 import SpotlightCard from './rb/SpotlightCard.astro';
+import { liveBytes, formatSize, MAX_LIVE_BYTES } from '../data/live-size';
 import { localizePath, type Lang } from '../i18n';
 /** motion: the projects index's slide-in, hover sweep and preview; other pages (the overview) keep the plain row. */
 interface Props { lang: Lang; project: ProjectEntry; index: number; motion?: boolean }
 const { lang, project, index, motion = false } = Astro.props;
+const live = project.live && { href: localizePath(project.live.href, lang), bytes: liveBytes(project.live.size) };
 ---
 <SpotlightCard tone="paper">
+<div class="pcard">
 <a class="prow" href={localizePath(project.href, lang)} data-motion={motion ? '' : undefined}>
   <span class="prow__n">{String(index + 1).padStart(2, '0')}</span>
   <span class="prow__title">{project.title[lang]}</span>
@@ -15,6 +19,19 @@ const { lang, project, index, motion = false } = Astro.props;
   <span class="prow__arrow" aria-hidden="true">→</span>
   {motion && project.preview && <img class="prow__preview" src={project.preview} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
 </a>
+<div class="pcard__actions">
+  {/* The row above is the accessible link to the simple page; this visible twin stays out of the tab order. */}
+  <a class="pcard__act" href={localizePath(project.href, lang)} tabindex="-1" aria-hidden="true">{SITE.cards.read[lang]} →</a>
+  {live && (
+    <a class="pcard__act pcard__live" href={live.href} style={`--share:${Math.min(1, live.bytes / MAX_LIVE_BYTES).toFixed(3)}`}>
+      <span>{SITE.cards.run[lang]} ↗</span>
+      <small data-size>{formatSize(live.bytes, lang)}</small>
+      <i class="pcard__bar" aria-hidden="true"></i>
+    </a>
+  )}
+</div>
+<svg class="pcard__trace" aria-hidden="true"><rect pathLength="1" /></svg>
+</div>
 </SpotlightCard>
 <script>
   import { reveal } from '../scripts/motion-dom';
@@ -35,11 +52,9 @@ const { lang, project, index, motion = false } = Astro.props;
 </script>
 <style>
   :global(.card-spotlight:has(.prow:hover)), :global(.card-spotlight:has(.prow:focus-visible)) { --spot: rgb(236 228 214 / 0.12); }
-  .prow { position: relative; display: grid; grid-template-columns: 3ch minmax(10em, 1fr) 2fr minmax(9em, 1fr) 2ch; gap: 8px clamp(14px, 2vw, 32px); align-items: baseline; padding: 18px max(var(--gutter), calc((100% - 1600px) / 2 + var(--gutter))); border-bottom: var(--hair); text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease), opacity 0.6s var(--ease) var(--d, 0ms), transform 0.6s var(--ease) var(--d, 0ms); }
+  .prow { position: relative; display: grid; grid-template-columns: 3ch minmax(10em, 1fr) 2fr minmax(9em, 1fr) 2ch; gap: 8px clamp(14px, 2vw, 32px); align-items: baseline; padding: 18px max(var(--gutter), calc((100% - 1600px) / 2 + var(--gutter))); text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease), opacity 0.6s var(--ease) var(--d, 0ms), transform 0.6s var(--ease) var(--d, 0ms); }
   .prow[data-motion]:global(.reveal):not(:global(.is-in)) { opacity: 0; transform: translateX(-28px); }
-  .prow[data-motion]::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.45s var(--ease); }
   .prow:hover, .prow[data-motion]:focus-visible { background: var(--ink); color: var(--paper); }
-  .prow[data-motion]:hover::after, .prow[data-motion]:focus::after { transform: scaleX(1); }
   .prow__n { display: inline-block; font: 700 18px/1 var(--font-display); }
   .prow[data-motion]:hover .prow__n, .prow[data-motion]:focus .prow__n { animation: n-flip 0.45s var(--ease); }
   @keyframes n-flip { from { transform: rotateX(90deg); opacity: 0.2; } }
@@ -53,7 +68,23 @@ const { lang, project, index, motion = false } = Astro.props;
     .prow:hover .prow__preview, .prow:focus .prow__preview { opacity: 1; transform: translate(calc(var(--safe-x) + 24px), calc(-50% + var(--py, 0px))) scale(1); }
   }
   @media not ((hover: hover) and (pointer: fine)) { .prow__preview { display: none; } }
+  .pcard { position: relative; border-bottom: var(--hair); }
+  .pcard__actions { --row-pad: max(var(--gutter), calc((100% - 1600px) / 2 + var(--gutter))); display: flex; flex-wrap: wrap; gap: 8px 12px; padding: 0 var(--row-pad) 18px calc(var(--row-pad) + 3ch + clamp(14px, 2vw, 32px)); }
+  .pcard__act { position: relative; display: inline-flex; align-items: baseline; gap: 10px; padding: 6px 12px; border: 1.5px solid var(--ink); overflow: hidden; font-size: 14px; font-weight: 700; text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
+  .pcard__act:hover, .pcard__act:focus-visible { background: var(--ink); color: var(--paper); }
+  .pcard__live { border-color: var(--red-text); color: var(--red-text); }
+  .pcard__live small { color: var(--mute); font-weight: 500; }
+  .pcard__live:hover small, .pcard__live:focus-visible small { color: var(--night-mute); }
+  /* The bar's length is the download's share of the largest runtime; it fills when the button is pointed at. */
+  .pcard__bar { position: absolute; left: 0; bottom: 0; width: calc(var(--share) * 100%); height: 3px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.6s var(--ease); }
+  .pcard__live:hover .pcard__bar, .pcard__live:focus-visible .pcard__bar { transform: none; }
+  .pcard__trace { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .pcard__trace rect { x: 1px; y: 1px; width: calc(100% - 2px); height: calc(100% - 2px); fill: none; stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.7s var(--ease); }
+  .pcard:hover .pcard__trace rect, .pcard:focus-within .pcard__trace rect { stroke-dashoffset: 0; }
+  :global(html[data-motion='gentle']) .pcard__trace rect { stroke-dashoffset: 0; opacity: 0; transition: opacity 0.5s var(--ease); }
+  :global(html[data-motion='gentle']) .pcard:hover .pcard__trace rect, :global(html[data-motion='gentle']) .pcard:focus-within .pcard__trace rect { opacity: 1; }
   @media (max-width: 800px) {
+    .pcard__actions { padding-left: calc(var(--gutter) + 3ch + 14px); }
     .prow { grid-template-columns: 3ch 1fr; }
     .prow__did, .prow__status { grid-column: 2; }
     .prow__arrow { display: none; }

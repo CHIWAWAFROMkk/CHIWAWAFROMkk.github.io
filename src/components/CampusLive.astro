@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import CodeLive from './CodeLive.astro';
 import PyBoot from './PyBoot.astro';
+import { liveMB } from '../data/live-size';
 import { CAMPUS_TEXT } from '../scripts/campus-live-text';
 import { CAMPUS_RUNTIME, CORE_FILES, SCENARIOS, testNames } from '../scripts/campus-flow';
 import type { Lang } from '../i18n';
@@ -19,7 +20,7 @@ const own = CAMPUS_RUNTIME.files.map(u => {
   return { name: u.slice(u.lastIndexOf('/') + 1), sha256: createHash('sha256').update(b).digest('hex'), bytes: b.length };
 });
 const files = [...core, ...own];
-const mb = (files.reduce((s, f) => s + f.bytes, 0) / 1048576).toFixed(1);
+const mb = liveMB('campus');
 const tests = testNames(readFileSync('public/downloads/campus/test_analysis.py', 'utf8'));
 ---
 <section class="campus-live" data-campus-live data-demo data-lang={lang} aria-labelledby="cm-title">

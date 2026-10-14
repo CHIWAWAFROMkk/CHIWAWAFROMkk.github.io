@@ -61,6 +61,10 @@ export const SITE = {
     evidence: { zh: '可查证成果', en: 'What you can check' },
     status: { zh: '当前状态', en: 'Status' },
   },
+  cards: {
+    read: { zh: '看过程与取舍', en: 'Process & trade-offs' },
+    run: { zh: '在浏览器里运行', en: 'Run it in your browser' },
+  },
   pager: { label: { zh: '上一个 / 下一个项目', en: 'Previous / next project' } },
   film: {
     pause: { zh: '暂停视频', en: 'Pause videos' },

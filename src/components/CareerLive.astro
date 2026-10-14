@@ -1,15 +1,14 @@
 ---
-import { readFileSync } from 'node:fs';
 import CodeLive from './CodeLive.astro';
 import CareerDemo from './CareerDemo.astro';
 import PyBoot from './PyBoot.astro';
+import { liveMB } from '../data/live-size';
 import { LIVE_TEXT, DEMO_JD } from '../scripts/career-live-text';
 import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const T = LIVE_TEXT[lang];
-const bytes = (p: string) => JSON.parse(readFileSync(p, 'utf8')).files.reduce((s: number, f: { bytes: number }) => s + f.bytes, 0);
-const mb = ((bytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + bytes('public/assets/py/job-agent/4397ded/manifest.json')) / 1048576).toFixed(1);
+const mb = liveMB('career');
 ---
 <section class="career-live" data-career-live data-demo data-lang={lang} aria-labelledby="cl-title">
   <div class="wrap">

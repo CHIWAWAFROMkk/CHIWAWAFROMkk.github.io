@@ -36,7 +36,8 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
 
 test('the projects index lists each full edition right after its project', async ({ page }) => {
   await page.goto('/projects/');
-  const hrefs = await page.locator('main a[href^="/projects/"]').evaluateAll(els => els.map(e => e.getAttribute('href')));
+  // The card's visible twin of the project link is aria-hidden and out of the tab order; skip it like assistive tech does.
+  const hrefs = await page.locator('main a[href^="/projects/"]:not([aria-hidden="true"])').evaluateAll(els => els.map(e => e.getAttribute('href')));
   for (const e of EDITIONS) {
     const i = hrefs.indexOf(`/projects/${e.slug}/`);
     expect(hrefs[i + 1], e.slug).toBe(`/projects/${e.slug}/live/`);
