@@ -57,11 +57,13 @@ export const SITE = {
   },
   summaryLabels: {
     heading: { zh: '一分钟摘要', en: 'In one minute' },
-    task: { zh: '任务', en: 'The task' },
+    task: { zh: '问题与场景', en: 'Problem & context' },
+    tradeoff: { zh: '方案取舍', en: 'Trade-offs' },
     mine: { zh: '我的工作', en: 'What I did' },
     tools: { zh: '工具协作', en: 'Tools & AI' },
     evidence: { zh: '可查证成果', en: 'What you can check' },
     status: { zh: '当前状态', en: 'Status' },
+    statusNext: { zh: '状态与下一步', en: 'Status & next' },
   },
   cards: {
     read: { zh: '看过程与取舍', en: 'Process & trade-offs' },
@@ -138,6 +140,7 @@ export const SITE = {
       tags: [ { zh: '课程设计', en: 'Course project' }, { zh: 'SQLite · sql.js · Web Worker', en: 'SQLite · sql.js · Web Worker' } ],
       summary: {
         task: { zh: '用一个校园外卖场景，把下单、库存、支付、配送和退款设计成相互约束、可以查询的关系数据库，再用 SQL 做经营分析。', en: 'Model campus food delivery — ordering, stock, payment, delivery and refunds — as a relational database whose records constrain each other, then analyse it with SQL.' },
+        tradeoff: { zh: '先把一笔订单拆成相互约束的表，再用事务保证下单、支付、配送、退款要么全部写入、要么全部回滚；经营分析用固定种子生成的合成数据，只说明方法，不代表真实经营。', en: 'An order is split into tables that constrain each other, and transactions make ordering, payment, delivery and refunds all land or all roll back; the analysis uses seeded synthetic data and shows a method, not real trading.' },
         mine: { zh: '课程设计由我个人负责：8 张业务表的建模、约束与触发器、下单与退款事务、业务查询和经营分析结论。把数据库放进浏览器的在线工作台由我设计并验收，开发借助 AI 编程工具完成。', en: 'I was personally responsible for the course project: modelling the 8 business tables, constraints and triggers, the order and refund transactions, the business queries and findings. I designed and reviewed the in-browser lab; it was built with AI coding tools.' },
         tools: { zh: 'SQLite；sql.js（WebAssembly）让它在浏览器里运行，查询放在 Web Worker 里执行并有超时保护。', en: 'SQLite; sql.js (WebAssembly) runs it in the browser, with queries in a Web Worker behind a timeout.' },
         evidence: { zh: '本页的 SQL 工作台（可运行查询、下单、退款）、建表与数据 SQL、完整源码包。', en: 'The SQL lab on this page (run queries, place and refund orders), the schema and data SQL, and the full source package.' },
@@ -164,10 +167,12 @@ export const SITE = {
       tags: [ { zh: '个人项目 · 2026.08 至今', en: 'Personal project · 2026.08 – present' }, { zh: 'Python · Pydantic · SQLite', en: 'Python · Pydantic · SQLite' } ],
       summary: {
         task: { zh: '把岗位、职位描述、真实经历、定向材料和投递反馈串进一个本地工作台，减少文件版本混乱，让每次推荐和材料修改都有依据。', en: 'Bring roles, job descriptions, real experience, tailored materials and application feedback into one local workbench, so every recommendation and every edit to the materials has a basis.' },
+        tradeoff: { zh: '公开演示用确定性的规则匹配：同样的输入总得到同样的分数，每条判断都能追溯到一条事实，访客改了输入可以当场复核。', en: 'The public demo uses deterministic rule matching: the same input always gives the same score, every judgement traces back to a fact, and a visitor who changes the input can check the result on the spot.' },
         mine: { zh: '提出需求并定下规则：事实要有来源和确认状态，硬门槛优先于综合分，未确认的经历不进入材料；划定人工确认与本人提交的边界，并核对每组范例的输出。', en: 'Set the requirements and the rules: every fact needs a source and a confirmation status, hard requirements outrank the overall score, unconfirmed experience never enters the materials; drew the line where a person must confirm and submit, and checked the output of every replay.' },
         tools: { zh: '代码借助 AI 编程工具编写；Python + Pydantic + SQLite 实现流程，AI 分析是可选服务（本机 Codex、OpenAI 或兼容接口）。本页范例只调用本地规则，不调用大模型。', en: 'The code was written with AI coding tools; Python + Pydantic + SQLite run the workflow, and AI analysis is an optional service (local Codex, OpenAI or a compatible API). The replay on this page uses only the local rules — no language model.' },
         evidence: { zh: '本页的六组范例回放（公开版引擎真实计算）、固定版本源码、导出脚本与全部输入输出。', en: 'The six replays on this page (computed by the public engine), the pinned source, the export script and every input and output.' },
         status: { zh: '个人项目，持续开发；本页为固定版本的交互回放，不是在线服务，也不会投递。', en: 'Personal project, in active development; this page replays a pinned version — it is not a live service and never submits applications.' },
+        next: { zh: '下一步：把大模型的语义判断接入公开演示，与规则结果并排展示并标明来源。', en: 'Next: bring a language model’s semantic judgement into the public demo, shown beside the rule result with its source labelled.' },
       },
     },
     quota: {
@@ -177,6 +182,7 @@ export const SITE = {
       tags: [ { zh: '个人项目 · MIT 开源', en: 'Personal project · MIT licensed' }, { zh: 'Electron · Node.js', en: 'Electron · Node.js' } ],
       summary: {
         task: { zh: '额度分散在不同 Agent 和 API 里；同一个账户余额在十几个模型下重复出现，容易误以为每个模型都有独立额度。', en: 'Quotas are scattered across agents and APIs, and one account balance shows up under a dozen models, suggesting each model has its own allowance.' },
+        tradeoff: { zh: '读不到额度时显示"未知"，不当作用完；估算、过期快照和断连都标明来源，刷新失败时保留上次成功的数据和时间，不假装刚同步。', en: 'A quota that cannot be read shows as "unknown", not as used up; estimates, stale snapshots and disconnects are labelled with their source, and a failed refresh keeps the last good data and its time instead of pretending to be fresh.' },
         mine: { zh: '定下呈现规则：额度池、模型与计费关系分开，只展示服务商真实提供的信息；确定各服务的数据来源与边界，规划并行分工的角色，并验证连接与界面。', en: 'Set the display rules — pools, models and billing kept apart, showing only what each provider really reports; chose each service\'s data source and limits, planned the roles for parallel hand-off, and verified the connectors and the interface.' },
         tools: { zh: '代码借助 AI 编程工具编写；Electron 托盘窗口与 Node.js 连接器，读取数据和模型调用放在主进程，界面通过受限桥接请求操作。', en: 'The code was written with AI coding tools; an Electron tray window with Node.js connectors — data reads and model calls stay in the main process, and the interface acts through a restricted bridge.' },
         evidence: { zh: '本页的界面截图（本机运行，演示数据）、公开源码与自动检查。', en: 'Interface screenshots on this page (run locally, demo data), the public source and its automated checks.' },
@@ -207,6 +213,7 @@ export const SITE = {
       tags: [ { zh: '大创项目 · 2024.03—2024.07', en: 'Student research · 2024.03—2024.07' }, { zh: '校级大学生创新创业项目一等奖（项目组长）', en: 'First Prize, university student innovation programme (team lead)' }, { zh: '公开版 · 重建材料', en: 'Public edition · rebuilt materials' } ],
       summary: {
         task: { zh: '从大学生活里的具体任务出发，研究 AI 在哪些场景可用，以及"感觉有帮助"是否意味着任务做得更好。', en: 'Start from concrete tasks in student life and ask where AI helps — and whether "it felt helpful" means the task was done better.' },
+        tradeoff: { zh: '当年的原研究与后来的浏览器重建分开写：重建只复现分析方法，构造样本都有标注，不当作当年的调查结果。', en: 'The original study and its later browser rebuild are kept apart: the rebuild only reproduces the method, and its constructed samples are labelled and never presented as survey results.' },
         mine: { zh: '原项目（项目组长）：组织团队，设计问卷，清洗数据并做交叉统计，撰写研究报告并答辩。公开重建：原始问卷、数据与文稿没有保留，我根据回忆和现有材料重新整理文献综合、问卷口径和五段式任务评估框架，并编写数据校验与统计程序。', en: 'Original project (team lead): organised the team, designed the questionnaire, cleaned the data and ran cross-tabulations, wrote the report and defended it. Public rebuild: the original questionnaire, data and paper were not kept, so from memory and surviving materials I re-assembled the literature synthesis, the questionnaire definitions and the five-stage evaluation framework, and wrote the data-checking and statistics program.' },
         tools: { zh: 'Python 标准库校验字段、日期、枚举与评分并做统计，程序与测试一起公开；文献与产品发布信息来自公开资料。', en: 'The Python standard library checks fields, dates, categories and ratings and computes the statistics, published with its tests; literature and product-release facts come from public sources.' },
         evidence: { zh: '研究稿、文献证据台账、问卷与统计口径、分析程序与测试。', en: 'The research paper, the evidence ledger, the questionnaire with its definitions, and the analysis program with tests.' },
@@ -314,6 +321,7 @@ export const SITE = {
       ],
       summary: {
         task: { zh: '中国区 CDP 系统中不少员工档案字段缺失，需要从 PDF 与图片档案中补全地址、紧急联系人、学历等字段，而且每份资料都必须归到正确的员工名下。', en: 'Many employee records in the China CDP system had empty fields. Addresses, emergency contacts and education had to be filled in from PDF and image files, and every file had to land on the right employee.' },
+        tradeoff: { zh: '模型只提供候选值，写入由人工审核决定；手写件最容易出错，一律进入人工复核。', en: 'The model only proposes values and a person decides what is written; handwritten files are the most error-prone, so every one goes to manual review.' },
         mine: { zh: '核查约 2000 名员工的档案主数据；负责资料下载、范围确认、字段核对、异常处理与结果复查；把补录需求拆成主名单、匹配优先级、字段提取、异常分类和审核写回五个部分。', en: 'Reviewed master records for about 2000 employees; handled downloading files, scoping each batch, checking fields, resolving exceptions and re-checking results; broke the backfill into five parts: master roster, match priority, field extraction, exception types and reviewed write-back.' },
         tools: { zh: '工作流在 2026.06—08 做了三版：第一版用 OpenClaw 调用 DeepSeek 与 ChatGPT 做字段提取（个人实践）；第二版改为本地 OCR + DeepSeek；最终版以 Copilot + Power Automate（配合 SharePoint、AI Builder）作为企业版交付，在公司批准的环境中运行。Excel 用于核对；模型只提供候选，写入由人工审核决定。', en: 'The workflow went through three versions in 2026.06–08: OpenClaw calling DeepSeek and ChatGPT for field extraction (personal practice); then local OCR + DeepSeek; the final version was delivered on Copilot + Power Automate (with SharePoint and AI Builder) and ran in the company-approved environment. Excel for checks; the model only proposes values — a person decides what gets written.' },
         evidence: { zh: '本页的审核流程演示（虚构数据）；可下载的企业版方案文档。公司真实资料不公开。', en: 'The review demo on this page (fictional data) and the downloadable enterprise version document. No real company records are published.' },

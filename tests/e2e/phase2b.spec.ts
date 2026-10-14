@@ -7,11 +7,11 @@ const PAGES = [['ai-career', 'career'], ['quota-deck', 'quota'], ['ai-campus', '
 
 for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
   for (const [slug, key] of PAGES) {
-    test(`${slug} (${lang}) has its title, five-row summary and body`, async ({ page }) => {
+    test(`${slug} (${lang}) has its title, six-row summary and body`, async ({ page }) => {
       await page.goto(`${prefix}/projects/${slug}/`);
       const P = SITE.pages[key];
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(P.title[lang]);
-      await expect(page.locator('.p-summary .p-row')).toHaveCount(5);
+      await expect(page.locator('.p-summary .p-row')).toHaveCount(6);
       await expect(page.locator('.p-summary')).toContainText(P.summary.mine[lang]);
       await expect(page.locator('article.prose h2').first()).toBeVisible();
       expect(await noHorizontalOverflow(page)).toBe(true);

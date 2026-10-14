@@ -7,8 +7,8 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
   test.describe(`HRIS page (${lang})`, () => {
     test.beforeEach(async ({ page }) => { await page.goto(`${prefix}/projects/hris-workflow/`); });
 
-    test('five-part summary is present', async ({ page }) => {
-      await expect(page.locator('.p-summary dt')).toHaveCount(5);
+    test('six-part summary is present (problem, trade-offs, work, tools, evidence, status)', async ({ page }) => {
+      await expect(page.locator('.p-summary dt')).toHaveCount(6);
     });
 
     test('states personal scope with the ledger wording and never the old 6000 framing', async ({ page }) => {
