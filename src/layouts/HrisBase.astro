@@ -1,0 +1,51 @@
+---
+import '../styles/base.css';
+import '../styles/hris.css';
+import { hrisThemeCss } from '../data/tokens';
+import { trackPath, type Lang } from '../i18n';
+import MotionBoot from '../components/MotionBoot.astro';
+import HrisTopbar from '../components/hris/HrisTopbar.astro';
+import HrisFooter from '../components/hris/HrisFooter.astro';
+
+interface Props { lang: Lang; path: string; title: string; description: string }
+const { lang, path, title, description } = Astro.props;
+const origin = 'https://chiwawafromkk.github.io';
+---
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'} data-track="hris" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={origin + trackPath('hris', path, lang)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style is:inline set:html={hrisThemeCss()}></style>
+    <script is:inline>
+      /* Theme before first paint: the visitor's choice, else dark (the cover's palette, user 2026-10-15). */
+      (function () {
+        var d = document.documentElement, t = null;
+        try { t = localStorage.getItem('hyj-hris-theme'); } catch (e) { /* storage blocked */ }
+        d.dataset.theme = t === 'light' ? 'light' : 'dark';
+      })();
+    </script>
+    <MotionBoot />
+    <slot name="head" />
+  </head>
+  <body class="hris">
+    <a class="skip" href="#main">{lang === 'zh' ? '跳到内容' : 'Skip to content'}</a>
+    <div class="h-shell">
+      <HrisTopbar lang={lang} path={path} />
+      <slot />
+      <HrisFooter lang={lang} />
+    </div>
+    <slot name="overlay" />
+    <script>
+      import { watchFps } from '../scripts/motion/tier';
+      import { initNightEntry } from '../scripts/night-entry';
+      watchFps();
+      initNightEntry();
+    </script>
+  </body>
+</html>

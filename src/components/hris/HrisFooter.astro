@@ -1,0 +1,14 @@
+---
+import { HRIS } from '../../data/hris';
+import { SITE } from '../../data/site';
+import MotionSwitch from '../MotionSwitch.astro';
+import type { Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<footer class="h-foot">
+  <p class="h-mono">© {HRIS.name[lang]}</p>
+  <p>{HRIS.footer.note[lang]}</p>
+  <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+  <MotionSwitch lang={lang} />
+</footer>

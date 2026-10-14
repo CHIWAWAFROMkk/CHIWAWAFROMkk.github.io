@@ -1,0 +1,19 @@
+---
+/* Writes <html data-motion> before first paint; shared by Base and HrisBase. */
+---
+<script is:inline>
+  /* Motion tier: the same rules as scripts/motion/tier.ts pickTier (motion-tier.spec keeps them in step).
+     A missing or slow island must never leave a heading hidden. */
+  (function () {
+    var d = document.documentElement, n = navigator, c = null, r = false;
+    try { c = localStorage.getItem('hyj-motion'); } catch (e) { /* storage blocked */ }
+    try { r = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* no matchMedia */ }
+    var t = c === 'full' || c === 'gentle' || c === 'off' ? c
+      : r ? 'gentle'
+      : (n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 4) ? 'lite' : 'full';
+    d.dataset.motion = t;
+    if (t === 'off') return;
+    d.classList.add('motion-ok');
+    setTimeout(function () { d.classList.add('motion-timeout'); }, 2500);
+  })();
+</script>

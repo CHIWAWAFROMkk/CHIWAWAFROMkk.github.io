@@ -1,0 +1,38 @@
+---
+import { HRIS } from '../../data/hris';
+import { SITE } from '../../data/site';
+import { trackPath, type Lang } from '../../i18n';
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const N = HRIS.nav;
+const L = (p: string) => trackPath('hris', p, lang);
+const other = lang === 'zh' ? 'en' : 'zh';
+const links = [['/', N.index], ['/brief/', N.brief], ['/projects/', N.projects], ['/workbench/', N.workbench]] as const;
+const current = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
+---
+<header class="h-top">
+  <a class="h-top__brand" href={L('/')}><b>{HRIS.name[lang]}</b><span class="h-mono">/hris/</span></a>
+  <nav class="h-top__nav" aria-label={N.label[lang]}>
+    {links.map(([p, label]) => <a href={L(p)} aria-current={current(p) ? 'page' : undefined}>{label[lang]}</a>)}
+  </nav>
+  <div class="h-top__util">
+    <a class="h-top__btn h-mono" href={trackPath('hris', path, other)} hreflang={other}>{N.otherLang[lang]}</a>
+    <button type="button" class="h-top__btn h-mono" data-theme-toggle data-dark={N.themeDark[lang]} data-light={N.themeLight[lang]}>{N.themeDark[lang]}</button>
+    <a class="h-top__cv h-mono" href={SITE.resume[lang]} download>{N.resume[lang]} ↓</a>
+  </div>
+</header>
+<script>
+  // The button names the theme it switches to; the choice is kept for later visits when storage allows.
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  if (btn) {
+    const d = document.documentElement;
+    const label = () => { btn.textContent = d.dataset.theme === 'dark' ? btn.dataset.light! : btn.dataset.dark!; btn.setAttribute('aria-pressed', String(d.dataset.theme === 'dark')); };
+    label();
+    btn.addEventListener('click', () => {
+      d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem('hyj-hris-theme', d.dataset.theme); } catch { /* storage blocked: this page still switches */ }
+      label();
+      document.dispatchEvent(new CustomEvent('hris-theme'));
+    });
+  }
+</script>

@@ -5,6 +5,7 @@ import { SITE } from '../data/site';
 import { localizePath, type Lang } from '../i18n';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import MotionBoot from '../components/MotionBoot.astro';
 
 interface Props {
   lang: Lang;
@@ -50,22 +51,7 @@ const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/o
     <link rel="preload" href="/assets/fonts/noto-sans-sc-300-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/noto-sans-sc-500-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/assets/fonts.css" />
-    <script is:inline>
-      /* Motion tier: the same rules as scripts/motion/tier.ts pickTier (motion-tier.spec keeps them in step).
-         A missing or slow island must never leave a heading hidden. */
-      (function () {
-        var d = document.documentElement, n = navigator, c = null, r = false;
-        try { c = localStorage.getItem('hyj-motion'); } catch (e) { /* storage blocked */ }
-        try { r = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* no matchMedia */ }
-        var t = c === 'full' || c === 'gentle' || c === 'off' ? c
-          : r ? 'gentle'
-          : (n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 4) ? 'lite' : 'full';
-        d.dataset.motion = t;
-        if (t === 'off') return;
-        d.classList.add('motion-ok');
-        setTimeout(function () { d.classList.add('motion-timeout'); }, 2500);
-      })();
-    </script>
+    <MotionBoot />
     {intro && (
       <script is:inline>
         (function () {
