@@ -3,8 +3,9 @@
 ---
 <div class="rows" data-rows aria-hidden="true" style="--s:0"><i class="rows__a"></i><i class="rows__b"></i><i class="rows__c"></i></div>
 <script>
+  import { fullMotion } from '../scripts/motion/tier';
   const layer = document.querySelector<HTMLElement>('[data-rows]');
-  if (layer && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (layer && fullMotion()) {
     let frame = 0;
     addEventListener('scroll', () => {
       if (frame) return;

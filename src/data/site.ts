@@ -48,6 +48,12 @@ export const SITE = {
   },
   contact: { heading: { zh: '聊聊？', en: "Let's talk." } },
   footer: { privacy: { zh: '隐私与使用说明', en: 'Privacy' } },
+  motion: {
+    label: { zh: '动效', en: 'Motion' },
+    full: { zh: '完整', en: 'Full' },
+    gentle: { zh: '温和', en: 'Gentle' },
+    off: { zh: '关', en: 'Off' },
+  },
   brief: {
     experience: { zh: '经历', en: 'Experience' },
     education: { zh: '教育', en: 'Education' },

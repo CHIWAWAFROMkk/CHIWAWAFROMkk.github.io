@@ -1,5 +1,6 @@
 import type { Bi, Lang } from '../i18n';
 import { DELIVERY_ERRORS } from './tool-i18n';
+import { fullMotion } from './motion/tier';
 
 export type Kind = 'place' | 'refund';
 export type StepState = 'idle' | 'on' | 'fail';
@@ -77,6 +78,6 @@ export function playBand(band: HTMLElement, kind: Kind, failAt: number | null | 
   };
   const frames = bandFrames(kind, failAt);
   apply({ at: 0, states: frames[0].states.map(() => 'idle'), result: '' });
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { apply(frames[frames.length - 1]); return; }
+  if (!fullMotion()) { apply(frames[frames.length - 1]); return; }
   for (const f of frames) setTimeout(() => { if (band.dataset.run === run) apply(f); }, f.at);
 }

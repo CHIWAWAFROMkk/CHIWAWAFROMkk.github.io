@@ -2,6 +2,7 @@
 import { parseCSV, analyze, numeric, histogram, csvExport, VERSION, LIMIT } from './analysis-core.mjs';
 import { LAB_TEXT } from './lab-text';
 import { CSV_ERRORS, localizeError } from './tool-i18n';
+import { fullMotion } from './motion/tier';
 
 type Row = string[];
 interface Source { headers: string[]; rows: Row[]; delimiter: ',' | ';' | '\t' }
@@ -24,7 +25,7 @@ export function initLab(root: HTMLElement): void {
   let sortColumn = -1;
   let ascending = true;
   let generation = 0;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   /** Preview rows on screen with the source row each shows, so a toggle can tell which rows are about to go. */
   let onScreen: [HTMLTableRowElement, Row][] = [];
   let removal = 0;

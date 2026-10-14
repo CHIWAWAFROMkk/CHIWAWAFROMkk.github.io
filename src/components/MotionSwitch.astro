@@ -1,0 +1,30 @@
+---
+import { SITE } from '../data/site';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const M = SITE.motion;
+const choices = ['full', 'gentle', 'off'] as const;
+---
+<div class="mswitch" role="group" aria-label={M.label[lang]} data-motion-switch>
+  <span class="mswitch__label" aria-hidden="true">{M.label[lang]}</span>
+  {choices.map(c => <button type="button" data-choice={c} aria-pressed="false">{M[c][lang]}</button>)}
+</div>
+<script>
+  import { readChoice, saveChoice, type Choice } from '../scripts/motion/tier';
+  for (const root of document.querySelectorAll<HTMLElement>('[data-motion-switch]')) {
+    const chosen = readChoice();
+    for (const b of root.querySelectorAll<HTMLButtonElement>('button[data-choice]')) {
+      b.setAttribute('aria-pressed', String(b.dataset.choice === chosen));
+      // Every script decides its motion once at start, so a fresh load is the honest way to apply a new tier.
+      b.addEventListener('click', () => { saveChoice(b.dataset.choice as Choice); location.reload(); });
+    }
+  }
+</script>
+<style>
+  .mswitch { display: inline-flex; align-items: center; gap: 2px; font-size: 13px; }
+  .mswitch__label { margin-right: 6px; }
+  .mswitch button { padding: 2px 8px; border: 1px solid currentColor; background: none; color: inherit; font: inherit; cursor: pointer; }
+  .mswitch button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+  :global(.night) .mswitch button[aria-pressed='true'], :global(.contact--red) .mswitch button[aria-pressed='true'] { background: var(--paper); color: var(--ink); }
+</style>

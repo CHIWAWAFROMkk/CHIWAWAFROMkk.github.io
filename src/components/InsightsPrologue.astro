@@ -14,7 +14,8 @@ const P = C.prologue;
     /* Before the first paint: if the film will run, reserve its full layout now, so going live later moves nothing on screen. */
     (function () {
       var r = document.currentScript && document.currentScript.parentElement;
-      if (!r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var m = document.documentElement.dataset.motion;   /* written in <head> by Base.astro; the film runs only in full or lite */
+      if (!r || m === 'gentle' || m === 'off') return;
       try {
         var gl = document.createElement('canvas').getContext('webgl2');
         if (gl) { r.dataset.state = 'pending'; var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }

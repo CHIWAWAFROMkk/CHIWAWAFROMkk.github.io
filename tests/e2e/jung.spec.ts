@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { skipIntro, noHorizontalOverflow } from './helpers';
+import { skipIntro, noHorizontalOverflow, motionOff } from './helpers';
 
 for (const lang of ['zh', 'en'] as const) {
   const PATH = `${lang === 'en' ? '/en' : ''}/projects/jung-self-map/`;
@@ -172,9 +172,9 @@ test('the English page opens the map in English: station names, text and control
 });
 
 // ---- Motion polish: nothing is left hidden, nothing jumps ----
-test('with reduced motion every quotation row and handbook station is visible at once', async ({ page }) => {
+test('with motion off every quotation row and handbook station is visible at once', async ({ page }) => {
   await skipIntro(page);
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await motionOff(page);
   await page.goto('/projects/jung-self-map/');
   await page.waitForTimeout(600);
   for (const sel of ['.prose table tbody tr', '#handbook .hb__item']) {

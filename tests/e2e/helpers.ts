@@ -22,3 +22,9 @@ export async function skipIntro(page: Page): Promise<void> {
 export async function noHorizontalOverflow(page: Page): Promise<boolean> {
   return page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth);
 }
+
+/** Choose a motion tier before any page script runs, as the footer switch would. */
+export async function motionChoice(page: Page, choice: 'full' | 'gentle' | 'off'): Promise<void> {
+  await page.addInitScript(c => { try { localStorage.setItem('hyj-motion', c); } catch { /* storage blocked */ } }, choice);
+}
+export const motionOff = (page: Page) => motionChoice(page, 'off');

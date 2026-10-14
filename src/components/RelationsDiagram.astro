@@ -38,6 +38,7 @@ const wires = [
   </figure>
 </template>
 <script>
+  import { fullMotion } from '../scripts/motion/tier';
   import { scrollProgress } from '../scripts/scroll-progress';
   import { reveal, onScroll } from '../scripts/motion-dom';
   const tpl = document.querySelector<HTMLTemplateElement>('#relations-tpl');
@@ -47,7 +48,7 @@ const wires = [
     // Markdown wraps the image in its own paragraph; replace the paragraph so the figure is not nested in a <p>.
     const target = img.parentElement?.tagName === 'P' && img.parentElement.childElementCount === 1 ? img.parentElement : img;
     target.replaceWith(fig);
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (fullMotion()) {
       reveal(fig.querySelectorAll('[data-box]'), 120);
       onScroll(() => {
         const r = fig.getBoundingClientRect();

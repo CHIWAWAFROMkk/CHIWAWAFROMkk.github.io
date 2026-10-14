@@ -6,6 +6,7 @@
  */
 import { gsap, SplitText as GSAPSplitText } from './gsap';
 import { MOTION, splitUnits } from './tokens';
+import { fullMotion } from './tier';
 
 interface RevealOptions {
   splitText?: boolean;
@@ -41,7 +42,7 @@ export function stableTextSplit(el: HTMLElement, text: string, charsClass: strin
  * timeline is reverted: business-script triggers and inline styles are retained. */
 export function initScrollReveal(el: HTMLElement, { splitText = true, preserveVisible = false, onPrepare }: RevealOptions = {}): () => void {
   const media = matchMedia('(prefers-reduced-motion: reduce)');
-  if (media.matches || !('IntersectionObserver' in window)) return () => {};
+  if (!fullMotion() || !('IntersectionObserver' in window)) return () => {};
   const doc = el.ownerDocument;
   let finished = false;
   let preparing = false;
@@ -65,7 +66,7 @@ export function initScrollReveal(el: HTMLElement, { splitText = true, preserveVi
   const run = (allowVisible: boolean) => {
     if (finished) return;
     const rect = el.getBoundingClientRect();
-    if (media.matches || rect.bottom <= 0 || (!allowVisible && rect.top < innerHeight)) { finish(); return; }
+    if (!fullMotion() || rect.bottom <= 0 || (!allowVisible && rect.top < innerHeight)) { finish(); return; }
     clearTimeout(timer);
     split = splitText ? stableTextSplit(el, el.textContent ?? '', 'sr-unit', 'sr-unit') : undefined;
     const parts = split?.parts ?? [el];

@@ -3,6 +3,7 @@ import { cam, stateFromScroll } from './camera';
 import { particleBudget, decideQuality, probeStep, PROBE_START } from './quality';
 import { POINT_VS, POINT_FS, QUAD_VS, BRIGHT_FS, BLUR_FS, COMP_FS } from './shaders';
 import type { Rows } from '../morph';
+import { fullMotion } from '../motion/tier';
 
 export interface PrologueData { heat: Rows; nets: number[]; label: string }
 interface Prog { p: WebGLProgram; u: (name: string) => WebGLUniformLocation | null }
@@ -12,7 +13,7 @@ interface Target { tex: WebGLTexture; fbo: WebGLFramebuffer; w: number; h: numbe
 export function startPrologue(root: HTMLElement, data: PrologueData): void {
   // The inline check may have reserved the film's layout ('pending'); any early exit gives it back.
   const bail = () => { if (root.dataset.state === 'pending') keepAnchor(root, () => { root.dataset.state = 'static'; }); };
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return bail();
+  if (!fullMotion()) return bail();
   const canvas = root.querySelector<HTMLCanvasElement>('canvas');
   if (!canvas) return bail();
   let gl: WebGL2RenderingContext | null = null;

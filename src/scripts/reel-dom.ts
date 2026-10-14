@@ -1,4 +1,5 @@
 import { activeIndex, edgeSpeed } from './reel';
+import { fullMotion } from './motion/tier';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -13,7 +14,7 @@ export function initReel(root: HTMLElement): void {
   const count = root.querySelector<HTMLElement>('[data-reel-count]');
   const toggle = root.querySelector<HTMLButtonElement>('[data-reel-toggle]');
   const videos = [...root.querySelectorAll<HTMLVideoElement>('video[data-src]')];
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const visible = new Set<HTMLVideoElement>();
   let paused = reduced;

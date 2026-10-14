@@ -19,6 +19,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   <SectionReveals />
 </Base>
 <script>
+  import { fullMotion } from '../scripts/motion/tier';
   import { scrollProgress } from '../scripts/scroll-progress';
   import { onScroll } from '../scripts/motion-dom';
   import { initCountUp } from '../scripts/countup-dom';
@@ -27,7 +28,7 @@ const Body = lang === 'zh' ? BodyZh : BodyEn;
   if (ol) {
     const items = [...ol.querySelectorAll<HTMLElement>(':scope > li')];
     ol.classList.add('timeline');
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!fullMotion()) {
       ol.style.setProperty('--p', '1');
       items.forEach(li => li.classList.add('is-lit'));
     } else {

@@ -1,4 +1,5 @@
 import { chromium, test, expect, type Page } from '@playwright/test';
+import { motionOff } from './helpers';
 
 /* Batch 4: the light pages' motion made visible — doors, summary rows, count-ups,
    section rules, programs powering on, the trailing preview. */
@@ -48,7 +49,7 @@ test.describe('motion batch 4: the light pages', () => {
     });
     await page.goto('/projects/hris-workflow/');
     await page.locator('.p-row').last().scrollIntoViewIfNeeded();
-    await expect(page.locator('.p-row.m-in')).toHaveCount(5, { timeout: 4000 });
+    await expect(page.locator('.p-row.m-in')).toHaveCount(6, { timeout: 4000 });
     await expect.poll(() => allShown(page, '.p-row dt, .p-row dd'), { timeout: 4000 }).toBe(true);
     const count = page.locator('.p-row [data-count]');
     await expect(count).toHaveText('2000', { timeout: 4000 });
@@ -56,7 +57,7 @@ test.describe('motion batch 4: the light pages', () => {
     // It really counted (on a narrow screen countup-dom keeps a number static if counting would rewrap the line).
     if (!isMobile) expect(seen.length).toBeGreaterThan(2);
     expect(seen.filter(t => t.includes(','))).toEqual([]);           // and never as "1,260"
-    expect(await page.locator('.p-row dd').nth(1).textContent()).toContain('约 2000 名员工');
+    expect(await page.locator('.p-row dd').nth(2).textContent()).toContain('约 2000 名员工');   // 问题与场景, 方案取舍, then 我的工作
   });
 
   test('a section heading draws its rule, then rises onto it', async ({ page }) => {
@@ -161,8 +162,8 @@ test.describe('motion batch 4: the light pages', () => {
     await inside(320);
   });
 
-  test('reduced motion: nothing is ever armed and every part shows at once', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
+  test('motion off: nothing is ever armed and every part shows at once', async ({ page }) => {
+    await motionOff(page);
     for (const path of ['/', '/projects/hris-workflow/', '/projects/campus-delivery/', '/en/projects/']) {
       await page.goto(path);
       await page.waitForTimeout(300);

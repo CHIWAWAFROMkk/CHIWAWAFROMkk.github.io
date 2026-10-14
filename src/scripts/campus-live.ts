@@ -8,6 +8,7 @@ import {
   type Row, type Gate, type Traced, type Invalid, type TestEvent, type TestSummary, type FormState, type Analysis,
 } from './campus-flow';
 import { CAMPUS_TEXT, summaryLine, ranLine } from './campus-live-text';
+import { fullMotion } from './motion/tier';
 
 const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
 const fmt = (n: number) => n.toLocaleString('en-US');
@@ -48,7 +49,7 @@ interface Run { replace?: boolean; special?: number | null; storm?: boolean; con
 export function initCampusLive(root: HTMLElement): void {
   const lang = root.dataset.lang === 'en' ? 'en' : 'zh', T = CAMPUS_TEXT[lang];
   const $ = <E extends HTMLElement = HTMLElement>(id: string) => root.querySelector<E>(`#${id}`)!;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   const light = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData || matchMedia('(pointer: coarse)').matches || innerWidth < 720;
   const stage = $('cm-stage'), prof = profiler(codeLive($('cm-code')));
   const pipe = createPipeline($('cm-pipe'), T.pipe, { reduced, light, hit: n => prof.hit(n) });

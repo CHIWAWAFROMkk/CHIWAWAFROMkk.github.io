@@ -45,9 +45,10 @@ const films = filmEntries(lang);
   </main>
 </Base>
 <script>
+  import { fullMotion } from '../scripts/motion/tier';
   import { onScroll } from '../scripts/motion-dom';
   const word = document.querySelector<HTMLElement>('[data-bgword]');
-  if (word && !matchMedia('(prefers-reduced-motion: reduce)').matches) onScroll(() => word.style.setProperty('--s', String(Math.round(window.scrollY * 0.35))));
+  if (word && fullMotion()) onScroll(() => word.style.setProperty('--s', String(Math.round(window.scrollY * 0.35))));
 </script>
 <style>
   .i-head { display: grid; gap: 16px; padding-block: clamp(32px, 6vh, 72px) 24px; }

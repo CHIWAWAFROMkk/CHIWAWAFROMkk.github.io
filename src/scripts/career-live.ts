@@ -5,6 +5,7 @@ import { createCircuit } from './career-circuit';
 import { codeLive } from './code-live';
 import { spinOdometer, setOdometerText } from './odometer-dom';
 import { LIVE_TEXT, DEMO_JD, DEMO_FACTS } from './career-live-text';
+import { fullMotion } from './motion/tier';
 
 type Status = 'user_confirmed' | 'needs_confirmation';
 /** Each added experience keeps a stable key, so edits never depend on list positions that change while the engine runs. */
@@ -18,7 +19,7 @@ const MANIFESTS = ['/assets/vendor/pyodide/0.29.5/manifest.json', '/assets/py/jo
 export function initCareerLive(root: HTMLElement): void {
   const lang = root.dataset.lang === 'en' ? 'en' : 'zh', T = LIVE_TEXT[lang];
   const $ = <E extends HTMLElement = HTMLElement>(id: string) => root.querySelector<E>(`#${id}`)!;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   const light = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData || matchMedia('(pointer: coarse)').matches || innerWidth < 720;
   const stage = $('cl-stage'), code = codeLive($('cl-code')), circuit = createCircuit($('cl-circuit'), lang);
   const cand: Candidate = { days: 4, statuses: {}, removed: [], added: [] };

@@ -1,16 +1,16 @@
 import { countText } from './countup';
+import { fullMotion } from './motion/tier';
 
 /** Counts each number up once as it enters the viewport; always ends on the exact original text. */
 export function initCountUp(els: Iterable<HTMLElement>, text: (final: string, k: number) => string = countText): void {
-  const media = matchMedia('(prefers-reduced-motion: reduce)');
-  if (!('IntersectionObserver' in window) || media.matches) return;
+  if (!('IntersectionObserver' in window) || !fullMotion()) return;
   const io = new IntersectionObserver(entries => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;
       io.unobserve(e.target);
       const el = e.target as HTMLElement;
       const final = el.textContent ?? '';
-      if (text(final, 0) === final || media.matches) continue;
+      if (text(final, 0) === final || !fullMotion()) continue;
       let restore = () => {};
       if (getComputedStyle(el).display === 'inline') {
         // A changing digit count must not move the words around it. Measure the
@@ -38,7 +38,7 @@ export function initCountUp(els: Iterable<HTMLElement>, text: (final: string, k:
       }
       const t0 = performance.now();
       const step = (now: number) => {
-        const k = media.matches ? 1 : Math.min(1, (now - t0) / 700);
+        const k = !fullMotion() ? 1 : Math.min(1, (now - t0) / 700);
         el.textContent = k === 1 ? final : text(final, 1 - (1 - k) ** 3);
         if (k < 1) requestAnimationFrame(step);
         else restore();

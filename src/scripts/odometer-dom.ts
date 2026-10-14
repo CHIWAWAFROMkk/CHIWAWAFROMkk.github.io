@@ -1,4 +1,5 @@
 import { slots, reelRows } from './odometer';
+import { fullMotion } from './motion/tier';
 
 /** Spins el's text in as a mechanical counter. The reels draw their digits with CSS generated content, so el.textContent
  *  is the final text the whole time; when the reels stop, they are replaced by that plain text. A newer spin cancels an older one. */
@@ -9,7 +10,7 @@ export function setOdometerText(el: HTMLElement, text: string): void {
 }
 
 export function spinOdometer(el: HTMLElement, final: string, delay = 0, from?: string, ms = 850): void {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = final; return; }
+  if (!fullMotion()) { el.textContent = final; return; }
   const run = String(Number(el.dataset.odoRun ?? '0') + 1);
   el.dataset.odoRun = run;
   const fromDigits = from ? slots(from).flatMap(s => (s.digit === null ? [] : [s.digit])) : [];

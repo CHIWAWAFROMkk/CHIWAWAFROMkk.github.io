@@ -1,4 +1,5 @@
 import { EXPAND_MS, shouldAnimateClick } from './door-transition';
+import { fullMotion } from './motion/tier';
 
 const EASE = 'cubic-bezier(.7, 0, .2, 1)';
 
@@ -13,7 +14,7 @@ export function initDoorTransition(gate: HTMLElement): void {
 
   gate.addEventListener('click', e => {
     const door = (e.target as Element | null)?.closest<HTMLAnchorElement>('a.door');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = !fullMotion();
     if (!door || !shouldAnimateClick(e, reduced) || typeof door.animate !== 'function') return;
     e.preventDefault();
 

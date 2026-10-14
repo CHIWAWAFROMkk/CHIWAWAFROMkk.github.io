@@ -1,4 +1,5 @@
 import { FONT_WAIT_MS, INTRO_MS, markSeen, readSeen, shouldPlayIntro, withTimeout } from './intro';
+import { fullMotion } from './motion/tier';
 
 function storage(): Storage | null {
   try {
@@ -11,7 +12,7 @@ function storage(): Storage | null {
 export async function initIntro(overlay: HTMLElement): Promise<void> {
   const html = document.documentElement;
   const store = storage();
-  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reducedMotion = !fullMotion();
   const seen = readSeen(store);
   const fontsReady = !seen && !reducedMotion && (await withTimeout(document.fonts.load('700 1em Barlow'), FONT_WAIT_MS));
 

@@ -24,17 +24,18 @@ const first = PROLOGUE_FRAMES[0];
   <p class="jp__hud" aria-hidden="true" data-demo>WEBGL2 · 6 KEYFRAMES · <b data-jp-fps>--</b> FPS</p>
 </section>
 <script>
+  import { fullMotion } from '../scripts/motion/tier';
   import { startJungPrologue } from '../scripts/jung-prologue';
   import { PROLOGUE_FRAMES } from '../data/jung-prologue';
   import { onScroll } from '../scripts/motion-dom';
   const root = document.querySelector<HTMLElement>('[data-jung-prologue]');
   if (root) {
     // Scrolling away: the picture dims and recedes a little, so the page below takes over gently.
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+    if (fullMotion())
       onScroll(() => root.style.setProperty('--leave', Math.min(1, Math.max(0, scrollY / Math.max(1, root.offsetHeight))).toFixed(3)));
     startJungPrologue(root, PROLOGUE_FRAMES, root.dataset.lang === 'en' ? 'en' : 'zh').catch(() => { root.dataset.state = 'static'; });
     root.querySelector('[data-jp-map]')?.addEventListener('click', () => {
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reduce = !fullMotion();
       document.getElementById('jm-h')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
       const load = document.querySelector<HTMLButtonElement>('[data-jm-load]');
       if (load && !load.hidden) load.click();

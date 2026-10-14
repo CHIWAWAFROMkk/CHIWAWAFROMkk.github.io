@@ -51,10 +51,17 @@ const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/o
     <link rel="preload" href="/assets/fonts/noto-sans-sc-500-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/assets/fonts.css" />
     <script is:inline>
-      /* A missing or slow island must never leave a heading hidden. */
+      /* Motion tier: the same rules as scripts/motion/tier.ts pickTier (motion-tier.spec keeps them in step).
+         A missing or slow island must never leave a heading hidden. */
       (function () {
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        var d = document.documentElement;
+        var d = document.documentElement, n = navigator, c = null, r = false;
+        try { c = localStorage.getItem('hyj-motion'); } catch (e) { /* storage blocked */ }
+        try { r = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* no matchMedia */ }
+        var t = c === 'full' || c === 'gentle' || c === 'off' ? c
+          : r ? 'gentle'
+          : (n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 4) ? 'lite' : 'full';
+        d.dataset.motion = t;
+        if (t === 'off') return;
         d.classList.add('motion-ok');
         setTimeout(function () { d.classList.add('motion-timeout'); }, 2500);
       })();
@@ -85,7 +92,9 @@ const shareImage = origin + (SHARE.find(([p]) => path.startsWith(p))?.[1] ?? '/o
     <slot name="overlay" />
     <script>
       import { initRise } from '../scripts/rise';
+      import { watchFps } from '../scripts/motion/tier';
       initRise();
+      watchFps();
     </script>
   </body>
 </html>

@@ -1,6 +1,7 @@
+import { fullMotion } from './motion/tier';
 /** Adds .is-in once to each [data-rise] element as it enters the viewport. No-op without IO or with reduced motion. */
 export function initRise(): void {
-  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window) || !fullMotion()) return;
   const els = document.querySelectorAll<HTMLElement>('[data-rise]');
   if (!els.length) return;
   document.documentElement.classList.add('rise-ready');

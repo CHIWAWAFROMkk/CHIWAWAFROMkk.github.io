@@ -3,6 +3,7 @@ import { DELIVERY_TEXT } from './delivery-text';
 import { DELIVERY_ERRORS, localizeError } from './tool-i18n';
 import { playBand, failedStep } from './txn-band';
 import { countText } from './countup';
+import { fullMotion } from './motion/tier';
 
 interface Dish { id: number; name: string; merchant: string; price_cents: number; stock: number }
 interface Order { id: number; student: string; merchant: string; status: 'paid' | 'delivered' | 'refunded'; total_cents: number }
@@ -41,7 +42,7 @@ export function initDelivery(root: HTMLElement): void {
   const showRows = (text: string) => {
     const s = $('sql-status');
     s.dataset.error = 'false';
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { s.textContent = text; return; }
+    if (!fullMotion()) { s.textContent = text; return; }
     const sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = text;
     const shown = document.createElement('span'); shown.setAttribute('aria-hidden', 'true');
     s.replaceChildren(sr, shown);
@@ -226,7 +227,7 @@ export function initDelivery(root: HTMLElement): void {
   button('export-csv').onclick = () => download('﻿' + exportRows.map(row => row.map(v => '"' + String(v ?? '').replace(/^[=+@-]/, "'$&").replaceAll('"', '""') + '"').join(',')).join('\r\n'), 'query-result.csv', 'text/csv;charset=utf-8');
   root.querySelectorAll<HTMLButtonElement>('[data-jump]').forEach(b => b.addEventListener('click', () => {
     preset.value = b.dataset.jump ?? '0'; showPreset();
-    root.querySelector('#workbench')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    root.querySelector('#workbench')?.scrollIntoView({ behavior: !fullMotion() ? 'auto' : 'smooth' });
     boot();
   }));
   fetch('/assets/delivery-schema.sql').then(r => { if (!r.ok) throw Error(); return r.text(); })

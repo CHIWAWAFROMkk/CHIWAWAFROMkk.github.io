@@ -5,6 +5,7 @@ import { spinOdometer, setOdometerText } from './odometer-dom';
 import { merchantLegend, reasonLegend } from './insights-names';
 import { COCKPIT_TEXT, KPI_IDS, kpiText, type KpiId } from './cockpit-text';
 import type { Results } from './insights-facts';
+import { fullMotion } from './motion/tier';
 
 type ChartId = 'heatmap' | 'merchants' | 'delivery' | 'reasons';
 const CHARTS: ChartId[] = ['heatmap', 'merchants', 'delivery', 'reasons'];
@@ -20,7 +21,7 @@ interface Chart { rects: SVGRectElement[]; shown: Mark[]; keys: Key[]; token: nu
 export function initCockpit(root: HTMLElement, initial: Results): void {
   const lang = root.dataset.lang === 'en' ? 'en' : 'zh';
   const T = COCKPIT_TEXT[lang];
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   const $ = <E extends Element>(sel: string) => root.querySelector<E>(sel)!;
   const form = $<HTMLFormElement>('#ck-form');
   const status = $<HTMLElement>('#ck-status');

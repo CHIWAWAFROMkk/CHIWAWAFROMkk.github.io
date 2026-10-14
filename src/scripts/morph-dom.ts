@@ -1,4 +1,5 @@
 import { chapterProgress, frameAt, type Mark } from './morph';
+import { fullMotion } from './motion/tier';
 
 /** Writes marks into the pool of <rect data-m> elements. */
 export function paint(rects: SVGRectElement[], marks: Mark[]): void {
@@ -18,7 +19,7 @@ export function paint(rects: SVGRectElement[], marks: Mark[]): void {
  *  With reduced motion the stage jumps straight to the current chapter's chart. */
 export function initMorph(stage: HTMLElement, chapters: HTMLElement[], layouts: Mark[][]): void {
   const rects = [...stage.querySelectorAll<SVGRectElement>('rect[data-m]')];
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   let frame = 0;
   let shown = -1;
   const update = () => {

@@ -36,10 +36,11 @@ const L = HANDBOOK.labels;
   </div>
 </section>
 <script>
+  import { fullMotion } from '../scripts/motion/tier';
   import { reveal, onScroll } from '../scripts/motion-dom';
   const list = document.querySelector<HTMLElement>('[data-hb-list]');
   const rail = document.querySelector<HTMLElement>('[data-hb-rail]');
-  if (list && rail && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (list && rail && fullMotion()) {
     reveal(list.querySelectorAll('.hb__item'), 90);
     rail.style.transform = 'scaleY(0)';
     onScroll(() => {

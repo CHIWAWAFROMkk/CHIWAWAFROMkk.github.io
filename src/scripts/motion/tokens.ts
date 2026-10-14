@@ -1,10 +1,11 @@
+import { fullMotion } from './tier';
 /** Shared motion contract from the 2026-10-05 design. */
 export const MOTION = {
   ease: 'cubic-bezier(.2,.8,.2,1)', quick: 0.2, reveal: 0.6, title: 0.9,
   staggerChar: 0.04, staggerRow: 0.07, staggerBlock: 0.09, magnetMax: 6,
 } as const;
 export function prefersMotion(): boolean {
-  return typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return fullMotion();
 }
 export function isCoarse(): boolean {
   return typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;

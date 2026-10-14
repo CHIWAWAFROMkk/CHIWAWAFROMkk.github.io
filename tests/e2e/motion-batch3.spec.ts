@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { motionOff } from './helpers';
 import { motionBudget, recordSplits } from './motion-budget';
 
 const skipIntro = (page: Page) => page.addInitScript(() => localStorage.setItem('hyj-intro-seen', '1'));
@@ -70,8 +71,8 @@ test.describe('motion batch 3: the film pages', () => {
     expect(await page.locator('[data-fm="bloom"] .fm-mono').evaluate(el => getComputedStyle(el).opacity)).toBe('0');
   });
 
-  test('with reduced motion or without JS, the stills and the video show as they are', async ({ page, browser, baseURL }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
+  test('with motion off or without JS, the stills and the video show as they are', async ({ page, browser, baseURL }) => {
+    await motionOff(page);
     for (const path of [FILM[0], JUNG[0]]) {
       await page.goto(path);
       await expect(page.locator('[data-fm].m-armed')).toHaveCount(0);

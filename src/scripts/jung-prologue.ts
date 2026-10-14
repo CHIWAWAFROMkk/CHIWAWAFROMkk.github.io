@@ -4,6 +4,7 @@
 import { shotAt, segmentProgress } from './jung-prologue-timeline';
 import { frameCap } from './frame-cap';
 import { PROBE_START, probeStep, decideQuality, type Probe } from './cinema/quality';
+import { fullMotion } from './motion/tier';
 
 interface Frame { src: string; quote?: { zh: string; en: string } }
 
@@ -53,7 +54,7 @@ async function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 export async function startJungPrologue(root: HTMLElement, frames: Frame[], lang: 'zh' | 'en'): Promise<void> {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;          // stays on the still picture
+  if (!fullMotion()) return;          // stays on the still picture
   const canvas = root.querySelector<HTMLCanvasElement>('canvas')!;
   const qEn = root.querySelector<HTMLElement>('[data-q="en"]'), qZh = root.querySelector<HTMLElement>('[data-q="zh"]');
   const bars = [...root.querySelectorAll<HTMLElement>('[data-jp-bar] b')];

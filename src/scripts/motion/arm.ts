@@ -2,7 +2,7 @@
  *  .m-armed is the start state, .m-in the end state; both rules live inside
  *  (prefers-reduced-motion: no-preference), so reduced motion shows everything as it is.
  *  Only elements still below the fold are armed: nothing on screen is put back into a start state. */
-import { prefersMotion } from './tokens';
+import { anyMotion } from './tier';
 
 const introPending = () => {
   const c = document.documentElement.classList;
@@ -34,7 +34,7 @@ export interface ArmOptions { margin?: string; fold?: number; onArm?: (el: HTMLE
 
 /** Arms the elements below the fold and plays each once as it scrolls into view. */
 export function armOnScroll(els: Iterable<HTMLElement>, { margin = '0px 0px -12% 0px', fold = 1, onArm }: ArmOptions = {}): () => void {
-  if (!prefersMotion() || !('IntersectionObserver' in window)) return () => {};
+  if (!anyMotion() || !('IntersectionObserver' in window)) return () => {};
   const late = !introPending() && document.documentElement.classList.contains('motion-timeout');
   const below = [...els].filter(el => {
     const top = el.getBoundingClientRect().top;
@@ -60,7 +60,7 @@ export interface StageOptions { delay?: number; step?: number; margin?: string }
  *  the rest are armed and play as they scroll in. */
 export function stage(els: Iterable<HTMLElement>, { delay = 0, step = 80, margin = '0px 0px -12% 0px' }: StageOptions = {}): () => void {
   const list = [...els];
-  if (!prefersMotion() || !('IntersectionObserver' in window)) { for (const el of list) el.classList.add('m-in'); return () => {}; }
+  if (!anyMotion() || !('IntersectionObserver' in window)) { for (const el of list) el.classList.add('m-in'); return () => {}; }
   // Behind the intro overlay everything waits in the start state, independent of the deadline.
   const waiting = introPending();
   // Past the deadline the on-screen elements are already showing: they stay as they are.

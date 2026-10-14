@@ -1,6 +1,7 @@
 ---
 import { SITE } from '../data/site';
 import Magnet from './rb/Magnet.astro';
+import MotionSwitch from './MotionSwitch.astro';
 import type { Lang } from '../i18n';
 interface Props { lang: Lang; variant?: 'bar' | 'red' }
 const { lang, variant = 'bar' } = Astro.props;
@@ -10,6 +11,7 @@ const { lang, variant = 'bar' } = Astro.props;
     {variant === 'red' && <p class="contact__h">{SITE.contact.heading[lang]}</p>}
     <Magnet><a class="contact__mail" href={`mailto:${SITE.email}`}>{SITE.email}</a></Magnet>
     <Magnet><a class="contact__cv" href={SITE.resume[lang]} download>{SITE.nav.resume[lang]} <span aria-hidden="true">↓</span></a></Magnet>
+    <MotionSwitch lang={lang} />
   </div>
 </section>
 <style>

@@ -1,5 +1,6 @@
 import { frameCap } from './frame-cap';
 import { pct, timeAt, stepIndex } from './film-desk';
+import { fullMotion } from './motion/tier';
 
 interface Signals { fps: number; colors: string[]; peaks: number[] }
 const SIGNALS = '/media/mais-je-taime/film-signals.json';
@@ -11,7 +12,7 @@ export function initFilmDesk(root: HTMLElement): void {
   const shots = [...root.querySelectorAll<HTMLButtonElement>('[data-fd-shots] [data-fd-shot]')];
   const cards = [...root.querySelectorAll<HTMLElement>('[data-fd-card]')];
   const ids = cards.map(c => c.dataset.fdCard ?? '');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   let current = cards.find(c => !c.hidden)?.dataset.fdCard ?? ids[0];
 
   const place = (t: number) => {

@@ -1,4 +1,5 @@
-const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+import { anyMotion } from './motion/tier';
+const reduced = () => !anyMotion();
 
 /** Hides each element (.reveal) and shows it (.is-in) once it is 10% into the viewport.
  *  Does nothing with reduced motion or without IntersectionObserver, so content is never left hidden. */

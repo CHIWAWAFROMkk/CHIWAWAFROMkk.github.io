@@ -1,6 +1,7 @@
 import { scrambleText } from './impact';
+import { fullMotion } from './motion/tier';
 
-const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = () => !fullMotion();
 const once = (el: Element, fn: () => void, margin = '0px 0px -20% 0px') => {
   const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); fn(); } }, { rootMargin: margin });
   io.observe(el);

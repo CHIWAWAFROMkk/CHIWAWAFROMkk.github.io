@@ -5,6 +5,7 @@ import { createTimeMachine, hhmm, countdown, type TmState } from './qd-timeline'
 import { codeLive } from './code-live';
 import { frameCap } from './frame-cap';
 import { QUOTA_TEXT } from './qd-live-text';
+import { fullMotion } from './motion/tier';
 
 declare global { interface Window { __quotaDeckBridge?: unknown; __quotaDeckFailed?: (message: string) => void } }
 /** compact.js rebuilds these with innerHTML on every snapshot; a focused control in them is found again by its key. */
@@ -36,7 +37,7 @@ function reels(el: HTMLElement, s: string) {
 export function initQuotaLive(root: HTMLElement): void {
   const lang = root.dataset.lang === 'en' ? 'en' : 'zh', T = QUOTA_TEXT[lang];
   const $ = <E extends HTMLElement = HTMLElement>(id: string) => root.querySelector<E>(`#${id}`)!;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = !fullMotion();
   const light = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData || matchMedia('(pointer: coarse)').matches || innerWidth < 720;
   const stage = $('qd-stage'), frame = $<HTMLIFrameElement>('qd-frame'), code = codeLive($('qd-code'));
   const clampY = (v: number, a: number, b: number) => Math.max(a + 8, Math.min(b - 8, v));
