@@ -1,14 +1,32 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { SITE } from '../../src/data/site';
 import { FACTS, fact } from '../../src/data/facts';
 import { EDITIONS } from '../../src/data/editions';
 
-/** Claims about the author that the experience ledger rules out (档案 0.2 红线；2026-10-13/14 简历审查). */
-const AUTHOR_CLAIMS = [/独立(开发|完成|设计|交付|编写)/, /\bsolo\b/i, /\bindependently (built|developed|designed|delivered)\b/i, /500\s*强/, /Fortune\s*500/i, /100\s*%/, /闭环/];
-/** Long-form copy also talks about other people's independence (learners, reviewers) and UI states such as "reset to 100%". */
-const PROSE_CLAIMS = [/独立(开发|编写|交付)/, /\bsolo\b/i, /500\s*强/, /Fortune\s*500/i, /闭环/];
+/** Claims the experience ledger rules out (档案 0.2 红线；2026-10-13/14 简历审查; spec §8): 「独立」 in any form. */
+const AUTHOR_CLAIMS = [/独立/, /\bsolo\b/i, /\bindependent(ly)?\b/i, /500\s*强/, /Fortune\s*500/i, /100\s*%/, /闭环/];
+/** Existing uses that are not claims about the author, one by one with the reason (spec §8: no blanket relaxation). */
+const ALLOWED: { file: string; phrase: string; why: string }[] = [
+  { file: 'projects/ai-campus.zh.md', phrase: '独立判断', why: '研究变量：学习者的独立判断' },
+  { file: 'projects/ai-campus.zh.md', phrase: '独立尝试', why: '研究中描述的学习流程' },
+  { file: 'projects/ai-campus.zh.md', phrase: '学习者能独立完成', why: '指学习者' },
+  { file: 'projects/ai-campus.zh.md', phrase: '独立作答', why: '研究变量' },
+  { file: 'projects/ai-campus.en.md', phrase: 'independent judgement', why: 'study variable about learners' },
+  { file: 'projects/ai-campus.en.md', phrase: 'answering independently', why: 'study variable' },
+  { file: 'projects/campus-delivery.zh.md', phrase: '业务对象独立建表', why: '数据库设计：每类对象单独成表' },
+  { file: 'projects/hris-workflow.zh.md', phrase: '不能独立决定', why: '说的是模型不能自行决定写入' },
+  { file: 'projects/quota-deck.zh.md', phrase: '独立额度', why: '账户额度的产品概念' },
+  { file: 'projects/quota-deck.zh.md', phrase: '独立审查', why: '指 Claude Code 等 Agent 的审查' },
+  { file: 'projects/quota-deck.zh.md', phrase: '独立结果', why: '指各 Agent 的结果' },
+  { file: 'projects/quota-deck.zh.md', phrase: '独立份额', why: '演示中的虚构模型份额' },
+  { file: 'projects/quota-deck.en.md', phrase: 'reviews independently', why: 'about the agents, not the author' },
+  { file: 'projects/quota-deck.en.md', phrase: 'independent results', why: 'about the agents, not the author' },
+  { file: 'projects/stark-desk.zh.md', phrase: '独立图层', why: '图像图层' },
+  { file: 'projects/stock-data-method.zh.md', phrase: '通用部分独立成', why: '代码模块拆分' },
+  { file: 'src/data/site.ts', phrase: '独立额度', why: 'QuotaDeck 页的产品概念' },
+];
 
 function strings(node: unknown): string[] {
   if (typeof node === 'string') return [node];
@@ -27,15 +45,21 @@ function markdown(dir: string): string[] {
 
 describe('copy makes no claims the ledger rules out', () => {
   it('site data, facts and editions', () => {
-    for (const s of strings([SITE, FACTS, EDITIONS])) {
-      for (const re of AUTHOR_CLAIMS) expect(re.test(s), `${re} in: ${s}`).toBe(false);
+    const allowed = ALLOWED.filter(a => a.file === 'src/data/site.ts');
+    for (const raw of strings([SITE, FACTS, EDITIONS])) {
+      const s = allowed.reduce((t, a) => t.replaceAll(a.phrase, ''), raw);
+      for (const re of AUTHOR_CLAIMS) expect(re.test(s), `${re} in: ${raw}`).toBe(false);
     }
   });
 
-  it('markdown copy', () => {
+  it('markdown copy, except the listed uses', () => {
     for (const file of markdown('src/copy')) {
-      const text = readFileSync(file, 'utf8');
-      for (const re of PROSE_CLAIMS) expect(re.test(text), `${re} in ${file}`).toBe(false);
+      let text = readFileSync(file, 'utf8');
+      for (const a of ALLOWED.filter(x => file.split(sep).join('/').endsWith(x.file))) {
+        expect(text.includes(a.phrase), `allow-listed phrase gone from ${a.file}: ${a.phrase}`).toBe(true);
+        text = text.replaceAll(a.phrase, '');
+      }
+      for (const re of AUTHOR_CLAIMS) expect(re.test(text), `${re} in ${file}`).toBe(false);
     }
   });
 

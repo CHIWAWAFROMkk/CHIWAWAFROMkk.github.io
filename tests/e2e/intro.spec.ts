@@ -73,6 +73,7 @@ test.describe('intro', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await expect(page.locator(overlay)).toHaveClass(/is-gentle/);
+    expect(await page.locator(overlay).evaluate(el => getComputedStyle(el).animationName)).toBe('intro-gentle');
     await expect(page.locator(overlay)).toBeHidden({ timeout: 1500 });
     await expect(page.locator('.home__name')).toBeVisible();
   });
@@ -131,5 +132,28 @@ test.describe('intro without JavaScript', () => {
     await page.goto('/');
     await expect(page.locator(overlay)).toBeHidden();
     await expect(page.locator('.home__name')).toBeVisible();
+  });
+});
+
+test.describe('intro letters and trace', () => {
+  test.skip(({ isMobile }) => !!isMobile, 'timing checks run once on desktop');
+
+  test('every letter of every word is shown by the end of the stream', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForTimeout(1700);
+    const hidden = await page.locator('.intro__line b > span').evaluateAll(els => els.filter(el => getComputedStyle(el).opacity !== '1').map(el => el.textContent));
+    expect(hidden).toEqual([]);
+  });
+
+  test('the trace is hidden at the start and drawn by the end', async ({ page }) => {
+    await page.goto('/');
+    const svg = page.locator('.intro__trace');
+    // The left inset is the hidden share of the line: 100% at the start, 0 once drawn.
+    const leftInset = () => svg.evaluate(el => {
+      const parts = getComputedStyle(el).clipPath.match(/inset\(([^)]*)\)/)?.[1].trim().split(/\s+/) ?? ['0'];
+      return parseFloat(parts[parts.length === 4 ? 3 : parts.length === 2 ? 1 : 0]);
+    });
+    expect(await leftInset()).toBe(100);
+    await expect.poll(leftInset, { timeout: 2500, intervals: [50] }).toBeLessThan(0.5);
   });
 });

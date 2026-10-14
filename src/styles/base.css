@@ -108,8 +108,11 @@ p, li, dd { text-wrap: pretty; }
 @view-transition { navigation: auto; }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
-  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  /* Without JavaScript there is no tier: reduced motion stops everything. */
+  html:not([data-motion]) *, html:not([data-motion]) *::before, html:not([data-motion]) *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+/* Gentle tier (system reduced motion unless the visitor chose otherwise, or chosen): nothing travels or loops, fades stay. */
+html[data-motion='gentle'] *, html[data-motion='gentle'] *::before, html[data-motion='gentle'] *::after { animation: none !important; transition-property: opacity !important; scroll-behavior: auto !important; }
 
 /* ---- Page motion (scripts/motion/arm.ts): .m-armed is the start state, .m-in the end state.
    Everything lives under no-preference, so reduced motion never sees a start state. ---- */
@@ -147,3 +150,4 @@ html[data-motion='gentle'] .reveal.is-in, html[data-motion='gentle'] .m-armed.m-
 .night-zone.has-dim { position: relative; }
 .night-dim { position: absolute; inset: 0; z-index: 5; background: var(--night); pointer-events: none; transition: opacity 0.9s var(--ease) 0.15s; }
 .night-zone.is-lit > .night-dim { opacity: 0; }
+@media print { .night-dim { display: none; } }

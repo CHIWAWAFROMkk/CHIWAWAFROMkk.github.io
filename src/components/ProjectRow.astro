@@ -24,7 +24,7 @@ const live = project.live && { href: localizePath(project.live.href, lang), byte
   <a class="pcard__act" href={localizePath(project.href, lang)} tabindex="-1" aria-hidden="true">{SITE.cards.read[lang]} →</a>
   {live && (
     <a class="pcard__act pcard__live" href={live.href} style={`--share:${Math.min(1, live.bytes / MAX_LIVE_BYTES).toFixed(3)}`}>
-      <span>{SITE.cards.run[lang]} ↗</span>
+      <span><span class="pcard__sr">{project.title[lang]}：</span>{SITE.cards.run[lang]} <span aria-hidden="true">↗</span></span>
       <small data-size>{formatSize(live.bytes, lang)}</small>
       <i class="pcard__bar" aria-hidden="true"></i>
     </a>
@@ -75,6 +75,7 @@ const live = project.live && { href: localizePath(project.live.href, lang), byte
   .pcard__actions { --row-pad: max(var(--gutter), calc((100% - 1600px) / 2 + var(--gutter))); display: flex; flex-wrap: wrap; gap: 8px 12px; padding: 0 var(--row-pad) 18px calc(var(--row-pad) + 3ch + clamp(14px, 2vw, 32px)); }
   .pcard__act { position: relative; display: inline-flex; align-items: baseline; gap: 10px; padding: 6px 12px; border: 1.5px solid var(--ink); overflow: hidden; font-size: 14px; font-weight: 700; text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
   .pcard__act:hover, .pcard__act:focus-visible { background: var(--ink); color: var(--paper); }
+  .pcard__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .pcard__live { border-color: var(--red-text); color: var(--red-text); }
   .pcard__live small { color: var(--mute); font-weight: 500; }
   .pcard__live:hover small, .pcard__live:focus-visible small { color: var(--night-mute); }

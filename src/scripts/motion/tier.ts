@@ -43,9 +43,11 @@ export function readChoice(): Choice | null {
   }
 }
 
-export function saveChoice(c: Choice): void {
-  try { localStorage.setItem(MOTION_KEY, c); } catch { /* storage blocked: this page still switches */ }
+/** Stores the visitor's tier and applies it to this page. Returns false when storage is blocked, so the caller knows a
+ *  reload would fall back to the automatic tier. */
+export function saveChoice(c: Choice): boolean {
   document.documentElement.dataset.motion = c;
+  try { localStorage.setItem(MOTION_KEY, c); return true; } catch { return false; }
 }
 
 /** Samples the first frames of a visible page; a page that cannot hold 30 fps drops from full to lite.

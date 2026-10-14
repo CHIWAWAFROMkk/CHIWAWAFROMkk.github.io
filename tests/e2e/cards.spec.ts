@@ -53,3 +53,12 @@ test('a card\'s buttons wait for their row to slide in', async ({ page, isMobile
   await card.scrollIntoViewIfNeeded();
   await expect.poll(() => card.locator('.pcard__actions').evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
 });
+
+test('each live-edition link names its project for screen readers', async ({ page }) => {
+  await page.goto('/projects/');
+  for (const p of trackProjects('ai').filter(x => x.live)) {
+    const name = await page.locator(`a.pcard__live[href="${p.live!.href}"]`).evaluate(el => (el as HTMLElement).innerText + '|' + el.textContent);
+    expect(name, p.slug).toContain(p.title.zh);
+  }
+  expect(await page.locator('a.pcard__live').first().evaluate(el => el.querySelector('[aria-hidden="true"]')?.textContent)).toContain('↗');
+});

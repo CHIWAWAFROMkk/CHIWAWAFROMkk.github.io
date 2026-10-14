@@ -41,3 +41,13 @@ test('the rail steps aside over the film zone, where the cinema uses the screen 
   await expect(nav).toHaveClass(/is-over-night/);
   expect(await nav.evaluate(el => getComputedStyle(el).pointerEvents)).toBe('none');
 });
+
+test('over the film zone a focused rail node still shows itself', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop rail');
+  await page.goto('/brief/');
+  await page.locator('.b-film').evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY));
+  const nav = page.locator('[data-rail-nav]');
+  await expect(nav).toHaveClass(/is-over-night/);
+  await nav.locator('a').first().focus();
+  await expect.poll(() => nav.evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+});

@@ -17,3 +17,12 @@ test('motion off: no dimmer at all', async ({ page }) => {
   await page.goto('/projects/');
   await expect(page.locator('.night-dim')).toHaveCount(0);
 });
+
+test('a film zone taller than four screens still comes up (landscape phone)', async ({ page }) => {
+  await skipIntro(page);
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.goto('/projects/ai-campus/live/');
+  const zone = page.locator('#cm-stage');
+  await zone.evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY));
+  await expect.poll(() => zone.locator('> .night-dim').evaluate(el => Number(getComputedStyle(el).opacity)), { timeout: 3000 }).toBe(0);
+});

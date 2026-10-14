@@ -15,6 +15,7 @@ const { lang } = Astro.props;
 <style>
   .rail { position: fixed; z-index: 20; left: max(8px, calc(var(--gutter) / 2 - 5px)); top: 50%; transform: translateY(-50%); transition: opacity 0.3s var(--ease); }
   .rail.is-over-night { opacity: 0; pointer-events: none; }
+  .rail.is-over-night:focus-within { opacity: 1; pointer-events: auto; }
   .rail ol { position: relative; display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
   .rail ol::before, .rail ol::after { content: ''; position: absolute; left: 4px; top: 4px; bottom: 4px; width: 1.5px; }
   .rail ol::before { background: var(--ink); opacity: 0.25; }

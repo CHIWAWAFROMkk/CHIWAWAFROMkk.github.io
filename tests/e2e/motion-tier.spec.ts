@@ -54,3 +54,30 @@ test('storage blocked: tier boots and the switch still works', async ({ page }) 
   await page.waitForLoadState('load');
   expect(errors).toEqual([]);
 });
+
+test('system reduced motion: the gentle fades really animate (not cut by the old global reset)', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/projects/');
+  const row = page.locator('a.prow').first();
+  await expect(row).toHaveClass(/is-in/);
+  const t = await row.evaluate(el => ({ d: getComputedStyle(el).transitionDuration, p: getComputedStyle(el).transitionProperty }));
+  expect(t.p).toContain('opacity');
+  expect(t.d.split(',').some(d => parseFloat(d) > 0)).toBe(true);
+});
+
+test('choosing full while the system asks for reduced motion gives full motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await motionChoice(page, 'full');
+  await page.goto('/projects/');
+  const row = page.locator('a.prow').first();
+  expect(await row.evaluate(el => getComputedStyle(el).transitionDuration.split(',').some(d => parseFloat(d) > 0))).toBe(true);
+});
+
+test('storage blocked: the switch still applies the chosen tier to this page', async ({ page }) => {
+  await page.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } }); });
+  await page.goto('/brief/');
+  const sw = page.locator('footer.footer [data-motion-switch]');
+  await sw.getByRole('button', { name: SITE.motion.off.zh }).click();
+  await expect.poll(() => tier(page)).toBe('off');
+  await expect(sw.locator('button[aria-pressed="true"]')).toHaveText(SITE.motion.off.zh);
+});

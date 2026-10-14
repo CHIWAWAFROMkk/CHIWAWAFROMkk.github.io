@@ -16,8 +16,12 @@ const choices = ['full', 'gentle', 'off'] as const;
     const chosen = readChoice();
     for (const b of root.querySelectorAll<HTMLButtonElement>('button[data-choice]')) {
       b.setAttribute('aria-pressed', String(b.dataset.choice === chosen));
-      // Every script decides its motion once at start, so a fresh load is the honest way to apply a new tier.
-      b.addEventListener('click', () => { saveChoice(b.dataset.choice as Choice); location.reload(); });
+      // Every script decides its motion once at start, so a fresh load is the honest way to apply a new tier. When the
+      // choice cannot be stored, a reload would forget it: keep this page and let the CSS tier rules apply it.
+      b.addEventListener('click', () => {
+        if (saveChoice(b.dataset.choice as Choice)) { location.reload(); return; }
+        for (const other of root.querySelectorAll('button[data-choice]')) other.setAttribute('aria-pressed', String(other === b));
+      });
     }
   }
 </script>
