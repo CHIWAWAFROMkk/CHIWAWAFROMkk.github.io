@@ -6,7 +6,7 @@ const { lang } = Astro.props;
 ---
 <footer class="footer wrap">
   <p><strong>{SITE.name[lang]}</strong> · {SITE.tagline[lang]}</p>
-  <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a> · <a href={localizePath('/privacy/', lang)}>{SITE.footer.privacy[lang]}</a></p>
+  <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a> · <a href={SITE.github} rel="me">{SITE.nav.github[lang]}</a> · <a href={localizePath('/privacy/', lang)}>{SITE.footer.privacy[lang]}</a></p>
 </footer>
 <style>
   .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 28px 40px; border-top: var(--rule); font-size: 13px; color: var(--mute); }

@@ -20,14 +20,16 @@ const project = (p: Omit<ProjectEntry, 'href'>): ProjectEntry => ({ ...p, href: 
 
 export const SITE = {
   name: { zh: '何彦钧', en: 'Yanjun He' },
-  tagline: { zh: '数据分析 · AI 应用 · AI 影像', en: 'Data · Applied AI · AI Film' },
+  tagline: { zh: 'AI 产品 · Agent 工作流 · AIGC 影像', en: 'AI Products · Agent Workflows · AIGC Film' },
   email: '2806660493@qq.com',
+  github: 'https://github.com/CHIWAWAFROMkk',
   resume: { zh: '/downloads/resume/heyanjun-resume-zh.pdf', en: '/downloads/resume/heyanjun-resume-en.pdf' },
   nav: {
     label: { zh: '主导航', en: 'Main' },
     skip: { zh: '跳到内容', en: 'Skip to content' },
     brief: { zh: '快速概览', en: 'Overview' },
     projects: { zh: '项目与演示', en: 'Projects & demos' },
+    github: { zh: 'GitHub', en: 'GitHub' },
     resume: { zh: '下载简历', en: 'Résumé (PDF)' },
     otherLang: { zh: 'English', en: '中文' },
   },
@@ -50,7 +52,7 @@ export const SITE = {
     experience: { zh: '经历', en: 'Experience' },
     education: { zh: '教育', en: 'Education' },
     projects: { zh: '项目', en: 'Projects' },
-    film: { zh: '影像', en: 'Film' },
+    film: { zh: 'AIGC 影像与互动作品', en: 'AIGC film & interactive work' },
     status: { zh: '状态', en: 'Status' },
   },
   summaryLabels: {
@@ -118,8 +120,8 @@ export const SITE = {
   ] satisfies ProjectEntry[],
   pages: {
     home: {
-      title: { zh: '何彦钧 · 数据分析 · AI 应用 · AI 影像', en: 'Yanjun He · Data · Applied AI · AI Film' },
-      description: { zh: '何彦钧的作品集：HR 数据实习、AI 工作流与工具项目、AI 短片分镜。可以一分钟了解，也可以查看项目过程与在线演示。', en: 'Portfolio of Yanjun He: HR data internship, AI workflow and tool projects, and an AI short-film storyboard. Take the one-minute overview or dig into the projects and live demos.' },
+      title: { zh: '何彦钧 · AI 产品 · Agent 工作流 · AIGC 影像', en: 'Yanjun He · AI Products · Agent Workflows · AIGC Film' },
+      description: { zh: '何彦钧的作品集：实习中落地的员工档案补录 AI 工作流，能在浏览器里运行的求职 Agent 与 QuotaDeck，以及 AIGC 影像作品。可以一分钟了解，也可以查看项目过程与在线演示。', en: 'Portfolio of Yanjun He: an employee-records AI workflow delivered during an internship, a job agent and QuotaDeck that run in your browser, and AIGC film work. Take the one-minute overview or dig into the projects and live demos.' },
     },
     brief: {
       title: { zh: '快速概览 · 何彦钧', en: 'Overview · Yanjun He' },
@@ -265,10 +267,10 @@ export const SITE = {
     },
     projects: {
       title: { zh: '项目与演示', en: 'Projects & demos' },
-      lead: { zh: '数据 × AI 工具是主要作品，每个项目都能打开看过程、亲手试；影像是独立的创作板块。', en: 'Data × AI tools are the main work — open any project to see the process and try it yourself. Film is a separate creative strand.' },
-      description: { zh: '何彦钧的全部项目：HR 档案补录工作流、SQL 工作台、求职 Agent、QuotaDeck、AI 校园研究、CSV 工具，以及 AI 短片分镜。', en: "All of Yanjun He's projects: the HR records workflow, SQL lab, job agent, QuotaDeck, AI-on-campus study, CSV tool, and an AI short-film storyboard." },
-      data: { zh: '数据 × AI 工具', en: 'Data × AI tools' },
-      film: { zh: 'AI 影像', en: 'AI film' },
+      lead: { zh: 'AI 产品与工作流是主要作品，每个项目都能打开看过程与取舍，或在浏览器里亲手运行；AIGC 影像与互动作品单列在后。', en: 'AI products and workflows are the main work: open any project for the process and trade-offs, or run it in your browser. AIGC film and interactive work follow.' },
+      description: { zh: '何彦钧的项目：求职 Agent、员工档案补录 AI 工作流、QuotaDeck、校园外卖 SQL 与经营分析、AI 校园研究，以及 AIGC 影像作品。', en: "Yanjun He's projects: the job agent, the HR records AI workflow, QuotaDeck, campus delivery SQL and insights, the AI-on-campus study, and AIGC film work." },
+      data: { zh: 'AI 产品与工作流', en: 'AI products & workflows' },
+      film: { zh: 'AIGC 影像与互动作品', en: 'AIGC film & interactive work' },
     },
     method: {
       title: { zh: '过程与运行 · CSV 数据分析工具', en: 'Method & results · CSV Analysis Tool' },

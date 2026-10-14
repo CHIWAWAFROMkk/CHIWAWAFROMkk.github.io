@@ -4,7 +4,7 @@ import { factCorpus } from '../../src/data/facts';
 import { strayTokens } from './digits';
 
 // Contact details, URLs, file names and storyboard shot ids (S01…) are identifiers, not claims.
-const SKIP_KEYS = new Set(['email', 'resume', 'href', 'slug', 'src', 'file', 'shot']);
+const SKIP_KEYS = new Set(['email', 'github', 'resume', 'href', 'slug', 'src', 'file', 'shot']);
 
 function strings(node: unknown, key = ''): string[] {
   if (SKIP_KEYS.has(key)) return [];
