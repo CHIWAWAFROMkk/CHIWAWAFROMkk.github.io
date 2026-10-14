@@ -5,6 +5,7 @@ import CampusLive from '../components/CampusLive.astro';
 import CampusFramework from '../components/CampusFramework.astro';
 import QuotaLive from '../components/QuotaLive.astro';
 import QuotaShots from '../components/QuotaShots.astro';
+import LivePreview from '../components/LivePreview.astro';
 import { SITE } from '../data/site';
 import { EDITIONS, type EditionId } from '../data/editions';
 import { localizePath, type Lang } from '../i18n';
@@ -14,6 +15,7 @@ const E = EDITIONS[which], P = SITE.pages[E.page];
 ---
 <ProjectLayout lang={lang} slug={`${E.slug}/live`} title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <Fragment slot="demo">
+    <LivePreview which={which} lang={lang} />
     {which === 'career' && <CareerLive lang={lang} />}
     {which === 'campus' && <CampusLive lang={lang} />}
     {which === 'campus' && <CampusFramework lang={lang} />}

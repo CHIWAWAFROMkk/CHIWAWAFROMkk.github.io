@@ -79,6 +79,10 @@ export const SITE = {
     status: { zh: '当前状态', en: 'Status' },
     statusNext: { zh: '状态与下一步', en: 'Status & next' },
   },
+  livePreview: {
+    caption: { zh: '预览截图：真实程序运行后的界面。下方是在你的浏览器里实时运行的版本。', en: 'Preview: the real program after it has run. The live version runs in your browser below.' },
+    alt: { zh: '完整版运行后的界面截图', en: 'Screenshot of the live edition after it has run' },
+  },
   cards: {
     read: { zh: '看过程与取舍', en: 'Process & trade-offs' },
     run: { zh: '在浏览器里运行', en: 'Run it in your browser' },

@@ -1,0 +1,18 @@
+---
+import { readFileSync } from 'node:fs';
+import { SITE } from '../data/site';
+import type { EditionId } from '../data/editions';
+import type { Lang } from '../i18n';
+interface Props { which: EditionId; lang: Lang }
+const { which, lang } = Astro.props;
+const shot = (JSON.parse(readFileSync('public/media/live-previews/manifest.json', 'utf8')) as Record<EditionId, { file: string; w: number; h: number }>)[which];
+---
+<figure class="live-preview wrap">
+  <img src={shot.file} width={shot.w} height={shot.h} alt={SITE.livePreview.alt[lang]} decoding="async" />
+  <figcaption>{SITE.livePreview.caption[lang]}</figcaption>
+</figure>
+<style>
+  .live-preview { display: grid; gap: 10px; padding-block: 8px 28px; }
+  .live-preview img { width: 100%; height: auto; border: var(--rule); }
+  .live-preview figcaption { color: var(--mute); font-size: 13px; }
+</style>
