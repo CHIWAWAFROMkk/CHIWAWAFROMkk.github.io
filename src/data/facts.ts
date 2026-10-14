@@ -1,6 +1,6 @@
 import type { Bi } from '../i18n';
 
-export type FactId = 'F1' | 'F2' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'F10' | 'F11' | 'F12' | 'F13' | 'F14';
+export type FactId = 'F1' | 'F2' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'F10' | 'F11' | 'F12' | 'F13' | 'F14' | 'F15';
 
 export interface Fact {
   id: FactId;
@@ -31,6 +31,7 @@ export const FACTS: Record<FactId, Fact> = {
   F12: { id: 'F12', text: { zh: '2024.03—2024.07', en: '2024.03—2024.07' }, scope: 'AI 校园研究项目时间', source: RESUME, confirmed: '2026-09-19', public: true },
   F13: { id: 'F13', figure: '21', text: { zh: '21 个物件 · 10 个宇宙', en: '21 objects · 10 universes' }, scope: 'Stark Has a Warm Heart：可点击物件数与画风宇宙数', source: 'ironman-desk 仓库 2641bdf：prompts/objects.json 21 项、web/src/content.json universes 10 项', confirmed: '2026-10-06', public: true },
   F14: { id: 'F14', text: { zh: '员工档案补录工作流 · 2026.06—08 · 三个版本，最终版在公司环境运行', en: 'Records backfill workflow · 2026.06–08 · three versions, the final one ran at the company' }, scope: '丹纳赫实习期间工作流的迭代时间与交付状态', source: '用户口述（2026-10-08）', confirmed: '2026-10-08', public: true },
+  F15: { id: 'F15', figure: '100', text: { zh: '每满 100 份全部人工核对一次', en: 'every 100 files are all re-checked by hand' }, scope: '档案补录工作流的复核规则（不是抽查）', source: '经历档案 4.1，用户口述 2026-10-08', confirmed: '2026-10-08', public: true },
 };
 
 export function fact(id: FactId): Fact {

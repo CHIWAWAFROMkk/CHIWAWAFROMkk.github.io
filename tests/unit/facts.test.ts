@@ -4,8 +4,8 @@ import { FACTS, fact, factCorpus } from '../../src/data/facts';
 describe('fact ledger', () => {
   const all = Object.values(FACTS);
 
-  it('has F1–F14 with matching ids', () => {
-    expect(all.map(f => f.id)).toEqual(['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12','F13','F14']);
+  it('has F1–F15 with matching ids', () => {
+    expect(all.map(f => f.id)).toEqual(['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12','F13','F14','F15']);
     for (const [k, f] of Object.entries(FACTS)) expect(f.id).toBe(k);
   });
 

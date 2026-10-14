@@ -26,3 +26,29 @@ describe('AI track', () => {
     });
   });
 });
+
+import { trackPath } from '../../src/i18n';
+
+describe('HRIS track', () => {
+  it('lists the HRIS order with the job engine renamed', () => {
+    const list = trackProjects('hris');
+    expect(list.map(p => p.slug)).toEqual(['hris-workflow', 'ai-career', 'campus-delivery', 'ai-campus', 'quota-deck']);
+    expect(list.find(p => p.slug === 'ai-career')!.title.zh).toBe('人岗匹配评估引擎');
+  });
+  it('rewrites only the card copy, never the links', () => {
+    for (const p of trackProjects('hris')) expect(p.href).toBe(`/projects/${p.slug}/`);
+  });
+});
+
+describe('trackPath', () => {
+  it('keeps the AI track as it is', () => {
+    expect(trackPath('ai', '/projects/ai-career/', 'zh')).toBe('/projects/ai-career/');
+    expect(trackPath('ai', '/', 'en')).toBe('/en/');
+  });
+  it('puts the HRIS track under /hris/, before the language prefix', () => {
+    expect(trackPath('hris', '/', 'zh')).toBe('/hris/');
+    expect(trackPath('hris', '/projects/ai-career/live/', 'zh')).toBe('/hris/projects/ai-career/live/');
+    expect(trackPath('hris', '/brief/', 'en')).toBe('/en/hris/brief/');
+    expect(trackPath('hris', '/en/projects/', 'en')).toBe('/en/hris/projects/');
+  });
+});
