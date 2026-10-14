@@ -37,6 +37,10 @@ const nodes = traceNodes(SITE.trace.length);
   .trace__tick { font: 700 13px/1 var(--font-display); fill: var(--red-text); opacity: 0; transition: opacity 0.3s var(--ease); }
   .trace__node.is-done .trace__tick { opacity: 1; }
   .trace__pulse { fill: var(--red); opacity: 0; }
-  /* Phones: the diagram follows the text instead of sitting behind it. */
-  @media (max-width: 800px) { .trace { position: static; order: 10; width: 100%; margin-top: 4px; } }
+  /* Phones: a slim strip after the text (labels hidden), so both doors still fit the first screen. */
+  @media (max-width: 800px) {
+    .trace { position: static; order: 10; width: 100%; margin-top: 4px; }
+    .trace svg { height: 56px; }
+    .trace__label { display: none; }
+  }
 </style>

@@ -41,12 +41,12 @@ const rows: [Bi, Bi, Bi?][] = [
     </section>
     <slot name="demo" />
     <article class="prose wrap"><slot /></article>
-    <ReadingRail lang={lang} />
     <nav class="p-pager wrap" aria-label={SITE.pager.label[lang]}>
       {prev ? <a href={localizePath(prev.href, lang)}>← {prev.title[lang]}</a> : <span></span>}
       {next && <a href={localizePath(next.href, lang)}>{next.title[lang]} →</a>}
     </nav>
   </main>
+  <ReadingRail lang={lang} />
   {motion && <SectionReveals />}
   {motion && <ProjectMotion />}
 </Base>
