@@ -41,3 +41,15 @@ test('hovering a card draws the trace around it', async ({ page, isMobile }) => 
   await card.hover();
   await expect.poll(() => rect.evaluate(el => Number(getComputedStyle(el).strokeDashoffset.replace('px', ''))), { timeout: 2000 }).toBeLessThan(0.05);
 });
+
+test('a card\'s buttons wait for their row to slide in', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'run once');
+  await page.setViewportSize({ width: 1440, height: 700 });
+  await page.goto('/projects/');
+  const card = page.locator('.pcard').last();
+  await expect(card.locator('a.prow')).toHaveClass(/reveal/);
+  await expect(card.locator('a.prow')).not.toHaveClass(/is-in/);
+  expect(await card.locator('.pcard__actions').evaluate(el => getComputedStyle(el).opacity)).toBe('0');
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(() => card.locator('.pcard__actions').evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+});

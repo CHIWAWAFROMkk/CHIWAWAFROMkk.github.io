@@ -69,6 +69,9 @@ const live = project.live && { href: localizePath(project.live.href, lang), byte
   }
   @media not ((hover: hover) and (pointer: fine)) { .prow__preview { display: none; } }
   .pcard { position: relative; border-bottom: var(--hair); }
+  /* The buttons belong to their row: on the projects index they wait for it to slide in, and arrive with it. */
+  .prow:global(.reveal.is-in) ~ .pcard__actions { transition: opacity 0.6s var(--ease) calc(var(--d, 0ms) + 120ms); }
+  .prow:global(.reveal):not(:global(.is-in)) ~ .pcard__actions { opacity: 0; }
   .pcard__actions { --row-pad: max(var(--gutter), calc((100% - 1600px) / 2 + var(--gutter))); display: flex; flex-wrap: wrap; gap: 8px 12px; padding: 0 var(--row-pad) 18px calc(var(--row-pad) + 3ch + clamp(14px, 2vw, 32px)); }
   .pcard__act { position: relative; display: inline-flex; align-items: baseline; gap: 10px; padding: 6px 12px; border: 1.5px solid var(--ink); overflow: hidden; font-size: 14px; font-weight: 700; text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
   .pcard__act:hover, .pcard__act:focus-visible { background: var(--ink); color: var(--paper); }
