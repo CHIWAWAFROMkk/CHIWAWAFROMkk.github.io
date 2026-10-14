@@ -79,6 +79,21 @@ export const SITE = {
     status: { zh: '当前状态', en: 'Status' },
     statusNext: { zh: '状态与下一步', en: 'Status & next' },
   },
+  /** Real screenshots of the live editions (tools/live-shots.mjs), shown on the home page's projects door and the overview. */
+  shots: {
+    real: { zh: '真实运行截图', en: 'Screenshot of the running program' },
+    items: [
+      { id: 'career', href: '/projects/ai-career/live/',
+        alt: { zh: '求职引擎的匹配电路：左边是岗位要求，右边是候选人的事实', en: 'The job engine’s matching circuit: job requirements on the left, the candidate’s facts on the right' },
+        caption: { zh: '求职引擎在浏览器里匹配虚构的岗位与候选人，每条要求连到一条事实', en: 'The job engine matching a fictional job and candidate in the browser, every requirement wired to a fact' } },
+      { id: 'campus', href: '/projects/ai-campus/live/',
+        alt: { zh: '研究统计程序的清洗结果：排除原因的柱状图与纳入后的统计', en: 'The study’s statistics program: bars for each exclusion reason and the figures for the included rows' },
+        caption: { zh: '研究的统计程序在浏览器里清洗构造样本：排除了哪些，为什么', en: 'The study’s statistics program cleaning a constructed sample in the browser: what was excluded and why' } },
+      { id: 'quota', href: '/projects/quota-deck/live/',
+        alt: { zh: 'QuotaDeck 的额度时间轴：三条额度曲线与耗尽预测虚线', en: 'QuotaDeck’s quota timeline: three quota curves and the dashed exhaustion forecast' },
+        caption: { zh: 'QuotaDeck 的真实界面在模拟时钟上运行：额度消耗与耗尽预测', en: 'QuotaDeck’s real interface on a simulated clock: quota drain and the exhaustion forecast' } },
+    ],
+  },
   livePreview: {
     caption: { zh: '预览截图：真实程序运行后的界面。下方是在你的浏览器里实时运行的版本。', en: 'Preview: the real program after it has run. The live version runs in your browser below.' },
     alt: { zh: '完整版运行后的界面截图', en: 'Screenshot of the live edition after it has run' },

@@ -7,6 +7,7 @@ import ContactBar from '../components/ContactBar.astro';
 import SplitText from '../components/rb/SplitText.astro';
 import StreamText from '../components/StreamText.astro';
 import ReadingRail from '../components/ReadingRail.astro';
+import ProductShots from '../components/ProductShots.astro';
 import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
@@ -45,6 +46,7 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
 
     <section aria-labelledby="b-proj" data-rail="">
       <div class="wrap"><div class="section-head"><h2 id="b-proj"><ScrollReveal text={B.projects[lang]} /></h2></div></div>
+      <ProductShots lang={lang} />
       {dataProjects.map((p, i) => <ProjectRow lang={lang} project={p} index={i} />)}
     </section>
 

@@ -2,16 +2,31 @@
   "career": {
     "file": "/media/live-previews/career.jpg",
     "w": 1440,
-    "h": 1107
+    "h": 1107,
+    "crop": {
+      "file": "/media/live-previews/career-crop.jpg",
+      "w": 1088,
+      "h": 680
+    }
   },
   "campus": {
     "file": "/media/live-previews/campus.jpg",
     "w": 1440,
-    "h": 1169
+    "h": 1169,
+    "crop": {
+      "file": "/media/live-previews/campus-crop.jpg",
+      "w": 1168,
+      "h": 730
+    }
   },
   "quota": {
     "file": "/media/live-previews/quota.jpg",
     "w": 1440,
-    "h": 1275
+    "h": 1275,
+    "crop": {
+      "file": "/media/live-previews/quota-crop.jpg",
+      "w": 976,
+      "h": 610
+    }
   }
 }

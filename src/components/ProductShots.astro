@@ -1,0 +1,27 @@
+---
+import { SITE } from '../data/site';
+import { productShots } from '../data/shots';
+import { localizePath, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<div class="shots wrap">
+  {productShots().map(s => (
+    <figure>
+      <a href={localizePath(s.href, lang)}>
+        <img src={s.img.file} width={s.img.w} height={s.img.h} alt={s.alt[lang]} loading="lazy" decoding="async" />
+      </a>
+      <figcaption><b>{SITE.shots.real[lang]}</b> {s.caption[lang]}</figcaption>
+    </figure>
+  ))}
+</div>
+<style>
+  .shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px clamp(16px, 2vw, 32px); padding-block: 8px 40px; }
+  .shots figure { display: grid; align-content: start; gap: 12px; margin: 0; }
+  .shots a { display: block; overflow: hidden; background: var(--night); }
+  .shots img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.6s var(--ease); }
+  .shots a:hover img, .shots a:focus-visible img { transform: scale(1.03); }
+  .shots figcaption { font-size: 15px; line-height: 1.55; }
+  .shots figcaption b { display: block; margin-bottom: 2px; font-weight: 700; color: var(--red-text); }
+  @media (max-width: 800px) { .shots { grid-template-columns: 1fr; } }
+</style>

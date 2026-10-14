@@ -29,6 +29,7 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
       test.skip(!!isMobile, 'hover only');
       await page.goto(`${prefix}/`);
       const door = page.locator('a.door').nth(0);
+      await door.scrollIntoViewIfNeeded();                   // measure where the hover will find it, not where it starts
       const before = await door.boundingBox();
       await door.hover();
       await page.waitForTimeout(400);

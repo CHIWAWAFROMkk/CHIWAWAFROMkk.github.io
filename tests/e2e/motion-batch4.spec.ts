@@ -19,7 +19,7 @@ test.describe('motion batch 4: the light pages', () => {
   test('home: the doors rise in order after the name and end fully shown', async ({ page, isMobile }) => {
     await page.goto('/');
     const parts = page.locator('.door [data-m-pre]');
-    await expect(parts).toHaveCount(8);
+    await expect(parts).toHaveCount(9);   // index, big word, title and line per door, plus the projects door's screenshots
     await expect(page.locator('.door .door__big.m-in')).toHaveCount(2);
     const delays = await page.locator('.door .door__big').evaluateAll(els => els.map(el => parseInt(getComputedStyle(el).getPropertyValue('--m-d'))));
     expect(delays[1]).toBeGreaterThan(delays[0]);
