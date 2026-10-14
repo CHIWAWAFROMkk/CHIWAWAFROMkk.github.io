@@ -1,0 +1,55 @@
+---
+import HrisBase from '../../layouts/HrisBase.astro';
+import ReadingRail from '../../components/ReadingRail.astro';
+import { HRIS } from '../../data/hris';
+import { fact } from '../../data/facts';
+import { trackPath, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const B = HRIS.brief;
+---
+<HrisBase lang={lang} path="/brief/" title={HRIS.meta.brief.title[lang]} description={HRIS.meta.brief.description[lang]}>
+  <main id="main">
+    <div class="h-mast"><span class="h-mono">1:00</span><h1>{HRIS.nav.brief[lang]}</h1></div>
+    <section class="hb-row" data-rail={B.experience[lang]}>
+      <h2 class="h-mono">{B.experience[lang]}</h2>
+      <div>
+        <p class="hb-org">{fact('F5').text[lang]}</p>
+        <ul class="hb-points">{B.points.map(p => <li>{p[lang]}</li>)}</ul>
+      </div>
+    </section>
+    <section class="hb-row" data-rail={B.education[lang]}>
+      <h2 class="h-mono">{B.education[lang]}</h2>
+      <div class="hb-edu"><p>{fact('F2').text[lang]}</p><p>{fact('F10').text[lang]}</p></div>
+    </section>
+    <section class="hb-row" data-rail={B.skills[lang]}>
+      <h2 class="h-mono">{B.skills[lang]}</h2>
+      <dl class="hb-skills">{HRIS.skills.map(s => <div><dt>{s.group[lang]}</dt><dd>{s.items[lang]}</dd></div>)}</dl>
+    </section>
+    <section class="hb-row" data-rail={B.availability[lang]}>
+      <h2 class="h-mono">{B.availability[lang]}</h2>
+      <div class="hb-close">
+        <p class="hb-avail">{fact('F3').text[lang]}</p>
+        <a class="hb-cta" href={trackPath('hris', '/workbench/', lang)}>{B.toWorkbench[lang]}</a>
+      </div>
+    </section>
+  </main>
+  <ReadingRail lang={lang} />
+</HrisBase>
+<style>
+  .h-mast h1 { padding: 22px 32px; font: 700 24px/1.3 var(--font-body); }
+  .hb-row { display: grid; grid-template-columns: 260px 1fr; border-bottom: var(--hair); }
+  .hb-row > h2 { padding: 36px 24px; border-right: var(--hair); background: var(--card); color: var(--mute); font-weight: 400; }
+  .hb-row > div, .hb-row > dl { padding: 36px 40px; margin: 0; }
+  .hb-org { margin-bottom: 14px; font: 700 20px/1.4 var(--font-body); }
+  .hb-points { display: grid; gap: 10px; max-width: 42em; padding-left: 18px; }
+  .hb-edu { display: grid; gap: 6px; }
+  .hb-skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .hb-skills dt { margin-bottom: 8px; color: var(--red-text); font-family: var(--font-mono); font-size: 13px; }
+  .hb-skills dd { margin: 0; color: var(--mute); font-size: 15px; }
+  .hb-close { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+  .hb-avail { font: 700 18px/1.4 var(--font-body); }
+  .hb-cta { padding: 12px 18px; background: var(--ink); color: var(--paper); text-decoration: none; }
+  .hb-cta:hover, .hb-cta:focus-visible { background: var(--red-fill); color: var(--on-accent); }
+  @media (max-width: 1024px) { .hb-row, .hb-skills { grid-template-columns: 1fr; } .hb-row > h2 { border-right: 0; border-bottom: var(--hair); padding: 16px 20px; } .hb-row > div, .hb-row > dl { padding: 24px 20px; } }
+</style>

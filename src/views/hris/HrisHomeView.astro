@@ -1,15 +1,14 @@
 ---
 import HrisBase from '../../layouts/HrisBase.astro';
 import Topology from '../../components/hris/Topology.astro';
+import HrisWorks from '../../components/hris/HrisWorks.astro';
 import { HRIS } from '../../data/hris';
 import { fact } from '../../data/facts';
-import { trackProjects } from '../../data/tracks';
 import { trackPath, type Lang } from '../../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const H = HRIS.hero;
 const L = (p: string) => trackPath('hris', p, lang);
-const works = trackProjects('hris');
 // The bold half breaks after its comma, as on the V3 cover: 将非标人事流程， / 重构为 + the light half.
 const [lead1, lead2] = H.title[lang].split(/(?<=，)/);
 ---
@@ -36,21 +35,7 @@ const [lead1, lead2] = H.title[lang].split(/(?<=，)/);
       ))}
     </section>
     <div class="h-mast"><span class="h-mono">{lang === 'zh' ? '项目' : 'Projects'}</span><h2>{HRIS.projects.title[lang]}</h2></div>
-    <section class="h-works">
-      {works.map(p => (
-        <article class="h-work">
-          <div class="h-work__meta h-mono">{p.status[lang]}</div>
-          <div class="h-work__body">
-            <a class="h-work__title" href={L(p.href)}>{p.title[lang]}</a>
-            <p>{p.did[lang]}</p>
-          </div>
-          <div class="h-work__act">
-            <a class="h-act" href={L(p.href)}>{lang === 'zh' ? '看过程与取舍' : 'Process & trade-offs'} →</a>
-            {p.live && <a class="h-act h-act--fill" href={L(p.live.href)}>{lang === 'zh' ? '在浏览器里运行' : 'Run it in your browser'} <span aria-hidden="true">↗</span></a>}
-          </div>
-        </article>
-      ))}
-    </section>
+    <HrisWorks lang={lang} />
   </main>
 </HrisBase>
 <style>
@@ -72,21 +57,9 @@ const [lead1, lead2] = H.title[lang].split(/(?<=，)/);
   .h-ledger__item:last-child { border-right: 0; }
   .h-ledger__num { font-size: clamp(36px, 3.6vw, 52px); font-weight: 500; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
   .h-ledger__cap { color: var(--mute); font-size: 14px; }
-  .h-work { display: grid; grid-template-columns: 260px 1fr 240px; border-bottom: var(--hair); transition: background-color 0.25s var(--ease); }
-  .h-work:hover { background: var(--card); }
-  .h-work > * { padding: 32px 24px; border-right: var(--hair); }
-  .h-work > :last-child { border-right: 0; }
-  .h-work__meta { color: var(--mute); }
-  .h-work__title { display: block; margin-bottom: 10px; font: 700 21px/1.35 var(--font-body); text-decoration: none; }
-  .h-work__title:hover { color: var(--red-text); }
-  .h-work__body p { max-width: 38em; color: var(--mute); font-size: 15px; }
-  .h-work__act { display: grid; align-content: center; gap: 10px; }
-  .h-act { display: flex; justify-content: space-between; padding: 10px 14px; border: var(--rule); font-size: 14px; text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
-  .h-act--fill { background: var(--ink); color: var(--paper); }
-  .h-act:hover, .h-act:focus-visible { background: var(--red-fill); border-color: var(--red-fill); color: var(--on-accent); }
   @media (max-width: 1024px) {
-    .h-hero, .h-work { grid-template-columns: 1fr; }
-    .h-hero__copy, .h-work > * { border-right: 0; border-bottom: var(--hair); }
+    .h-hero { grid-template-columns: 1fr; }
+    .h-hero__copy { border-right: 0; border-bottom: var(--hair); }
     .h-hero__copy { padding: 36px 20px; }
     .h-ledger { grid-template-columns: 1fr 1fr; }
     .h-ledger__item:nth-child(2) { border-right: 0; }
