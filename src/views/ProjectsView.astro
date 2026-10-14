@@ -6,11 +6,12 @@ import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import SpotlightCard from '../components/rb/SpotlightCard.astro';
 import { SITE } from '../data/site';
 import { filmEntries } from '../data/film-zone';
+import { trackProjects } from '../data/tracks';
 import { localizePath, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const P = SITE.pages.projects;
-const data = SITE.projects.filter(p => p.line === 'data');
+const data = trackProjects('ai');
 const films = filmEntries(lang);
 ---
 <Base lang={lang} path="/projects/" title={`${P.title[lang]} · ${SITE.name[lang]}`} description={P.description[lang]}>

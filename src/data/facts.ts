@@ -17,7 +17,7 @@ export interface Fact {
 const RESUME = '《何彦钧_通用基准参考简历》2026-09-19';
 
 export const FACTS: Record<FactId, Fact> = {
-  F1: { id: 'F1', text: { zh: '设计并验收 AI 工作流与工具：实习中把员工档案补录做成在公司环境运行的 AI 工作流；课余借助 AI 编程工具，把产品想法做成能在浏览器里运行的原型。', en: 'I design and sign off AI workflows and tools: during my internship I turned employee-records backfill into an AI workflow that ran at the company, and on my own time I use AI coding tools to turn product ideas into prototypes that run in the browser.' }, scope: '自我介绍（AI 产品主线）', source: '用户 2026-10-14 选择「AI 产品」主线；措辞为草稿，上线前待用户逐字确认', confirmed: '2026-10-14', public: true },
+  F1: { id: 'F1', text: { zh: '设计并验收 AI 工作流与工具：实习中把员工档案补录做成在公司环境运行的 AI 工作流；课余借助 AI 编程工具，把产品想法做成能在浏览器里运行的原型。', en: 'I design and sign off AI workflows and tools: during my internship I turned employee-records backfill into an AI workflow that ran at the company, and on my own time I use AI coding tools to turn product ideas into prototypes that run in the browser.' }, scope: '自我介绍（AI 产品主线）', source: '用户 2026-10-14 选择「AI 产品」主线；文字为草稿，上线前待用户逐字确认', confirmed: '2026-10-14', public: true },
   F2: { id: 'F2', text: { zh: '上海立信会计金融学院 · 行政管理本科 · 2027 届', en: 'Shanghai Lixin University of Accounting and Finance · BA in Public Administration · Class of 2027' }, scope: '教育', source: RESUME, confirmed: '2026-09-19', public: true },
   F3: { id: 'F3', text: { zh: '可立即到岗 · 每周 5 天 · 可连续实习 3 个月以上', en: 'Available now · 5 days a week · 3+ months' }, scope: '求职条件', source: '用户（本次对话，更正此前的"4–5 天"，与中文简历一致）', confirmed: '2026-09-28', public: true },
   F4: { id: 'F4', text: { zh: '专业排名前 5%（获校级奖学金）', en: 'Top 5% of major (university scholarship)' }, scope: '教育；用户 2026-09-28 要求不在网站和英文简历上展示', source: RESUME, confirmed: '2026-09-28', public: false },

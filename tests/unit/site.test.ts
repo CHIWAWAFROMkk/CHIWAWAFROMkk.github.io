@@ -39,4 +39,10 @@ describe('SITE copy', () => {
   it('never claims the unsupported 70% metric', () => {
     expect(strings(SITE).join('\n')).not.toContain('70%');
   });
+
+  it('the CSV tool keeps its page but is not on the AI track', async () => {
+    const { trackProjects } = await import('../../src/data/tracks');
+    expect(SITE.projects.some(p => p.slug === 'stock-data')).toBe(true);
+    expect(trackProjects('ai').some(p => p.slug === 'stock-data')).toBe(false);
+  });
 });

@@ -1,5 +1,6 @@
 import type { Bi } from '../i18n';
 import { FILM_SHOTS } from './film';
+import type { LiveId } from './live-size';
 
 export interface ProjectEntry {
   slug: string;
@@ -11,6 +12,8 @@ export interface ProjectEntry {
   status: Bi;
   /** Illustration shown beside the row on the projects index (desktop hover / focus). */
   preview?: string;
+  /** The project's live edition, if it has one: a second button on its card. */
+  live?: { href: string; size: LiveId };
 }
 
 const project = (p: Omit<ProjectEntry, 'href'>): ProjectEntry => ({ ...p, href: `/projects/${p.slug}/` });
@@ -69,41 +72,29 @@ export const SITE = {
   },
   projects: [
     project({ slug: 'hris-workflow', line: 'data', preview: '/assets/editorial/hris-flow.svg', inBrief: true,
-      title: { zh: '员工电子档案补录', en: 'HR Records Backfill' },
-      did: { zh: '核查约 2000 名员工的档案主数据，并把补录流程拆成可审核的工作流', en: 'Reviewed master records for about 2000 employees and turned the backfill into a reviewable workflow' },
+      title: { zh: '员工档案补录 AI 工作流', en: 'HR Records Backfill — AI Workflow' },
+      did: { zh: '核查约 2000 名员工的档案主数据；把补录迭代成三版 AI 工作流，最终版基于 Copilot + Power Automate，在公司批准的环境中运行', en: 'Reviewed master records for about 2000 employees and iterated the backfill into an AI workflow over three versions; the final one, on Copilot + Power Automate, ran in the company-approved environment' },
       status: { zh: '已结束 · 最终版已在公司环境运行', en: 'Finished · final version ran at the company' } }),
     project({ slug: 'campus-delivery', line: 'data', preview: '/assets/editorial/delivery-relations.svg', inBrief: true,
-      title: { zh: '校园外卖 SQL 工作台', en: 'Campus Delivery SQL Lab' },
-      did: { zh: '个人负责的课程设计：8 张业务表、事务与复合外键；可在浏览器里运行的工作台借助 AI 编程工具开发', en: 'A course project I was responsible for: 8 business tables with transactions and composite keys; the in-browser lab was built with AI coding tools' },
-      status: { zh: '课程设计 · 可在线运行', en: 'Course project · runs online' } }),
-    project({ slug: 'campus-delivery/insights', line: 'data', preview: '/assets/previews/campus-insights.svg', inBrief: false,
-      title: { zh: '校园外卖经营分析（进阶版）', en: 'Campus Delivery Insights (advanced)' },
-      did: { zh: '在课程设计数据库上扩展出一个学期的合成数据：滚动读五个经营问题的答案，再在驾驶舱里自己筛选验证', en: 'A synthetic term built on the course-project database: scroll through five business questions, then filter the dashboard yourself' },
-      status: { zh: '进阶版 · 借助 AI 编程工具开发 · 合成数据', en: 'Advanced · built with AI coding tools · synthetic data' } }),
+      live: { href: '/projects/campus-delivery/insights/', size: 'insights' },
+      title: { zh: '校园外卖：SQL 工作台与经营分析', en: 'Campus Delivery: SQL Lab & Insights' },
+      did: { zh: '个人负责的课程设计：8 张业务表、事务与复合外键；在同一套表上扩展一个学期的合成数据，回答五个经营问题。浏览器里的工作台与分析页借助 AI 编程工具开发', en: 'A course project I was responsible for: 8 business tables with transactions and composite keys, extended with a synthetic term of orders to answer five business questions. The in-browser lab and the analysis were built with AI coding tools' },
+      status: { zh: '课程设计 · 分析页为合成数据', en: 'Course project · analysis uses synthetic data' } }),
     project({ slug: 'ai-career', line: 'data', preview: '/assets/editorial/career-evidence.svg', inBrief: true,
+      live: { href: '/projects/ai-career/live/', size: 'career' },
       title: { zh: '个人求职 Agent', en: 'Personal Job Agent' },
       did: { zh: '借助 AI 编程工具开发的求职辅助工具，每条匹配判断都能追溯到事实证据', en: 'A job-search helper built with AI coding tools; every match traces back to a fact' },
       status: { zh: '个人项目 · 2026.08 至今', en: 'Personal project · 2026.08 – present' } }),
-    project({ slug: 'ai-career/live', line: 'data', preview: '/assets/editorial/career-evidence.svg', inBrief: false,
-      title: { zh: '个人求职 Agent（完整版）', en: 'Personal Job Agent (live edition)' },
-      did: { zh: '在浏览器里运行公开版匹配引擎：改职位描述和候选人条件，当场重算', en: 'The public matching engine in your browser: edit the job description and the candidate, and it recomputes' },
-      status: { zh: '完整版 · 在浏览器里运行', en: 'Live edition · runs in your browser' } }),
     project({ slug: 'quota-deck', line: 'data', preview: '/assets/editorial/quota-pools.svg', inBrief: true,
+      live: { href: '/projects/quota-deck/live/', size: 'quota' },
       title: { zh: 'QuotaDeck', en: 'QuotaDeck' },
       did: { zh: '借助 AI 编程工具开发的桌面小工具，集中查看多家 AI 服务的额度', en: 'A desktop tool, built with AI coding tools, that shows AI service quotas in one place' },
       status: { zh: '个人项目 · MIT 开源', en: 'Personal project · MIT licensed' } }),
-    project({ slug: 'quota-deck/live', line: 'data', preview: '/assets/editorial/quota-pools.svg', inBrief: false,
-      title: { zh: 'QuotaDeck（完整版）', en: 'QuotaDeck (live edition)' },
-      did: { zh: '真实界面在模拟时钟上运行：看额度消耗、重置与耗尽预测', en: 'The real interface on a simulated clock: quota drain, resets and the exhaustion forecast' },
-      status: { zh: '完整版 · 在浏览器里运行', en: 'Live edition · runs in your browser' } }),
     project({ slug: 'ai-campus', line: 'data', preview: '/assets/editorial/campus-method.svg', inBrief: true,
+      live: { href: '/projects/ai-campus/live/', size: 'campus' },
       title: { zh: 'AI 校园应用研究', en: 'AI on Campus — Study' },
       did: { zh: '项目组长：设计问卷、清洗数据并做交叉统计，获校级大学生创新创业项目一等奖', en: 'Team lead: survey design, data cleaning and cross-tab analysis; First Prize, university student innovation programme' },
       status: { zh: '大创项目 · 2024.03—2024.07', en: 'Student research · 2024.03—2024.07' } }),
-    project({ slug: 'ai-campus/live', line: 'data', preview: '/assets/editorial/campus-method.svg', inBrief: false,
-      title: { zh: 'AI 校园应用研究（完整版）', en: 'AI on Campus — Study (live edition)' },
-      did: { zh: '研究自己的统计程序在浏览器里运行：清洗、统计与单元测试', en: 'The study\'s own statistics program in your browser: cleaning, statistics and unit tests' },
-      status: { zh: '完整版 · 在浏览器里运行', en: 'Live edition · runs in your browser' } }),
     project({ slug: 'stock-data', line: 'data', preview: '/assets/editorial/csv-process.svg', inBrief: false,
       title: { zh: 'CSV 数据分析工具', en: 'CSV Analysis Tool' },
       did: { zh: '上传表格即可检查缺失与重复、查看统计与分布', en: 'Upload a table to check gaps and duplicates and see its statistics' },

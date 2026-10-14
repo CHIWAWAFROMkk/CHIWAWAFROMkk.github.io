@@ -10,11 +10,12 @@ import { SITE } from '../data/site';
 import { fact } from '../data/facts';
 import { localizePath, type Lang } from '../i18n';
 import { filmEntries } from '../data/film-zone';
+import { trackProjects } from '../data/tracks';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const B = SITE.brief;
 const meta = SITE.pages.brief;
-const dataProjects = SITE.projects.filter(p => p.inBrief && p.line === 'data');
+const dataProjects = trackProjects('ai').filter(p => p.inBrief);
 const films = filmEntries(lang).filter(f => f.project.inBrief);
 ---
 <Base lang={lang} path="/brief/" title={meta.title[lang]} description={meta.description[lang]}>

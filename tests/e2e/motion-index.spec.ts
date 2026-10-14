@@ -13,9 +13,9 @@ test('rows slide in as the list scrolls into view', async ({ page }) => {
 test('hovering a row shows its preview beside the pointer', async ({ page, isMobile }) => {
   test.skip(!!isMobile, 'hover only');
   await page.goto(INDEX);
-  const row = page.locator('a.prow[href="/projects/campus-delivery/insights/"]');
+  const row = page.locator('a.prow[href="/projects/campus-delivery/"]');
   const preview = row.locator('.prow__preview');
-  await expect(preview).toHaveAttribute('src', '/assets/previews/campus-insights.svg');
+  await expect(preview).toHaveAttribute('src', '/assets/editorial/delivery-relations.svg');
   await row.hover({ position: { x: 200, y: 20 } });
   await expect.poll(() => preview.evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
   const x = await row.evaluate(el => getComputedStyle(el).getPropertyValue('--px'));
@@ -25,7 +25,7 @@ test('hovering a row shows its preview beside the pointer', async ({ page, isMob
 test('keyboard focus shows the preview too', async ({ page, isMobile }) => {
   test.skip(!!isMobile, 'hover only');
   await page.goto(INDEX);
-  const row = page.locator('a.prow[href="/projects/stock-data/"]');
+  const row = page.locator('a.prow[href="/projects/ai-career/"]');
   await row.focus();
   await expect.poll(() => row.locator('.prow__preview').evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
 });

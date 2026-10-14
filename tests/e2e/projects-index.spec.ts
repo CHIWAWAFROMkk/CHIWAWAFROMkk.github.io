@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { SITE } from '../../src/data/site';
+import { trackProjects } from '../../src/data/tracks';
 import { skipIntro, noHorizontalOverflow } from './helpers';
 
 for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
   test(`projects index (${lang}) lists every data project, then the film zone`, async ({ page }) => {
     await page.goto(`${prefix}/projects/`);
-    const data = SITE.projects.filter(p => p.line === 'data').map(p => `${prefix}${p.href}`);
+    const data = trackProjects('ai').map(p => `${prefix}${p.href}`);
     expect(await page.locator('a.prow').evaluateAll(as => as.map(a => a.getAttribute('href')))).toEqual(data);
     const film = page.locator('.night-zone a[href$="/projects/mais-je-taime/"]');
     await expect(film).toBeVisible();

@@ -6,13 +6,15 @@ import { countableSegments } from '../scripts/motion/countable';
 import SplitText from '../components/rb/SplitText.astro';
 import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import { SITE } from '../data/site';
+import { trackProjects } from '../data/tracks';
 import { localizePath, type Lang, type Bi } from '../i18n';
 
 export interface Summary { task: Bi; mine: Bi; tools: Bi; evidence: Bi; status: Bi }
 interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean; motion?: boolean; deferTitle?: boolean }
 const { lang, slug, title, lead, tags, summary, description, night = false, motion = true, deferTitle = false } = Astro.props;
 const path = `/projects/${slug}/`;
-const order = SITE.projects;
+// Pager order is the main site's order, then the films; the CSV tool and the live editions sit outside it.
+const order = [...trackProjects('ai'), ...SITE.projects.filter(p => p.line === 'film')];
 const i = order.findIndex(p => p.slug === slug);
 const prev = i > 0 ? order[i - 1] : undefined;
 const next = i >= 0 && i < order.length - 1 ? order[i + 1] : undefined;
