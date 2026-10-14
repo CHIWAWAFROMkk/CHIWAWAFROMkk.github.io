@@ -1,0 +1,18 @@
+---
+interface Props { text: string }
+const { text } = Astro.props;
+---
+<span class="stream" data-stream>{text}</span>
+<script>
+  import { initStream } from '../scripts/motion/stream-dom';
+  for (const el of document.querySelectorAll<HTMLElement>('[data-stream]:not(.is-armed):not(.is-on)')) initStream(el);
+</script>
+<style>
+  /* Held only while scripts may still arm it; html.motion-timeout (2.5 s) always lets it show. */
+  :global(html.motion-ok:not(.motion-timeout)) .stream:not(.is-armed):not(.is-on) { opacity: 0; }
+  .stream.is-armed :global(.stream__c) { opacity: 0; }
+  .stream.is-armed.is-on :global(.stream__c) { opacity: 1; transition: opacity 0.35s var(--ease) var(--sd, 0ms); }
+  :global(html.motion-timeout) .stream.is-armed:not(.is-on) :global(.stream__c) { opacity: 1; }
+  .stream :global(.stream__caret)::after { content: '▍'; margin-left: 2px; color: var(--red); animation: stream-caret 0.9s steps(1) infinite; }
+  @keyframes stream-caret { 50% { opacity: 0; } }
+</style>

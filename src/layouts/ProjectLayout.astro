@@ -4,7 +4,7 @@ import SectionReveals from '../components/SectionReveals.astro';
 import ProjectMotion from '../components/ProjectMotion.astro';
 import { countableSegments } from '../scripts/motion/countable';
 import SplitText from '../components/rb/SplitText.astro';
-import ScrollReveal from '../components/rb/ScrollReveal.astro';
+import StreamText from '../components/StreamText.astro';
 import { SITE } from '../data/site';
 import { trackProjects } from '../data/tracks';
 import { localizePath, type Lang, type Bi } from '../i18n';
@@ -32,7 +32,7 @@ const rows: [Bi, Bi, Bi?][] = [
     <header class="p-head wrap">
       <ul class="p-tags">{tags.map(t => <li>{t[lang]}</li>)}</ul>
       <h1 class="p-title">{motion ? <SplitText text={title[lang]} deferUntilVisible={deferTitle} /> : title[lang]}</h1>
-      <p class="p-lead">{motion ? <ScrollReveal text={lead[lang]} /> : lead[lang]}</p>
+      <p class="p-lead">{motion ? <StreamText text={lead[lang]} /> : lead[lang]}</p>
     </header>
     <section class="p-summary wrap" aria-labelledby="p-summary-h">
       <h2 id="p-summary-h" class="label">{S.heading[lang]}</h2>

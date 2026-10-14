@@ -5,6 +5,7 @@ import ProjectRow from '../components/ProjectRow.astro';
 import FilmReel from '../components/FilmReel.astro';
 import ContactBar from '../components/ContactBar.astro';
 import SplitText from '../components/rb/SplitText.astro';
+import StreamText from '../components/StreamText.astro';
 import ScrollReveal from '../components/rb/ScrollReveal.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
@@ -23,7 +24,7 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
     <header class="b-id wrap">
       <h1 class="b-id__name"><SplitText text={SITE.name[lang]} /></h1>
       <div class="b-id__text">
-        <p class="b-id__line">{fact('F1').text[lang]}</p>
+        <p class="b-id__line"><StreamText text={fact('F1').text[lang]} /></p>
         <p class="b-id__avail">{fact('F3').text[lang]}</p>
       </div>
     </header>

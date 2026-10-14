@@ -5,6 +5,7 @@ import Gate from '../components/Gate.astro';
 import ContactBar from '../components/ContactBar.astro';
 import Intro from '../components/Intro.astro';
 import AgentTrace from '../components/AgentTrace.astro';
+import StreamText from '../components/StreamText.astro';
 import SplitText from '../components/rb/SplitText.astro';
 import { SITE } from '../data/site';
 import { fact } from '../data/facts';
@@ -21,7 +22,7 @@ const meta = SITE.pages.home;
         <h1 class="home__name"><SplitText text={SITE.name[lang]} /></h1>
         <LangSwitch lang={lang} path="/" />
       </div>
-      <p class="home__line">{fact('F1').text[lang]}</p>
+      <p class="home__line"><StreamText text={fact('F1').text[lang]} /></p>
       <p class="home__meta">{fact('F2').text[lang]}</p>
       <p class="home__avail">{fact('F3').text[lang]}</p>
     </header>
