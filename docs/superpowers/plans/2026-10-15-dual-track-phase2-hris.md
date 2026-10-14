@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 建一套只通过 HR 版简历链接进入的 `/hris/` 站：V3 视觉（钴蓝 + 森林绿、1px 结构线、深浅色切换），首页、一分钟版、项目列表、5 个项目的详情与完整版、流程终端，中英双语，动效为"治理收敛"。
+**Goal:** 建一套只通过 HR 版简历链接进入的 `/hris/` 站：以 V3 开场封面为准的视觉（默认深色：近黑、暖白、灰 + 浅钴蓝一个强调色；1px 结构线；可切换浅色），首页、一分钟版、项目列表、5 个项目的详情与完整版、流程终端，中英双语，动效为"治理收敛"。
 
 **Architecture:** 新的 `track = 'hris'` 沿用第一期的结构：页面文件一行调用 View，View 多接收 `track`，`ProjectLayout` 按 track 选 `Base` 或新的 `HrisBase` 外壳，HRIS 外壳下用 `hris.css` 把同一套详情页结构换成 V3 样子；站内链接一律经 `trackPath()` 生成。HRIS 颜色只定义在 `src/data/tokens.ts`，由 `hrisThemeCss()` 生成浅/深两套变量。拓扑与稽核终端都是"纯函数 + DOM 驱动"两层。
 
@@ -22,7 +22,8 @@
 - 实习职位统一「项目专员（HR数字化方向）」（F5）。
 - **HRIS 字体**：用系统字体栈（与 V3 一致），不加载网站的 Noto Sans SC 子集与 Barlow；等宽只用于编号、状态码等 V3 的结构标签。
 - 动效档位语义同第一期（full / gentle / lite / off，`localStorage['hyj-motion']`）；HRIS 拓扑 full 约 2000 点、lite 约 600 点、gentle 约 600 点慢速且无指针互动、off 静态；任何动效不遮挡正文超过 2.5 秒。
-- 深浅色：`localStorage['hyj-hris-theme']`（`light` / `dark`），没有选择时跟随系统；深色下演示组件放在浅色纸底面板里。
+- 配色（用户 2026-10-15 决定）：以 V3 开场封面为准，**默认深色**——底 `#0B0C0E`、正文暖白 `#F4F3EF`、灰 `#5F6368`/`#9AA0A6`、唯一彩色为浅钴蓝 `#8AB4F8`；状态只用明暗区分：通过 = 暖白实心、人工复核 = 钴蓝、缺件 = 灰色空心；不用绿色、琥珀色。浅色是访客可选的切换（纸色底、近黑字、深钴蓝 `#174EA6`）。`localStorage['hyj-hris-theme']`（`light` / `dark`），没有选择时为深色（不跟随系统）；演示组件在深色下放在浅色纸底面板里。
+- 大标题沿用封面手法：前半句粗体暖白，后半句细体灰（`HRIS.hero.title` + `HRIS.hero.titleSoft`）。
 - 命令：`npm test`、`npx vitest run <file>`、`npm run e2e`、`npx playwright test <file>`（Git Bash）。
 - 新文案（HRIS 首屏介绍、技能、一分钟版要点、卡片、流程终端说明）都是草稿，Task 10 加入待确认清单，确认前不上线。
 
@@ -210,7 +211,8 @@ export const HRIS = {
   },
   intro: { top: { zh: '何彦钧 · HRIS 与人力数据', en: 'Yanjun He · HRIS & people data' }, lines: ['HR DATA', 'GOVERNANCE.'], skip: { zh: '跳过', en: 'Skip' } },
   hero: {
-    title: { zh: '将非标人事流程，重构为可稽核的数据资产。', en: 'Turning non-standard HR processes into data you can audit.' },
+    title: { zh: '将非标人事流程，重构为', en: 'Turning non-standard HR processes into' },
+    titleSoft: { zh: '可稽核的数据资产。', en: 'data you can audit.' },
     lead: { zh: '丹纳赫实习期间，核查约 2000 名员工的档案主数据；把档案补录工作流迭代三版，最终版基于 Copilot + Power Automate，在公司批准的环境中运行，并交接给 mentor。', en: 'During my internship at Danaher I reviewed master records for about 2000 employees and iterated the records backfill into three versions; the final one, on Copilot + Power Automate, ran in the company-approved environment and was handed over to my mentor.' },
     doorBrief: { code: '1:00', label: { zh: '一分钟了解我', en: 'Know me in a minute' } },
     doorWorkbench: { code: 'LIVE', label: { zh: '打开档案补录流程终端', en: 'Open the backfill workflow terminal' } },
@@ -334,19 +336,19 @@ import { HRIS_COLORS, hrisThemeCss, contrast } from '../../src/data/tokens';
 for (const theme of ['light', 'dark'] as const) {
   const c = HRIS_COLORS[theme];
   describe(`HRIS ${theme} palette`, () => {
-    it('body text and secondary text are readable on paper and on cards', () => {
+    it('body text, secondary text and the accent are readable on paper and on cards', () => {
       for (const bg of [c.paper, c.card]) {
         expect(contrast(c.ink, bg)).toBeGreaterThanOrEqual(7);
         expect(contrast(c.mute, bg)).toBeGreaterThanOrEqual(4.5);
         expect(contrast(c.accent, bg)).toBeGreaterThanOrEqual(4.5);
       }
     });
-    it('status colours read as text on paper', () => {
-      expect(contrast(c.verified, c.paper)).toBeGreaterThanOrEqual(4.5);
-      expect(contrast(c.warn, c.paper)).toBeGreaterThanOrEqual(4.5);
+    it('the dim grey works for large light-weight type and hollow marks (≥ 3:1)', () => {
+      expect(contrast(c.dim, c.paper)).toBeGreaterThanOrEqual(3);
+      expect(contrast(c.dim, c.card)).toBeGreaterThanOrEqual(3);
     });
-    it('the filled button carries white text', () => {
-      expect(contrast('#ffffff', c.accentFill)).toBeGreaterThanOrEqual(4.5);
+    it('the filled button carries its own text colour', () => {
+      expect(contrast(c.onAccent, c.accentFill)).toBeGreaterThanOrEqual(4.5);
     });
     it('structure lines stay visible (≥ 1.3:1 on paper)', () => {
       expect(contrast(c.line, c.paper)).toBeGreaterThanOrEqual(1.3);
@@ -354,12 +356,21 @@ for (const theme of ['light', 'dark'] as const) {
   });
 }
 
+it('one hue only: apart from the accent, every colour is a grey', () => {
+  const sat = (hex: string) => { const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return Math.max(r, g, b) - Math.min(r, g, b); };
+  for (const theme of ['light', 'dark'] as const) {
+    const { accent, accentFill, ...rest } = HRIS_COLORS[theme];
+    void accent; void accentFill;
+    for (const [k, v] of Object.entries(rest)) expect(sat(v), `${theme}.${k}`).toBeLessThanOrEqual(16);
+  }
+});
+
 describe('hrisThemeCss', () => {
   it('writes both palettes onto the site variables the shared components read', () => {
     const css = hrisThemeCss();
-    for (const v of ['--paper', '--ink', '--mute', '--red', '--red-text', '--red-fill', '--night', '--night-fg', '--night-mute', '--card', '--line', '--verified', '--warn', '--font-body', '--font-display', '--font-cjk-bold', '--font-mono']) expect(css, v).toContain(`${v}:`);
-    expect(css).toContain("html[data-track='hris'][data-theme='dark']");
-    expect(css).toContain(HRIS_COLORS.dark.paper);
+    for (const v of ['--paper', '--ink', '--mute', '--dim', '--red', '--red-text', '--red-fill', '--on-accent', '--night', '--night-fg', '--night-mute', '--card', '--line', '--font-body', '--font-display', '--font-cjk-bold', '--font-mono']) expect(css, v).toContain(`${v}:`);
+    expect(css.indexOf(HRIS_COLORS.dark.paper)).toBeLessThan(css.indexOf("[data-theme='light']"));   // dark is the base
+    expect(css).toContain("html[data-track='hris'][data-theme='light']");
   });
 });
 ```
@@ -374,12 +385,14 @@ Expected：FAIL（`HRIS_COLORS` 不存在）。
 `src/data/tokens.ts` 末尾加：
 
 ```ts
-export interface HrisPalette { paper: string; card: string; ink: string; mute: string; accent: string; accentFill: string; verified: string; warn: string; line: string; night: string; nightFg: string; nightMute: string }
+export interface HrisPalette { paper: string; card: string; ink: string; mute: string; dim: string; accent: string; accentFill: string; onAccent: string; line: string; night: string; nightFg: string; nightMute: string }
 
-/** The HRIS track's V3 palette (Gemini V3: warm stone paper, cobalt, clinical green), light and dark. */
+/** The HRIS track's palette, taken from the V3 intro cover (user, 2026-10-15): near-black, warm white, two greys and one
+ *  light cobalt. Dark is the default; light is the visitor's alternative. Status reads by tone, not by hue:
+ *  verified = ink (solid), manual review = accent, missing = dim (hollow). */
 export const HRIS_COLORS: { light: HrisPalette; dark: HrisPalette } = {
-  light: { paper: '#f4f3ef', card: '#faf9f6', ink: '#111214', mute: '#52555a', accent: '#174ea6', accentFill: '#174ea6', verified: '#0f5223', warn: '#8a4600', line: '#c9c6bc', night: '#0b0c0e', nightFg: '#edeff2', nightMute: '#9aa0a6' },
-  dark: { paper: '#0b0c0e', card: '#121417', ink: '#edeff2', mute: '#9aa0a6', accent: '#8ab4f8', accentFill: '#1a5fc8', verified: '#81c995', warn: '#fdd663', line: '#2e323a', night: '#050607', nightFg: '#edeff2', nightMute: '#9aa0a6' },
+  dark: { paper: '#0b0c0e', card: '#111317', ink: '#f4f3ef', mute: '#9aa0a6', dim: '#6b7076', accent: '#8ab4f8', accentFill: '#8ab4f8', onAccent: '#0b0c0e', line: '#2a2e36', night: '#050607', nightFg: '#f4f3ef', nightMute: '#9aa0a6' },
+  light: { paper: '#f4f3ef', card: '#faf9f6', ink: '#0b0c0e', mute: '#52555a', dim: '#84888e', accent: '#174ea6', accentFill: '#174ea6', onAccent: '#ffffff', line: '#c9c6bc', night: '#0b0c0e', nightFg: '#f4f3ef', nightMute: '#9aa0a6' },
 };
 
 const HRIS_FONTS = [
@@ -392,16 +405,16 @@ const HRIS_FONTS = [
 /** Both HRIS palettes as CSS on the site's own variable names, so shared components (cards, demos, prose) pick them up. */
 export function hrisThemeCss(): string {
   const vars = (c: HrisPalette) => [
-    `--paper:${c.paper}`, `--card:${c.card}`, `--ink:${c.ink}`, `--mute:${c.mute}`, `--red:${c.accent}`, `--red-text:${c.accent}`,
-    `--red-fill:${c.accentFill}`, `--verified:${c.verified}`, `--warn:${c.warn}`, `--line:${c.line}`, `--night:${c.night}`,
+    `--paper:${c.paper}`, `--card:${c.card}`, `--ink:${c.ink}`, `--mute:${c.mute}`, `--dim:${c.dim}`, `--red:${c.accent}`, `--red-text:${c.accent}`,
+    `--red-fill:${c.accentFill}`, `--on-accent:${c.onAccent}`, `--line:${c.line}`, `--night:${c.night}`,
     `--night-fg:${c.nightFg}`, `--night-mute:${c.nightMute}`, `--rule:1px solid ${c.ink}`, `--hair:1px solid ${c.line}`,
   ].join(';');
-  return `html[data-track='hris']{${vars(HRIS_COLORS.light)};${HRIS_FONTS.join(';')}}`
-    + `html[data-track='hris'][data-theme='dark']{${vars(HRIS_COLORS.dark)}}`;
+  return `html[data-track='hris']{${vars(HRIS_COLORS.dark)};${HRIS_FONTS.join(';')}}`
+    + `html[data-track='hris'][data-theme='light']{${vars(HRIS_COLORS.light)}}`;
 }
 ```
 
-（`warn` 浅色取 `#8a4600`、`line` 取 `#c9c6bc`、深色 `accentFill` 取 `#1a5fc8`：是 V3 原色在对比度测试下的最小调整，V3 的 `#B05A00` 与 `#D6D4CC` 在纸色上不达标。）
+（浅色 `line` 取 `#c9c6bc`、深色 `line` 取 `#2a2e36`、深色 `dim` 取 `#6b7076`：是 V3 原色在对比度测试下的最小调整。）
 
 - [ ] **Step 4: 跑单元测试**
 
@@ -431,7 +444,7 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
     await motionOff(page);
     await page.goto(`${prefix}/hris/`);
     expect(await page.evaluate(() => document.documentElement.dataset.track)).toBe('hris');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(HRIS.hero.title[lang]);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(HRIS.hero.title[lang] + HRIS.hero.titleSoft[lang]);
     await expect(page.locator('.h-lead')).toHaveText(HRIS.hero.lead[lang]);
     await expect(page.locator('.h-avail')).toHaveText(fact('F3').text[lang]);
     await expect(page.locator('.h-ledger__num')).toHaveText(HRIS.ledger.map(l => l.figure));
@@ -451,11 +464,12 @@ test('HRIS pages use system fonts, not the main site\'s web fonts', async ({ pag
   expect(fonts).toEqual([]);
 });
 
-test('theme: follows the system, the switch flips it and remembers', async ({ page }) => {
+test('theme: dark by default even on a light system; the switch flips it and remembers', async ({ page }) => {
   await skipHrisIntro(page);
-  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/hris/');
   expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(11, 12, 14)');
   await page.locator('[data-theme-toggle]').click();
   expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('light');
   await page.reload();
@@ -466,11 +480,10 @@ test('storage blocked: theme still toggles on this page', async ({ page }) => {
   await page.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } }); });
   const errors: string[] = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/hris/');
   await page.keyboard.press('Escape');
   await page.locator('[data-theme-toggle]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('light');
   expect(errors).toEqual([]);
 });
 
@@ -509,7 +522,7 @@ const { lang, path, title, description } = Astro.props;
 const origin = 'https://chiwawafromkk.github.io';
 ---
 <!doctype html>
-<html lang={lang === 'zh' ? 'zh-CN' : 'en'} data-track="hris" data-theme="light">
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'} data-track="hris" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -520,12 +533,11 @@ const origin = 'https://chiwawafromkk.github.io';
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <style is:inline set:html={hrisThemeCss()}></style>
     <script is:inline>
-      /* Theme before first paint: the visitor's choice, else the system's. */
+      /* Theme before first paint: the visitor's choice, else dark (the cover's palette, user 2026-10-15). */
       (function () {
         var d = document.documentElement, t = null;
         try { t = localStorage.getItem('hyj-hris-theme'); } catch (e) { /* storage blocked */ }
-        if (t !== 'light' && t !== 'dark') { try { t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) { t = 'light'; } }
-        d.dataset.theme = t;
+        d.dataset.theme = t === 'light' ? 'light' : 'dark';
       })();
     </script>
     <MotionBoot />
@@ -633,7 +645,7 @@ html[data-track='hris'] body { background: var(--paper); color: var(--ink); font
 .hris .h-top__btn { display: inline-flex; align-items: center; padding: 0 16px; border: 0; border-right: var(--hair); background: none; color: var(--mute); cursor: pointer; text-decoration: none; }
 .hris .h-top__btn:hover { color: var(--ink); background: var(--card); }
 .hris .h-top__cv { display: inline-flex; align-items: center; padding: 0 20px; background: var(--ink); color: var(--paper); text-decoration: none; }
-.hris .h-top__cv:hover { background: var(--red-fill); color: #fff; }
+.hris .h-top__cv:hover { background: var(--red-fill); color: var(--on-accent); }
 .hris .h-foot { display: grid; grid-template-columns: 260px 1fr auto auto; align-items: center; gap: 0; border-top: var(--hair); background: var(--card); color: var(--mute); font-size: 14px; }
 .hris .h-foot > * { padding: 20px 24px; border-right: var(--hair); }
 .hris .h-foot > :last-child { border-right: 0; }
@@ -642,7 +654,7 @@ html[data-track='hris'] body { background: var(--paper); color: var(--ink); font
 .hris .h-mast > :first-child { padding: 22px 24px; border-right: var(--hair); color: var(--red-text); }
 .hris .h-mast > h2 { padding: 22px 32px; font: 700 20px/1.3 var(--font-body); letter-spacing: -0.01em; }
 /* Demos keep a light paper panel in the dark theme (spec §3.4). */
-html[data-track='hris'][data-theme='dark'] [data-demo] { --paper: #f4f3ef; --card: #faf9f6; --ink: #111214; --mute: #52555a; --red: #174ea6; --red-text: #174ea6; --red-fill: #174ea6; --line: #c9c6bc; --hair: 1px solid #c9c6bc; --rule: 1px solid #111214; background: var(--paper); color: var(--ink); }
+html[data-track='hris'][data-theme='dark'] [data-demo] { --paper: #f4f3ef; --card: #faf9f6; --ink: #0b0c0e; --mute: #52555a; --dim: #84888e; --red: #174ea6; --red-text: #174ea6; --red-fill: #174ea6; --on-accent: #ffffff; --line: #c9c6bc; --hair: 1px solid #c9c6bc; --rule: 1px solid #0b0c0e; background: var(--paper); color: var(--ink); }
 @media (max-width: 1024px) {
   .hris .h-top, .hris .h-foot, .hris .h-mast { grid-template-columns: 1fr; }
   .hris .h-top__brand, .hris .h-mast > :first-child { border-right: 0; border-bottom: var(--hair); }
@@ -671,7 +683,7 @@ const works = trackProjects('hris');
     <section class="h-hero">
       <div class="h-hero__copy">
         <p class="h-avail h-mono">{fact('F3').text[lang]}</p>
-        <h1>{H.title[lang]}</h1>
+        <h1>{H.title[lang]}<span class="h-soft">{H.titleSoft[lang]}</span></h1>
         <p class="h-lead">{H.lead[lang]}</p>
         <nav class="h-doors" aria-label={HRIS.nav.label[lang]}>
           <a href={L('/brief/')}><span class="h-mono">{H.doorBrief.code} →</span><b>{H.doorBrief.label[lang]}</b></a>
@@ -709,7 +721,8 @@ const works = trackProjects('hris');
   .h-hero { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 560px; border-bottom: var(--hair); }
   .h-hero__copy { display: flex; flex-direction: column; justify-content: space-between; gap: 40px; padding: 64px 48px; border-right: var(--hair); }
   .h-avail { color: var(--red-text); }
-  .h-hero h1 { margin: 20px 0 24px; font: 700 clamp(34px, 4.2vw, 58px)/1.1 var(--font-display); letter-spacing: -0.03em; }
+  .h-hero h1 { margin: 20px 0 24px; font: 800 clamp(34px, 4.2vw, 58px)/1.1 var(--font-display); letter-spacing: -0.03em; }
+  .h-hero h1 .h-soft { color: var(--dim); font-weight: 300; }
   .h-lead { max-width: 36em; color: var(--mute); font-size: 17px; line-height: 1.75; }
   .h-doors { display: grid; grid-template-columns: 1fr 1fr; border: var(--rule); background: var(--card); }
   .h-doors a { display: grid; gap: 12px; padding: 20px 22px; text-decoration: none; transition: background-color 0.25s var(--ease), color 0.25s var(--ease); }
@@ -734,7 +747,7 @@ const works = trackProjects('hris');
   .h-work__act { display: grid; align-content: center; gap: 10px; }
   .h-act { display: flex; justify-content: space-between; padding: 10px 14px; border: var(--rule); font-size: 14px; text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
   .h-act--fill { background: var(--ink); color: var(--paper); }
-  .h-act:hover, .h-act:focus-visible { background: var(--red-fill); border-color: var(--red-fill); color: #fff; }
+  .h-act:hover, .h-act:focus-visible { background: var(--red-fill); border-color: var(--red-fill); color: var(--on-accent); }
   @media (max-width: 1024px) {
     .h-hero, .h-work { grid-template-columns: 1fr; }
     .h-hero__copy, .h-work > * { border-right: 0; border-bottom: var(--hair); }
@@ -844,7 +857,7 @@ describe('colours on the card', () => {
   for (const theme of ['light', 'dark'] as const) {
     it(`${theme}: node colours stand out from the card (≥ 3:1)`, () => {
       const c = HRIS_COLORS[theme];
-      for (const col of [c.verified, c.warn, c.accent, c.mute]) expect(contrast(col, c.card)).toBeGreaterThanOrEqual(3);
+      for (const col of [c.ink, c.accent, c.dim, c.mute]) expect(contrast(col, c.card)).toBeGreaterThanOrEqual(3);
     });
   }
 });
@@ -1037,15 +1050,17 @@ const still = governedTargets(600, 560, 380);
   .topo__head { display: flex; justify-content: space-between; gap: 12px; padding: 16px 24px; border-bottom: var(--hair); color: var(--mute); }
   .topo__view { position: relative; min-height: 380px; }
   .topo__view svg, .topo__view canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .topo-still .k-verified, .topo__legend .k-verified::before { fill: var(--verified); background: var(--verified); }
+  /* Status by tone (the cover's palette): verified solid ink, review the accent, missing a hollow dim square. */
+  .topo-still .k-verified, .topo__legend .k-verified::before { fill: var(--ink); background: var(--ink); }
   .topo-still .k-review, .topo__legend .k-review::before { fill: var(--red); background: var(--red); }
-  .topo-still .k-missing, .topo__legend .k-missing::before { fill: var(--warn); background: var(--warn); }
+  .topo-still .k-missing { fill: none; stroke: var(--dim); stroke-width: 1; }
+  .topo__legend .k-missing::before { background: none; box-shadow: inset 0 0 0 1px var(--dim); }
   .topo__foot { display: grid; grid-template-columns: 1fr auto; gap: 10px 16px; align-items: center; padding: 16px 24px; border-top: var(--hair); background: var(--paper); }
   .topo__foot p { color: var(--mute); font-size: 14px; }
   .topo__legend { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; color: var(--mute); }
   .topo__legend li::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 6px; }
   .topo__foot button { grid-column: 2; grid-row: 1 / 3; padding: 9px 14px; border: var(--rule); background: var(--card); color: var(--ink); cursor: pointer; }
-  .topo__foot button[aria-pressed='true'] { background: var(--red-fill); border-color: var(--red-fill); color: #fff; }
+  .topo__foot button[aria-pressed='true'] { background: var(--red-fill); border-color: var(--red-fill); color: var(--on-accent); }
   .topo.is-live .topo-still { display: none; }
 </style>
 ```
@@ -1084,7 +1099,7 @@ export function initTopology(fig: HTMLElement): void {
   let colours: Record<Kind | 'raw', string> = { verified: '', review: '', missing: '', raw: '' };
   const readColours = () => {
     const cs = getComputedStyle(fig);
-    colours = { verified: cs.getPropertyValue('--verified').trim(), review: cs.getPropertyValue('--red').trim(), missing: cs.getPropertyValue('--warn').trim(), raw: cs.getPropertyValue('--mute').trim() };
+    colours = { verified: cs.getPropertyValue('--ink').trim(), review: cs.getPropertyValue('--red').trim(), missing: cs.getPropertyValue('--dim').trim(), raw: cs.getPropertyValue('--dim').trim() };
   };
   const layout = () => {
     const r = view.getBoundingClientRect();
@@ -1111,14 +1126,16 @@ export function initTopology(fig: HTMLElement): void {
     const dt = Math.min(0.05, (now - t0) / 1000); t0 = now;
     ctx.clearRect(0, 0, w, h);
     for (const kind of ['verified', 'review', 'missing'] as Kind[]) {
+      const hollow = governed && kind === 'missing';
       ctx.fillStyle = governed ? colours[kind] : colours.raw;
+      ctx.strokeStyle = colours.missing;
       for (let i = 0; i < n; i++) {
         if (kinds[i] !== kind) continue;
         const drift = governed ? 0 : Math.sin(now / 1400 + i) * 6;
         [x[i], vx[i]] = springStep(x[i], vx[i], (governed ? gx[i] : rx[i]) + drift, dt, k, c);
         [y[i], vy[i]] = springStep(y[i], vy[i], (governed ? gy[i] : ry[i]) + drift * 0.6, dt, k, c);
         if (mx > -1e3) [x[i], y[i]] = repel(x[i], y[i], mx, my);
-        ctx.fillRect(x[i] - 1.5, y[i] - 1.5, 3, 3);
+        if (hollow) ctx.strokeRect(x[i] - 1.5, y[i] - 1.5, 3, 3); else ctx.fillRect(x[i] - 1.5, y[i] - 1.5, 3, 3);
       }
     }
   };
@@ -1418,7 +1435,7 @@ const B = HRIS.brief;
   .hb-close { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
   .hb-avail { font: 700 18px/1.4 var(--font-body); }
   .hb-cta { padding: 12px 18px; background: var(--ink); color: var(--paper); text-decoration: none; }
-  .hb-cta:hover, .hb-cta:focus-visible { background: var(--red-fill); color: #fff; }
+  .hb-cta:hover, .hb-cta:focus-visible { background: var(--red-fill); color: var(--on-accent); }
   @media (max-width: 1024px) { .hb-row, .hb-skills { grid-template-columns: 1fr; } .hb-row > h2 { border-right: 0; border-bottom: var(--hair); padding: 16px 20px; } .hb-row > div, .hb-row > dl { padding: 24px 20px; } }
 </style>
 ```
@@ -1633,10 +1650,10 @@ let n = 0;
 <style>
   .hintro { position: fixed; inset: 0; z-index: 100; display: grid; grid-template-rows: auto 1fr auto; padding: 36px 44px; background: #0b0c0e; color: #f4f3ef; outline: none; }
   :global(html.intro-pending) .hintro, .hintro.is-playing { display: grid; }
-  .hintro__top { color: #9aa0a6; }
+  .hintro__top { color: #8ab4f8; }
   .hintro__lines { align-self: center; }
   .hintro__line { font: 800 clamp(44px, 8vw, 112px)/0.96 var(--font-display); letter-spacing: -0.04em; }
-  .hintro__line.is-muted { color: #8ab4f8; font-weight: 400; }
+  .hintro__line.is-muted { color: #5f6368; font-weight: 400; }
   .hintro__line span { display: inline-block; }
   .hintro__grid { position: absolute; inset: 0; pointer-events: none; }
   .hintro__grid b { position: absolute; left: 0; right: 0; height: 1px; background: #2e323a; transform: scaleX(0); transform-origin: left; }
@@ -1988,15 +2005,15 @@ const payload = JSON.stringify({ lang, cases: WB_CASES, versions: VERSIONS, step
 </script>
 <style>
   .wb-intro { padding: 24px 32px; border-bottom: var(--hair); color: var(--mute); }
-  .wb-badge { margin-left: 8px; padding: 2px 8px; border: 1px solid var(--warn); color: var(--warn); font-weight: 400; }
+  .wb-badge { margin-left: 8px; padding: 2px 8px; border: 1px solid var(--red); color: var(--red-text); font-weight: 400; }
   .wb-grid { display: grid; grid-template-columns: 1.1fr 1fr; border-bottom: var(--hair); }
   .wb-left { border-right: var(--hair); }
   .wb-records { margin: 0; padding: 0; list-style: none; }
   .wb-records button { display: grid; grid-template-columns: 120px 1fr auto; gap: 12px; width: 100%; padding: 16px 24px; border: 0; border-bottom: var(--hair); background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
   .wb-records button:hover { background: var(--card); }
   .wb-records button[aria-pressed='true'] { background: var(--card); box-shadow: inset 3px 0 0 var(--red); }
-  .wb-badge-s[data-outcome='done'] { color: var(--verified); }
-  .wb-badge-s:not([data-outcome='done']) { color: var(--warn); }
+  .wb-badge-s[data-outcome='done'] { color: var(--ink); }
+  .wb-badge-s:not([data-outcome='done']) { color: var(--red-text); }
   .wb-left h2, .wb-right h2 { padding: 18px 24px 8px; color: var(--mute); font-weight: 400; }
   .wb-routing { display: grid; gap: 8px; padding: 0 24px 24px 42px; }
   .wb-right { display: grid; align-content: start; gap: 12px; padding-bottom: 24px; background: var(--card); }
@@ -2009,14 +2026,14 @@ const payload = JSON.stringify({ lang, cases: WB_CASES, versions: VERSIONS, step
   .wb-steps { display: grid; grid-template-columns: repeat(6, 1fr); margin: 8px 24px; padding: 0; list-style: none; border: var(--hair); }
   .wb-steps li { display: grid; gap: 6px; padding: 12px 10px; border-right: var(--hair); font-size: 14px; }
   .wb-steps li:last-child { border-right: 0; }
-  .wb-steps li[data-state='passed'] { box-shadow: inset 0 3px 0 var(--verified); }
-  .wb-steps li[data-state='stopped'] { box-shadow: inset 0 3px 0 var(--warn); background: var(--paper); }
+  .wb-steps li[data-state='passed'] { box-shadow: inset 0 3px 0 var(--ink); }
+  .wb-steps li[data-state='stopped'] { box-shadow: inset 0 3px 0 var(--red); background: var(--paper); }
   .wb-steps li[data-state='skipped'] { color: var(--mute); }
   .wb-tool, .wb-state { font-size: 13px; color: var(--mute); }
   .wb-trail { display: grid; gap: 6px; margin: 0 24px; padding: 14px 16px 14px 34px; background: var(--paper); border: var(--hair); }
   .wb-outcome { justify-self: start; margin-inline: 24px; padding: 6px 12px; border: 2px solid currentColor; font-weight: 700; }
-  .wb-outcome[data-outcome='done'] { color: var(--verified); }
-  .wb-outcome:not([data-outcome='done']) { color: var(--warn); }
+  .wb-outcome[data-outcome='done'] { color: var(--ink); }
+  .wb-outcome:not([data-outcome='done']) { color: var(--red-text); }
   .wb-link { color: var(--red-text); }
   @media (max-width: 1024px) { .wb-grid { grid-template-columns: 1fr; } .wb-left { border-right: 0; border-bottom: var(--hair); } .wb-steps { grid-template-columns: repeat(3, 1fr); } .wb-steps li:nth-child(3) { border-right: 0; } }
   @media (max-width: 640px) { .wb-records button { grid-template-columns: 1fr auto; } .wb-records button > :first-child { grid-column: 1 / -1; } .wb-steps { grid-template-columns: 1fr 1fr; } }
@@ -2153,14 +2170,13 @@ test('structure lines draw in as sections scroll in', async ({ page, isMobile })
   await expect(work).toHaveClass(/m-in/);
 });
 
-test('theme switch: colours change smoothly, the canvas recolours', async ({ page, isMobile }) => {
+test('theme switch: colours change smoothly from the dark default to light', async ({ page, isMobile }) => {
   test.skip(!!isMobile, 'desktop');
   await skip(page);
-  await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/hris/');
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).transitionDuration)).not.toBe('0s');
   await page.locator('[data-theme-toggle]').click();
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor), { timeout: 2000 }).toBe('rgb(11, 12, 14)');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor), { timeout: 2000 }).toBe('rgb(244, 243, 239)');
 });
 
 test('motion off: figures and lines are simply there', async ({ page }) => {
@@ -2286,7 +2302,7 @@ Run: `node tools/phase2-shots.mjs`，用 Read 工具逐张查看至少：首页�
 - [ ] **Step 3: 追加待确认文案**
 
 在 `docs/superpowers/reviews/2026-10-14-phase1-copy-for-signoff.md` 末尾追加 `## 第二期（HRIS 站）` 一节，按第一期同样格式（中文、English、确认 / 修改为：___），原文直接从代码复制：
-1. `HRIS.hero.title`、`HRIS.hero.lead`
+1. `HRIS.hero.title` + `HRIS.hero.titleSoft`（粗体与细体两段）、`HRIS.hero.lead`
 2. `HRIS.ledger` 四条说明
 3. `HRIS.skills` 三组
 4. `HRIS.brief.points` 五条（注明来源：经历档案 4.1；"被邀请延长实习"按档案只写半句）
