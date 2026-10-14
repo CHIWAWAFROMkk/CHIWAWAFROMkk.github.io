@@ -1,5 +1,6 @@
 ---
 import HrisBase from '../../layouts/HrisBase.astro';
+import Topology from '../../components/hris/Topology.astro';
 import { HRIS } from '../../data/hris';
 import { fact } from '../../data/facts';
 import { trackProjects } from '../../data/tracks';
@@ -24,6 +25,7 @@ const [lead1, lead2] = H.title[lang].split(/(?<=，)/);
           <a href={L('/workbench/')}><span class="h-mono">{H.doorWorkbench.code} →</span><b>{H.doorWorkbench.label[lang]}</b></a>
         </nav>
       </div>
+      <Topology lang={lang} />
     </section>
     <section class="h-ledger" aria-label={lang === 'zh' ? '数字' : 'Figures'}>
       {HRIS.ledger.map(l => (
