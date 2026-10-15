@@ -1,79 +1,57 @@
-import { test, expect, type Page } from '@playwright/test';
-import { CASES } from '../../src/scripts/hris-demo';
-import { noHorizontalOverflow } from './helpers';
+import { test, expect } from '@playwright/test';
+import { HRIS } from '../../src/data/hris';
+import { motionOff } from './helpers';
 
-const shownLines = (page: Page) => page.locator('[data-card] [data-line]:not([hidden])').count();
+const skip = (page: import('@playwright/test').Page) => page.addInitScript(() => { try { localStorage.setItem('hyj-hris-intro-seen', '1'); } catch { /* blocked */ } });
 
-async function hoverStep(page: Page, index: number) {
-  await page.locator('[data-steps]').scrollIntoViewIfNeeded();
-  const box = (await page.locator('[data-steps]').boundingBox())!;
-  await page.mouse.move(box.x + (box.width / 6) * (index + 0.5), box.y + box.height / 2);
-}
-
-test.describe('HRIS step scrubbing', () => {
-  test.beforeEach(async ({ page }) => { await page.goto('/projects/hris-workflow/'); });
-
-  test('hovering a step shows the record card up to that step, and leaving restores it', async ({ page, isMobile }) => {
-    test.skip(!!isMobile, 'hover');
-    const full = CASES[0].trail.length;
-    await expect.poll(() => shownLines(page)).toBe(full);
-    await hoverStep(page, 2);
-    await expect.poll(() => shownLines(page)).toBe(3);
-    await expect(page.locator('[data-steps]')).toHaveAttribute('aria-valuenow', '3');
-    await page.mouse.move(5, 5);
-    await expect.poll(() => shownLines(page)).toBe(full);
-  });
-
-  test('past the stopping step the card says the step never ran', async ({ page, isMobile }) => {
-    test.skip(!!isMobile, 'hover');
-    await page.locator('[data-case="DEMO-002"]').click();
-    await hoverStep(page, 4);
-    await expect(page.locator('[data-card] [data-line].is-stop')).toHaveCount(1);
-    await expect(page.locator('[data-card] [data-skipped]')).toBeVisible();
-  });
-
-  test('arrow keys scrub the steps too', async ({ page }) => {
-    await page.locator('[data-steps]').focus();
-    await page.keyboard.press('Home');
-    await expect.poll(() => shownLines(page)).toBe(1);
-    await page.keyboard.press('ArrowRight');
-    await expect.poll(() => shownLines(page)).toBe(2);
-  });
+test('ledger figures spin in as counters and land on the ledger text', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await skip(page);
+  await page.setViewportSize({ width: 1440, height: 700 });
+  await page.goto('/hris/');
+  const nums = page.locator('[data-ledger-num]');
+  await nums.first().scrollIntoViewIfNeeded();
+  await expect(nums.first().locator('.odo')).toHaveCount(1, { timeout: 2000 });
+  await expect(nums).toHaveText(HRIS.ledger.map(l => l.figure), { timeout: 4000 });
 });
 
-test.describe('HRIS scroll scenes', () => {
-  test('the diagram changes scene as each section reaches the reading line', async ({ page }) => {
-    await page.goto('/projects/hris-workflow/');
-    const scenes = page.locator('[data-scenes]');
-    const headings = page.locator('.hris-text h2');
-    await headings.nth(0).evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 100));
-    await expect(scenes).toHaveAttribute('data-scene', '1');
-    await headings.nth(2).evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 100));
-    await expect(scenes).toHaveAttribute('data-scene', '3');
-    await headings.nth(4).evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 100));
-    await expect(scenes).toHaveAttribute('data-scene', '5');
-    expect(await noHorizontalOverflow(page)).toBe(true);
-  });
+test('structure lines draw in as sections scroll in', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await skip(page);
+  await page.setViewportSize({ width: 1440, height: 700 });
+  await page.goto('/hris/');
+  const work = page.locator('.h-work').last();
+  await expect(work).toHaveClass(/m-armed/);
+  await work.scrollIntoViewIfNeeded();
+  await expect(work).toHaveClass(/m-in/);
 });
 
-test.describe('HRIS background', () => {
-  test('a decorative data-row layer drifts with scrolling, never catching clicks', async ({ page, isMobile }) => {
-    test.skip(!!isMobile, 'run once');
-    await page.goto('/projects/hris-workflow/');
-    const layer = page.locator('[data-rows]');
-    await expect(layer).toHaveAttribute('aria-hidden', 'true');
-    expect(await layer.evaluate(el => getComputedStyle(el).pointerEvents)).toBe('none');
-    const before = await layer.evaluate(el => getComputedStyle(el).getPropertyValue('--s'));
-    await page.mouse.wheel(0, 1200);
-    await expect.poll(() => layer.evaluate(el => getComputedStyle(el).getPropertyValue('--s'))).not.toBe(before);
-  });
+test('theme switch: colours change smoothly from the dark default to light', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await skip(page);
+  await page.goto('/hris/');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).transitionDuration)).not.toBe('0s');
+  await page.locator('[data-theme-toggle]').click();
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor), { timeout: 2000 }).toBe('rgb(244, 243, 239)');
+});
 
-  test('reduced motion keeps the background still', async ({ page, isMobile }) => {
-    test.skip(!!isMobile, 'run once');
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/projects/hris-workflow/');
-    await page.mouse.wheel(0, 1200);
-    await page.waitForTimeout(300);
-    expect((await page.locator('[data-rows]').evaluate(el => getComputedStyle(el).getPropertyValue('--s'))).trim()).toBe('0');
-  });
+test('motion off: figures and lines are simply there', async ({ page }) => {
+  await skip(page);
+  await motionOff(page);
+  await page.goto('/hris/');
+  await expect(page.locator('[data-ledger-num] .odo')).toHaveCount(0);
+  await expect(page.locator('.h-work.m-armed')).toHaveCount(0);
+});
+
+test('project page: every summary row is shown once scrolled past, and its line draws', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await skip(page);
+  await page.setViewportSize({ width: 1440, height: 700 });
+  await page.goto('/hris/projects/hris-workflow/');
+  const rows = page.locator('.p-hris .p-row');
+  await expect(rows.last()).toHaveClass(/m-armed/);
+  for (const row of await rows.all()) await row.scrollIntoViewIfNeeded();
+  await expect(rows.last()).toHaveClass(/m-in/);
+  await expect.poll(() => rows.evaluateAll(els => els.filter(e => getComputedStyle(e).opacity !== '1').length), { timeout: 3000 }).toBe(0);
+  expect(await rows.last().evaluate(el => getComputedStyle(el, '::after').transform)).not.toBe('matrix(0, 0, 0, 1, 0, 0)');
 });
