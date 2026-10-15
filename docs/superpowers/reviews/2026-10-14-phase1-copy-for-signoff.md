@@ -1,5 +1,9 @@
 # 第一期待确认文案（2026-10-14）
 
+> **状态（2026-10-15）**：用户回复"确认文案"，第 1–32 条统一确认。确认前 Claude 按《求职与经历档案》逐条核对，改了两处超出档案的写法（第 29 条第 3、5 项：Copilot 不再写成"Copilot（AI Builder）"；"资料存于 SharePoint"改为"另用 SharePoint、AI Builder"）。
+> 另有一处档案没有原话、待用户确认：第 3、30、31 条的"手写件一律人工复核"。档案只写"手写最易出错"，分流规则写的是"无法识别、识别不清、字段缺失的转人工复核"。
+> HRIS 站的详情页标题由用户交给 Claude 决定：HRIS 站上统一用卡片标题（如"人岗匹配评估引擎"），主站保持原标题。
+
 以下文字由 Claude 起草或改写，**确认前不上线**。原文从代码中直接提取，与网站上显示的一字不差。逐条在"确认 / 修改为"后面填写即可。
 
 另有一项显示上的取舍需要你看：手机上首页的执行轨迹图压成了 56px 高的细条、不显示步骤名，这样两扇入口门都能留在第一屏。截图见 `test-results/phase1/phone-full_.png`。
@@ -231,12 +235,12 @@
   English: Ran in the company-approved environment; handed over to my mentor
 - 2）中文：Power Automate 按工号查找文件并返回工号
   English: Power Automate finds each file by employee ID and returns the ID
-- 3）中文：Copilot（AI Builder）识别图像中的字段
-  English: Copilot (AI Builder) reads the fields in the image
+- 3）中文：Copilot 识别图像中的字段
+  English: Copilot reads the fields in the image
 - 4）中文：分流：通过的自动录入，其余转人工复核
   English: Routing: passed records are entered automatically; the rest go to manual review
-- 5）中文：Excel 作为数据载体，资料存于 SharePoint
-  English: Excel holds the data; the files live in SharePoint
+- 5）中文：Excel 作为数据载体，另用 SharePoint、AI Builder
+  English: Excel holds the data; SharePoint and AI Builder are also used
 - 说明：第一条是这一版的性质，其余是做法。
 - 确认 / 修改为：___
 

@@ -13,8 +13,8 @@ export const VERSIONS: Version[] = [
     chain: [{ zh: '本地 OCR 识别扫描件', en: 'Local OCR reads the scans' }, { zh: 'DeepSeek 从识别结果里提取字段', en: 'DeepSeek extracts fields from the OCR text' }, { zh: '模型只给候选，写入由人工决定', en: 'The model only proposes; a person decides what is written' }],
     tools: { extract: { zh: '本地 OCR · DeepSeek', en: 'Local OCR · DeepSeek' }, review: { zh: '人工审核', en: 'Manual review' } } },
   { id: 'final', label: { zh: '最终版', en: 'Final version' }, nature: { zh: '在公司批准的环境中运行，已交接给 mentor', en: 'Ran in the company-approved environment; handed over to my mentor' },
-    chain: [{ zh: 'Power Automate 按工号查找文件并返回工号', en: 'Power Automate finds each file by employee ID and returns the ID' }, { zh: 'Copilot（AI Builder）识别图像中的字段', en: 'Copilot (AI Builder) reads the fields in the image' }, { zh: '分流：通过的自动录入，其余转人工复核', en: 'Routing: passed records are entered automatically; the rest go to manual review' }, { zh: 'Excel 作为数据载体，资料存于 SharePoint', en: 'Excel holds the data; the files live in SharePoint' }],
-    tools: { match: { zh: 'Power Automate', en: 'Power Automate' }, identity: { zh: 'Power Automate 返回工号', en: 'Power Automate returns the ID' }, extract: { zh: 'Copilot · AI Builder', en: 'Copilot · AI Builder' }, review: { zh: '人工复核', en: 'Manual review' }, writeback: { zh: 'Power Automate → Excel', en: 'Power Automate → Excel' } } },
+    chain: [{ zh: 'Power Automate 按工号查找文件并返回工号', en: 'Power Automate finds each file by employee ID and returns the ID' }, { zh: 'Copilot 识别图像中的字段', en: 'Copilot reads the fields in the image' }, { zh: '分流：通过的自动录入，其余转人工复核', en: 'Routing: passed records are entered automatically; the rest go to manual review' }, { zh: 'Excel 作为数据载体，另用 SharePoint、AI Builder', en: 'Excel holds the data; SharePoint and AI Builder are also used' }],
+    tools: { match: { zh: 'Power Automate', en: 'Power Automate' }, identity: { zh: 'Power Automate 返回工号', en: 'Power Automate returns the ID' }, extract: { zh: 'Copilot', en: 'Copilot' }, review: { zh: '人工复核', en: 'Manual review' }, writeback: { zh: 'Power Automate → Excel', en: 'Power Automate → Excel' } } },
 ];
 
 /** The routing rules of the final version (档案 4.1). */
