@@ -34,6 +34,16 @@ html[data-track='hris'][data-theme='dark'] section.demo[data-demo] { background:
   .hris .h-top__nav { overflow-x: auto; }
   .hris .h-foot > * { border-right: 0; border-bottom: var(--hair); }
 }
+/* Phones: the four sections as a 2 × 2 grid, so none waits off-screen in a sideways strip. */
+@media (max-width: 640px) {
+  .hris .h-top__nav { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; border-bottom: var(--hair); }
+  .hris .h-top__nav a { padding: 11px 16px; }
+  .hris .h-top__nav a:nth-child(2n) { border-right: 0; }
+  .hris .h-top__nav a:nth-child(-n + 2) { border-bottom: var(--hair); }
+  .hris .h-top__util { border-left: 0; }
+  .hris .h-top__btn, .hris .h-top__cv { min-height: 40px; }
+  .hris .h-top__cv { flex: 1; justify-content: center; }
+}
 
 /* Project pages in the HRIS track: the shared ProjectLayout markup in V3's structure. */
 .hris .p-hris .p-head { padding: 48px 32px 36px; border-bottom: var(--hair); }

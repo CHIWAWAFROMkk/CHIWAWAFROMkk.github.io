@@ -32,7 +32,7 @@ test('the main site never links to /hris/', async ({ page, isMobile }) => {
   for (const url of ['/', '/brief/', '/projects/', '/projects/hris-workflow/', '/projects/ai-career/', '/projects/ai-career/live/', '/en/', '/en/projects/']) {
     await page.goto(url);
     // /downloads/hris/ holds the solution document, a file the main site offers; only pages of the track count.
-    expect(await page.locator('a[href^="/hris/"], a[href^="/en/hris/"]').count(), url).toBe(0);
+    expect(await page.locator('a[href^="/hris/"], a[href^="/en/hris/"], a[href*="github.io/hris/"], a[href*="github.io/en/hris/"]').count(), url).toBe(0);
   }
 });
 

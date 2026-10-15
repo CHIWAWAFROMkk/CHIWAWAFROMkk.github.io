@@ -66,3 +66,23 @@ test('phone: the headline and lead are on the first screen', async ({ page, isMo
     expect(box.y, sel).toBeLessThan(vh);
   }
 });
+
+for (const prefix of ['', '/en']) {
+  test(`phone${prefix}: every HRIS nav item is on screen, none hidden in a sideways strip`, async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'phone');
+    await page.addInitScript(() => { try { localStorage.setItem('hyj-hris-intro-seen', '1'); } catch { /* blocked */ } });
+    await page.goto(`${prefix}/hris/`);
+    const vw = page.viewportSize()!.width;
+    for (const r of await page.locator('.h-top__nav a').evaluateAll(as => as.map(a => a.getBoundingClientRect().right)))
+      expect(r).toBeLessThanOrEqual(vw);
+    expect(await page.locator('.h-top__nav').evaluate(n => n.scrollWidth <= n.clientWidth)).toBe(true);
+  });
+}
+
+test('phone: language, theme and résumé buttons are thumb-sized', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'phone');
+  await page.addInitScript(() => { try { localStorage.setItem('hyj-hris-intro-seen', '1'); } catch { /* blocked */ } });
+  await page.goto('/hris/');
+  for (const h of await page.locator('.h-top__util > *').evaluateAll(els => els.map(e => e.getBoundingClientRect().height)))
+    expect(h).toBeGreaterThanOrEqual(40);
+});
