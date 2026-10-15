@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { introMode, introLetterDelay, INTRO_MS, INTRO_GENTLE_MS, readSeen, markSeen, withTimeout, SEEN_KEY } from '../../src/scripts/intro';
+import { scatter, HRIS_SEEN_KEY, HRIS_INTRO_MS } from '../../src/scripts/intro';
 
 describe('introMode', () => {
   const base = { seen: false, tier: 'full' as const, fontsReady: true };
@@ -52,4 +53,20 @@ describe('withTimeout', () => {
     expect(await failing).toBe(false);
     vi.useRealTimers();
   });
+});
+
+
+describe('HRIS intro', () => {
+  it('uses its own seen key, so the main intro and the HRIS intro are independent', () => {
+    const store = new Map<string, string>();
+    const s = { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) };
+    markSeen(s, HRIS_SEEN_KEY);
+    expect(readSeen(s, HRIS_SEEN_KEY)).toBe(true);
+    expect(readSeen(s)).toBe(false);
+  });
+  it('letters scatter within a screen-sized range and the same way on every visit', () => {
+    expect(scatter(3)).toEqual(scatter(3));
+    for (let i = 0; i < 20; i++) { const s = scatter(i); expect(Math.abs(s.x)).toBeLessThanOrEqual(60); expect(Math.abs(s.y)).toBeLessThanOrEqual(40); expect(Math.abs(s.r)).toBeLessThanOrEqual(25); }
+  });
+  it('the HRIS intro is a little shorter than the main one', () => expect(HRIS_INTRO_MS).toBeLessThan(INTRO_MS));
 });

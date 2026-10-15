@@ -9,11 +9,11 @@ function storage(): Storage | null {
   }
 }
 
-export async function initIntro(overlay: HTMLElement): Promise<void> {
+export async function initIntro(overlay: HTMLElement, opts: { key?: string; fullMs?: number; gentleMs?: number } = {}): Promise<void> {
   const html = document.documentElement;
   const store = storage();
   const tier = currentTier();
-  const seen = readSeen(store);
+  const seen = readSeen(store, opts.key);
   const fontsReady = !seen && tier !== 'off' && (await withTimeout(document.fonts.load('700 1em Barlow'), FONT_WAIT_MS));
   const mode = introMode({ seen, tier, fontsReady });
 
@@ -24,7 +24,7 @@ export async function initIntro(overlay: HTMLElement): Promise<void> {
     return;
   }
 
-  markSeen(store);
+  markSeen(store, opts.key);
   const skip = overlay.querySelector<HTMLButtonElement>('[data-intro-skip]');
   // Everything except the intro (page, skip link) is inert while it plays, so focus cannot land underneath.
   const underneath = [...document.body.children].filter((el): el is HTMLElement => el !== overlay && el instanceof HTMLElement);
@@ -55,5 +55,5 @@ export async function initIntro(overlay: HTMLElement): Promise<void> {
   document.addEventListener('keydown', onKey);
   // Focus the overlay itself, not the skip button, so Enter/Space cannot skip by accident.
   overlay.focus({ preventScroll: true });
-  timer = window.setTimeout(finish, mode === 'gentle' ? INTRO_GENTLE_MS : INTRO_MS);
+  timer = window.setTimeout(finish, mode === 'gentle' ? (opts.gentleMs ?? INTRO_GENTLE_MS) : (opts.fullMs ?? INTRO_MS));
 }

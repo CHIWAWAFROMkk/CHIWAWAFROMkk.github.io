@@ -7,8 +7,8 @@ import MotionBoot from '../components/MotionBoot.astro';
 import HrisTopbar from '../components/hris/HrisTopbar.astro';
 import HrisFooter from '../components/hris/HrisFooter.astro';
 
-interface Props { lang: Lang; path: string; title: string; description: string }
-const { lang, path, title, description } = Astro.props;
+interface Props { lang: Lang; path: string; title: string; description: string; intro?: boolean }
+const { lang, path, title, description, intro = false } = Astro.props;
 const origin = 'https://chiwawafromkk.github.io';
 ---
 <!doctype html>
@@ -31,6 +31,16 @@ const origin = 'https://chiwawafromkk.github.io';
       })();
     </script>
     <MotionBoot />
+    {intro && (
+      <script is:inline>
+        (function () {
+          var d = document.documentElement;
+          try { if (d.dataset.motion === 'off' || localStorage.getItem('hyj-hris-intro-seen') === '1') return; } catch (e) { /* storage blocked: first visit */ }
+          d.classList.add('intro-pending');
+          setTimeout(function () { d.classList.remove('intro-pending'); }, 3000);
+        })();
+      </script>
+    )}
     <slot name="head" />
   </head>
   <body class="hris">

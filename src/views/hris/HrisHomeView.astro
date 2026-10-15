@@ -2,6 +2,7 @@
 import HrisBase from '../../layouts/HrisBase.astro';
 import Topology from '../../components/hris/Topology.astro';
 import HrisWorks from '../../components/hris/HrisWorks.astro';
+import HrisIntro from '../../components/hris/HrisIntro.astro';
 import { HRIS } from '../../data/hris';
 import { fact } from '../../data/facts';
 import { trackPath, type Lang } from '../../i18n';
@@ -12,7 +13,7 @@ const L = (p: string) => trackPath('hris', p, lang);
 // The bold half breaks after its comma, as on the V3 cover: 将非标人事流程， / 重构为 + the light half.
 const [lead1, lead2] = H.title[lang].split(/(?<=，)/);
 ---
-<HrisBase lang={lang} path="/" title={HRIS.meta.home.title[lang]} description={HRIS.meta.home.description[lang]}>
+<HrisBase lang={lang} path="/" title={HRIS.meta.home.title[lang]} description={HRIS.meta.home.description[lang]} intro>
   <main id="main">
     <section class="h-hero">
       <div class="h-hero__copy">
@@ -37,6 +38,7 @@ const [lead1, lead2] = H.title[lang].split(/(?<=，)/);
     <div class="h-mast"><span class="h-mono">{lang === 'zh' ? '项目' : 'Projects'}</span><h2>{HRIS.projects.title[lang]}</h2></div>
     <HrisWorks lang={lang} />
   </main>
+  <HrisIntro slot="overlay" lang={lang} />
 </HrisBase>
 <style>
   .h-hero { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 560px; border-bottom: var(--hair); }

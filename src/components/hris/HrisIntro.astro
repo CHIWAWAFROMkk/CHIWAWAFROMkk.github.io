@@ -1,0 +1,48 @@
+---
+import { HRIS } from '../../data/hris';
+import { scatter } from '../../scripts/intro';
+import type { Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+let n = 0;
+---
+<div class="hintro" hidden data-hintro tabindex="-1">
+  <p class="hintro__top h-mono">{HRIS.intro.top[lang]}</p>
+  <div class="hintro__lines" aria-hidden="true">
+    {HRIS.intro.lines.map((line, li) => (
+      <p class:list={['hintro__line', { 'is-muted': li === 1 }]}>{[...line].map(ch => { const s = scatter(n++); return <span style={`--sx:${s.x}px;--sy:${s.y}px;--sr:${s.r}deg;--d:${(n * 0.03).toFixed(2)}s`}>{ch === ' ' ? '\u00a0' : ch}</span>; })}</p>
+    ))}
+  </div>
+  <i class="hintro__grid" aria-hidden="true"><b></b><b></b><b></b></i>
+  <button type="button" class="hintro__skip h-mono" data-intro-skip>{HRIS.intro.skip[lang]} Esc</button>
+</div>
+<script>
+  import { initIntro } from '../../scripts/intro-dom';
+  import { HRIS_SEEN_KEY, HRIS_INTRO_MS } from '../../scripts/intro';
+  const overlay = document.querySelector<HTMLElement>('[data-hintro]');
+  if (overlay) void initIntro(overlay, { key: HRIS_SEEN_KEY, fullMs: HRIS_INTRO_MS });
+</script>
+<style>
+  .hintro { position: fixed; inset: 0; z-index: 100; grid-template-rows: auto 1fr auto; padding: 36px 44px; background: #0b0c0e; color: #f4f3ef; outline: none; }
+  :global(html.intro-pending) .hintro, .hintro.is-playing { display: grid; }
+  .hintro__top { color: #8ab4f8; }
+  .hintro__lines { align-self: center; }
+  .hintro__line { font: 800 clamp(44px, 8vw, 112px)/0.96 var(--font-display); letter-spacing: -0.04em; }
+  .hintro__line.is-muted { color: #5f6368; font-weight: 400; }
+  .hintro__line span { display: inline-block; }
+  .hintro__grid { position: absolute; inset: 0; pointer-events: none; }
+  .hintro__grid b { position: absolute; left: 0; right: 0; height: 1px; background: #2e323a; transform: scaleX(0); transform-origin: left; }
+  .hintro__grid b:nth-child(1) { top: 22%; } .hintro__grid b:nth-child(2) { top: 50%; } .hintro__grid b:nth-child(3) { top: 78%; }
+  .hintro__skip { justify-self: end; padding: 8px 14px; border: 1px solid #5f6368; background: none; color: #f4f3ef; cursor: pointer; }
+  /* Full: letters start scattered and spring onto the baseline; the structure lines draw; the curtain lifts. */
+  .is-playing:not(.is-gentle) .hintro__line span { animation: h-settle 0.9s var(--d) cubic-bezier(.34, 1.56, .64, 1) both; }
+  .is-playing:not(.is-gentle) .hintro__grid b { animation: h-line 0.7s 0.5s cubic-bezier(.6, 0, .2, 1) forwards; }
+  .is-playing:not(.is-gentle) .hintro__grid b:nth-child(2) { animation-delay: 0.6s; } .is-playing:not(.is-gentle) .hintro__grid b:nth-child(3) { animation-delay: 0.7s; }
+  .is-playing:not(.is-gentle) { animation: h-lift 0.5s 1.7s cubic-bezier(.7, 0, .2, 1) forwards; }
+  .is-playing.is-gentle { animation: h-fade 0.8s var(--ease) forwards; }
+  :global(html[data-motion='gentle']) .hintro.is-playing.is-gentle { animation: h-fade 0.8s var(--ease) forwards !important; }
+  @keyframes h-settle { from { opacity: 0; transform: translate(var(--sx), var(--sy)) rotate(var(--sr)); } to { opacity: 1; transform: none; } }
+  @keyframes h-line { to { transform: none; } }
+  @keyframes h-lift { to { transform: translateY(-100%); } }
+  @keyframes h-fade { 0% { opacity: 0; } 30%, 60% { opacity: 1; } 100% { opacity: 0; } }
+</style>
