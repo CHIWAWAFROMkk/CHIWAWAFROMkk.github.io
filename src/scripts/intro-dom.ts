@@ -38,8 +38,10 @@ export async function initIntro(overlay: HTMLElement, opts: { key?: string; full
     for (const el of underneath) el.inert = false;
     html.classList.remove('intro-lock');
     // The 2.5 s safety net restarts when the cover lifts, so the first screen's own motion is not cut short by the intro's time.
+    const w = window as Window & { __hyjMotionTimer?: number };
+    window.clearTimeout(w.__hyjMotionTimer);
     html.classList.remove('motion-timeout');
-    window.setTimeout(() => html.classList.add('motion-timeout'), 2500);
+    w.__hyjMotionTimer = window.setTimeout(() => html.classList.add('motion-timeout'), 2500);
   };
   const onKey = (e: KeyboardEvent) => {
     if (e.key === 'Escape') finish();

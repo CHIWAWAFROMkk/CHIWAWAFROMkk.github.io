@@ -15,6 +15,21 @@ test.describe('intro', () => {
     expect(await page.evaluate(() => document.getElementById('page')!.inert)).toBe(false);
   });
 
+  test('when the cover lifts, the boot safety timer is cancelled, not left to cut the first screen short', async ({ page }) => {
+    await page.addInitScript(() => {
+      const w = window as unknown as { __cleared: number[] };
+      const clear = window.clearTimeout.bind(window);
+      w.__cleared = [];
+      window.clearTimeout = (id?: number) => { if (id !== undefined) w.__cleared.push(id); clear(id); };
+    });
+    await page.goto('/');
+    await expect(page.locator(overlay)).toBeVisible();
+    const boot = await page.evaluate(() => (window as unknown as { __hyjMotionTimer?: number }).__hyjMotionTimer);
+    expect(typeof boot).toBe('number');
+    await page.keyboard.press('Escape');
+    expect(await page.evaluate(() => (window as unknown as { __cleared: number[] }).__cleared)).toContain(boot);
+  });
+
   test('Escape skips immediately', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator(overlay)).toBeVisible();

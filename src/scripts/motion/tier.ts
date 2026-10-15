@@ -5,6 +5,8 @@ export type Choice = 'full' | 'gentle' | 'off';
 export const MOTION_KEY = 'hyj-motion';
 export const CHOICES: readonly Choice[] = ['full', 'gentle', 'off'];
 export const SLOW_FPS = 30;
+/** Longer than any real frame; a gap this size means rAF was paused (hidden tab). */
+const MAX_FRAME_GAP_MS = 250;
 
 export interface TierEnv { choice: string | null; reduced: boolean; saveData: boolean; deviceMemory?: number }
 
@@ -57,6 +59,8 @@ export function watchFps(doc: Document = document, frames = 60): void {
   const stamps: number[] = [];
   const tick = (t: number) => {
     if (doc.visibilityState !== 'visible') return;
+    // A gap this long is the tab being hidden (frames pause), not a slow page: start the sample again.
+    if (stamps.length && t - stamps[stamps.length - 1] > MAX_FRAME_GAP_MS) stamps.length = 0;
     stamps.push(t);
     if (stamps.length < frames) { requestAnimationFrame(tick); return; }
     if (averageFps(stamps) < SLOW_FPS && currentTier(doc) === 'full') doc.documentElement.dataset.motion = 'lite';

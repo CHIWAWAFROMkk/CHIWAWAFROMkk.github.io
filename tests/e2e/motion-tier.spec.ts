@@ -81,3 +81,16 @@ test('storage blocked: the switch still applies the chosen tier to this page', a
   await expect.poll(() => tier(page)).toBe('off');
   await expect(sw.locator('button[aria-pressed="true"]')).toHaveText(SITE.motion.off.zh);
 });
+
+test('gentle: once a block is revealed its children keep their own transforms (a centred or rotated child stays put)', async ({ page }) => {
+  await motionChoice(page, 'gentle');
+  await page.goto('/brief/');
+  const t = await page.evaluate(() => {
+    const host = document.createElement('div');
+    host.className = 'm-armed m-in';
+    host.innerHTML = '<span style="display:inline-block; transform: rotate(45deg)">x</span>';
+    document.body.append(host);
+    return getComputedStyle(host.firstElementChild!).transform;
+  });
+  expect(t).not.toBe('none');
+});

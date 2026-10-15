@@ -14,6 +14,7 @@
     d.dataset.motion = t;
     if (t === 'off') return;
     d.classList.add('motion-ok');
-    setTimeout(function () { d.classList.add('motion-timeout'); }, 2500);
+    // Kept on window so the intro can cancel it and restart the net when its cover lifts (scripts/intro-dom.ts).
+    window.__hyjMotionTimer = setTimeout(function () { d.classList.add('motion-timeout'); }, 2500);
   })();
 </script>

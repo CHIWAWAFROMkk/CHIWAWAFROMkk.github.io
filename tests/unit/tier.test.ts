@@ -44,6 +44,17 @@ describe('watchFps', () => {
     while (queue.length) { t += 50; queue.shift()!(t); }          // 20 fps
     expect(doc.documentElement.dataset.motion).toBe('lite');
   });
+  it('a pause in the sample (tab hidden, then back) restarts it instead of counting as slow frames', () => {
+    let t = 0;
+    const queue: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { queue.push(cb); return queue.length; });
+    vi.stubGlobal('localStorage', { getItem: () => null });
+    const doc = { visibilityState: 'visible', documentElement: { dataset: { motion: 'full' } } } as unknown as Document;
+    watchFps(doc, 10);
+    let n = 0;
+    while (queue.length) { t += n++ === 4 ? 5000 : 16; queue.shift()!(t); }   // 60 fps with one 5 s gap
+    expect(doc.documentElement.dataset.motion).toBe('full');
+  });
   it("never overrides the visitor's choice", () => {
     const raf = vi.fn();
     vi.stubGlobal('requestAnimationFrame', raf);

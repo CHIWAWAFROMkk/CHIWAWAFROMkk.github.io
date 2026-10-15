@@ -142,7 +142,8 @@ html[data-motion='off'] *, html[data-motion='off'] *::before, html[data-motion='
   animation-duration: 1ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
   transition-duration: 1ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
 }
-html[data-motion='gentle'] .reveal, html[data-motion='gentle'] .m-armed, html[data-motion='gentle'] .m-armed > * { transform: none !important; }
+/* Travel is cancelled only in the start state; once revealed, children keep whatever transform they rest at. */
+html[data-motion='gentle'] .reveal, html[data-motion='gentle'] .m-armed:not(.m-in), html[data-motion='gentle'] .m-armed:not(.m-in) > * { transform: none !important; }
 html[data-motion='gentle'] .reveal:not(.is-in), html[data-motion='gentle'] .m-armed:not(.m-in) { opacity: 0; }
 html[data-motion='gentle'] .reveal.is-in, html[data-motion='gentle'] .m-armed.m-in { opacity: 1; transition: opacity 0.7s var(--ease) var(--d, var(--m-d, 0ms)); }
 
