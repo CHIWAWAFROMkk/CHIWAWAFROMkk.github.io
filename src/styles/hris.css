@@ -22,7 +22,7 @@ html[data-track='hris'] body { background: var(--paper); color: var(--ink); font
 .hris .h-mast > :first-child { padding: 22px 24px; border-right: var(--hair); color: var(--red-text); }
 .hris .h-mast > h2 { padding: 22px 32px; font: 700 20px/1.3 var(--font-body); letter-spacing: -0.01em; }
 /* Demos keep a light paper panel in the dark theme (spec §3.4). */
-html[data-track='hris'][data-theme='dark'] [data-demo] { --paper: #f4f3ef; --card: #faf9f6; --ink: #0b0c0e; --mute: #52555a; --dim: #84888e; --red: #174ea6; --red-text: #174ea6; --red-fill: #174ea6; --on-accent: #ffffff; --line: #c9c6bc; --hair: 1px solid #c9c6bc; --rule: 1px solid #0b0c0e; background: var(--paper); color: var(--ink); }
+html[data-track='hris'][data-theme='dark'] [data-demo]:not([data-wb]) { --paper: #f4f3ef; --card: #faf9f6; --ink: #0b0c0e; --mute: #52555a; --dim: #84888e; --red: #174ea6; --red-text: #174ea6; --red-fill: #174ea6; --on-accent: #ffffff; --line: #c9c6bc; --hair: 1px solid #c9c6bc; --rule: 1px solid #0b0c0e; background: var(--paper); color: var(--ink); }
 @media (max-width: 1024px) {
   .hris .h-top, .hris .h-foot, .hris .h-mast { grid-template-columns: 1fr; }
   .hris .h-top__brand, .hris .h-mast > :first-child { border-right: 0; border-bottom: var(--hair); }

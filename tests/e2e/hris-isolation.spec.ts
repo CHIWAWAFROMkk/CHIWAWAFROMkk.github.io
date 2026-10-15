@@ -16,13 +16,13 @@ test('crawl: every page link reachable from /hris/ stays under /hris/', async ({
     expect(res!.status(), url).toBe(200);
     await expect(page.locator('meta[name="robots"]'), url).toHaveAttribute('content', 'noindex, nofollow');
     const hrefs = await page.locator('a[href]').evaluateAll(as => as.map(a => a.getAttribute('href')!.split('#')[0]).filter(Boolean));
-    for (const h of hrefs.filter(isPage).filter(x => !x.includes('/hris/workbench/'))) {   // Task 8 removes this filter
+    for (const h of hrefs.filter(isPage)) {
       if (!/^\/(en\/)?hris\//.test(h)) leaks.push(`${url} → ${h}`);
       else if (!seen.has(h)) queue.push(h);
     }
   }
   expect(leaks).toEqual([]);
-  expect(seen.size).toBeGreaterThanOrEqual(24);   // Task 8 adds /hris/workbench/ (zh + en) and raises this to 26
+  expect(seen.size).toBeGreaterThanOrEqual(26);
 });
 
 test('the main site never links to /hris/', async ({ page, isMobile }) => {
