@@ -11,9 +11,9 @@ test('wide screens: one node per overview section, the current one marked', asyn
   await expect(rail.locator('a')).toHaveCount(4);
   // Put the education section's top just above the 40 % reading line (the section is short, so the next one stays below it).
   await page.locator('section[aria-labelledby="b-edu"]').evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - innerHeight * 0.4 + 10));
-  await expect(rail.locator('a[aria-current="true"]')).toHaveText(SITE.brief.education.zh);
+  await expect(rail.locator('a[aria-current="location"]')).toHaveText(SITE.brief.education.zh);
   await rail.locator('a').nth(2).click();
-  await expect(rail.locator('a').nth(2)).toHaveAttribute('aria-current', 'true');
+  await expect(rail.locator('a').nth(2)).toHaveAttribute('aria-current', 'location');
 });
 
 test('narrow screens: a progress bar instead, no overflow', async ({ page, isMobile }) => {

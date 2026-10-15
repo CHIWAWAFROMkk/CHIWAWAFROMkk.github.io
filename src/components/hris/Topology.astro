@@ -20,7 +20,7 @@ const still = governedTargets(600, 560, 380);
     <ul class="topo__legend h-mono">
       <li class="k-verified">{T.legend.verified[lang]}</li><li class="k-review">{T.legend.review[lang]}</li><li class="k-missing">{T.legend.missing[lang]}</li>
     </ul>
-    <button type="button" class="h-mono" hidden aria-pressed="true" data-to-raw={T.toRaw[lang]} data-to-governed={T.toGoverned[lang]} data-raw={T.raw[lang]} data-governed={T.governed[lang]}>{T.toRaw[lang]}</button>
+    <button type="button" class="h-mono" hidden data-state="governed" data-to-raw={T.toRaw[lang]} data-to-governed={T.toGoverned[lang]} data-raw={T.raw[lang]} data-governed={T.governed[lang]}>{T.toRaw[lang]}</button>
   </div>
 </figure>
 <script>
@@ -43,6 +43,6 @@ const still = governedTargets(600, 560, 380);
   .topo__legend { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; color: var(--mute); }
   .topo__legend li::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 6px; }
   .topo__foot button { grid-column: 2; grid-row: 1 / 3; padding: 9px 14px; border: var(--rule); background: var(--card); color: var(--ink); cursor: pointer; }
-  .topo__foot button[aria-pressed='true'] { background: var(--red-fill); border-color: var(--red-fill); color: var(--on-accent); }
+  .topo__foot button[data-state='governed'] { background: var(--red-fill); border-color: var(--red-fill); color: var(--on-accent); }
   .topo.is-live .topo-still { display: none; }
 </style>

@@ -35,7 +35,7 @@ export function initReadingRail(nav: HTMLElement, bar: HTMLElement): void {
   const update = () => {
     frame = 0;
     const i = activeIndex(sections.map(s => s.getBoundingClientRect().top), innerHeight * 0.4);
-    links.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    links.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current')));
     nav.style.setProperty('--progress', String(Math.max(0, i) / (links.length - 1)));
     // Over a film zone the rail steps aside: ink nodes vanish on the dark ground, and the cinema uses the screen edges.
     const r = nav.getBoundingClientRect();

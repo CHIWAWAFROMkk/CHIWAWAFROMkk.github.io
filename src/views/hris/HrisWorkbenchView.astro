@@ -26,7 +26,7 @@ const payload = JSON.stringify({ lang, cases: WB_CASES, versions: VERSIONS, step
         <h2 class="h-mono">{WB_TEXT.routing[lang]}</h2>
         <ul class="wb-routing">{ROUTING.map(r => <li>{r[lang]}</li>)}</ul>
       </section>
-      <section class="wb-right" aria-live="polite">
+      <section class="wb-right">
         <div class="wb-versions" role="group" aria-label={WB_TEXT.versions[lang]}>
           {VERSIONS.map(v => <button type="button" data-wb-version={v.id} aria-pressed={String(v.id === 'final')}>{v.label[lang]}</button>)}
         </div>
@@ -42,8 +42,10 @@ const payload = JSON.stringify({ lang, cases: WB_CASES, versions: VERSIONS, step
         </ol>
         <p class="wb-situation">{first.situation[lang]}</p>
         <ul class="wb-trail">{first.trail.map((t, i) => <li style={`--i:${i}`}>{t[lang]}</li>)}</ul>
-        <p class="wb-outcome" data-outcome={first.outcome}>{OUTCOME_LABEL[first.outcome][lang]}</p>
-        <p class="wb-result">{first.result[lang]}</p>
+        <div class="wb-verdict" aria-live="polite">
+          <p class="wb-outcome" data-outcome={first.outcome}>{OUTCOME_LABEL[first.outcome][lang]}</p>
+          <p class="wb-result">{first.result[lang]}</p>
+        </div>
         <p class="wb-next">{DEMO_TEXT.nextLabel[lang]}{first.next[lang]}</p>
         <a class="wb-link" href={trackPath('hris', '/projects/hris-workflow/', lang)}>{WB_TEXT.toProject[lang]}</a>
       </section>
@@ -76,6 +78,8 @@ const payload = JSON.stringify({ lang, cases: WB_CASES, versions: VERSIONS, step
   .wb-versions button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
   .wb-versions button:focus-visible, .wb-records button:focus-visible { outline: 2px solid var(--red); outline-offset: -4px; }
   .wb-nature, .wb-situation, .wb-result, .wb-next, .wb-link { padding-inline: 24px; }
+  /* Only the verdict is announced on a switch; the buttons and steps around it are not re-read. */
+  .wb-verdict { display: grid; gap: 12px; }
   .wb-chain { display: grid; gap: 6px; padding: 0 24px 0 46px; }
   .wb-steps { display: grid; grid-template-columns: repeat(6, 1fr); margin: 8px 24px; padding: 0; list-style: none; border: var(--hair); }
   .wb-steps li { display: grid; gap: 6px; padding: 12px 10px; border-right: var(--hair); font-size: 14px; }

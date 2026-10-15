@@ -44,3 +44,14 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('[data-topology] button')).toBeHidden();
   });
 });
+
+test('the switch says what it does by its label alone, not also as a pressed toggle', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'desktop');
+  await skip(page);
+  await page.goto('/hris/');
+  const btn = page.locator('[data-topology] button');
+  await expect(btn).toBeVisible();
+  await expect(btn).not.toHaveAttribute('aria-pressed', /.*/);
+  await btn.click();
+  await expect(btn).not.toHaveAttribute('aria-pressed', /.*/);
+});

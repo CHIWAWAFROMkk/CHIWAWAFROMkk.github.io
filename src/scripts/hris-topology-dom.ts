@@ -12,7 +12,7 @@ export function initTopology(fig: HTMLElement): void {
   let governed = true;
   const setLabels = () => {
     btn.textContent = governed ? btn.dataset.toRaw! : btn.dataset.toGoverned!;
-    btn.setAttribute('aria-pressed', String(governed));
+    btn.dataset.state = governed ? 'governed' : 'raw';   // the label already says what a press does
     state.textContent = governed ? btn.dataset.governed! : btn.dataset.raw!;
   };
   btn.addEventListener('click', () => { governed = !governed; setLabels(); });

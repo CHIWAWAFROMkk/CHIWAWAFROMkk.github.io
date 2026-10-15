@@ -71,3 +71,12 @@ test('dark theme: the terminal follows the theme (it is the page, not an embedde
   expect(await page.locator('main').evaluate(el => getComputedStyle(el).backgroundColor)).not.toBe('rgb(244, 243, 239)');
   expect(await page.locator('h1').evaluate(el => parseFloat(getComputedStyle(el).paddingLeft))).toBeGreaterThanOrEqual(16);
 });
+
+test('screen readers hear the outcome of a switch, not the whole pane again', async ({ page }) => {
+  await page.goto('/hris/workbench/');
+  await expect(page.locator('.wb-right')).not.toHaveAttribute('aria-live', /.*/);
+  await expect(page.locator('[aria-live="polite"]')).toHaveCount(1);
+  await expect(page.locator('[aria-live="polite"] .wb-outcome')).toHaveCount(1);
+  await expect(page.locator('[aria-live="polite"] .wb-result')).toHaveCount(1);
+  await expect(page.locator('[aria-live="polite"] button')).toHaveCount(0);
+});
