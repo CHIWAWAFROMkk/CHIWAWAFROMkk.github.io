@@ -8,14 +8,16 @@ import SplitText from '../components/rb/SplitText.astro';
 import StreamText from '../components/StreamText.astro';
 import ReadingRail from '../components/ReadingRail.astro';
 import { SITE } from '../data/site';
-import { trackProjects } from '../data/tracks';
+import { trackProjects, trackTitle } from '../data/tracks';
 import type { Track } from '../data/tracks';
 import { trackPath, type Lang, type Bi } from '../i18n';
 
 export interface Summary { task: Bi; tradeoff?: Bi; mine: Bi; tools: Bi; evidence: Bi; status: Bi; next?: Bi }
 interface Props { lang: Lang; slug: string; title: Bi; lead: Bi; tags: Bi[]; summary: Summary; description: Bi; night?: boolean; motion?: boolean; deferTitle?: boolean; track?: Track }
-const { lang, slug, title, lead, tags, summary, description, night = false, motion = true, deferTitle = false, track = 'ai' } = Astro.props;
+const { lang, slug, title: ownTitle, lead, tags, summary, description, night = false, motion = true, deferTitle = false, track = 'ai' } = Astro.props;
 const path = `/projects/${slug}/`;
+// On the HRIS track the page is titled like its card (tracks.ts trackTitle); the main site keeps its own title.
+const title = trackTitle(track, slug) ?? ownTitle;
 // Pager order is the main site's order, then the films; the CSV tool and the live editions sit outside it.
 const order = track === 'hris' ? trackProjects('hris') : [...trackProjects('ai'), ...SITE.projects.filter(p => p.line === 'film')];
 const i = order.findIndex(p => p.slug === slug);

@@ -9,10 +9,13 @@ import LivePreview from '../components/LivePreview.astro';
 import { SITE } from '../data/site';
 import { EDITIONS, type EditionId } from '../data/editions';
 import { trackPath, type Lang } from '../i18n';
-import type { Track } from '../data/tracks';
+import { trackTitle, type Track } from '../data/tracks';
 interface Props { which: EditionId; lang: Lang; track?: Track }
 const { which, lang, track = 'ai' } = Astro.props;
 const E = EDITIONS[which], P = SITE.pages[E.page];
+// The back link names the simple page as this track titles it ("← 回到简易版：" + the HRIS card title on /hris/).
+const backName = trackTitle(track, E.slug);
+const backText = backName ? E.back[lang].match(/^.*?[:：]\s?/)![0] + backName[lang] : E.back[lang];
 ---
 <ProjectLayout track={track} lang={lang} slug={`${E.slug}/live`} title={P.title} lead={P.lead} tags={P.tags} summary={P.summary} description={P.description}>
   <Fragment slot="demo">
@@ -25,5 +28,5 @@ const E = EDITIONS[which], P = SITE.pages[E.page];
   </Fragment>
   <h2>{E.body.h2[lang]}</h2>
   <p>{E.body.p[lang]}</p>
-  <p><a href={trackPath(track, `/projects/${E.slug}/`, lang)}>{E.back[lang]}</a></p>
+  <p><a href={trackPath(track, `/projects/${E.slug}/`, lang)}>{backText}</a></p>
 </ProjectLayout>

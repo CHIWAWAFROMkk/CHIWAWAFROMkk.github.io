@@ -1,6 +1,6 @@
 import { SITE, type ProjectEntry } from './site';
 import { HRIS } from './hris';
-import type { TrackId } from '../i18n';
+import type { Bi, TrackId } from '../i18n';
 
 /** The main site (ai) and the HRIS fallback (hris, under /hris/). */
 export type Track = TrackId;
@@ -20,4 +20,14 @@ export function trackProjects(track: Track): ProjectEntry[] {
     const card = track === 'hris' ? HRIS.cards[slug as keyof typeof HRIS.cards] : undefined;
     return card ? { ...p, title: card.title, did: card.did } : p;
   });
+}
+
+/** The title a detail page shows in a track: on the HRIS track, the card's title (so the card, the pager and the page
+ *  agree), with "(live edition)" on a live page; undefined keeps the page's own title. */
+export function trackTitle(track: Track, slug: string): Bi | undefined {
+  if (track !== 'hris') return undefined;
+  const live = slug.endsWith('/live');
+  const card = HRIS.cards[slug.replace(/\/live$/, '') as keyof typeof HRIS.cards];
+  if (!card) return undefined;
+  return live ? { zh: `${card.title.zh}（完整版）`, en: `${card.title.en} (live edition)` } : card.title;
 }

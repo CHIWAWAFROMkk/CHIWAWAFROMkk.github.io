@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { SITE } from '../../src/data/site';
-import { trackProjects, TRACK_ORDER } from '../../src/data/tracks';
+import { trackProjects, TRACK_ORDER, trackTitle } from '../../src/data/tracks';
+import { HRIS } from '../../src/data/hris';
 
 describe('AI track', () => {
   it('lists the five product projects in the confirmed order', () => {
@@ -50,5 +51,17 @@ describe('trackPath', () => {
     expect(trackPath('hris', '/projects/ai-career/live/', 'zh')).toBe('/hris/projects/ai-career/live/');
     expect(trackPath('hris', '/brief/', 'en')).toBe('/en/hris/brief/');
     expect(trackPath('hris', '/en/projects/', 'en')).toBe('/en/hris/projects/');
+  });
+});
+
+describe('trackTitle: an HRIS detail page carries its card title', () => {
+  it('detail and live pages of the HRIS track take the card title; the live one says so', () => {
+    expect(trackTitle('hris', 'ai-career')).toEqual(HRIS.cards['ai-career'].title);
+    expect(trackTitle('hris', 'ai-career/live')!.zh).toBe(`${HRIS.cards['ai-career'].title.zh}（完整版）`);
+    expect(trackTitle('hris', 'ai-career/live')!.en).toBe(`${HRIS.cards['ai-career'].title.en} (live edition)`);
+  });
+  it('pages without an HRIS card, and the main site, keep their own titles', () => {
+    expect(trackTitle('hris', 'campus-delivery/insights')).toBeUndefined();
+    expect(trackTitle('ai', 'ai-career')).toBeUndefined();
   });
 });

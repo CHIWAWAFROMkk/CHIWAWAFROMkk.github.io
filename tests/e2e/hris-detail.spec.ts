@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { trackProjects } from '../../src/data/tracks';
+import { HRIS } from '../../src/data/hris';
+import { SITE } from '../../src/data/site';
 import { motionOff, noHorizontalOverflow } from './helpers';
 
 const PAGES = ['/hris/projects/hris-workflow/', '/hris/projects/ai-career/', '/hris/projects/campus-delivery/', '/hris/projects/ai-campus/', '/hris/projects/quota-deck/',
@@ -68,4 +70,19 @@ test('dark theme: inline code in project prose is readable', async ({ page }) =>
   await page.addInitScript(() => { try { localStorage.setItem('hyj-hris-theme', 'dark'); } catch { /* blocked */ } });
   await page.goto('/hris/projects/campus-delivery/');
   expect(await page.locator('.prose code').first().evaluate(textContrast)).toBeGreaterThanOrEqual(4.5);
+});
+
+test('an HRIS detail page is titled like its card; the main site keeps its own title', async ({ page }) => {
+  await motionOff(page);
+  const card = HRIS.cards['ai-career'].title.zh;
+  await page.goto('/hris/projects/ai-career/');
+  await expect(page.locator('h1')).toHaveText(card);
+  await expect(page).toHaveTitle(new RegExp(`^${card}`));
+  await page.goto('/hris/projects/ai-career/live/');
+  await expect(page.locator('h1')).toHaveText(`${card}（完整版）`);
+  await expect(page.locator('main a[href="/hris/projects/ai-career/"]').last()).toContainText(card);
+  await page.goto('/en/hris/projects/ai-career/live/');
+  await expect(page.locator('main a[href="/en/hris/projects/ai-career/"]').last()).toHaveText(`← Back to the simple page: ${HRIS.cards['ai-career'].title.en}`);
+  await page.goto('/projects/ai-career/');
+  await expect(page.locator('h1')).toHaveText(SITE.pages.career.title.zh);
 });
