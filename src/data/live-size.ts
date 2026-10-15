@@ -21,7 +21,8 @@ const dirBytes = (d: string): number =>
 export function liveBytes(id: LiveId): number {
   switch (id) {
     case 'career':
-      return sum(manifest(PYODIDE).map(f => f.bytes)) + sum(manifest('public/assets/py/job-agent/4397ded/manifest.json').map(f => f.bytes));
+      // The manifest also lists the source map and licence texts, which ship with the runtime but are never fetched.
+      return sum(manifest(PYODIDE).filter(f => !/\.map$|^LICENSE/.test(f.name)).map(f => f.bytes)) + sum(manifest('public/assets/py/job-agent/4397ded/manifest.json').map(f => f.bytes));
     case 'campus':
       return sum(manifest(PYODIDE).filter(f => CORE_FILES.includes(f.name)).map(f => f.bytes)) + sum(CAMPUS_RUNTIME.files.map(u => fileBytes(`public${u}`)));
     case 'quota':

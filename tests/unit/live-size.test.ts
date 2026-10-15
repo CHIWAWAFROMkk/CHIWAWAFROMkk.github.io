@@ -5,8 +5,11 @@ import { liveBytes, liveMB, formatSize, MAX_LIVE_BYTES, type LiveId } from '../.
 const manifestBytes = (p: string) => (JSON.parse(readFileSync(p, 'utf8')) as { files: { bytes: number }[] }).files.reduce((s, f) => s + f.bytes, 0);
 
 describe('live edition sizes are read from the shipped files', () => {
-  it('career = Pyodide manifest + job agent manifest', () => {
-    expect(liveBytes('career')).toBe(manifestBytes('public/assets/vendor/pyodide/0.29.5/manifest.json') + manifestBytes('public/assets/py/job-agent/4397ded/manifest.json'));
+  it('career = what the page loads: the Pyodide manifest without its source map and licence texts, plus the job agent', () => {
+    const py = (JSON.parse(readFileSync('public/assets/vendor/pyodide/0.29.5/manifest.json', 'utf8')) as { files: { name: string; bytes: number }[] }).files;
+    const loaded = py.filter(f => !/\.map$|^LICENSE/.test(f.name)).reduce((s, f) => s + f.bytes, 0);
+    expect(loaded).toBeLessThan(manifestBytes('public/assets/vendor/pyodide/0.29.5/manifest.json'));
+    expect(liveBytes('career')).toBe(loaded + manifestBytes('public/assets/py/job-agent/4397ded/manifest.json'));
   });
 
   it('insights = sql.js + the term database + its worker', () => {
