@@ -20,7 +20,7 @@ const still = governedTargets(600, 560, 380);
     <ul class="topo__legend h-mono">
       <li class="k-verified">{T.legend.verified[lang]}</li><li class="k-review">{T.legend.review[lang]}</li><li class="k-missing">{T.legend.missing[lang]}</li>
     </ul>
-    <button type="button" class="h-mono" aria-pressed="true" data-to-raw={T.toRaw[lang]} data-to-governed={T.toGoverned[lang]} data-raw={T.raw[lang]} data-governed={T.governed[lang]}>{T.toRaw[lang]}</button>
+    <button type="button" class="h-mono" hidden aria-pressed="true" data-to-raw={T.toRaw[lang]} data-to-governed={T.toGoverned[lang]} data-raw={T.raw[lang]} data-governed={T.governed[lang]}>{T.toRaw[lang]}</button>
   </div>
 </figure>
 <script>

@@ -10,6 +10,8 @@ export const FILM_PAGES = ['/projects/mais-je-taime/', '/en/projects/mais-je-tai
 export const JUNG_PAGES = ['/projects/jung-self-map/', '/en/projects/jung-self-map/'];
 export const STARK_PAGES = ['/projects/stark-desk/', '/en/projects/stark-desk/'];
 export const PRIVACY_PAGES = ['/privacy/', '/en/privacy/'];
+/** The HRIS track (/hris/): kept out of PAGES, whose specs assume the main site's shell. */
+export const HRIS_PAGES = ['/hris/', '/hris/brief/', '/hris/projects/', '/hris/workbench/', '/hris/projects/hris-workflow/', '/hris/projects/ai-career/', '/hris/projects/campus-delivery/', '/hris/projects/ai-campus/', '/hris/projects/quota-deck/', '/hris/projects/ai-career/live/', '/hris/projects/ai-campus/live/', '/hris/projects/quota-deck/live/', '/hris/projects/campus-delivery/insights/'].flatMap(p => [p, `/en${p}`]);
 export const PAGES = [...PHASE1_PAGES, ...PHASE2A_PAGES, ...INSIGHTS_PAGES, ...PHASE2B_PAGES, ...LIVE_PAGES, ...FILM_PAGES, ...JUNG_PAGES, ...STARK_PAGES, ...PRIVACY_PAGES];
 
 /** Mark the intro as seen before any page script runs. */

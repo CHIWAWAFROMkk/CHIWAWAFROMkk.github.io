@@ -32,6 +32,8 @@ test('motion off: a still grid drawn without the canvas loop', async ({ page }) 
   await page.goto('/hris/');
   await expect(page.locator('[data-topology] svg.topo-still')).toBeVisible();
   await expect(page.locator('[data-topology] canvas')).toBeHidden();
+  // The still grid cannot switch to "before", so the switch is not offered.
+  await expect(page.locator('[data-topology] button')).toBeHidden();
 });
 
 test.describe('without JavaScript', () => {
@@ -39,5 +41,6 @@ test.describe('without JavaScript', () => {
   test('the still grid shows', async ({ page }) => {
     await page.goto('/hris/');
     await expect(page.locator('[data-topology] svg.topo-still')).toBeVisible();
+    await expect(page.locator('[data-topology] button')).toBeHidden();
   });
 });

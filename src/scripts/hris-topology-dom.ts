@@ -73,6 +73,7 @@ export function initTopology(fig: HTMLElement): void {
   const stop = () => { cancelAnimationFrame(raf); raf = 0; };
   readColours(); layout();
   canvas.hidden = false;
+  btn.hidden = false;   // only the live canvas can show "before"; the still grid keeps the switch hidden
   fig.classList.add('is-live');
   addEventListener('resize', () => layout());
   document.addEventListener('hris-theme', readColours);
