@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { liveBytes, liveMB, formatSize, MAX_LIVE_BYTES, type LiveId } from '../../src/data/live-size';
 
 const manifestBytes = (p: string) => (JSON.parse(readFileSync(p, 'utf8')) as { files: { bytes: number }[] }).files.reduce((s, f) => s + f.bytes, 0);
@@ -15,6 +15,12 @@ describe('live edition sizes are read from the shipped files', () => {
   it('insights = sql.js + the term database + its worker', () => {
     const files = ['public/assets/vendor/sql-wasm.js', 'public/assets/vendor/sql-wasm.wasm', 'public/assets/insights/campus-term.sqlite', 'public/assets/insights-worker.js'];
     expect(liveBytes('insights')).toBe(files.reduce((s, f) => s + statSync(f).size, 0));
+  });
+
+  it("quota = the vendored HUD at 974c61d plus the portfolio's host files", () => {
+    const dir = (d: string): number => readdirSync(d, { withFileTypes: true }).reduce((s, e) => s + (e.isDirectory() ? dir(`${d}/${e.name}`) : statSync(`${d}/${e.name}`).size), 0);
+    const host = ['hud-host.html', 'hud-host.js', 'hud-host-off.css', 'hud-host-gentle.css'].map(f => statSync(`public/assets/quotadeck/${f}`).size).reduce((a, b) => a + b, 0);
+    expect(liveBytes('quota')).toBe(dir('public/assets/quotadeck/974c61d') + host);
   });
 
   it('every size is positive and fits the bar scale', () => {

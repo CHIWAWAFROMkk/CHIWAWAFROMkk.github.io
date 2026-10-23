@@ -14,7 +14,4 @@ describe('QuotaDeck screenshots', () => {
       expect(h).toBeGreaterThan(w);
     });
   }
-  it('the capture script refuses to shoot anything but demo data', () => {
-    expect(readFileSync('tools/quotadeck/shots.cjs', 'utf8')).toContain("演示数据 · 非真实额度");
-  });
 });

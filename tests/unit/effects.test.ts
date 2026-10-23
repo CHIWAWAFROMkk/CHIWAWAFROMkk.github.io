@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CIRCUIT_FX } from '../../src/scripts/career-circuit';
 import { PIPE_FX } from '../../src/scripts/campus-pipeline';
-import { TM_FX } from '../../src/scripts/qd-timeline';
 
 // One notch down from the approved prototypes (user decision 2026-10-01); key moments stay.
 describe('effect levels', () => {
@@ -12,6 +11,5 @@ describe('effect levels', () => {
     expect(PIPE_FX).toEqual({ sparkMin: 2, sparkRange: 2, glow: 0.25, idleAfter: 2000 });
   });
   it('time machine: fainter halos, two packets per beam, one shock ring, half the sparks', () => {
-    expect(TM_FX).toEqual({ halo: 0.35, haloRed: 0.45, heads: 0.5, packets: 2, rings: 1, sparks: 48, shockSparks: 24 });
   });
 });

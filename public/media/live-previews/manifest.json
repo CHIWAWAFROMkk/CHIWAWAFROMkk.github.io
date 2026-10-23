@@ -22,7 +22,7 @@
   "quota": {
     "file": "/media/live-previews/quota.jpg",
     "w": 1440,
-    "h": 1275,
+    "h": 923,
     "crop": {
       "file": "/media/live-previews/quota-crop.jpg",
       "w": 976,

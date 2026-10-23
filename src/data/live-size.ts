@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { CAMPUS_RUNTIME, CORE_FILES } from '../scripts/campus-flow';
-import { QD_DIR } from '../scripts/qd-load';
+import { QD_HUD_DIR } from '../scripts/qd-hud-load';
 import type { Lang } from '../i18n';
 
 /** Live editions whose first-load size is shown on the project cards. Read at build time from public/. */
@@ -26,7 +26,8 @@ export function liveBytes(id: LiveId): number {
     case 'campus':
       return sum(manifest(PYODIDE).filter(f => CORE_FILES.includes(f.name)).map(f => f.bytes)) + sum(CAMPUS_RUNTIME.files.map(u => fileBytes(`public${u}`)));
     case 'quota':
-      return dirBytes(`public${QD_DIR}`) + fileBytes('public/assets/quotadeck/host.html') + fileBytes('public/assets/quotadeck/host.js');
+      // QuotaDeck's vendored HUD, plus the portfolio's iframe host and its two motion-tier stylesheets.
+      return dirBytes(`public${QD_HUD_DIR}`) + ['hud-host.html', 'hud-host.js', 'hud-host-off.css', 'hud-host-gentle.css'].map(f => fileBytes(`public/assets/quotadeck/${f}`)).reduce((a, b) => a + b, 0);
     case 'insights':
       return sum(['public/assets/vendor/sql-wasm.js', 'public/assets/vendor/sql-wasm.wasm', 'public/assets/insights/campus-term.sqlite', 'public/assets/insights-worker.js'].map(fileBytes));
   }
