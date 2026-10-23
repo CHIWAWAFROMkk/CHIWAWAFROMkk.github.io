@@ -3,7 +3,7 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
 import CareerLive from '../components/CareerLive.astro';
 import CampusLive from '../components/CampusLive.astro';
 import CampusFramework from '../components/CampusFramework.astro';
-import QuotaLive from '../components/QuotaLive.astro';
+import QuotaHudLive from '../components/QuotaHudLive.astro';
 import QuotaShots from '../components/QuotaShots.astro';
 import LivePreview from '../components/LivePreview.astro';
 import { SITE } from '../data/site';
@@ -23,7 +23,7 @@ const backText = backName ? E.back[lang].match(/^.*?[:：]\s?/)![0] + backName[l
     {which === 'career' && <CareerLive lang={lang} />}
     {which === 'campus' && <CampusLive lang={lang} />}
     {which === 'campus' && <CampusFramework lang={lang} />}
-    {which === 'quota' && <QuotaLive lang={lang} />}
+    {which === 'quota' && <QuotaHudLive lang={lang} />}
     {which === 'quota' && <QuotaShots lang={lang} />}
   </Fragment>
   <h2>{E.body.h2[lang]}</h2>

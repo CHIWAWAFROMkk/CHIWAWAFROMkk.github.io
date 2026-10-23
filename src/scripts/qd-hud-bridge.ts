@@ -13,6 +13,8 @@ export interface BridgeOptions {
   onReturn(id: string): void;
   onOpenStats(): void;
   onAction(name: string): void;
+  /** The strip sizes the HUD measured; the page places the strip with them, as the desktop does. */
+  onStrips?(value: unknown): void;
 }
 type Channel = 'state' | 'tokens' | 'layout' | 'settings' | 'sessions' | 'gaming';
 type Listener = (value: unknown) => void;
@@ -52,7 +54,7 @@ export function createHudBridge(o: BridgeOptions) {
     hits(_rects: unknown) { /* click-through belongs to the desktop window */ },
     drag(_phase: unknown) { /* the strip stays on the right edge in the demo */ },
     card(_open: unknown) {},
-    strips(_value: unknown) {},
+    strips(value: unknown) { o.onStrips?.(value); },
     onState: subscribe('state'),
     onTokens: subscribe('tokens'),
     onLayout: subscribe('layout'),

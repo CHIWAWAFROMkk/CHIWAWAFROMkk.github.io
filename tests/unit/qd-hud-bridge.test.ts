@@ -58,3 +58,12 @@ describe('window.hud for the browser', () => {
     expect(o.onDismiss).toHaveBeenCalledWith(['x']);
   });
 });
+
+describe('strip sizes', () => {
+  it('the measured strip sizes reach the page, which places the strip with them', () => {
+    const onStrips = vi.fn();
+    const { hud } = make({ onStrips });
+    hud.strips({ vertical: { width: 120, height: 200 }, horizontal: { width: 420, height: 34 } });
+    expect(onStrips).toHaveBeenCalledWith({ vertical: { width: 120, height: 200 }, horizontal: { width: 420, height: 34 } });
+  });
+});

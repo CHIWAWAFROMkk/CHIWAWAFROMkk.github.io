@@ -1,0 +1,76 @@
+---
+import { QD_HUD_TEXT } from '../scripts/qd-hud-text';
+import { noteAt } from '../scripts/qd-hud-scenario';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = QD_HUD_TEXT[lang];
+---
+<section class="qhud" data-quota-hud data-demo data-lang={lang} aria-labelledby="qhud-title">
+  <div class="wrap qhud-head">
+    <div class="section-head"><h2 id="qhud-title">{T.title}</h2><span class="meta">{T.meta}</span></div>
+    <p class="qhud-intro">{T.intro}</p>
+    <p class="qhud-badge">{T.badge}</p>
+  </div>
+  <div class="qhud-stage night-zone" id="qd-stage" data-state="idle" hidden>
+    <div class="wrap qhud-bar">
+      <p class="qhud-note" data-qd-note aria-live="polite">{noteAt(0)[lang]}</p>
+      <div class="qhud-ctl">
+        <div class="qhud-style" role="group" aria-label={T.styleLabel}>
+          <button type="button" class="qhud-btn" data-qd-style="strip" aria-pressed="true">{T.styleStrip}</button>
+          <button type="button" class="qhud-btn" data-qd-style="notch" aria-pressed="false">{T.styleNotch}</button>
+        </div>
+        <button type="button" class="qhud-btn" data-qd-play aria-pressed="false">{T.pause}</button>
+        <button type="button" class="qhud-btn" data-qd-restart>{T.restart}</button>
+        <button type="button" class="qhud-btn red" data-qd-step hidden>{T.step}</button>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="qhud-desk" data-qd-desk>
+        <div class="qhud-screen" data-qd-screen role="group" aria-label={T.deskLabel}>
+          <iframe id="qd-frame" title={T.frameTitle} data-src="/assets/quotadeck/hud-host.html"></iframe>
+        </div>
+      </div>
+      <p class="qhud-hint" data-qd-hint hidden>{T.hint}</p>
+      <p class="qhud-log" data-qd-log aria-live="polite"></p>
+      <figure class="qhud-stats" data-qd-stats hidden>
+        <img src="/media/quota-deck/hud/stats.png" width="1406" height="585" alt={T.statsNote} loading="lazy" />
+        <figcaption>{T.statsNote}</figcaption>
+      </figure>
+      <p class="qhud-credit">{T.credit}</p>
+    </div>
+  </div>
+  <p class="wrap qhud-fallback" id="qd-fallback">{T.noscript}</p>
+</section>
+<script>
+  import { initQuotaHudLive } from '../scripts/qd-hud-live';
+  document.querySelectorAll<HTMLElement>('[data-quota-hud]').forEach(initQuotaHudLive);
+</script>
+<style>
+  .qhud { padding-bottom: 32px; overflow-x: clip; }
+  .qhud-intro { max-width: 60em; margin: 14px 0 8px; }
+  .qhud-badge { display: inline-block; margin: 0 0 18px; padding: 4px 10px; border: 1.5px solid currentColor; font-size: 14px; }
+  .qhud-stage[hidden] { display: none; }
+  .qhud-stage { padding-block: 16px 20px; }
+  .qhud-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 16px; margin-bottom: 14px; }
+  .qhud-note { margin: 0; color: var(--night-fg); font: 600 16px/1.5 var(--font-body); min-height: 3em; max-width: 42em; }
+  .qhud-ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+  .qhud-style { display: inline-flex; }
+  .qhud-btn { min-height: 40px; padding: 0 14px; border: 1.5px solid var(--night-mute); background: none; color: var(--night-fg); font: 500 14px/1 var(--font-body); cursor: pointer; }
+  .qhud-btn + .qhud-btn { margin-left: -1.5px; }
+  .qhud-btn[aria-pressed='true'] { background: var(--night-fg); color: var(--night); }
+  .qhud-btn.red { border-color: var(--red); background: var(--red); color: #fff; }
+  .qhud-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+  .qhud-btn[hidden] { display: none; }
+  .qhud-desk { position: relative; width: 100%; overflow: hidden; border: 1px solid color-mix(in srgb, var(--night-fg) 18%, transparent); }
+  .qhud-screen { position: absolute; left: 0; top: 0; transform-origin: 0 0; background: radial-gradient(120% 90% at 20% 10%, #2d3748 0%, #1a1f29 55%, #0e1117 100%); }
+  /* The HUD declares color-scheme: dark; the frame must match, or the browser paints an opaque backdrop over the wallpaper. */
+  .qhud-screen iframe { position: absolute; border: 0; background: transparent; color-scheme: dark; }
+  .qhud-hint { margin: 12px 0 0; color: var(--night-fg); font-weight: 600; }
+  .qhud-hint[hidden], .qhud-stats[hidden] { display: none; }
+  .qhud-log { min-height: 1.5em; margin: 8px 0 0; color: var(--night-fg); }
+  .qhud-stats { margin: 12px 0 0; max-width: 720px; }
+  .qhud-stats img { width: 100%; height: auto; display: block; }
+  .qhud-stats figcaption, .qhud-credit { margin-top: 8px; color: var(--night-mute); font-size: 14px; }
+  .qhud-fallback[hidden] { display: none; }
+</style>
