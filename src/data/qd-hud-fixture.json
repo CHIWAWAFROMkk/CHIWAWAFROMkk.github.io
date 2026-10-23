@@ -1,0 +1,1693 @@
+{
+  "commit": "974c61d268ae7c1852370c6c8f9cd046d7a9d0f7",
+  "base": 1792648800000,
+  "keyframes": [
+    {
+      "at": 0,
+      "ui": {
+        "providers": [
+          {
+            "id": "codex",
+            "name": "Codex",
+            "monogram": "CX",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 51,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 51,
+                  "resetsAt": "2026-10-22T08:30:00.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周",
+                  "remainingPercent": 70,
+                  "resetsAt": "2026-10-24T08:00:00.000Z",
+                  "reset": "31h 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "pro · 官方额度窗口",
+            "quotaHero": "51.0%",
+            "quotaSub": "已到重置时间 · 待同步",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:00",
+            "freshness": "数据时间 2026/10/21 23:00:00",
+            "planType": "pro",
+            "updatedAt": "2026-10-22T06:00:00.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "claude",
+            "name": "Claude Code",
+            "monogram": "CC",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 21,
+              "windows": [
+                {
+                  "label": "每周",
+                  "remainingPercent": 21,
+                  "resetsAt": "2026-10-26T16:27:00.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周 · Opus",
+                  "remainingPercent": 40,
+                  "resetsAt": "2026-10-26T16:27:00.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 88,
+                  "resetsAt": "2026-10-22T07:12:30.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "low",
+            "statusText": "偏低",
+            "plan": "Claude Max_20x · 官方用量接口",
+            "quotaHero": "21.0%",
+            "quotaSub": "订阅窗口 · 官方用量接口",
+            "sharedPool": false,
+            "sharedNotice": "由 Claude 官方用量接口读取，与 Claude Code 的 /usage 同源。 · 数据时间 2026/10/21 23:00:00",
+            "freshness": "数据时间 2026/10/21 23:00:00",
+            "planType": "max_20x",
+            "updatedAt": "2026-10-22T06:00:00.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Claude 订阅共享额度",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 88,
+                    "resetsAt": "2026-10-22T07:12:30.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": 6.3,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周",
+                    "remainingPercent": 21,
+                    "resetsAt": "2026-10-26T16:27:00.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 1.4,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周 · Opus",
+                    "remainingPercent": 40,
+                    "resetsAt": "2026-10-26T16:27:00.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 0.8,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "chainConnected": false,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "antigravity",
+            "name": "Antigravity",
+            "monogram": "AG",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 91,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 91,
+                  "resetsAt": "2026-10-22T09:20:00.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "91.0%",
+            "quotaSub": "共享账户剩余",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:00",
+            "freshness": "数据时间 2026/10/21 23:00:00",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:00.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Gemini",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 91,
+                    "resetsAt": "2026-10-22T09:20:00.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": null,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "workbuddy",
+            "name": "WorkBuddy",
+            "monogram": "WB",
+            "gauge": {
+              "kind": "ratio",
+              "provenance": "live",
+              "remainingPercent": 66,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "660 积分",
+            "quotaSub": "共 1,000 积分",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:00",
+            "freshness": "数据时间 2026/10/21 23:00:00",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:00.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": "open-workbuddy",
+            "action": {
+              "label": "登录并读取用量",
+              "type": "open-workbuddy"
+            }
+          },
+          {
+            "id": "deepseek",
+            "name": "DeepSeek",
+            "monogram": "DS",
+            "gauge": {
+              "kind": "balance",
+              "provenance": "live",
+              "remainingPercent": null,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "¥ 8.85",
+            "quotaSub": "全模型共享余额",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:00",
+            "freshness": "数据时间 2026/10/21 23:00:00",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:00.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "at": 20000,
+      "ui": {
+        "providers": [
+          {
+            "id": "codex",
+            "name": "Codex",
+            "monogram": "CX",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 51,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 51,
+                  "resetsAt": "2026-10-22T08:30:20.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周",
+                  "remainingPercent": 70,
+                  "resetsAt": "2026-10-24T08:00:20.000Z",
+                  "reset": "31h 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "pro · 官方额度窗口",
+            "quotaHero": "51.0%",
+            "quotaSub": "已到重置时间 · 待同步",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:20",
+            "freshness": "数据时间 2026/10/21 23:00:20",
+            "planType": "pro",
+            "updatedAt": "2026-10-22T06:00:20.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "claude",
+            "name": "Claude Code",
+            "monogram": "CC",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 21,
+              "windows": [
+                {
+                  "label": "每周",
+                  "remainingPercent": 21,
+                  "resetsAt": "2026-10-26T16:27:20.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周 · Opus",
+                  "remainingPercent": 40,
+                  "resetsAt": "2026-10-26T16:27:20.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 52,
+                  "resetsAt": "2026-10-22T07:12:50.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "low",
+            "statusText": "偏低",
+            "plan": "Claude Max_20x · 官方用量接口",
+            "quotaHero": "21.0%",
+            "quotaSub": "订阅窗口 · 官方用量接口",
+            "sharedPool": false,
+            "sharedNotice": "由 Claude 官方用量接口读取，与 Claude Code 的 /usage 同源。 · 数据时间 2026/10/21 23:00:20",
+            "freshness": "数据时间 2026/10/21 23:00:20",
+            "planType": "max_20x",
+            "updatedAt": "2026-10-22T06:00:20.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Claude 订阅共享额度",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 52,
+                    "resetsAt": "2026-10-22T07:12:50.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": 6.3,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周",
+                    "remainingPercent": 21,
+                    "resetsAt": "2026-10-26T16:27:20.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 1.4,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周 · Opus",
+                    "remainingPercent": 40,
+                    "resetsAt": "2026-10-26T16:27:20.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 0.8,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "chainConnected": false,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "antigravity",
+            "name": "Antigravity",
+            "monogram": "AG",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 91,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 91,
+                  "resetsAt": "2026-10-22T09:20:20.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "91.0%",
+            "quotaSub": "共享账户剩余",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:20",
+            "freshness": "数据时间 2026/10/21 23:00:20",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:20.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Gemini",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 91,
+                    "resetsAt": "2026-10-22T09:20:20.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": null,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "workbuddy",
+            "name": "WorkBuddy",
+            "monogram": "WB",
+            "gauge": {
+              "kind": "ratio",
+              "provenance": "live",
+              "remainingPercent": 66,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "660 积分",
+            "quotaSub": "共 1,000 积分",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:20",
+            "freshness": "数据时间 2026/10/21 23:00:20",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:20.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": "open-workbuddy",
+            "action": {
+              "label": "登录并读取用量",
+              "type": "open-workbuddy"
+            }
+          },
+          {
+            "id": "deepseek",
+            "name": "DeepSeek",
+            "monogram": "DS",
+            "gauge": {
+              "kind": "balance",
+              "provenance": "live",
+              "remainingPercent": null,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "¥ 8.85",
+            "quotaSub": "全模型共享余额",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:20",
+            "freshness": "数据时间 2026/10/21 23:00:20",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:20.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "at": 45000,
+      "ui": {
+        "providers": [
+          {
+            "id": "codex",
+            "name": "Codex",
+            "monogram": "CX",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 51,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 51,
+                  "resetsAt": "2026-10-22T08:30:45.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周",
+                  "remainingPercent": 70,
+                  "resetsAt": "2026-10-24T08:00:45.000Z",
+                  "reset": "31h 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "pro · 官方额度窗口",
+            "quotaHero": "51.0%",
+            "quotaSub": "已到重置时间 · 待同步",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:45",
+            "freshness": "数据时间 2026/10/21 23:00:45",
+            "planType": "pro",
+            "updatedAt": "2026-10-22T06:00:45.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "claude",
+            "name": "Claude Code",
+            "monogram": "CC",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 21,
+              "windows": [
+                {
+                  "label": "每周",
+                  "remainingPercent": 21,
+                  "resetsAt": "2026-10-26T16:27:45.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 27,
+                  "resetsAt": "2026-10-22T07:13:15.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周 · Opus",
+                  "remainingPercent": 40,
+                  "resetsAt": "2026-10-26T16:27:45.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "low",
+            "statusText": "偏低",
+            "plan": "Claude Max_20x · 官方用量接口",
+            "quotaHero": "21.0%",
+            "quotaSub": "订阅窗口 · 官方用量接口",
+            "sharedPool": false,
+            "sharedNotice": "由 Claude 官方用量接口读取，与 Claude Code 的 /usage 同源。 · 数据时间 2026/10/21 23:00:45",
+            "freshness": "数据时间 2026/10/21 23:00:45",
+            "planType": "max_20x",
+            "updatedAt": "2026-10-22T06:00:45.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Claude 订阅共享额度",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 27,
+                    "resetsAt": "2026-10-22T07:13:15.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": 6.3,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周",
+                    "remainingPercent": 21,
+                    "resetsAt": "2026-10-26T16:27:45.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 1.4,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周 · Opus",
+                    "remainingPercent": 40,
+                    "resetsAt": "2026-10-26T16:27:45.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 0.8,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "chainConnected": false,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "antigravity",
+            "name": "Antigravity",
+            "monogram": "AG",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 91,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 91,
+                  "resetsAt": "2026-10-22T09:20:45.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "91.0%",
+            "quotaSub": "共享账户剩余",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:45",
+            "freshness": "数据时间 2026/10/21 23:00:45",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:45.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Gemini",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 91,
+                    "resetsAt": "2026-10-22T09:20:45.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": null,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "workbuddy",
+            "name": "WorkBuddy",
+            "monogram": "WB",
+            "gauge": {
+              "kind": "ratio",
+              "provenance": "live",
+              "remainingPercent": 66,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "660 积分",
+            "quotaSub": "共 1,000 积分",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:45",
+            "freshness": "数据时间 2026/10/21 23:00:45",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:45.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": "open-workbuddy",
+            "action": {
+              "label": "登录并读取用量",
+              "type": "open-workbuddy"
+            }
+          },
+          {
+            "id": "deepseek",
+            "name": "DeepSeek",
+            "monogram": "DS",
+            "gauge": {
+              "kind": "balance",
+              "provenance": "live",
+              "remainingPercent": null,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "¥ 8.85",
+            "quotaSub": "全模型共享余额",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:00:45",
+            "freshness": "数据时间 2026/10/21 23:00:45",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:00:45.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "at": 70000,
+      "ui": {
+        "providers": [
+          {
+            "id": "codex",
+            "name": "Codex",
+            "monogram": "CX",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 51,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 51,
+                  "resetsAt": "2026-10-22T08:31:10.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周",
+                  "remainingPercent": 70,
+                  "resetsAt": "2026-10-24T08:01:10.000Z",
+                  "reset": "31h 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "pro · 官方额度窗口",
+            "quotaHero": "51.0%",
+            "quotaSub": "已到重置时间 · 待同步",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:01:10",
+            "freshness": "数据时间 2026/10/21 23:01:10",
+            "planType": "pro",
+            "updatedAt": "2026-10-22T06:01:10.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "claude",
+            "name": "Claude Code",
+            "monogram": "CC",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 21,
+              "windows": [
+                {
+                  "label": "每周",
+                  "remainingPercent": 21,
+                  "resetsAt": "2026-10-26T16:28:10.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 27,
+                  "resetsAt": "2026-10-22T07:13:40.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                },
+                {
+                  "label": "每周 · Opus",
+                  "remainingPercent": 40,
+                  "resetsAt": "2026-10-26T16:28:10.000Z",
+                  "reset": "4d 后重置",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "low",
+            "statusText": "偏低",
+            "plan": "Claude Max_20x · 官方用量接口",
+            "quotaHero": "21.0%",
+            "quotaSub": "订阅窗口 · 官方用量接口",
+            "sharedPool": false,
+            "sharedNotice": "由 Claude 官方用量接口读取，与 Claude Code 的 /usage 同源。 · 数据时间 2026/10/21 23:01:10",
+            "freshness": "数据时间 2026/10/21 23:01:10",
+            "planType": "max_20x",
+            "updatedAt": "2026-10-22T06:01:10.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Claude 订阅共享额度",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 27,
+                    "resetsAt": "2026-10-22T07:13:40.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": 6.3,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周",
+                    "remainingPercent": 21,
+                    "resetsAt": "2026-10-26T16:28:10.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 1.4,
+                    "samplingSupported": true
+                  },
+                  {
+                    "label": "每周 · Opus",
+                    "remainingPercent": 40,
+                    "resetsAt": "2026-10-26T16:28:10.000Z",
+                    "reset": "4d 后重置",
+                    "burnPerHour": 0.8,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "chainConnected": false,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "antigravity",
+            "name": "Antigravity",
+            "monogram": "AG",
+            "gauge": {
+              "kind": "window",
+              "provenance": "live",
+              "remainingPercent": 91,
+              "windows": [
+                {
+                  "label": "5 小时",
+                  "remainingPercent": 91,
+                  "resetsAt": "2026-10-22T09:21:10.000Z",
+                  "reset": "已到重置时间 · 待同步",
+                  "burnPerHour": null,
+                  "estimatedHoursLeft": null
+                }
+              ]
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "91.0%",
+            "quotaSub": "共享账户剩余",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:01:10",
+            "freshness": "数据时间 2026/10/21 23:01:10",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:01:10.000Z",
+            "models": [],
+            "pools": [
+              {
+                "name": "Gemini",
+                "modelCount": 0,
+                "windows": [
+                  {
+                    "label": "5 小时",
+                    "remainingPercent": 91,
+                    "resetsAt": "2026-10-22T09:21:10.000Z",
+                    "reset": "已到重置时间 · 待同步",
+                    "burnPerHour": null,
+                    "samplingSupported": true
+                  }
+                ]
+              }
+            ],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          },
+          {
+            "id": "workbuddy",
+            "name": "WorkBuddy",
+            "monogram": "WB",
+            "gauge": {
+              "kind": "ratio",
+              "provenance": "live",
+              "remainingPercent": 66,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "660 积分",
+            "quotaSub": "共 1,000 积分",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:01:10",
+            "freshness": "数据时间 2026/10/21 23:01:10",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:01:10.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": "open-workbuddy",
+            "action": {
+              "label": "登录并读取用量",
+              "type": "open-workbuddy"
+            }
+          },
+          {
+            "id": "deepseek",
+            "name": "DeepSeek",
+            "monogram": "DS",
+            "gauge": {
+              "kind": "balance",
+              "provenance": "live",
+              "remainingPercent": null,
+              "windows": []
+            },
+            "status": "healthy",
+            "statusText": "充裕",
+            "plan": "已连接 · 官方数据",
+            "quotaHero": "¥ 8.61",
+            "quotaSub": "全模型共享余额",
+            "sharedPool": false,
+            "sharedNotice": "数据时间 2026/10/21 23:01:10",
+            "freshness": "数据时间 2026/10/21 23:01:10",
+            "planType": "",
+            "updatedAt": "2026-10-22T06:01:10.000Z",
+            "models": [],
+            "pools": [],
+            "setupAction": null,
+            "action": {
+              "label": "配置连接",
+              "type": "configure"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tokens": {
+    "claude": {
+      "status": "ok",
+      "startAt": 1792563300000,
+      "partial": false,
+      "stacks": [
+        [
+          200000,
+          90000
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          90000
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          440000,
+          90000
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          90000
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          380000,
+          90000
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          260000,
+          90000
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          320000,
+          90000
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          90000
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          260000,
+          90000
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          440000,
+          90000
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          200000,
+          90000
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          90000
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          440000,
+          90000
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          90000
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          380000,
+          90000
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          260000,
+          90000
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          320000,
+          90000
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          90000
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          260000,
+          90000
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          0
+        ],
+        [
+          440000,
+          90000
+        ],
+        [
+          200000,
+          0
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          200000,
+          90000
+        ],
+        [
+          260000,
+          0
+        ],
+        [
+          320000,
+          0
+        ],
+        [
+          380000,
+          90000
+        ],
+        [
+          440000,
+          0
+        ],
+        [
+          200000,
+          0
+        ]
+      ],
+      "buckets": [
+        290000,
+        260000,
+        320000,
+        470000,
+        440000,
+        200000,
+        0,
+        0,
+        0,
+        530000,
+        200000,
+        260000,
+        410000,
+        380000,
+        440000,
+        0,
+        0,
+        0,
+        470000,
+        440000,
+        200000,
+        350000,
+        320000,
+        380000,
+        0,
+        0,
+        0,
+        410000,
+        380000,
+        440000,
+        290000,
+        260000,
+        320000,
+        0,
+        0,
+        0,
+        350000,
+        320000,
+        380000,
+        530000,
+        200000,
+        260000,
+        0,
+        0,
+        0,
+        290000,
+        260000,
+        320000,
+        470000,
+        440000,
+        200000,
+        0,
+        0,
+        0,
+        530000,
+        200000,
+        260000,
+        410000,
+        380000,
+        440000,
+        0,
+        0,
+        0,
+        470000,
+        440000,
+        200000,
+        350000,
+        320000,
+        380000,
+        0,
+        0,
+        0,
+        410000,
+        380000,
+        440000,
+        290000,
+        260000,
+        320000,
+        0,
+        0,
+        0,
+        350000,
+        320000,
+        380000,
+        530000,
+        200000,
+        260000,
+        0,
+        0,
+        0,
+        290000,
+        260000,
+        320000,
+        470000,
+        440000,
+        200000
+      ],
+      "models": [
+        {
+          "id": "claude-opus-5-5",
+          "name": "Opus 5.5",
+          "total": 21000000
+        },
+        {
+          "id": "claude-fable-5-1",
+          "name": "Fable 5.1",
+          "total": 1980000
+        }
+      ],
+      "total": 22980000
+    },
+    "codex": {
+      "status": "unsupported",
+      "startAt": 1792563300000,
+      "partial": false,
+      "total": 0,
+      "buckets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "models": [],
+      "stacks": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    }
+  }
+}
