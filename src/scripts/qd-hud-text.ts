@@ -12,7 +12,7 @@ export const QD_HUD_TEXT = {
     step: '下一步',
     styleLabel: '显示方式',
     styleStrip: '贴边浮条',
-    styleNotch: '刘海',
+    styleNotch: '顶部黑块',
     deskLabel: '模拟的桌面',
     frameTitle: 'QuotaDeck HUD（真实界面，模拟数据）',
     hint: '可以点浮条上的 Claude 图标，再点 Allow once 或 Deny 试试。',

@@ -41,13 +41,13 @@ export const EDITIONS: Record<EditionId, Edition> = {
     slug: 'quota-deck', page: 'quotaLive',
     teaser: {
       kicker: KICKER,
-      title: { zh: '时间机器：QuotaDeck 的真实界面在线运行 →', en: 'Time machine: QuotaDeck\'s real interface, live →' },
-      sub: { zh: '托盘窗口的真实界面文件原样运行，模拟时钟快进：看额度消耗、到点重置、按采样算出的耗尽预测。只有时钟和使用量是模拟的。', en: 'The tray window\'s real interface files run unchanged on a fast-forward clock: watch quota drain, reset on time and QuotaDeck\'s own exhaustion forecast. Only the clock and the usage are simulated.' },
+      title: { zh: '看 HUD 怎样提醒你：做完了、等批准 →', en: 'See how the HUD tells you: done, waiting for approval →' },
+      sub: { zh: 'QuotaDeck 的真实界面文件原样运行，一分半钟走完一个下午：Agent 做完一轮、请求批准、等待，你随时可以点开卡片、批准或拒绝。只有时钟和数据是模拟的。', en: 'QuotaDeck\'s real interface files run unchanged through an afternoon in a minute and a half: an agent finishes a turn, asks for approval, waits, and you can open a card, allow or deny at any time. Only the clock and the data are simulated.' },
     },
     back: { zh: '← 回到简易版：QuotaDeck', en: '← Back to the simple page: QuotaDeck' },
     body: {
       h2: { zh: '这一页在运行什么', en: 'What runs on this page' },
-      p: { zh: '窗口是公开仓库固定版本的真实界面文件；界面数据和耗尽预测由 QuotaDeck 自己的代码算出。不读取你的电脑或任何账号，协作只走状态流程、不调用真实 Agent。演示不可用时，演示区会换成桌面版的真实截图。', en: 'The window is the real interface of a pinned commit of the public repository; its data and the exhaustion forecast are computed by QuotaDeck\'s own code. Nothing on your computer or in any account is read, and the parallel run only walks the state flow — no real agent is called. If the demo cannot start, the demo area shows real desktop screenshots instead.' },
+      p: { zh: '浮条与卡片是公开仓库固定版本的真实界面文件；会话状态和额度换算由 QuotaDeck 自己的代码算出。不读取你的电脑或任何账号，批准与拒绝只改演示状态、不执行任何命令。演示不可用时，下方有桌面版截图。', en: 'The strip and the cards are the real interface files of a pinned commit of the public repository; session states and quota figures are worked out by QuotaDeck\'s own code. Nothing on your computer or in any account is read, and allowing or denying only changes the demo; no command runs. If the demo cannot start, the desktop screenshots below still show the interface.' },
     },
   },
 };

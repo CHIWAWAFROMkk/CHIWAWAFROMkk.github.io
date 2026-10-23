@@ -1,66 +1,54 @@
-One desktop entry point for quotas scattered across agents and APIs: first see how much is left, then open the models and their consumption multipliers, then hand a task to several local agents at once.
+A small strip on the edge of the screen: how much quota several AI services have left, at a glance; and when Claude Code or Codex finishes a turn or waits for your approval, the strip tells you.
 
-## From a model list to a usage decision
+## From a quota table to reminders on the desktop
 
-When one account balance appears under a dozen models, it looks as if each model had its own allowance. The project keeps pools, models and billing apart, and shows only what each provider actually reports.
+When one account balance appears under a dozen models, it looks as if each model had its own allowance. The project first kept pools, models and billing apart, showing only what each provider actually reports; 0.6.0 then moved the interface to an edge HUD and added done reminders and approval cards: step away for a while, glance at the strip when you are back, and you know which agent is done and which one is waiting for you.
 
-The current version is the 0.5.0 release candidate (0.5.0-rc.5), and its source is public.
+The interface is a faithful copy of the minimal form of Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); its look is not my design. My part was choosing the direction and the scope, setting the rules for reading quotas, for reminders and for approvals, and signing off the result.
 
-### Quota
+### Edge strip
 
-Folded by provider, with a shared pool shown only once. Claude Code shows its five-hour and weekly subscription windows; Antigravity shows its quota windows, reset times and sampled burn rate; WorkBuddy shows each model's consumption multiplier.
+One quota ring per service; the number is the share used (the balance for prepaid ones), green below 70%, amber from 70%, red from 90%, and `–` when nothing could be read. Hover an icon for a line of detail; click it for that service's card: 5-hour and weekly windows, reset times, and for Claude and Codex 24 hours of token bars stacked by model.
 
-### Models
+### Done reminders
 
-Collects the models the connected services currently return, with search. Each model's strengths are marked as a local suggestion, so heuristic tags are never mistaken for official benchmarks.
+QuotaDeck only reads local session logs and changes no Claude Code or Codex setting. Seconds after a turn ends the icon becomes a smiling bot and a `New reply` capsule slides out; the reminder stays until you have seen it. `Waiting` is an inference: a tool call with no result after 30 seconds is taken as possibly waiting for you.
 
-### Parallel hand-off
+### Approval cards
 
-The same task goes to the agents you tick: Codex drafts the technical plan, Claude Code reviews independently, Antigravity proposes an alternative, WorkBuddy shapes the deliverable; their independent results appear side by side. Nothing starts until the user ticks the agents.
+Once connected, a command Claude Code asks to run appears as a card on the HUD, with `Allow once` and `Deny`. It is off by default; connecting backs up the existing settings first, and one click disconnects. When QuotaDeck is not running, requests fall back to the usual confirmation.
 
-![How pools, models and tasks relate (diagram in Chinese)](/assets/editorial/quota-pools.svg)
+### Notch
 
-A structural sketch of shared quota sources and model choice. It holds no private balances and is not a picture of the running interface.
+The strip can also become a black block at the top centre of the screen (the notch): its glow takes each service's quota colour, it opens out to both sides when there is a reminder, and cards hang below it. While a full-screen 3D program such as a Steam game is in front, the whole HUD hides (a browser playing video full screen does not count); the reminders that came in meanwhile appear once it closes.
+
+![How quota pools, models and tasks relate](/assets/editorial/quota-pools.svg)
+
+A structural sketch of shared quota sources and model choice. It holds no private balance and is not a picture of the running interface.
 
 ## Connections and current scope
 
 | Service | Data source | Current limits |
 |---|---|---|
-| Codex | Local CLI: account windows, model list | Shared quota is never split into invented per-model shares |
-| Claude Code | Subscription windows and session model forwarded by the official statusLine | One-click connect in the app; an existing status line keeps working through a chained bridge, and one click disconnects and restores it exactly |
-| Antigravity | The local service's quota and model catalogue, falling back to the CLI | Experimental interface that may change with client versions; burn rate is sampled per pool |
+| Codex | Local CLI: account windows and model list | A shared quota is never split into made-up per-model shares |
+| Claude Code | Reads the local sign-in to call the official usage endpoint; falls back to data forwarded by the official statusLine | The token stays in the main process, never in snapshots, logs or the interface |
+| Antigravity | The local service's quota and model catalogue, falling back to the CLI | Experimental interface that may change with client versions |
 | DeepSeek | Official API for balance and models | Needs the user's own API key; the account balance is shared |
-| WorkBuddy | An official web snapshot the user saved | Does not refresh the web page automatically; balance and multipliers are as of the snapshot time |
+| WorkBuddy | An official web snapshot the user saved | Does not refresh the web page; balance and multipliers are as of the snapshot time |
 
-The catalogue covers what the connectors return; it does not promise to discover any local agent. Third-party names and trademarks belong to their owners.
+Third-party names and trademarks belong to their owners.
 
-## How to read a multiplier
+## Build and verification
 
-On the same billing basis, a lower consumption multiplier means the same balance goes further. The interface uses the reciprocal of the multiplier to help compare.
+Electron and Node.js. Data reads stay in the main process; the interface only gets data through a restricted bridge. The code was written with AI coding tools: GPT wrote the back end, Claude wrote the front end and reviewed and merged.
 
-### A worked example, not an account measurement
+Unit tests and desktop smoke tests cover quota mapping, session states, reminders and approvals; approval cards were signed off in a real Claude Code session: allowed commands ran, denied ones did not. Tests and builds never call a real account.
 
-Suppose two models have multipliers of 0.5× and 1×. Under the same input and output conditions, the first gives twice the relative usage of the second.
-
-This does not convert into an exact number of requests: context length, output length, caching and discounts all change real consumption. When a provider does not publish a multiplier, it stays unknown.
-
-## Implementation and verification
-
-An Electron tray window with Node.js connectors. Data reads and model calls stay in the main process; the interface acts through a restricted bridge.
-
-### Verified
-
-61 automated checks cover shared-quota mapping, output parsing, status boundaries, the Claude Code chained bridge, connector hardening, packaging and security boundaries; on the development machine, short parallel tasks ran end to end through Codex, Antigravity and WorkBuddy. CI checks and builds never call real account models.
-
-If the interface fails it can recover automatically within limits, or be reloaded from the tray; collaboration state for the current run stays in memory, and a reload never calls the models again.
-
-### Still to build
-
-Multi-round cross-review, automatic summaries, discovery of arbitrary agents and exact per-model consumption attribution are not implemented. Capability suggestions come from name rules and have not been calibrated against real benchmarks.
+The live edition of this page runs the same HUD interface files in your browser, on simulated data.
 
 ## Run it on your own computer
 
-You need Windows 11, Node.js 22+ and PowerShell 7; install and sign in to the CLIs you need as the repository README describes.
+Prepare Windows 11, Node.js 22+ and PowerShell 7, then install and sign in to the CLIs you need, following the repository README.
 
 ```
 git clone https://github.com/CHIWAWAFROMkk/quota-deck.git
@@ -70,8 +58,8 @@ npm run check
 npm start
 ```
 
-You can also build a portable package with the repository's packaging script (an unsigned release candidate that does not bypass Windows security prompts; the package ships a per-file SHA-256 manifest).
+The repository's packaging script also builds a portable version (unsigned; it does not bypass Windows security prompts; a per-file SHA-256 manifest is included).
 
-Neither the public source nor the builds contain private usage snapshots, sign-in credentials or API keys. This page only describes the features; it never connects to a visitor's computer or reads any account. Real parallel tasks consume quota at the providers you choose.
+Neither the public source nor the build contains private usage snapshots, sign-in credentials or API keys. This project page only describes the tool; it does not connect to the visitor's computer or read any account.
 
-- [Source and setup guide](https://github.com/CHIWAWAFROMkk/quota-deck) · [Builds and checks](https://github.com/CHIWAWAFROMkk/quota-deck/actions) · [MIT licence](https://github.com/CHIWAWAFROMkk/quota-deck/blob/main/LICENSE)
+- [Source and setup](https://github.com/CHIWAWAFROMkk/quota-deck) · [Builds and checks](https://github.com/CHIWAWAFROMkk/quota-deck/actions) · [MIT licence](https://github.com/CHIWAWAFROMkk/quota-deck/blob/main/LICENSE)

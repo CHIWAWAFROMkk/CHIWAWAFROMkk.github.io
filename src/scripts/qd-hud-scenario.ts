@@ -14,7 +14,7 @@ export type BeatId = 'start' | 'claude-done' | 'codex-start' | 'approval' | 'cod
 export const BEATS: { at: number; id: BeatId; note: Bi }[] = [
   { at: 0, id: 'start', note: { zh: '0 s · Claude 开始一轮，图标变成在跑的 bot', en: '0 s · Claude starts a turn; its icon becomes the working bot' } },
   { at: 12_000, id: 'claude-done', note: { zh: '12 s · Claude 做完了一轮：笑脸 bot，伸出 New reply', en: '12 s · Claude finishes: smiling bot and a New reply capsule' } },
-  { at: 20_000, id: 'codex-start', note: { zh: '20 s · Codex 开始；Claude 5 小时额度随消耗上涨', en: "20 s · Codex starts; Claude's 5-hour quota climbs as it works" } },
+  { at: 20_000, id: 'codex-start', note: { zh: '20 s · Codex 开始；Claude 5 小时额度随消耗上升', en: "20 s · Codex starts; Claude's 5-hour quota climbs as it works" } },
   { at: APPROVAL_AT, id: 'approval', note: { zh: '32 s · Claude 请求批准一条命令，等你点', en: '32 s · Claude asks to run a command and waits for you' } },
   { at: 50_000, id: 'codex-done', note: { zh: '50 s · Codex 做完；Claude 的命令 30 秒没结果，显示 Waiting（推测）', en: "50 s · Codex finishes; Claude's command has run 30 s with no result: Waiting (an inference)" } },
   { at: TOKENS_AT, id: 'tokens', note: { zh: '70 s · Token 柱长出新的一格；DeepSeek 余额减少', en: '70 s · A new token bar grows; the DeepSeek balance drops' } },

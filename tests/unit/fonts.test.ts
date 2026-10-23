@@ -25,7 +25,9 @@ describe('site fonts', () => {
   it('every Chinese character written in the page copy is inside the subset', () => {
     const covered = new Set(readFileSync('tools/font-subset-chars.txt', 'utf8'));
     const sources = ['src/data/site.ts', 'src/data/facts.ts', 'src/data/jung.ts', 'src/data/jung-handbook.ts', 'src/data/jung-prologue.ts',
-      ...readdirSync('src/copy/projects').map(f => `src/copy/projects/${f}`), 'src/copy/privacy.zh.md'];
+      ...readdirSync('src/copy/projects').map(f => `src/copy/projects/${f}`), 'src/copy/privacy.zh.md',
+      // QuotaDeck's live edition and screenshots are main-site pages too.
+      'src/data/editions.ts', 'src/scripts/qd-hud-text.ts', 'src/scripts/qd-hud-scenario.ts', 'src/components/QuotaShots.astro', 'src/components/QuotaHudLive.astro'];
     const missing = new Set<string>();
     for (const f of sources) for (const ch of readFileSync(f, 'utf8')) if (/[\u4e00-\u9fff]/.test(ch) && !covered.has(ch)) missing.add(ch);
     expect([...missing].join('')).toBe('');

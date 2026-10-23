@@ -1,6 +1,7 @@
 /** Numbers that are UI ordinals or product names, not claims. */
 export const ALLOWED_TOKENS = ['01', '02', '1:00'];
-const ALLOWED_PATTERNS = [/Microsoft 365/g, /DEMO-\d+/g, /CET-6/g];
+// Names, not claims: a product, record ids, an exam, a licence (Apache-2.0) and QuotaDeck's release (package.json at 974c61d).
+const ALLOWED_PATTERNS = [/Microsoft 365/g, /DEMO-\d+/g, /CET-6/g, /Apache-2\.0/g, /\b0\.6\.0\b/g];
 
 export function stripAllowed(text: string): string {
   let out = text;

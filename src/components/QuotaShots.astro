@@ -3,15 +3,18 @@ import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const zh = lang === 'zh';
+// Captured at 2x by QuotaDeck's own desktop test on synthetic data (portfolio-site/work/qd-materials/974c61d).
 const SHOTS = [
-  { id: 'quota', zh: '额度：按服务商折叠，共享池只展示一次', en: 'Quota: folded by provider; a shared pool is shown once' },
-  { id: 'models', zh: '模型库：列出已连接服务返回的模型，可搜索', en: 'Models: every model the connected services report, searchable' },
-  { id: 'collab', zh: '并行分工：勾选多个 Agent，同一任务各自负责不同角度', en: 'Parallel hand-off: pick several agents, each takes one angle of the same task' },
+  { id: 'strip', w: 185, h: 377, zh: '贴边浮条：每家一个额度环，数字是已用比例，余额类写余额', en: 'Edge strip: one ring per service; the number is the share used, or the balance for prepaid ones' },
+  { id: 'card', w: 1077, h: 687, zh: '额度卡片：5 小时与每周窗口、重置时间，以及过去一天的 Token 柱', en: 'Quota card: 5-hour and weekly windows, reset times, and the past day of token bars' },
+  { id: 'reply', w: 1077, h: 693, zh: '做完了提醒：Claude Code 一轮结束后留在 HUD 上，直到看过为止', en: 'Done reminder: when a Claude Code turn ends, it stays on the HUD until you have seen it' },
+  { id: 'approval', w: 1076, h: 728, zh: '批准卡片：Claude Code 请求执行命令时，直接在 HUD 上允许或拒绝', en: 'Approval card: when Claude Code asks to run a command, allow or deny it on the HUD' },
+  { id: 'notch', w: 928, h: 698, zh: '顶部黑块（Notch）：屏幕顶部正中的一块黑色，外圈的光按额度着色，卡片挂在下方', en: 'Notch: a black capsule at the top centre with a quota glow; cards hang below it' },
 ];
-const title = zh ? '桌面版真实截图' : 'The desktop app: real screenshots';
+const title = zh ? '桌面版截图（0.6.0）' : 'The desktop app: screenshots (0.6.0)';
 const note = zh
-  ? '截图来自本机运行的 QuotaDeck 当前候选版托盘窗口。为保护账号隐私，额度、余额与模型名称均为演示数据（标题栏写着"演示数据 · 非真实额度"）。'
-  : 'Screenshots of the current QuotaDeck release candidate running on my machine. To keep accounts private, every quota, balance and model name is demo data (the header reads "演示数据 · 非真实额度" — demo data, not real quota).';
+  ? '截图由 QuotaDeck 自带的桌面测试在合成数据上截取，不含真实额度、会话内容或账户信息。界面复刻自 Agent HUD（Apache-2.0）。'
+  : 'Captured by QuotaDeck’s own desktop test on synthetic data: no real quota, session content or account details. The interface is modelled on Agent HUD (Apache-2.0).';
 ---
 <section class="qshots wrap" aria-labelledby="qshots-title">
   <div class="section-head"><h2 id="qshots-title">{title}</h2></div>
@@ -19,7 +22,7 @@ const note = zh
   <div class="qshots__row">
     {SHOTS.map(s => (
       <figure data-shot={s.id}>
-        <img src={`/media/quota-deck/${s.id}.png`} alt={zh ? s.zh : s.en} width="504" height="775" loading="lazy" decoding="async" />
+        <div class="qshots__pane"><img src={`/media/quota-deck/hud/${s.id}.png`} alt={zh ? s.zh : s.en} width={s.w} height={s.h} loading="lazy" decoding="async" /></div>
         <figcaption>{zh ? s.zh : s.en}</figcaption>
       </figure>
     ))}
@@ -32,9 +35,15 @@ const note = zh
 <style>
   .qshots { padding-bottom: 32px; }
   .qshots__note { max-width: 52em; margin: 14px 0 20px; color: var(--mute); font-size: 14px; }
-  .qshots__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-  figure { margin: 0; }
-  img { width: 100%; height: auto; border: var(--rule); background: var(--night); }
+  .qshots__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  figure { margin: 0; display: grid; grid-template-rows: 1fr auto; }
+  /* The HUD is drawn for a dark desktop; its transparent screenshots sit on the night tone. */
+  .qshots__pane { display: grid; place-items: center; padding: 20px; background: radial-gradient(120% 90% at 20% 10%, #2d3748 0%, #1a1f29 55%, #0e1117 100%); }
+  img { width: 100%; height: auto; }
+  /* Captured at 2x: shown at their real size, never blown up. */
+  [data-shot='strip'] img { max-width: 93px; }
+  [data-shot='card'] img, [data-shot='reply'] img, [data-shot='approval'] img { max-width: 539px; }
+  [data-shot='notch'] img { max-width: 464px; }
   figcaption { margin-top: 10px; font-size: 14px; }
-  @media (max-width: 800px) { .qshots__row { grid-template-columns: minmax(0, 1fr); max-width: 420px; } }
+  @media (max-width: 800px) { .qshots__row { grid-template-columns: minmax(0, 1fr); } }
 </style>

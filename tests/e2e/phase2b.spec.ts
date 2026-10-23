@@ -34,12 +34,13 @@ test('every download and image on the three pages resolves', async ({ page, requ
   for (const u of found) expect((await request.get(u)).status(), u).toBe(200);
 });
 
-test('QuotaDeck shows three interface screenshots, labelled as demo data', async ({ page }) => {
+test('QuotaDeck shows five HUD screenshots, labelled as synthetic data with the Agent HUD credit', async ({ page }) => {
   await page.goto('/projects/quota-deck/');
   const shots = page.locator('.qshots figure[data-shot]');
-  await expect(shots).toHaveCount(3);
-  await expect(page.locator('.qshots')).toContainText('演示数据');
-  for (const i of [0, 1, 2]) {
+  await expect(shots).toHaveCount(5);
+  await expect(page.locator('.qshots')).toContainText('合成数据');
+  await expect(page.locator('.qshots')).toContainText('Agent HUD');
+  for (const i of [0, 1, 2, 3, 4]) {
     const img = shots.nth(i).locator('img');
     await img.scrollIntoViewIfNeeded();
     await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
