@@ -2,7 +2,7 @@
 export const QD_HUD_TEXT = {
   zh: {
     title: '一个下午，在网页里跑真实的 HUD',
-    meta: 'QuotaDeck 974c61d · 前端原样运行',
+    meta: 'QuotaDeck 0.7.0 · 前端原样运行',
     intro: '下面的浮条就是 QuotaDeck 的真实界面文件；会话状态、额度换算也由它自己的代码算出。只有时钟和数据是模拟的：90 秒走完一个下午，你随时可以点开卡片、批准或拒绝。',
     badge: '模拟数据 · 批准按钮只影响演示，不执行任何命令',
     credit: '界面复刻自 Agent HUD（jazzenchen/agent-hud-open，Apache-2.0）；QuotaDeck 为 MIT 开源，字体 Inter（OFL）、图标 Lobe Icons（MIT）。',
@@ -26,10 +26,10 @@ export const QD_HUD_TEXT = {
   },
   en: {
     title: 'One afternoon, the real HUD in your browser',
-    meta: 'QuotaDeck 974c61d · interface files unchanged',
+    meta: 'QuotaDeck 0.7.0 · interface files unchanged',
     intro: 'The strip below is QuotaDeck’s real interface; its session states and quota figures come from its own code. Only the clock and the data are simulated: an afternoon in 90 seconds, and you can open a card, allow or deny at any time.',
     badge: 'Simulated data · the approval buttons only change the demo; no command runs',
-    credit: 'Interface modelled on Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); QuotaDeck is MIT licensed, with the Inter font (OFL) and Lobe Icons (MIT).',
+    credit: 'The interface copies Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); QuotaDeck is MIT licensed, with the Inter font (OFL) and Lobe Icons (MIT).',
     pause: 'Pause',
     resume: 'Resume',
     restart: 'Start over',

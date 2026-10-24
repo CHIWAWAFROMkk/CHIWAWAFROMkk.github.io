@@ -2,7 +2,7 @@ A small strip on the edge of the screen: how much quota several AI services have
 
 ## From a quota table to reminders on the desktop
 
-When one account balance appears under a dozen models, it looks as if each model had its own allowance. The project first kept pools, models and billing apart, showing only what each provider actually reports; 0.6.0 then moved the interface to an edge HUD and added done reminders and approval cards: step away for a while, glance at the strip when you are back, and you know which agent is done and which one is waiting for you.
+When one account balance appears under a dozen models, it looks as if each model had its own allowance. The project first kept pools, models and billing apart, showing only what each provider actually reports; later the interface moved to an edge HUD with done reminders and approval cards, and 0.7.0 added the notch: step away for a while, glance at the strip when you are back, and you know which agent is done and which one is waiting for you.
 
 The interface is a faithful copy of the minimal form of Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); its look is not my design. My part was choosing the direction and the scope, setting the rules for reading quotas, for reminders and for approvals, and signing off the result.
 
@@ -20,7 +20,7 @@ Once connected, a command Claude Code asks to run appears as a card on the HUD, 
 
 ### Notch
 
-The strip can also become a black block at the top centre of the screen (the notch): its glow takes each service's quota colour, it opens out to both sides when there is a reminder, and cards hang below it. While a full-screen 3D program such as a Steam game is in front, the whole HUD hides (a browser playing video full screen does not count); the reminders that came in meanwhile appear once it closes.
+The strip can also become a black block at the top centre of the screen (the notch): its glow takes each service's quota colour, it opens out to both sides when there is a reminder, and cards hang below it. Game mode hides the whole HUD at once: press `Ctrl+Alt+H` or tick it in the tray menu, and again to bring it back. QuotaDeck does not guess what you are doing; reminders that come in meanwhile appear afterwards.
 
 ![How quota pools, models and tasks relate](/assets/editorial/quota-pools.svg)
 
@@ -40,7 +40,7 @@ Third-party names and trademarks belong to their owners.
 
 ## Build and verification
 
-Electron and Node.js. Data reads stay in the main process; the interface only gets data through a restricted bridge. The code was written with AI coding tools: GPT wrote the back end, Claude wrote the front end and reviewed and merged.
+Electron and Node.js. Data reads stay in the main process; the interface only gets data through a restricted bridge. The code was written with AI coding tools: GPT wrote the back end, Claude wrote the front end and reviewed and merged; the approval cards were implemented by DeepSeek from Claude's plan and reviewed by Claude.
 
 Unit tests and desktop smoke tests cover quota mapping, session states, reminders and approvals; approval cards were signed off in a real Claude Code session: allowed commands ran, denied ones did not. Tests and builds never call a real account.
 

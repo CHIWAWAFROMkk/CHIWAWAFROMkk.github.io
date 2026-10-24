@@ -8,7 +8,7 @@ const fromPublic = (path: string) => readFile(`public${QD_HUD_DIR}${path}`, 'utf
 describe('QuotaDeck HUD loader', () => {
   it('points at the vendored commit and its four pure modules', () => {
     expect(QD_HUD_COMMIT).toBe(fixture.commit);
-    expect(QD_HUD_DIR).toBe('/assets/quotadeck/974c61d/');
+    expect(QD_HUD_DIR).toBe('/assets/quotadeck/175d31c/');
     expect(QD_HUD_MAIN).toEqual(['src/main/model-names.cjs', 'src/main/hud-view.cjs', 'src/main/session-tracker.cjs', 'src/main/hud-geometry.cjs']);
   });
 

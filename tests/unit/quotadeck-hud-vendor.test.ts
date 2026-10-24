@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { posix } from 'node:path';
 
-const COMMIT = '974c61d268ae7c1852370c6c8f9cd046d7a9d0f7';
-const DIR = 'public/assets/quotadeck/974c61d';
+const COMMIT = '175d31c2c8f579eebbf8f1928025e877d108904f';
+const DIR = 'public/assets/quotadeck/175d31c';
 const R = 'src/renderer/';
 const FILES = [
   ...['hud.html', 'chart.css', 'hud.css', 'hud-metrics.js', 'hud-dom.js', 'hud-bots.js', 'hud-strip.js', 'hud-notch-metrics.js', 'hud-notch.js', 'hud-chart.js', 'hud-card.js', 'hud-settings.js', 'hud.js'].map(f => R + f),
@@ -18,9 +18,9 @@ const manifest = () => JSON.parse(readFileSync(`${DIR}/manifest.json`, 'utf8')) 
 const fixture = () => JSON.parse(readFileSync('src/data/qd-hud-fixture.json', 'utf8'));
 const text = (p: string) => readFileSync(`${DIR}/${p}`, 'utf8');
 
-describe('vendored QuotaDeck HUD (974c61d)', () => {
-  it('is pinned to 974c61d, version 0.6.0', () => {
-    expect(manifest()).toMatchObject({ repository: 'https://github.com/CHIWAWAFROMkk/quota-deck', commit: COMMIT, version: '0.6.0' });
+describe('vendored QuotaDeck HUD (175d31c, 0.7.0)', () => {
+  it('is pinned to the public 0.7.0 commit', () => {
+    expect(manifest()).toMatchObject({ repository: 'https://github.com/CHIWAWAFROMkk/quota-deck', commit: COMMIT, version: '0.7.0' });
   });
   it('carries exactly the HUD, its four pure modules, fonts, logos and licences', () => {
     expect(manifest().files.map(f => f.path)).toEqual(FILES);
@@ -40,6 +40,9 @@ describe('vendored QuotaDeck HUD (974c61d)', () => {
     const logos = ['codex', 'claude', 'antigravity', 'workbuddy', 'deepseek'].map(id => posix.join('src/renderer', `../../assets/logos/${id}.svg`));
     expect(text(`${R}hud-dom.js`)).toContain('../../assets/logos/');
     for (const p of [...refs, ...css, ...logos]) expect(vendored.has(p), p).toBe(true);
+  });
+  it('the iframe host resolves the HUD from the vendored folder', () => {
+    expect(readFileSync('public/assets/quotadeck/hud-host.html', 'utf8')).toContain(`<base href="${COMMIT.slice(0, 7)}/src/renderer/">`);
   });
   it('the fixture comes from the same commit and has four keyframes', () => {
     const f = fixture();

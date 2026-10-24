@@ -8,9 +8,9 @@ const P = quotaPlate();
 const nModels = P.perModel.length, nPools = P.pools.length;
 const T = lang === 'zh'
   ? { title: '同一池水：额度按池显示，模型挂在池下', wrong: '按模型逐个列出', wrongNote: `看起来像 ${nModels} 份独立额度`, right: 'QuotaDeck：按额度池', rightNote: `${nPools} 个额度池，各显示一次`,
-      source: '网页演示所用模拟器的起始读数（演示数据）', scale: '真实数据' }
+      source: '按 QuotaDeck 额度池规则构造的演示读数（演示数据）', scale: '真实数据' }
   : { title: 'One pool of water: quota shown per pool, models hung beneath', wrong: 'Listed model by model', wrongNote: `Reads like ${nModels} separate quotas`, right: 'QuotaDeck: by pool', rightNote: `${nPools} pools, each shown once`,
-      source: 'Starting readings of the simulator the live demo runs (demo data)', scale: 'Real data' };
+      source: 'Demo readings built on QuotaDeck\'s pool rules (demo data)', scale: 'Real data' };
 ---
 <Plate lang={lang} kind="quota" no={2} title={T.title} source={T.source} scale={T.scale}>
   <div class="pq">

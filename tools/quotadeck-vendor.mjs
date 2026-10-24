@@ -10,7 +10,7 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
-const COMMIT = '974c61d268ae7c1852370c6c8f9cd046d7a9d0f7';
+const COMMIT = '175d31c2c8f579eebbf8f1928025e877d108904f';
 const R = 'src/renderer/';
 const FILES = [
   ...['hud.html', 'chart.css', 'hud.css', 'hud-metrics.js', 'hud-dom.js', 'hud-bots.js', 'hud-strip.js', 'hud-notch-metrics.js', 'hud-notch.js', 'hud-chart.js', 'hud-card.js', 'hud-settings.js', 'hud.js'].map(f => R + f),

@@ -1,5 +1,5 @@
 {
-  "commit": "974c61d268ae7c1852370c6c8f9cd046d7a9d0f7",
+  "commit": "175d31c2c8f579eebbf8f1928025e877d108904f",
   "base": 1792648800000,
   "keyframes": [
     {
@@ -27,7 +27,7 @@
                   "label": "每周",
                   "remainingPercent": 70,
                   "resetsAt": "2026-10-24T08:00:00.000Z",
-                  "reset": "31h 后重置",
+                  "reset": "2h 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 }
@@ -64,7 +64,7 @@
                   "label": "每周",
                   "remainingPercent": 21,
                   "resetsAt": "2026-10-26T16:27:00.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 },
@@ -72,7 +72,7 @@
                   "label": "每周 · Opus",
                   "remainingPercent": 40,
                   "resetsAt": "2026-10-26T16:27:00.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 },
@@ -114,7 +114,7 @@
                     "label": "每周",
                     "remainingPercent": 21,
                     "resetsAt": "2026-10-26T16:27:00.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 1.4,
                     "samplingSupported": true
                   },
@@ -122,7 +122,7 @@
                     "label": "每周 · Opus",
                     "remainingPercent": 40,
                     "resetsAt": "2026-10-26T16:27:00.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 0.8,
                     "samplingSupported": true
                   }
@@ -272,7 +272,7 @@
                   "label": "每周",
                   "remainingPercent": 70,
                   "resetsAt": "2026-10-24T08:00:20.000Z",
-                  "reset": "31h 后重置",
+                  "reset": "2h 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 }
@@ -309,7 +309,7 @@
                   "label": "每周",
                   "remainingPercent": 21,
                   "resetsAt": "2026-10-26T16:27:20.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 },
@@ -317,7 +317,7 @@
                   "label": "每周 · Opus",
                   "remainingPercent": 40,
                   "resetsAt": "2026-10-26T16:27:20.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 },
@@ -359,7 +359,7 @@
                     "label": "每周",
                     "remainingPercent": 21,
                     "resetsAt": "2026-10-26T16:27:20.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 1.4,
                     "samplingSupported": true
                   },
@@ -367,7 +367,7 @@
                     "label": "每周 · Opus",
                     "remainingPercent": 40,
                     "resetsAt": "2026-10-26T16:27:20.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 0.8,
                     "samplingSupported": true
                   }
@@ -517,7 +517,7 @@
                   "label": "每周",
                   "remainingPercent": 70,
                   "resetsAt": "2026-10-24T08:00:45.000Z",
-                  "reset": "31h 后重置",
+                  "reset": "2h 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 }
@@ -554,7 +554,7 @@
                   "label": "每周",
                   "remainingPercent": 21,
                   "resetsAt": "2026-10-26T16:27:45.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 },
@@ -570,7 +570,7 @@
                   "label": "每周 · Opus",
                   "remainingPercent": 40,
                   "resetsAt": "2026-10-26T16:27:45.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 }
@@ -604,7 +604,7 @@
                     "label": "每周",
                     "remainingPercent": 21,
                     "resetsAt": "2026-10-26T16:27:45.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 1.4,
                     "samplingSupported": true
                   },
@@ -612,7 +612,7 @@
                     "label": "每周 · Opus",
                     "remainingPercent": 40,
                     "resetsAt": "2026-10-26T16:27:45.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 0.8,
                     "samplingSupported": true
                   }
@@ -762,7 +762,7 @@
                   "label": "每周",
                   "remainingPercent": 70,
                   "resetsAt": "2026-10-24T08:01:10.000Z",
-                  "reset": "31h 后重置",
+                  "reset": "2h 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 }
@@ -799,7 +799,7 @@
                   "label": "每周",
                   "remainingPercent": 21,
                   "resetsAt": "2026-10-26T16:28:10.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 },
@@ -815,7 +815,7 @@
                   "label": "每周 · Opus",
                   "remainingPercent": 40,
                   "resetsAt": "2026-10-26T16:28:10.000Z",
-                  "reset": "4d 后重置",
+                  "reset": "3d 后重置",
                   "burnPerHour": null,
                   "estimatedHoursLeft": null
                 }
@@ -849,7 +849,7 @@
                     "label": "每周",
                     "remainingPercent": 21,
                     "resetsAt": "2026-10-26T16:28:10.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 1.4,
                     "samplingSupported": true
                   },
@@ -857,7 +857,7 @@
                     "label": "每周 · Opus",
                     "remainingPercent": 40,
                     "resetsAt": "2026-10-26T16:28:10.000Z",
-                    "reset": "4d 后重置",
+                    "reset": "3d 后重置",
                     "burnPerHour": 0.8,
                     "samplingSupported": true
                   }

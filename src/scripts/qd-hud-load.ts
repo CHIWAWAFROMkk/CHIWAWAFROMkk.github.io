@@ -1,8 +1,8 @@
-/** QuotaDeck's four pure main-process modules (vendored unmodified at 974c61d), evaluated in the page. They turn quota
+/** QuotaDeck's four pure main-process modules (vendored unmodified at 175d31c, QuotaDeck 0.7.0), evaluated in the page. They turn quota
  *  snapshots into what the HUD draws (hud-view), follow agent sessions (session-tracker) and place the strip or the
  *  notch (hud-geometry). They require nothing but each other; require() resolves only these four files, so no code
  *  path here can read the visitor's machine. */
-export const QD_HUD_COMMIT = '974c61d268ae7c1852370c6c8f9cd046d7a9d0f7';
+export const QD_HUD_COMMIT = '175d31c2c8f579eebbf8f1928025e877d108904f';
 export const QD_HUD_DIR = `/assets/quotadeck/${QD_HUD_COMMIT.slice(0, 7)}/`;
 export const QD_HUD_MAIN = ['src/main/model-names.cjs', 'src/main/hud-view.cjs', 'src/main/session-tracker.cjs', 'src/main/hud-geometry.cjs'];
 

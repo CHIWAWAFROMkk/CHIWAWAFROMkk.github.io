@@ -93,7 +93,7 @@ test.describe('QuotaDeck live edition: the real HUD', () => {
   });
 
   test('a vendored file that fails to load falls back to the screenshots', async ({ page }) => {
-    await page.route('**/974c61d/src/renderer/hud.js', r => r.fulfill({ status: 404, body: '' }));
+    await page.route('**/175d31c/src/renderer/hud.js', r => r.fulfill({ status: 404, body: '' }));
     await page.goto(PAGE);
     await page.locator('.qshots').scrollIntoViewIfNeeded();
     await expect(page.locator('#qd-fallback')).toBeVisible({ timeout: 15_000 });

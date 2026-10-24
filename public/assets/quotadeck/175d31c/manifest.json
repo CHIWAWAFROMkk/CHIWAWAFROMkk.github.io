@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/CHIWAWAFROMkk/quota-deck",
-  "commit": "974c61d268ae7c1852370c6c8f9cd046d7a9d0f7",
-  "version": "0.6.0",
+  "commit": "175d31c2c8f579eebbf8f1928025e877d108904f",
+  "version": "0.7.0",
   "files": [
     {
       "path": "src/renderer/hud.html",
@@ -80,8 +80,8 @@
     },
     {
       "path": "src/main/hud-geometry.cjs",
-      "bytes": 7683,
-      "sha256": "42548e06a9d14b7d399ad8d5d610364ae31cc0a4cc7fd90e61fa8f0110dcb58f"
+      "bytes": 7335,
+      "sha256": "df3c638c9454250a847792eb02a5765aaea9c1f2129b2f0d052f8999ac694145"
     },
     {
       "path": "src/main/model-names.cjs",

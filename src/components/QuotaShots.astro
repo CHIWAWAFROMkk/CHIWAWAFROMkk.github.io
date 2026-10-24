@@ -3,7 +3,8 @@ import type { Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const zh = lang === 'zh';
-// Captured at 2x by QuotaDeck's own desktop test on synthetic data (portfolio-site/work/qd-materials/974c61d).
+// Captured at 2x by QuotaDeck's own desktop test on synthetic data, from the merged notch commit just before the 0.7.0 tag
+// (portfolio-site/work/qd-materials); the HUD is the one 0.7.0 ships.
 const SHOTS = [
   { id: 'strip', w: 185, h: 377, zh: '贴边浮条：每家一个额度环，数字是已用比例，余额类写余额', en: 'Edge strip: one ring per service; the number is the share used, or the balance for prepaid ones' },
   { id: 'card', w: 1077, h: 687, zh: '额度卡片：5 小时与每周窗口、重置时间，以及过去一天的 Token 柱', en: 'Quota card: 5-hour and weekly windows, reset times, and the past day of token bars' },
@@ -11,10 +12,10 @@ const SHOTS = [
   { id: 'approval', w: 1076, h: 728, zh: '批准卡片：Claude Code 请求执行命令时，直接在 HUD 上允许或拒绝', en: 'Approval card: when Claude Code asks to run a command, allow or deny it on the HUD' },
   { id: 'notch', w: 928, h: 698, zh: '顶部黑块（Notch）：屏幕顶部正中的一块黑色，外圈的光按额度着色，卡片挂在下方', en: 'Notch: a black capsule at the top centre with a quota glow; cards hang below it' },
 ];
-const title = zh ? '桌面版截图（0.6.0）' : 'The desktop app: screenshots (0.6.0)';
+const title = zh ? '桌面版截图' : 'The desktop app: screenshots';
 const note = zh
   ? '截图由 QuotaDeck 自带的桌面测试在合成数据上截取，不含真实额度、会话内容或账户信息。界面复刻自 Agent HUD（Apache-2.0）。'
-  : 'Captured by QuotaDeck’s own desktop test on synthetic data: no real quota, session content or account details. The interface is modelled on Agent HUD (Apache-2.0).';
+  : 'Captured by QuotaDeck’s own desktop test on synthetic data: no real quota, session content or account details. The interface copies Agent HUD (Apache-2.0).';
 ---
 <section class="qshots wrap" aria-labelledby="qshots-title">
   <div class="section-head"><h2 id="qshots-title">{title}</h2></div>
