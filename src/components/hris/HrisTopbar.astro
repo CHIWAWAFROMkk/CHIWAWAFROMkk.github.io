@@ -1,6 +1,5 @@
 ---
 import { HRIS } from '../../data/hris';
-import { SITE } from '../../data/site';
 import { trackPath, type Lang } from '../../i18n';
 interface Props { lang: Lang; path: string }
 const { lang, path } = Astro.props;
@@ -18,7 +17,7 @@ const current = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
   <div class="h-top__util">
     <a class="h-top__btn h-mono" href={trackPath('hris', path, other)} hreflang={other}>{N.otherLang[lang]}</a>
     <button type="button" class="h-top__btn h-mono" data-theme-toggle data-dark={N.themeDark[lang]} data-light={N.themeLight[lang]}>{N.themeDark[lang]}</button>
-    <a class="h-top__cv h-mono" href={SITE.resume[lang]} download>{N.resume[lang]} ↓</a>
+    <a class="h-top__cv h-mono" href={HRIS.resumeFile[lang]} download>{N.resume[lang]} ↓</a>
   </div>
 </header>
 <script>

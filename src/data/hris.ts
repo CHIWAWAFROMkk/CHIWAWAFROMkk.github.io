@@ -13,6 +13,8 @@ export const HRIS = {
     projects: { title: { zh: '全部项目 · 何彦钧', en: 'All projects · Yanjun He' }, description: { zh: '档案补录工作流、人岗匹配、SQL 数据库、问卷研究与额度工具。', en: 'Records backfill, job matching, an SQL database, a survey study and a quota tool.' } },
     workbench: { title: { zh: '流程终端 · 何彦钧', en: 'Workflow terminal · Yanjun He' }, description: { zh: '用虚构档案走一遍补录流程的三个版本。', en: 'Walk fictional records through the three versions of the backfill workflow.' } },
   },
+  /** The HR résumé (tools/resume-hr-*.html, printed by tools/print-resume.mjs); the AI site keeps its own. */
+  resumeFile: { zh: '/downloads/resume/heyanjun-resume-hr-zh.pdf', en: '/downloads/resume/heyanjun-resume-hr-en.pdf' },
   nav: {
     label: { zh: 'HRIS 导航', en: 'HRIS navigation' },
     index: { zh: '主页', en: 'Index' },

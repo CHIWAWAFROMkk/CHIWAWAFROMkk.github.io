@@ -486,3 +486,16 @@
 - 3）中文：筛选前对照客户的禁猎名单，跳过限制范围内的候选人；客户与候选人信息不对外公开。
   English: Check every candidate against the clients' off-limits list before screening; client and candidate details are never shared publicly.
 - 确认 / 修改为：___
+
+### 48. HR 站专用简历（`tools/resume-hr-{zh,en}.html` → `public/downloads/resume/heyanjun-resume-hr-{zh,en}.pdf`）
+
+- HR 站顶栏的"下载简历"改为下载这两份；AI 主站的简历不变。
+- 底稿：求职目录 `output/何彦钧_HR日常实习_简历_20261012.html`。改动如下：
+  - 求职意向改为"HR 实习生（招聘／HR 数字化方向）"。
+  - 摘要加一句"现于因特利普做招聘顾问实习，支持招聘全流程"。
+  - 实习经历最前面加因特利普一段，三条要点和网站一致。
+  - 按 2026-10-14 定稿单，职位改为"项目专员"，去掉课程一行。
+  - 去掉证件照，公开下载不放照片。
+  - 作品集链接指向 `/hris/`。
+- 英文版按同一内容写，样式与 AI 主站英文简历一致。都是单页 A4。
+- 确认 / 修改为：___
