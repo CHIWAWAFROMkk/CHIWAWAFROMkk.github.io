@@ -465,3 +465,24 @@
 - 删掉：并行分工、模型库、倍率计算示例、托盘窗口、候选版字样。
 - 实现与验证：GPT 写后端、Claude 写前端与审查；批准卡片由 DeepSeek 按 Claude 的计划实现、Claude 审查，并在真实 Claude Code 会话里验收（允许后执行、拒绝后不执行）。
 - 确认 / 修改为：___
+
+## 第四期（HR 站补因特利普猎头实习，2026-10-24）
+
+只放在 HR 站一分钟概览的"经历"一节，排在丹纳赫前面。AI 主站不放。客户和候选人一律不点名，也不写招聘平台的名字。网站字体子集已重新生成，补进了"猎"字。
+
+### 46. 事实台账 F16（`src/data/facts.ts`）
+
+- 中文：因特利普（IntelliPro）· 猎头实习生 · 2026.10 至今
+- English: IntelliPro · Headhunting Intern · 2026.10 – present
+- 说明：职位名按你 2026-10-14 说的"猎头实习生"写。如果合同或工牌上的职位名不同（比如"招聘顾问实习生"），告诉我改。
+- 确认 / 修改为：___
+
+### 47. 因特利普的三条要点（`HRIS.brief.jobs`）
+
+- 1）中文：支持招聘全流程：理解客户的岗位需求，改写职位标题与发布文案，在招聘平台上按 JD 搜索、筛选简历并主动联系候选人，做电话初筛、约面试并跟进结果。
+  English: Support the full recruiting cycle: understanding client roles, rewriting job titles and postings, searching and screening résumés against the JD on job platforms, reaching out to candidates, phone screening, and scheduling interviews and following up.
+- 2）中文：负责数据中心与智算中心方向的工程类岗位（电气、暖通、制冷等），把 JD 里的硬性条件整理成筛选卡和初筛必问题。
+  English: Work on engineering roles for data centres and AI computing centres (electrical, HVAC, cooling and more), turning each JD's hard requirements into a screening card and must-ask phone-screen questions.
+- 3）中文：筛选前对照客户的禁猎名单，跳过限制范围内的候选人；客户与候选人信息不对外公开。
+  English: Check every candidate against the clients' off-limits list before screening; client and candidate details are never shared publicly.
+- 确认 / 修改为：___

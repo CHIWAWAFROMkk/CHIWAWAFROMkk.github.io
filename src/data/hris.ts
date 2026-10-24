@@ -57,12 +57,20 @@ export const HRIS = {
     education: { zh: '教育', en: 'Education' },
     skills: { zh: '技能', en: 'Skills' },
     availability: { zh: '到岗', en: 'Availability' },
-    points: [
+    /** Newest first; each internship with its own points. Clients and candidates are never named. */
+    jobs: [
+      { fact: 'F16' as const, points: [
+        { zh: '支持招聘全流程：理解客户的岗位需求，改写职位标题与发布文案，在招聘平台上按 JD 搜索、筛选简历并主动联系候选人，做电话初筛、约面试并跟进结果。', en: 'Support the full recruiting cycle: understanding client roles, rewriting job titles and postings, searching and screening résumés against the JD on job platforms, reaching out to candidates, phone screening, and scheduling interviews and following up.' },
+        { zh: '负责数据中心与智算中心方向的工程类岗位（电气、暖通、制冷等），把 JD 里的硬性条件整理成筛选卡和初筛必问题。', en: 'Work on engineering roles for data centres and AI computing centres (electrical, HVAC, cooling and more), turning each JD’s hard requirements into a screening card and must-ask phone-screen questions.' },
+        { zh: '筛选前对照客户的禁猎名单，跳过限制范围内的候选人；客户与候选人信息不对外公开。', en: 'Check every candidate against the clients’ off-limits list before screening; client and candidate details are never shared publicly.' },
+      ] },
+      { fact: 'F5' as const, points: [
       { zh: '对接全国各区域 HR，跟进员工信息缺失与异常数据，推动档案补全。', en: 'Worked with regional HR teams across China to chase missing and inconsistent employee data until the records were complete.' },
       { zh: '核查约 2000 名员工的档案主数据；所在 CDP 系统覆盖 6,000+ 员工。', en: 'Reviewed master records for about 2000 employees, in a CDP system covering 6,000+ staff.' },
       { zh: '设计并使用档案补录工作流，迭代三版，最终版在公司批准的环境中运行并交接给 mentor。', en: 'Designed and used the records backfill workflow over three versions; the final one ran in the company-approved environment and was handed over to my mentor.' },
       { zh: '用 Excel 整理和分析合规数据，输出可视化报表。', en: 'Organised and analysed compliance data in Excel and produced visual reports.' },
       { zh: '因工作表现获得 HRBP 认可，被邀请延长实习。', en: 'Invited by the HRBP to extend the internship on the strength of my work.' },
+      ] },
     ],
     toWorkbench: { zh: '打开档案补录流程终端 →', en: 'Open the backfill workflow terminal →' },
   },

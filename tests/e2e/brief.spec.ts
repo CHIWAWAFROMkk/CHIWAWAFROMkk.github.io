@@ -19,7 +19,7 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
     test('the AI overview leaves the internship record to the HRIS site and singles out no project', async ({ page }) => {
       await page.goto(`${prefix}/brief/`);
       const main = await page.locator('main').innerText();
-      for (const id of ['F5', 'F6'] as const) expect(main, id).not.toContain(fact(id).text[lang]);
+      for (const id of ['F5', 'F6', 'F16'] as const) expect(main, id).not.toContain(fact(id).text[lang]);
       await expect(page.locator('#b-exp')).toHaveCount(0);
       await expect(page.locator('main .num')).toHaveCount(0);
       const shots = await page.locator('.shots a').evaluateAll(as => as.map(a => a.getAttribute('href')));

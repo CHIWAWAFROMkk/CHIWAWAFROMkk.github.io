@@ -13,9 +13,13 @@ const B = HRIS.brief;
     <div class="h-mast"><span class="h-mono">1:00</span><h1>{HRIS.nav.brief[lang]}</h1></div>
     <section class="hb-row" data-rail={B.experience[lang]}>
       <h2 class="h-mono">{B.experience[lang]}</h2>
-      <div>
-        <p class="hb-org">{fact('F5').text[lang]}</p>
-        <ul class="hb-points">{B.points.map(p => <li>{p[lang]}</li>)}</ul>
+      <div class="hb-jobs">
+        {B.jobs.map(job => (
+          <div class="hb-job">
+            <p class="hb-org">{fact(job.fact).text[lang]}</p>
+            <ul class="hb-points">{job.points.map(p => <li>{p[lang]}</li>)}</ul>
+          </div>
+        ))}
       </div>
     </section>
     <section class="hb-row" data-rail={B.education[lang]}>
@@ -41,6 +45,7 @@ const B = HRIS.brief;
   .hb-row { display: grid; grid-template-columns: 260px 1fr; border-bottom: var(--hair); }
   .hb-row > h2 { padding: 36px 24px; border-right: var(--hair); background: var(--card); color: var(--mute); font-weight: 400; }
   .hb-row > div, .hb-row > dl { padding: 36px 40px; margin: 0; }
+  .hb-jobs { display: grid; gap: 36px; }
   .hb-org { margin-bottom: 14px; font: 700 20px/1.4 var(--font-body); }
   .hb-points { display: grid; gap: 10px; max-width: 42em; padding-left: 18px; }
   .hb-edu { display: grid; gap: 6px; }
