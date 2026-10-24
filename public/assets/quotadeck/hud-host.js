@@ -11,12 +11,38 @@
     el.onload = resolve;
     el.onerror = () => reject(new Error(`${el.getAttribute('src') || el.getAttribute('href')}: failed to load`));
   });
+  // The desktop HUD is driven by the mouse: the strip opens a card on pointerup, and alert capsules are not focusable.
+  // For keyboard users on the web page, a keyboard-made click (detail 0) on a strip icon becomes the press the strip
+  // expects, and capsules join the tab order and answer Enter and Space. Nothing in the vendored files changes.
+  function keyboard() {
+    document.addEventListener('click', event => {
+      const item = event.detail === 0 && event.target.closest?.('#strip .item');
+      if (!item) return;
+      const at = { bubbles: true, button: 0, screenX: 0, screenY: 0, pointerId: 1 };
+      item.dispatchEvent(new PointerEvent('pointerdown', at));
+      item.dispatchEvent(new PointerEvent('pointerup', at));
+    }, true);
+    const focusable = () => document.querySelectorAll('.alert-pill:not([tabindex])').forEach(pill => { pill.tabIndex = 0; });
+    new MutationObserver(focusable).observe(document.body, { childList: true, subtree: true });
+    focusable();
+    document.addEventListener('keydown', event => {
+      const pill = event.target.closest?.('.alert-pill');
+      if (!pill || (event.key !== 'Enter' && event.key !== ' ')) return;
+      event.preventDefault();
+      pill.click();
+    });
+  }
   addEventListener('DOMContentLoaded', async () => {
     try {
       const response = await fetch('hud.html');
       if (!response.ok) throw new Error(`hud.html: HTTP ${response.status}`);
       const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
       const sheets = [...doc.querySelectorAll('link[rel="stylesheet"]')].map(link => document.importNode(link, true));
+      // Focus rings for keyboard users (the desktop HUD is mouse-only); a file, since the host's CSP allows no inline style.
+      const a11y = document.createElement('link');
+      a11y.rel = 'stylesheet';
+      a11y.href = '/assets/quotadeck/hud-host-a11y.css';
+      sheets.push(a11y);
       const tier = parent.__qdTier;
       if (tier === 'off' || tier === 'gentle') {
         const extra = document.createElement('link');
@@ -33,6 +59,7 @@
         document.body.append(script);
         await done;
       }
+      keyboard();
     } catch (error) {
       fail(error.message);
     }

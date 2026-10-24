@@ -26,8 +26,8 @@ export function liveBytes(id: LiveId): number {
     case 'campus':
       return sum(manifest(PYODIDE).filter(f => CORE_FILES.includes(f.name)).map(f => f.bytes)) + sum(CAMPUS_RUNTIME.files.map(u => fileBytes(`public${u}`)));
     case 'quota':
-      // QuotaDeck's vendored HUD, plus the portfolio's iframe host and its two motion-tier stylesheets.
-      return dirBytes(`public${QD_HUD_DIR}`) + ['hud-host.html', 'hud-host.js', 'hud-host-off.css', 'hud-host-gentle.css'].map(f => fileBytes(`public/assets/quotadeck/${f}`)).reduce((a, b) => a + b, 0);
+      // QuotaDeck's vendored HUD, plus the portfolio's iframe host, its focus-ring sheet and its two motion-tier sheets.
+      return dirBytes(`public${QD_HUD_DIR}`) + ['hud-host.html', 'hud-host.js', 'hud-host-a11y.css', 'hud-host-off.css', 'hud-host-gentle.css'].map(f => fileBytes(`public/assets/quotadeck/${f}`)).reduce((a, b) => a + b, 0);
     case 'insights':
       return sum(['public/assets/vendor/sql-wasm.js', 'public/assets/vendor/sql-wasm.wasm', 'public/assets/insights/campus-term.sqlite', 'public/assets/insights-worker.js'].map(fileBytes));
   }

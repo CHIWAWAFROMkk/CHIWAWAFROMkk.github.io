@@ -57,6 +57,26 @@ test.describe('QuotaDeck live edition: the real HUD', () => {
     await expect(hud(page).locator('.alert-pill', { hasText: 'Approve?' })).toBeHidden();
   });
 
+  test('keyboard only: open a card from the strip, then answer an approval request', async ({ page }) => {
+    await open(page);
+    const claude = hud(page).locator('#strip [data-id=claude]');
+    await claude.focus();
+    await page.keyboard.press('Enter');
+    await expect(hud(page).locator('#card')).toHaveClass(/shown/);
+    await page.keyboard.press('Escape');
+    await page.clock.runFor(32_500);
+    const pill = hud(page).locator('.alert-pill', { hasText: 'Approve?' });
+    await expect(pill).toBeVisible();
+    await pill.focus();
+    await expect(pill).toBeFocused();
+    await page.keyboard.press('Enter');
+    const allow = hud(page).getByRole('button', { name: 'Allow once' });
+    await allow.focus();
+    expect(await allow.evaluate(b => getComputedStyle(b).outlineStyle)).not.toBe('none');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-qd-log]')).toHaveText(T.allowed);
+  });
+
   test('52.5 s with no answer: a hint invites the visitor to try', async ({ page }) => {
     await open(page);
     await page.clock.runFor(52_500);
