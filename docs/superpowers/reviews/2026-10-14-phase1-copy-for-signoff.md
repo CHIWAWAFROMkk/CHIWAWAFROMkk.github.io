@@ -472,9 +472,9 @@
 
 ### 46. 事实台账 F16（`src/data/facts.ts`）
 
-- 中文：因特利普（IntelliPro）· 猎头实习生 · 2026.10 至今
-- English: IntelliPro · Headhunting Intern · 2026.10 – present
-- 说明：职位名按你 2026-10-14 说的"猎头实习生"写。如果合同或工牌上的职位名不同（比如"招聘顾问实习生"），告诉我改。
+- 中文：因特利普（IntelliPro）· 招聘顾问实习生 · 2026.10 至今
+- English: IntelliPro · Recruitment Consultant Intern · 2026.10 – present
+- 说明：2026-10-24 按你的要求，职位名从"猎头实习生"改为"招聘"方向的写法。
 - 确认 / 修改为：___
 
 ### 47. 因特利普的三条要点（`HRIS.brief.jobs`）

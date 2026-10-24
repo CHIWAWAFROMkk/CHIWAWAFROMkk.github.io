@@ -3,9 +3,10 @@ import { fact } from '../../src/data/facts';
 import { HRIS } from '../../src/data/hris';
 
 describe('the IntelliPro internship on the HRIS site', () => {
-  it('is in the ledger as an ongoing headhunting internship', () => {
+  it('is in the ledger as an ongoing recruitment internship', () => {
     expect(fact('F16').text.zh).toContain('因特利普');
-    expect(fact('F16').text.zh).toContain('猎头实习生');
+    expect(fact('F16').text.zh).toContain('招聘顾问实习生');
+    expect(fact('F16').text.en).toContain('Recruitment Consultant Intern');
     expect(fact('F16').text.zh).toContain('2026.10 至今');
     expect(fact('F16').text.en).toContain('IntelliPro');
     expect(fact('F16').public).toBe(true);
