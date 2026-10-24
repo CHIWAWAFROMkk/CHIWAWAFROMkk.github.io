@@ -90,6 +90,8 @@ export function initQuotaHudLive(root: HTMLElement): void {
   }
   function restart() {
     t = 0; prevT = -1; decided = null; keyframe = -1; tokensGrown = false; lastSessions = '';
+    // The 70 s beat grows a bar; put the bars back so the next afternoon shows it grow again.
+    hud.push.tokens(tokens());
     sessionBase = Date.now();
     tracker = main.tracker.createSessionTracker({ startedAt: sessionBase });
     logEl.textContent = '';

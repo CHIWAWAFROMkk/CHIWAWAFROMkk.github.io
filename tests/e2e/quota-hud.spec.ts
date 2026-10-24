@@ -112,6 +112,33 @@ test.describe('QuotaDeck live edition: the real HUD', () => {
     expect(sheets.some(h => h?.endsWith('hud-host-off.css'))).toBe(true);
   });
 
+  test('restart puts the token bars back, so every afternoon shows the new bar grow', async ({ page }) => {
+    await motionChoice(page, 'off');
+    await page.goto(PAGE);
+    await page.locator('[data-quota-hud]').scrollIntoViewIfNeeded();
+    await expect(page.locator('#qd-stage')).toHaveAttribute('data-state', 'stepping', { timeout: 15_000 });
+    await page.evaluate(() => {
+      const push = window.__qdHud!.push, send = push.tokens.bind(push);
+      (window as unknown as { pushed: string[] }).pushed = [];
+      push.tokens = (v: unknown) => { (window as unknown as { pushed: string[] }).pushed.push(JSON.stringify(v)); return send(v as never); };
+    });
+    const pushed = () => page.evaluate(() => (window as unknown as { pushed: string[] }).pushed);
+    const toTokens = async () => {
+      for (const id of ['claude-done', 'codex-start', 'approval', 'codex-done', 'tokens']) {
+        await page.locator('[data-qd-step]').click();
+        await expect(page.locator('[data-qd-note]')).toHaveText(note(id));
+      }
+    };
+    await toTokens();
+    await page.locator('[data-qd-restart]').click();
+    await expect(page.locator('[data-qd-note]')).toHaveText(BEATS[0].note.zh);
+    await toTokens();
+    const p = await pushed();
+    expect(p).toHaveLength(3);
+    expect(p[1]).not.toBe(p[0]);
+    expect(p[2]).toBe(p[0]);
+  });
+
   test('a vendored file that fails to load falls back to the screenshots', async ({ page }) => {
     await page.route('**/175d31c/src/renderer/hud.js', r => r.fulfill({ status: 404, body: '' }));
     await page.goto(PAGE);
