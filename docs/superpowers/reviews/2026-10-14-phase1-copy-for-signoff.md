@@ -283,13 +283,15 @@
 - 说明：流程终端的"每满 100 份"一条引用这里。
 - 确认 / 修改为：___
 
-## 第三期（QuotaDeck 0.6.0：贴边 HUD 与新完整版）
+## 第三期（QuotaDeck 0.7.0：贴边 HUD 与新完整版）
 
-以下是 QuotaDeck 更新后新写或改写的文字，**确认前不上线**。编号接第二期往下排。事实只取自 QuotaDeck 974c61d 的 README 与共享记忆里的 QuotaDeck 记录；不写已删掉或不确定的功能（并行分工、托盘大窗口、模型库）。
+以下是 QuotaDeck 更新后新写或改写的文字，**确认前不上线**。编号接第二期往下排。事实只取自 QuotaDeck 0.7.0（175d31c）的 README 与共享记忆里的 QuotaDeck 记录；不写已删掉或不确定的功能（并行分工、托盘大窗口、模型库）。
 
-两处字体限制下的用词：网站的中文字体子集没有"刘、胶、囊、晕、翅、游、戏"等字，这台电脑也无法重新生成子集，所以"刘海"写作"顶部黑块（Notch）"，"光晕"写作"外圈的光"，"打游戏时隐藏"写成具体的判断条件（前台是全屏 3D 程序时）。
+分工按记录写：GPT 写后端，Claude 写前端与审查；批准卡片由 DeepSeek 按 Claude 写的计划实现、Claude 审查；批准流程在真实 Claude Code 会话里的验收是 Claude 做的，所以"我的工作"里不写验收批准流程。
 
-另有两项内容要你看：项目页正文 `src/copy/projects/quota-deck.{zh,en}.md` 整篇重写（第 44 条只列要点）；完整版的演示在 `/projects/quota-deck/live/`。
+字体限制下的用词：网站的中文字体子集没有"刘、胶、囊、晕、翅、游、戏"等字，这台电脑也无法重新生成子集，所以"刘海"写作"顶部黑块（Notch）"，"光晕"写作"外圈的光"，"游戏模式"写作"按 Ctrl+Alt+H 或在托盘菜单里勾选对应的开关"。
+
+另有两项内容要你看：项目页正文 `src/copy/projects/quota-deck.{zh,en}.md` 整篇重写（第 45 条只列要点）；完整版的演示在 `/projects/quota-deck/live/`。
 
 ### 33. 卡片简介（`SITE.projects` quota-deck `did`）
 
@@ -315,14 +317,14 @@
   English: Quotas are scattered across agents and APIs, and one account balance shows up under a dozen models; step away for a while and you cannot tell which agent is done and which is waiting for approval.
 - 2）中文：读不到额度时显示"未知"，不当作用完；估算、过期快照和断连都标明来源，刷新失败时保留上次成功的数据和时间，不假装刚同步。
   English: A quota that cannot be read shows as "unknown", not as used up; estimates, stale snapshots and disconnects are labelled with their source, and a failed refresh keeps the last good data and its time instead of pretending to be fresh.
-- 3）中文：选定方向与范围：界面照 Agent HUD 复刻，提醒只读会话日志、不改 Agent 配置；定下额度的呈现规则（额度池与模型分开，读不到不当作用完）和提醒规则（做完了、等待、批准）；验收界面、连接与批准流程。
-  English: Chose the direction and the scope: the interface copies Agent HUD, and reminders only read session logs without changing any agent's settings; set the quota display rules (pools apart from models, unreadable is not used up) and the reminder rules (done, waiting, approval); signed off the interface, the connections and the approval flow.
-- 4）中文：代码借助 AI 编程工具编写：GPT 写后端，Claude 写前端并审查合并；Electron 与 Node.js，读取数据放在主进程，界面只通过受限接口拿数据。
-  English: The code was written with AI coding tools: GPT wrote the back end, Claude wrote the front end and reviewed and merged; Electron and Node.js, with data reads in the main process and the interface getting data only through a restricted bridge.
+- 3）中文：选定方向与范围：界面照 Agent HUD 复刻，提醒只读会话日志、不改 Agent 配置；定下额度的呈现规则（额度池与模型分开，读不到不当作用完）和提醒规则（做完了、等待、批准）；验收界面与连接。
+  English: Chose the direction and the scope: the interface copies Agent HUD, and reminders only read session logs without changing any agent's settings; set the quota display rules (pools apart from models, unreadable is not used up) and the reminder rules (done, waiting, approval); signed off the interface and the connections.
+- 4）中文：代码借助 AI 编程工具编写：GPT 写后端，Claude 写前端并审查合并；批准卡片由 DeepSeek 按 Claude 写的计划实现、Claude 审查。Electron 与 Node.js，读取数据放在主进程，界面只通过受限接口拿数据。
+  English: The code was written with AI coding tools: GPT wrote the back end, Claude wrote the front end and reviewed and merged; the approval cards were implemented by DeepSeek from Claude's plan and reviewed by Claude. Electron and Node.js, with data reads in the main process and the interface getting data only through a restricted bridge.
 - 5）中文：本页的桌面版截图（合成数据）与完整版、公开源码与自动检查；批准卡片在真实的 Claude Code 会话里验收过。
   English: The desktop screenshots on this page (synthetic data) and the live edition, the public source and its automated checks; approval cards were signed off in a real Claude Code session.
-- 6）中文：个人项目，MIT 开源；0.6.0 已发布，仍在开发。截图与完整版均为合成数据。
-  English: Personal project, MIT licensed; 0.6.0 is out and work continues. The screenshots and the live edition use synthetic data.
+- 6）中文：个人项目，MIT 开源；0.7.0 已发布，仍在开发。截图与完整版均为合成数据。
+  English: Personal project, MIT licensed; 0.7.0 is out and work continues. The screenshots and the live edition use synthetic data.
 - 说明：取舍一栏沿用原文。"我的工作"写明界面照 Agent HUD 复刻。
 - 确认 / 修改为：___
 
@@ -390,29 +392,31 @@
 
 - 1）中文：一个下午，在网页里跑真实的 HUD
   English: One afternoon, the real HUD in your browser
-- 2）中文：下面的浮条就是 QuotaDeck 的真实界面文件；会话状态、额度换算也由它自己的代码算出。只有时钟和数据是模拟的：90 秒走完一个下午，你随时可以点开卡片、批准或拒绝。
+- 2）中文：QuotaDeck 0.7.0 · 前端原样运行
+  English: QuotaDeck 0.7.0 · interface files unchanged
+- 3）中文：下面的浮条就是 QuotaDeck 的真实界面文件；会话状态、额度换算也由它自己的代码算出。只有时钟和数据是模拟的：90 秒走完一个下午，你随时可以点开卡片、批准或拒绝。
   English: The strip below is QuotaDeck’s real interface; its session states and quota figures come from its own code. Only the clock and the data are simulated: an afternoon in 90 seconds, and you can open a card, allow or deny at any time.
-- 3）中文：模拟数据 · 批准按钮只影响演示，不执行任何命令
+- 4）中文：模拟数据 · 批准按钮只影响演示，不执行任何命令
   English: Simulated data · the approval buttons only change the demo; no command runs
-- 4）中文：界面复刻自 Agent HUD（jazzenchen/agent-hud-open，Apache-2.0）；QuotaDeck 为 MIT 开源，字体 Inter（OFL）、图标 Lobe Icons（MIT）。
-  English: Interface modelled on Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); QuotaDeck is MIT licensed, with the Inter font (OFL) and Lobe Icons (MIT).
-- 5）中文：贴边浮条
+- 5）中文：界面复刻自 Agent HUD（jazzenchen/agent-hud-open，Apache-2.0）；QuotaDeck 为 MIT 开源，字体 Inter（OFL）、图标 Lobe Icons（MIT）。
+  English: The interface copies Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); QuotaDeck is MIT licensed, with the Inter font (OFL) and Lobe Icons (MIT).
+- 6）中文：贴边浮条
   English: Edge strip
-- 6）中文：顶部黑块
+- 7）中文：顶部黑块
   English: Notch
-- 7）中文：可以点浮条上的 Claude 图标，再点 Allow once 或 Deny 试试。
+- 8）中文：可以点浮条上的 Claude 图标，再点 Allow once 或 Deny 试试。
   English: Try clicking Claude on the strip, then Allow once or Deny.
-- 8）中文：已允许。在桌面上，Claude Code 会接着执行这条命令；演示里不执行任何命令。
+- 9）中文：已允许。在桌面上，Claude Code 会接着执行这条命令；演示里不执行任何命令。
   English: Allowed. On a desktop Claude Code would now run the command; the demo runs nothing.
-- 9）中文：已拒绝。在桌面上，这条命令不会执行；演示里本来也不执行任何命令。
+- 10）中文：已拒绝。在桌面上，这条命令不会执行；演示里本来也不执行任何命令。
   English: Denied. On a desktop the command would not run; the demo runs nothing anyway.
-- 10）中文：在真实桌面上，这里会打开对应的 Claude Code 或 Codex 会话。
+- 11）中文：在真实桌面上，这里会打开对应的 Claude Code 或 Codex 会话。
   English: On a real desktop this opens the matching Claude Code or Codex session.
-- 11）中文：这一项在桌面版里设置。
+- 12）中文：这一项在桌面版里设置。
   English: This is set up in the desktop app.
-- 12）中文：演示没能加载。下面是同一组界面的截图。
+- 13）中文：演示没能加载。下面是同一组界面的截图。
   English: The demo could not load. Screenshots of the same interface follow.
-- 13）中文：这个演示需要 JavaScript。下面是同一组界面的截图。
+- 14）中文：这个演示需要 JavaScript。下面是同一组界面的截图。
   English: This demo needs JavaScript. Screenshots of the same interface follow.
 - 确认 / 修改为：___
 
@@ -435,12 +439,20 @@
 - 说明：剧本里的会话标题（Build the iOS dashboard 等）与额度数字是合成数据，沿用 QuotaDeck 冒烟测试。
 - 确认 / 修改为：___
 
-### 44. 项目页正文要点（`src/copy/projects/quota-deck.{zh,en}.md`）
+### 44. 隐私页里关于 QuotaDeck 的两句（`src/copy/privacy.{zh,en}.md`）
+
+- 1）中文：QuotaDeck 完整版运行真实的 HUD 界面文件，但额度、会话和批准请求全部是模拟数据。
+  English: the full QuotaDeck edition runs the real HUD interface files, but every quota, session and approval request in it is simulated.
+- 2）中文：QuotaDeck 演示不读取你的电脑或任何账号；批准按钮只影响演示，不执行任何命令，也不调用真实的 AI Agent。
+  English: The QuotaDeck demo reads nothing from your computer or any account; its approval buttons only change the demo, run no command and call no real AI agent.
+- 确认 / 修改为：___
+
+### 45. 项目页正文要点（`src/copy/projects/quota-deck.{zh,en}.md`）
 
 - 开头：贴边浮条看额度；Claude Code、Codex 做完一轮或等批准时提醒。
 - 写明"界面照 Agent HUD 简约形态复刻，外观不是我设计的；我做的是选方向与范围、定规则、验收"。
-- 分节：贴边浮条、做完了提醒、批准卡片（默认不接入，接入前备份，可一键断开）、顶部黑块（全屏 3D 程序在前台时隐藏）。
+- 分节：贴边浮条、做完了提醒、批准卡片（默认不接入，接入前备份，可一键断开）、顶部黑块（0.7.0 加入）与手动的 Ctrl+Alt+H 隐藏开关。
 - 连接表更新 Claude Code 一行：只读本机登录信息请求官方用量接口，读不到时用 statusLine；登录凭证只留在主进程。
 - 删掉：并行分工、模型库、倍率计算示例、托盘窗口、候选版字样。
-- 实现与验证：GPT 写后端、Claude 写前端与审查；批准卡片在真实 Claude Code 会话里验收（允许后执行、拒绝后不执行）。
+- 实现与验证：GPT 写后端、Claude 写前端与审查；批准卡片由 DeepSeek 按 Claude 的计划实现、Claude 审查，并在真实 Claude Code 会话里验收（允许后执行、拒绝后不执行）。
 - 确认 / 修改为：___
