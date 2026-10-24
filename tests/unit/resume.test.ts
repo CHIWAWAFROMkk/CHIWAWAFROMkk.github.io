@@ -32,3 +32,21 @@ describe('English résumé source', () => {
     expect(statSync('public/downloads/resume/heyanjun-resume-zh.pdf').size).toBeGreaterThan(10_000);
   });
 });
+
+describe('the AI site’s résumés follow the 2026-10-14 final fixes', () => {
+  const zh = () => readFileSync('tools/resume-zh.html', 'utf8');
+  it('says Project Specialist, as the ledger (F5) does', () => {
+    expect(zh()).toContain('项目专员（HR 数字化方向）');
+    expect(zh()).not.toContain('项目助理');
+    expect(html).toContain('Project Specialist, HR Digitalization');
+    expect(html).not.toContain('Project Assistant');
+  });
+  it('drops the course line', () => {
+    expect(zh()).not.toContain('<b>课程</b>');
+    expect(html).not.toContain('<b>Courses</b>');
+  });
+  it('the Chinese source carries no photo', () => {
+    expect(zh()).not.toContain('<img');
+    expect(zh()).not.toContain('data:image');
+  });
+});
