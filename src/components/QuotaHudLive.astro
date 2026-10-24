@@ -40,7 +40,8 @@ const T = QD_HUD_TEXT[lang];
       <p class="qhud-credit">{T.credit}</p>
     </div>
   </div>
-  <p class="wrap qhud-fallback" id="qd-fallback">{T.noscript}</p>
+  <noscript><p class="wrap qhud-fallback">{T.noscript}</p></noscript>
+  <p class="wrap qhud-fallback" id="qd-fallback" hidden>{T.failed}</p>
 </section>
 <script>
   import { initQuotaHudLive } from '../scripts/qd-hud-live';

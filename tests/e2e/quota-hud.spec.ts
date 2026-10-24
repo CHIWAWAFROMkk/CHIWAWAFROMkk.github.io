@@ -95,9 +95,20 @@ test.describe('QuotaDeck live edition: the real HUD', () => {
   test('a vendored file that fails to load falls back to the screenshots', async ({ page }) => {
     await page.route('**/175d31c/src/renderer/hud.js', r => r.fulfill({ status: 404, body: '' }));
     await page.goto(PAGE);
-    await page.locator('.qshots').scrollIntoViewIfNeeded();
+    await page.locator('[data-quota-hud]').scrollIntoViewIfNeeded();   // the demo only starts loading near the screen
+    // The failure line, not the no-JS line: the demo noticed the failure and said so.
     await expect(page.locator('#qd-fallback')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('#qd-fallback')).toHaveText(T.failed);
     await expect(page.locator('#qd-stage')).toBeHidden();
+  });
+
+  test('a visitor with JavaScript never sees the no-JavaScript line, before or after the demo starts', async ({ page }) => {
+    await page.goto(PAGE);
+    await expect(page.getByText(T.noscript)).toBeHidden();
+    await expect(page.locator('#qd-fallback')).toBeHidden();
+    await page.locator('[data-quota-hud]').scrollIntoViewIfNeeded();
+    await expect(page.locator('#qd-stage')).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(T.noscript)).toBeHidden();
   });
 
   test('the page only ever asks this site for files', async ({ page }) => {
@@ -118,7 +129,10 @@ test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
   test('the explanation and the screenshots show', async ({ page }) => {
     await page.goto(PAGE);
-    await expect(page.locator('#qd-fallback')).toBeVisible();
+    // Playwright's text search skips <noscript>, so the paragraph is located directly.
+    await expect(page.locator('noscript p')).toBeVisible();
+    await expect(page.locator('noscript p')).toHaveText(QD_HUD_TEXT.zh.noscript);
+    await expect(page.locator('#qd-fallback')).toBeHidden();
     await expect(page.locator('#qd-stage')).toBeHidden();
     await expect(page.locator('.qshots img').first()).toBeVisible();
   });
