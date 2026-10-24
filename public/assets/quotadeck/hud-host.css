@@ -1,0 +1,9 @@
+/* The portfolio's own additions to QuotaDeck's HUD on a web page (the vendored files stay unchanged). */
+
+/* Keyboard users: a visible focus ring on everything the HUD can be operated with (the desktop HUD is mouse-only). */
+.item:focus-visible, .alert-pill:focus-visible, button:focus-visible, #notch:focus-visible { outline: 2px solid #8ab4f8; outline-offset: 2px; }
+
+/* Phones: the page gives the HUD a window as wide as the screen, and the 440 px card narrows to fit it, at full size. */
+@media (max-width: 460px) {
+  .card { width: calc(100vw - 12px); }
+}

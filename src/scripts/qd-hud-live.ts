@@ -9,10 +9,15 @@ import type { Lang } from '../i18n';
 declare global { interface Window { __qdHud?: HudBridge; __qdTier?: string; __qdFailed?: (reason: string) => void } }
 
 type Decision = 'allow' | 'deny' | null;
-/** The simulated desktop: wide screens keep the strip on the right edge (the author's choice); a phone puts it on the
- *  top edge, the only place its 440 px card fits next to it. The desktop is scaled to fill the stage's width. */
-const desktopFor = (width: number) => (width >= 1100 ? { width: 1280, height: 720, edge: 'right' }
-  : width >= 700 ? { width: 960, height: 600, edge: 'right' } : { width: 460, height: 640, edge: 'top' });
+/** The simulated desktop: wide screens keep the strip on the right edge (the author's choice) and scale the desktop to
+ *  fill the stage. A phone gets a desktop exactly as wide as the stage, at full size, with the strip on the top edge;
+ *  the host's sheet narrows the card to that width, so its text stays readable instead of shrinking with the desktop. */
+const PHONE_BELOW = 700;
+// The notch's wings are a fixed 456 px, so on a phone the notch gets a desktop wide enough for them, scaled to fit.
+const NOTCH_MIN_WIDTH = 480;
+const desktopFor = (width: number, style?: unknown) => (width >= 1100 ? { width: 1280, height: 720, edge: 'right' }
+  : width >= PHONE_BELOW ? { width: 960, height: 600, edge: 'right' }
+  : { width: Math.max(Math.floor(width), style === 'notch' ? NOTCH_MIN_WIDTH : 0), height: 560, edge: 'top' });
 const MAX_STEP_MS = 250;   // a longer gap (hidden tab, slow frame) is not replayed
 
 export function initQuotaHudLive(root: HTMLElement): void {
@@ -57,7 +62,7 @@ export function initQuotaHudLive(root: HTMLElement): void {
     return { mode: raw.mode === 'notch' ? 'notch' : 'strip', edge: raw.edge, strip: raw.strip, ...(raw.notch ? { notch: raw.notch } : {}), size: { width: win.width, height: win.height }, dragging: false };
   }
   function fit() {
-    const next = desktopFor(desk.clientWidth);
+    const next = desktopFor(desk.clientWidth, settings.style);
     const changed = next.width !== desktop.width;
     desktop = next;
     const scale = desk.clientWidth / desktop.width;
@@ -122,7 +127,8 @@ export function initQuotaHudLive(root: HTMLElement): void {
         return r.text();
       });
     } catch (error) { fail((error as Error).message); return; }
-    settings = main.geometry.normalizeHudSettings({ style: 'strip' });
+    // On a phone the strip starts without numbers so it fits across the screen; the settings page can turn them back on.
+    settings = main.geometry.normalizeHudSettings({ style: 'strip', ...(desk.clientWidth < PHONE_BELOW ? { showsNumbers: false } : {}) });
     sessionBase = Date.now();
     tracker = main.tracker.createSessionTracker({ startedAt: sessionBase });
     hud = createHudBridge({
@@ -132,7 +138,7 @@ export function initQuotaHudLive(root: HTMLElement): void {
         const styleChanged = next.style !== settings.style;
         settings = next;
         syncStyleButtons();
-        if (styleChanged) hud.push.layout(layout());
+        if (styleChanged) { fit(); hud.push.layout(layout()); }
       },
       onApprove: (_id, decision) => { decided = decision; logEl.textContent = decision === 'allow' ? T.allowed : T.denied; advance(); },
       onDismiss: ids => { tracker.dismiss(ids); advance(); },

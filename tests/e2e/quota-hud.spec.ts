@@ -173,5 +173,25 @@ for (const width of [390, 360]) {
     const scale = frame!.width / (await page.locator('#qd-frame').evaluate(f => (f as HTMLIFrameElement).offsetWidth));
     expect(frame!.x + card.left * scale).toBeGreaterThanOrEqual(0);
     expect(frame!.x + card.right * scale).toBeLessThanOrEqual(width);
+    // Readable, not a shrunken desktop: the card's text and buttons at their size on the phone screen.
+    const text = await hud(page).locator('#card').evaluate(c => parseFloat(getComputedStyle(c).fontSize));
+    expect(text * scale).toBeGreaterThanOrEqual(12);
   });
 }
+
+test('phone: the notch and its wings stay inside the simulated desktop', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'phone');
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.clock.install();
+  await page.goto(PAGE);
+  await page.locator('[data-quota-hud]').scrollIntoViewIfNeeded();
+  await expect(page.locator('#qd-stage')).toHaveAttribute('data-state', 'running', { timeout: 15_000 });
+  await page.locator('[data-qd-style="notch"]').click();
+  await page.clock.runFor(13_000);
+  await expect(hud(page).locator('#notch')).toHaveAttribute('data-view', 'wings');
+  await page.clock.runFor(1_000);
+  const fits = await hud(page).locator('#notch').evaluate(n => { const r = n.getBoundingClientRect(); return r.left >= 0 && r.right <= document.documentElement.clientWidth; });
+  expect(fits).toBe(true);
+  expect(await noHorizontalOverflow(page)).toBe(true);
+});

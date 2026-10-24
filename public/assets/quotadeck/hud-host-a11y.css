@@ -1,2 +1,0 @@
-/* Keyboard users on the web page: a visible focus ring on everything the HUD can be operated with. */
-.item:focus-visible, .alert-pill:focus-visible, button:focus-visible, #notch:focus-visible { outline: 2px solid #8ab4f8; outline-offset: 2px; }

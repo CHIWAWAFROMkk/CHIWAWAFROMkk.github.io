@@ -19,7 +19,7 @@ describe('live edition sizes are read from the shipped files', () => {
 
   it("quota = the vendored HUD at 175d31c plus the portfolio's host files", () => {
     const dir = (d: string): number => readdirSync(d, { withFileTypes: true }).reduce((s, e) => s + (e.isDirectory() ? dir(`${d}/${e.name}`) : statSync(`${d}/${e.name}`).size), 0);
-    const host = ['hud-host.html', 'hud-host.js', 'hud-host-a11y.css', 'hud-host-off.css', 'hud-host-gentle.css'].map(f => statSync(`public/assets/quotadeck/${f}`).size).reduce((a, b) => a + b, 0);
+    const host = ['hud-host.html', 'hud-host.js', 'hud-host.css', 'hud-host-off.css', 'hud-host-gentle.css'].map(f => statSync(`public/assets/quotadeck/${f}`).size).reduce((a, b) => a + b, 0);
     expect(liveBytes('quota')).toBe(dir('public/assets/quotadeck/175d31c') + host);
   });
 

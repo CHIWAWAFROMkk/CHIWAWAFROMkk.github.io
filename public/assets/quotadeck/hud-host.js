@@ -38,11 +38,11 @@
       if (!response.ok) throw new Error(`hud.html: HTTP ${response.status}`);
       const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
       const sheets = [...doc.querySelectorAll('link[rel="stylesheet"]')].map(link => document.importNode(link, true));
-      // Focus rings for keyboard users (the desktop HUD is mouse-only); a file, since the host's CSP allows no inline style.
-      const a11y = document.createElement('link');
-      a11y.rel = 'stylesheet';
-      a11y.href = '/assets/quotadeck/hud-host-a11y.css';
-      sheets.push(a11y);
+      // The portfolio's additions (focus rings, the phone-width card); a file, since the host's CSP allows no inline style.
+      const own = document.createElement('link');
+      own.rel = 'stylesheet';
+      own.href = '/assets/quotadeck/hud-host.css';
+      sheets.push(own);
       const tier = parent.__qdTier;
       if (tier === 'off' || tier === 'gentle') {
         const extra = document.createElement('link');
