@@ -136,7 +136,7 @@ test.describe('motion batch 1', () => {
     await expect(page.locator('h1 .split-parent')).toHaveAttribute('data-split-ready', '', { timeout: 8000 });
     await page.waitForTimeout(300);
     await expect(page.locator('h1 .split-char')).toHaveCount(0);
-    await expect(page.locator('#b-exp .sr-unit')).toHaveCount(0);
+    await expect(page.locator('#b-edu .sr-unit')).toHaveCount(0);
   });
 
   test('server HTML carries whole heading text with no animation units or hiding', async ({ request }) => {

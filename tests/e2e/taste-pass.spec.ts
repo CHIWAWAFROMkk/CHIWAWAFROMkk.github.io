@@ -31,10 +31,10 @@ test('prose paragraphs keep a readable measure', async ({ page, isMobile }) => {
   expect(widest).toBeLessThanOrEqual(36.5);
 });
 
-test('home: the projects door shows three real product screenshots on wide screens', async ({ page, isMobile }) => {
+test('home: the projects door shows two real product screenshots on wide screens', async ({ page, isMobile }) => {
   await page.goto('/');
   const shots = page.locator('a.door--ink .door__shots img');
-  await expect(shots).toHaveCount(3);
+  await expect(shots).toHaveCount(2);
   if (isMobile) { await expect(page.locator('.door__shots')).toBeHidden(); return; }
   await expect(page.locator('.door__shots')).toBeVisible();
   for (const img of await shots.all()) expect(await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
@@ -45,7 +45,7 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
   test(`overview (${lang}): real screenshots of the running projects, captioned and linked`, async ({ page }) => {
     await page.goto(`${prefix}/brief/`);
     const items = page.locator('.shots figure');
-    await expect(items).toHaveCount(3);
+    await expect(items).toHaveCount(2);
     for (const fig of await items.all()) {
       const img = fig.locator('img');
       await img.scrollIntoViewIfNeeded();
@@ -59,7 +59,7 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
 }
 
 test('overview screenshots sit flush in their frames (no dark band under a picture)', async ({ page, isMobile }) => {
-  test.skip(!!isMobile, 'three columns');
+  test.skip(!!isMobile, 'two columns');
   await page.goto('/brief/');
   const gaps = await page.locator('.shots a').evaluateAll(as => as.map(a => Math.abs(a.getBoundingClientRect().height - a.querySelector('img')!.getBoundingClientRect().height)));
   for (const g of gaps) expect(g).toBeLessThan(1);

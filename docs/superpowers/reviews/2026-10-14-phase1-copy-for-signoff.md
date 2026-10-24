@@ -372,7 +372,9 @@
   English: The strip and the cards are the real interface files of a pinned commit of the public repository; session states and quota figures are worked out by QuotaDeck's own code. Nothing on your computer or in any account is read, and allowing or denying only changes the demo; no command runs. If the demo cannot start, the desktop screenshots below still show the interface.
 - 确认 / 修改为：___
 
-### 40. 首页 / 一分钟概览的 QuotaDeck 截图说明（`SITE.shots`）
+### 40. ~~首页 / 一分钟概览的 QuotaDeck 截图说明（`SITE.shots`）~~ 已撤回
+
+- 2026-10-23 按你的要求，QuotaDeck 不在首页和一分钟概览的截图里单独露面，这条文字随之删除，无需确认。以下保留原文备查。
 
 - 1）中文：QuotaDeck 的 HUD：Claude 做完一轮后的提醒卡片与贴边浮条
   English: QuotaDeck's HUD: Claude's done reminder card beside the edge strip

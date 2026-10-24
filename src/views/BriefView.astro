@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import EvidenceRow from '../components/EvidenceRow.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import FilmReel from '../components/FilmReel.astro';
 import ContactBar from '../components/ContactBar.astro';
@@ -30,11 +29,6 @@ const films = filmEntries(lang).filter(f => f.project.inBrief);
         <p class="b-id__avail">{fact('F3').text[lang]}</p>
       </div>
     </header>
-
-    <section class="wrap" aria-labelledby="b-exp" data-rail="">
-      <div class="section-head"><h2 id="b-exp"><ScrollReveal text={B.experience[lang]} /></h2></div>
-      <EvidenceRow lang={lang} factId="F6" context="F5" />
-    </section>
 
     <section class="wrap" aria-labelledby="b-edu" data-rail="">
       <div class="section-head"><h2 id="b-edu"><ScrollReveal text={B.education[lang]} /></h2></div>

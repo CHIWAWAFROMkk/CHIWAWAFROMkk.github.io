@@ -8,7 +8,7 @@ test('wide screens: one node per overview section, the current one marked', asyn
   test.skip(!!isMobile, 'desktop rail');
   await page.goto('/brief/');
   const rail = page.getByRole('navigation', { name: SITE.rail.label.zh });
-  await expect(rail.locator('a')).toHaveCount(4);
+  await expect(rail.locator('a')).toHaveCount(3);
   // Put the education section's top just above the 40 % reading line (the section is short, so the next one stays below it).
   await page.locator('section[aria-labelledby="b-edu"]').evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - innerHeight * 0.4 + 10));
   await expect(rail.locator('a[aria-current="location"]')).toHaveText(SITE.brief.education.zh);

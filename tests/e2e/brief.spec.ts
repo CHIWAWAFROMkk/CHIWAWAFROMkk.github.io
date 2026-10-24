@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { FACTS, fact } from '../../src/data/facts';
+import { fact } from '../../src/data/facts';
 import { SITE } from '../../src/data/site';
 import { noHorizontalOverflow } from './helpers';
 
 for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
   test.describe(`brief (${lang})`, () => {
-    test('who, availability, main experience and contact are all present', async ({ page }) => {
+    test('who, availability, projects and contact are all present', async ({ page }) => {
       await page.goto(`${prefix}/brief/`);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(SITE.name[lang]);
-      for (const id of ['F1', 'F2', 'F3', 'F5', 'F6', 'F8'] as const) {
+      for (const id of ['F1', 'F2', 'F3', 'F8'] as const) {
         await expect(page.getByText(fact(id).text[lang], { exact: false }).first(), id).toBeVisible();
       }
       expect(await page.locator('main').innerText()).not.toContain(fact('F4').text[lang]);
@@ -16,18 +16,14 @@ for (const [prefix, lang] of [['', 'zh'], ['/en', 'en']] as const) {
       await expect(page.locator(`.contact--red a[href="${SITE.resume[lang]}"]`)).toBeVisible();
     });
 
-    test('every display number carries a ledger id and a caption', async ({ page }) => {
+    test('the AI overview leaves the internship record to the HRIS site and singles out no project', async ({ page }) => {
       await page.goto(`${prefix}/brief/`);
-      const nums = await page.locator('.num[data-fact]').evaluateAll(els =>
-        els.map(el => ({ id: el.getAttribute('data-fact')!, text: el.textContent!.trim(), caption: el.closest('.evidence')?.querySelector('.evidence__caption')?.textContent?.trim() ?? '' })),
-      );
-      expect(nums.length).toBeGreaterThan(0);
-      for (const n of nums) {
-        expect(Object.keys(FACTS)).toContain(n.id);
-        expect(FACTS[n.id as keyof typeof FACTS].figure).toBe(n.text);
-        expect(n.caption.length, n.id).toBeGreaterThan(8);
-      }
-      expect(await page.locator('.num:not([data-fact])').count()).toBe(0);
+      const main = await page.locator('main').innerText();
+      for (const id of ['F5', 'F6'] as const) expect(main, id).not.toContain(fact(id).text[lang]);
+      await expect(page.locator('#b-exp')).toHaveCount(0);
+      await expect(page.locator('main .num')).toHaveCount(0);
+      const shots = await page.locator('.shots a').evaluateAll(as => as.map(a => a.getAttribute('href')));
+      expect(shots).toEqual([`${prefix}/projects/ai-career/live/`, `${prefix}/projects/ai-campus/live/`]);
     });
 
     test('language switch stays on the overview page', async ({ page }) => {

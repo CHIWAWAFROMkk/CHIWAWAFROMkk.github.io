@@ -16,7 +16,7 @@ const shots = productShots();
       <span class="door__title" data-m-pre>{d.title[lang]}<Magnet className="door__magnet"><span class="door__arrow" aria-hidden="true">→</span></Magnet></span>
       <span class="door__desc" data-m-pre>{d.desc[lang]}</span>
       {i === 1 && (
-        /* Real screenshots of the three live editions; the link's own words name the door, so the pictures are decoration here. */
+        /* Real screenshots of the live editions; the link's own words name the door, so the pictures are decoration here. */
         <span class="door__shots" aria-hidden="true" data-m-pre>{shots.map(s => <img src={s.img.file} width={s.img.w} height={s.img.h} alt="" decoding="async" />)}</span>
       )}
     </a>
@@ -42,7 +42,7 @@ const shots = productShots();
      so the big word below can never run into them. In their own colours; pointing at the door lifts them a little. */
   .door__index, .door__shots { grid-row: 1; grid-column: 1; }
   .door__index { align-self: start; }
-  .door__shots { justify-self: end; display: flex; gap: 12px; width: min(calc(100% - 48px), 680px); }
+  .door__shots { justify-self: end; display: flex; gap: 12px; width: min(calc(100% - 48px), 450px); }
   .door__shots img { flex: 1; min-width: 0; height: auto; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.5s var(--ease); }
   .door--ink:hover .door__shots img, .door--ink:focus-visible .door__shots img { transform: translateY(-4px); }
   @media (max-width: 800px) { .door__shots { display: none; } }

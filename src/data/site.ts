@@ -35,7 +35,7 @@ export const SITE = {
   },
   gate: {
     label: { zh: '选择浏览方式', en: 'Choose how to browse' },
-    brief: { index: '01', big: '1:00', href: '/brief/', title: { zh: '一分钟了解我', en: 'Know me in a minute' }, desc: { zh: '经历、项目、影像与联系方式', en: 'Experience, projects, film and contact' } },
+    brief: { index: '01', big: '1:00', href: '/brief/', title: { zh: '一分钟了解我', en: 'Know me in a minute' }, desc: { zh: '教育、项目、影像与联系方式', en: 'Education, projects, film and contact' } },
     projects: { index: '02', big: 'ALL', href: '/projects/', title: { zh: '查看项目与演示', en: 'See projects & demos' }, desc: { zh: '过程与取舍、在线演示、源码下载', en: 'Process, live demos and source code' } },
   },
   /** The home page's agent run, step by step (AgentTrace). */
@@ -63,7 +63,6 @@ export const SITE = {
     off: { zh: '关', en: 'Off' },
   },
   brief: {
-    experience: { zh: '经历', en: 'Experience' },
     education: { zh: '教育', en: 'Education' },
     projects: { zh: '项目', en: 'Projects' },
     film: { zh: 'AIGC 影像与互动作品', en: 'AIGC film & interactive work' },
@@ -89,9 +88,6 @@ export const SITE = {
       { id: 'campus', href: '/projects/ai-campus/live/',
         alt: { zh: '研究统计程序的清洗结果：排除原因的柱状图与纳入后的统计', en: 'The study’s statistics program: bars for each exclusion reason and the figures for the included rows' },
         caption: { zh: '研究的统计程序在浏览器里清洗构造样本：排除了哪些，为什么', en: 'The study’s statistics program cleaning a constructed sample in the browser: what was excluded and why' } },
-      { id: 'quota', href: '/projects/quota-deck/live/',
-        alt: { zh: 'QuotaDeck 的 HUD：Claude 做完一轮后的提醒卡片与贴边浮条', en: 'QuotaDeck\'s HUD: Claude\'s done reminder card beside the edge strip' },
-        caption: { zh: 'QuotaDeck 的真实 HUD 在网页里运行：做完了的提醒与批准请求', en: 'QuotaDeck\'s real HUD running in the browser: done reminders and approval requests' } },
     ],
   },
   livePreview: {
@@ -161,7 +157,7 @@ export const SITE = {
     },
     brief: {
       title: { zh: '快速概览 · 何彦钧', en: 'Overview · Yanjun He' },
-      description: { zh: '一分钟了解何彦钧：到岗信息、实习经历、教育背景、项目与影像作品。', en: 'Yanjun He in one minute: availability, internship, education, projects and film work.' },
+      description: { zh: '一分钟了解何彦钧：到岗信息、教育背景、项目与影像作品。', en: 'Yanjun He in one minute: availability, education, projects and film work.' },
     },
     notFound: {
       title: { zh: '页面不存在', en: 'Page not found' },
