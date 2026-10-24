@@ -291,6 +291,13 @@
 
 字体限制下的用词：网站的中文字体子集没有"刘、胶、囊、晕、翅、游、戏"等字，这台电脑也无法重新生成子集，所以"刘海"写作"顶部黑块（Notch）"，"光晕"写作"外圈的光"，"游戏模式"写作"按 Ctrl+Alt+H 或在托盘菜单里勾选对应的开关"。
 
+**Claude 精修（2026-10-23）**，改动如下，其余条目逐句核对后保持原样：
+- 第 45 条（正文）：改正一处事实。游戏模式期间来的提醒是"先留着，HUD 回来后照常出现"（按 0.7.0 README），原中文写成"照常出现"，意思反了。补上 README 里的一句老实话："很长的命令（比如编译）也会被标成 Waiting"。开头一段拆成短句。英文表格里 "The token" 改成 "The sign-in token"，免得和 Token 柱混淆。
+- 第 37 条：标签"Electron 界面原样运行"改为"桌面 HUD 原样运行"，访客不一定知道 Electron。
+- 第 41 条：英文图注里的 "capsule" 改为 "block"，和中文"一块黑色"、正文一致。
+- 第 42 条：中文副标题"前端原样运行"改为"界面文件原样运行"，和英文、其他几处说法一致。
+- 第 43 条第 6 行写的"Token 柱长出新的一格"，以前只在第一轮成立，从第二轮起看不到变化。演示已修好，现在每一轮都会长出新的一格（有 e2e 测试）。
+
 另有两项内容要你看：项目页正文 `src/copy/projects/quota-deck.{zh,en}.md` 整篇重写（第 45 条只列要点）；完整版的演示在 `/projects/quota-deck/live/`。
 
 ### 33. 卡片简介（`SITE.projects` quota-deck `did`）
@@ -336,8 +343,8 @@
   English: The live edition of QuotaDeck: the desktop HUD's real interface files run in your browser through an afternoon in a minute and a half; done reminders, approval requests and waits are all worked out by QuotaDeck's own code, and the approval buttons only change the demo.
 - 3）中文：完整版 · 在浏览器里运行
   English: Live edition · runs in your browser
-- 4）中文：Electron 界面原样运行
-  English: The Electron interface, unchanged
+- 4）中文：桌面 HUD 原样运行
+  English: The desktop HUD, unchanged
 - 确认 / 修改为：___
 
 ### 38. 完整版摘要（`SITE.pages.quotaLive.summary`）
@@ -384,7 +391,7 @@
 - 4）中文：批准卡片：Claude Code 请求执行命令时，直接在 HUD 上允许或拒绝
   English: Approval card: when Claude Code asks to run a command, allow or deny it on the HUD
 - 5）中文：顶部黑块（Notch）：屏幕顶部正中的一块黑色，外圈的光按额度着色，卡片挂在下方
-  English: Notch: a black capsule at the top centre with a quota glow; cards hang below it
+  English: Notch: a black block at the top centre; its glow takes the quota colours, and cards hang below it
 - 说明：五张图由 QuotaDeck 自带的桌面测试在合成数据上截取。
 - 确认 / 修改为：___
 
@@ -392,7 +399,7 @@
 
 - 1）中文：一个下午，在网页里跑真实的 HUD
   English: One afternoon, the real HUD in your browser
-- 2）中文：QuotaDeck 0.7.0 · 前端原样运行
+- 2）中文：QuotaDeck 0.7.0 · 界面文件原样运行
   English: QuotaDeck 0.7.0 · interface files unchanged
 - 3）中文：下面的浮条就是 QuotaDeck 的真实界面文件；会话状态、额度换算也由它自己的代码算出。只有时钟和数据是模拟的：90 秒走完一个下午，你随时可以点开卡片、批准或拒绝。
   English: The strip below is QuotaDeck’s real interface; its session states and quota figures come from its own code. Only the clock and the data are simulated: an afternoon in 90 seconds, and you can open a card, allow or deny at any time.
@@ -451,7 +458,7 @@
 
 - 开头：贴边浮条看额度；Claude Code、Codex 做完一轮或等批准时提醒。
 - 写明"界面照 Agent HUD 简约形态复刻，外观不是我设计的；我做的是选方向与范围、定规则、验收"。
-- 分节：贴边浮条、做完了提醒、批准卡片（默认不接入，接入前备份，可一键断开）、顶部黑块（0.7.0 加入）与手动的 Ctrl+Alt+H 隐藏开关。
+- 分节：贴边浮条、做完了提醒（写明 `Waiting` 是推测，很长的命令也会被标出来）、批准卡片（默认不接入，接入前备份，可一键断开）、顶部黑块（0.7.0 加入）与手动的 Ctrl+Alt+H 隐藏开关（藏起来时来的提醒和批准请求先留着，HUD 回来后照常出现）。
 - 连接表更新 Claude Code 一行：只读本机登录信息请求官方用量接口，读不到时用 statusLine；登录凭证只留在主进程。
 - 删掉：并行分工、模型库、倍率计算示例、托盘窗口、候选版字样。
 - 实现与验证：GPT 写后端、Claude 写前端与审查；批准卡片由 DeepSeek 按 Claude 的计划实现、Claude 审查，并在真实 Claude Code 会话里验收（允许后执行、拒绝后不执行）。

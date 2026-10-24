@@ -17,7 +17,6 @@ const ALLOWED: { file: string; phrase: string; why: string }[] = [
   { file: 'projects/ai-campus.en.md', phrase: 'answering independently', why: 'study variable' },
   { file: 'projects/campus-delivery.zh.md', phrase: '业务对象独立建表', why: '数据库设计：每类对象单独成表' },
   { file: 'projects/hris-workflow.zh.md', phrase: '不能独立决定', why: '说的是模型不能自行决定写入' },
-  { file: 'projects/quota-deck.zh.md', phrase: '独立额度', why: '账户额度的产品概念' },
   { file: 'projects/quota-deck.zh.md', phrase: '独立份额', why: '演示中的虚构模型份额' },
   { file: 'projects/stark-desk.zh.md', phrase: '独立图层', why: '图像图层' },
   { file: 'projects/stock-data-method.zh.md', phrase: '通用部分独立成', why: '代码模块拆分' },

@@ -2,7 +2,7 @@
 export const QD_HUD_TEXT = {
   zh: {
     title: '一个下午，在网页里跑真实的 HUD',
-    meta: 'QuotaDeck 0.7.0 · 前端原样运行',
+    meta: 'QuotaDeck 0.7.0 · 界面文件原样运行',
     intro: '下面的浮条就是 QuotaDeck 的真实界面文件；会话状态、额度换算也由它自己的代码算出。只有时钟和数据是模拟的：90 秒走完一个下午，你随时可以点开卡片、批准或拒绝。',
     badge: '模拟数据 · 批准按钮只影响演示，不执行任何命令',
     credit: '界面复刻自 Agent HUD（jazzenchen/agent-hud-open，Apache-2.0）；QuotaDeck 为 MIT 开源，字体 Inter（OFL）、图标 Lobe Icons（MIT）。',

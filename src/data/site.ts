@@ -284,7 +284,7 @@ export const SITE = {
       title: { zh: 'QuotaDeck（完整版）', en: 'QuotaDeck (live edition)' },
       lead: { zh: '真实的 HUD 前端，模拟的一个下午。', en: 'The real HUD, a simulated afternoon.' },
       description: { zh: 'QuotaDeck 完整版：桌面 HUD 的真实界面文件在浏览器里运行，一分半钟走完一个下午；做完了提醒、批准请求和等待都由 QuotaDeck 自己的代码算出，批准按钮只影响演示。', en: 'The live edition of QuotaDeck: the desktop HUD\'s real interface files run in your browser through an afternoon in a minute and a half; done reminders, approval requests and waits are all worked out by QuotaDeck\'s own code, and the approval buttons only change the demo.' },
-      tags: [ { zh: '完整版 · 在浏览器里运行', en: 'Live edition · runs in your browser' }, { zh: 'Electron 界面原样运行', en: 'The Electron interface, unchanged' } ],
+      tags: [ { zh: '完整版 · 在浏览器里运行', en: 'Live edition · runs in your browser' }, { zh: '桌面 HUD 原样运行', en: 'The desktop HUD, unchanged' } ],
       summary: {
         task: { zh: '让访客不装软件，也能看到 QuotaDeck 在桌面上怎样提醒：哪个 Agent 做完了、哪个在等批准。', en: 'Let visitors see, without installing anything, how QuotaDeck tells you on the desktop which agent is done and which is waiting for approval.' },
         mine: { zh: '定下演示边界：界面文件与会话状态逻辑原样运行，只有时钟和数据是模拟的；批准与拒绝只改演示状态，不执行任何命令。', en: 'Set the demo\'s limits: the interface files and the session logic run unchanged, only the clock and the data are simulated; allowing and denying only change the demo, and no command ever runs.' },

@@ -2,7 +2,7 @@ A small strip on the edge of the screen: how much quota several AI services have
 
 ## From a quota table to reminders on the desktop
 
-When one account balance appears under a dozen models, it looks as if each model had its own allowance. The project first kept pools, models and billing apart, showing only what each provider actually reports; later the interface moved to an edge HUD with done reminders and approval cards, and 0.7.0 added the notch: step away for a while, glance at the strip when you are back, and you know which agent is done and which one is waiting for you.
+When one account balance appears under a dozen models, it looks as if each model had its own allowance. The project first kept pools, models and billing apart, showing only what each provider actually reports. Later the interface moved to an edge HUD with done reminders and approval cards, and 0.7.0 added the notch. Step away for a while, glance at the strip when you are back, and you know which agent is done and which one is waiting for you.
 
 The interface is a faithful copy of the minimal form of Agent HUD (jazzenchen/agent-hud-open, Apache-2.0); its look is not my design. My part was choosing the direction and the scope, setting the rules for reading quotas, for reminders and for approvals, and signing off the result.
 
@@ -12,7 +12,7 @@ One quota ring per service; the number is the share used (the balance for prepai
 
 ### Done reminders
 
-QuotaDeck only reads local session logs and changes no Claude Code or Codex setting. Seconds after a turn ends the icon becomes a smiling bot and a `New reply` capsule slides out; the reminder stays until you have seen it. `Waiting` is an inference: a tool call with no result after 30 seconds is taken as possibly waiting for you.
+QuotaDeck only reads local session logs and changes no Claude Code or Codex setting. Seconds after a turn ends the icon becomes a smiling bot and a `New reply` capsule slides out; the reminder stays until you have seen it. `Waiting` is an inference: a tool call with no result after 30 seconds is taken as possibly waiting for you, so a long command (a build, say) gets marked this way too.
 
 ### Approval cards
 
@@ -20,7 +20,7 @@ Once connected, a command Claude Code asks to run appears as a card on the HUD, 
 
 ### Notch
 
-The strip can also become a black block at the top centre of the screen (the notch): its glow takes each service's quota colour, it opens out to both sides when there is a reminder, and cards hang below it. Game mode hides the whole HUD at once: press `Ctrl+Alt+H` or tick it in the tray menu, and again to bring it back. QuotaDeck does not guess what you are doing; reminders that come in meanwhile appear afterwards.
+The strip can also become a black block at the top centre of the screen (the notch): its glow takes each service's quota colour, it opens out to both sides when there is a reminder, and cards hang below it. Game mode hides the whole HUD at once: press `Ctrl+Alt+H` or tick it in the tray menu, and again to bring it back. QuotaDeck does not guess what you are doing; reminders and approval requests that come in meanwhile are held and appear when the HUD comes back.
 
 ![How quota pools, models and tasks relate](/assets/editorial/quota-pools.svg)
 
@@ -31,7 +31,7 @@ A structural sketch of shared quota sources and model choice. It holds no privat
 | Service | Data source | Current limits |
 |---|---|---|
 | Codex | Local CLI: account windows and model list | A shared quota is never split into made-up per-model shares |
-| Claude Code | Reads the local sign-in to call the official usage endpoint; falls back to data forwarded by the official statusLine | The token stays in the main process, never in snapshots, logs or the interface |
+| Claude Code | Reads the local sign-in to call the official usage endpoint; falls back to data forwarded by the official statusLine | The sign-in token stays in the main process, never in snapshots, logs or the interface |
 | Antigravity | The local service's quota and model catalogue, falling back to the CLI | Experimental interface that may change with client versions |
 | DeepSeek | Official API for balance and models | Needs the user's own API key; the account balance is shared |
 | WorkBuddy | An official web snapshot the user saved | Does not refresh the web page; balance and multipliers are as of the snapshot time |

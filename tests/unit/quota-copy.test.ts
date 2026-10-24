@@ -20,6 +20,11 @@ describe('QuotaDeck copy follows the released 0.7.0', () => {
     expect(md('zh')).not.toMatch(/全屏 3D|自动隐藏/);
     expect(md('en')).not.toMatch(/full-screen 3D|Steam game/i);
   });
+  it('says reminders that arrive while the HUD is hidden wait until it is back, as the 0.7.0 README does', () => {
+    expect(md('zh')).not.toContain('期间来的提醒照常出现');
+    expect(md('zh')).toMatch(/先留着.{0,20}回来后/);
+    expect(md('en')).toMatch(/held.{0,60}comes back/);
+  });
 });
 
 describe('who did what is stated as the records say', () => {
