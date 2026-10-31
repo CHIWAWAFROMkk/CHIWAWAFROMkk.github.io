@@ -50,3 +50,16 @@ describe('the AI site’s résumés follow the 2026-10-14 final fixes', () => {
     expect(zh()).not.toContain('data:image');
   });
 });
+
+describe('availability follows the 2026-10-31 confirmation (in a job now, start date negotiable)', () => {
+  it('the ledger and all four résumé sources say the start date is negotiable', async () => {
+    const { fact } = await import('../../src/data/facts');
+    expect(fact('F3').text.zh).toContain('到岗时间可协商');
+    expect(fact('F3').text.en).toContain('Start date negotiable');
+    for (const f of ['resume-zh', 'resume-en', 'resume-hr-zh', 'resume-hr-en']) {
+      const s = readFileSync(`tools/${f}.html`, 'utf8');
+      expect(s, f).not.toMatch(/立即到岗|Available now/);
+      expect(s, f).toMatch(/到岗时间可协商|Start date negotiable/);
+    }
+  });
+});

@@ -41,7 +41,8 @@ for (const [html, pdf] of JOBS.filter(([, pdf]) => !process.env.ONLY || pdf.incl
   const profile = mkdtempSync(join(tmpdir(), 'print-resume-'));
   execFileSync(EDGE, ['--headless=new', '--disable-gpu', '--no-pdf-header-footer', `--user-data-dir=${profile}`, `--print-to-pdf=${out}`, src], { stdio: 'inherit' });
   const size = waitForFile(out);
-  rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  // Edge may still hold the profile for a moment; a leftover temp folder is harmless.
+  try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch { /* left for the OS to clean */ }
   if (size < 10_000) throw new Error(`PDF looks empty (${size} bytes)`);
   console.log(`wrote ${out} (${size} bytes)`);
 }
