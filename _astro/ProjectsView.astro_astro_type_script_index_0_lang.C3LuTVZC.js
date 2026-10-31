@@ -1,1 +1,0 @@
-import{t as e}from"./motion-dom.CrIigkO0.js";var t=document.querySelector(`[data-bgword]`);t&&!matchMedia(`(prefers-reduced-motion: reduce)`).matches&&e(()=>t.style.setProperty(`--s`,String(Math.round(window.scrollY*.35))));

@@ -1,0 +1,1 @@
+import{l as e}from"./text-motion.BspRPUq9.js";var t=document.querySelector(`[data-rows]`);if(t&&e()){let e=0;addEventListener(`scroll`,()=>{e||=requestAnimationFrame(()=>{e=0,t.style.setProperty(`--s`,String(Math.round(scrollY)))})},{passive:!0})}

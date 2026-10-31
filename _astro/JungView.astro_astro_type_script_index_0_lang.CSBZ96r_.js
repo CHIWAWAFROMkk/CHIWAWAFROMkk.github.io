@@ -1,1 +1,0 @@
-import{n as e}from"./motion-dom.CrIigkO0.js";e(document.querySelectorAll(`.prose table tbody tr`),70);

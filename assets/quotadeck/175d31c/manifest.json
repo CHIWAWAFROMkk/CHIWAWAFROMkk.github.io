@@ -1,0 +1,137 @@
+{
+  "repository": "https://github.com/CHIWAWAFROMkk/quota-deck",
+  "commit": "175d31c2c8f579eebbf8f1928025e877d108904f",
+  "version": "0.7.0",
+  "files": [
+    {
+      "path": "src/renderer/hud.html",
+      "bytes": 1234,
+      "sha256": "544fe940c9e29db09404445dbf6387e3cacb474303050813355b624db8309685"
+    },
+    {
+      "path": "src/renderer/chart.css",
+      "bytes": 1584,
+      "sha256": "9b6f650bde09aa176fdfe4a2c474503ce79d2531e1612052b86cdc3be9917609"
+    },
+    {
+      "path": "src/renderer/hud.css",
+      "bytes": 16674,
+      "sha256": "873c9cbd3700359acaba8bd3dad82a84a2b265c466fba9bfa12715d213dd849c"
+    },
+    {
+      "path": "src/renderer/hud-metrics.js",
+      "bytes": 2232,
+      "sha256": "d9a40db6034a6a8f9d57722edda26db0ccdd9f0ebda62fa1422241e539eb7e2b"
+    },
+    {
+      "path": "src/renderer/hud-dom.js",
+      "bytes": 3451,
+      "sha256": "4bf189c911333571f131c315c843ff635183a2c3fbacece7813ccf26609a2cb9"
+    },
+    {
+      "path": "src/renderer/hud-bots.js",
+      "bytes": 1511,
+      "sha256": "6c9d3fdcca55b0ea560dd66af819c41d4c68527522a301dc3bdca72eeb05c9e0"
+    },
+    {
+      "path": "src/renderer/hud-strip.js",
+      "bytes": 12647,
+      "sha256": "58d77bf307c25f0701f2dcaf2fa631480bc80bc360d4e993256bfef73dab48a7"
+    },
+    {
+      "path": "src/renderer/hud-notch-metrics.js",
+      "bytes": 2150,
+      "sha256": "b887e2376f64b7411cd4595f267ec5dabfb90cc91c23ce773458dd324e84db80"
+    },
+    {
+      "path": "src/renderer/hud-notch.js",
+      "bytes": 9266,
+      "sha256": "9d0115ffaf3196c7e215669019dab2934a5e7810257b6067da31e9f9f8ff2fd6"
+    },
+    {
+      "path": "src/renderer/hud-chart.js",
+      "bytes": 5309,
+      "sha256": "b8db825ef40f5c41e59f5dfc798dbc3b69496dea6347edb7fb1f4c5836a76390"
+    },
+    {
+      "path": "src/renderer/hud-card.js",
+      "bytes": 16917,
+      "sha256": "2bbba497b594d9bc7433e567fcb6cbaee0533a1d6a1de46da800b5fe6e6fa3b8"
+    },
+    {
+      "path": "src/renderer/hud-settings.js",
+      "bytes": 6486,
+      "sha256": "12f7c3459db4e301250086c837514097789d3050c963c5c374d6bea550c7de7e"
+    },
+    {
+      "path": "src/renderer/hud.js",
+      "bytes": 5888,
+      "sha256": "9c140244923705579909ee55d9a3777ac7d1d502b7f28bf4dfef08928ee56acd"
+    },
+    {
+      "path": "src/main/hud-view.cjs",
+      "bytes": 10085,
+      "sha256": "03e50a3e9e9f941b1f3183f168f6697c0c9ac034ed8ef918acdffe4a488d0a90"
+    },
+    {
+      "path": "src/main/session-tracker.cjs",
+      "bytes": 7202,
+      "sha256": "c3a1f2c8c04a22692e33e044ddf71d1cfb20f8c48b5a498eecac3f9980a79655"
+    },
+    {
+      "path": "src/main/hud-geometry.cjs",
+      "bytes": 7335,
+      "sha256": "df3c638c9454250a847792eb02a5765aaea9c1f2129b2f0d052f8999ac694145"
+    },
+    {
+      "path": "src/main/model-names.cjs",
+      "bytes": 745,
+      "sha256": "1906f309e4d80b828231cf93174d90b97fa162e810be00bb445eff8df98fc997"
+    },
+    {
+      "path": "assets/fonts/inter-latin-wght-normal.woff2",
+      "bytes": 48444,
+      "sha256": "f052ee44c3728dfd23aba8a4567150bc314d23903026fbb6ad089422c2df56af"
+    },
+    {
+      "path": "assets/fonts/LICENSE-inter.txt",
+      "bytes": 4375,
+      "sha256": "8c8fa881d9091ee315d2c80d207bb73afd4e90a66c9782ca445c5642f25db6dc"
+    },
+    {
+      "path": "assets/logos/codex.svg",
+      "bytes": 1710,
+      "sha256": "3d83514ea8ed8200b36804aff735797ca77aff87fa080b9f7e9967cf917469ee"
+    },
+    {
+      "path": "assets/logos/claude.svg",
+      "bytes": 1696,
+      "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+    },
+    {
+      "path": "assets/logos/antigravity.svg",
+      "bytes": 7634,
+      "sha256": "652128cf55a28bb958563ee372d0bd00208d9e6fd446f523f77aafd811eef8ca"
+    },
+    {
+      "path": "assets/logos/workbuddy.svg",
+      "bytes": 1589,
+      "sha256": "033d5da624460e686046f22b4e242b6b86484ad84ec4877e4efa15a9fb642b97"
+    },
+    {
+      "path": "assets/logos/deepseek.svg",
+      "bytes": 2164,
+      "sha256": "deba5f98a5c1796e20fcac3149bcd7eb8a32f0bdd04d048819400b1f28bd1439"
+    },
+    {
+      "path": "assets/logos/LICENSE-lobe-icons.txt",
+      "bytes": 1064,
+      "sha256": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1079,
+      "sha256": "fc032c113394ad99c97dbe132d670ce525a3bab8210e901cb715910991b1cbfd"
+    }
+  ]
+}

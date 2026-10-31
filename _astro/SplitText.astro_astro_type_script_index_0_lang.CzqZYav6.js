@@ -1,0 +1,1 @@
+import{t as e}from"./text-motion.BspRPUq9.js";for(let t of document.querySelectorAll(`.split-parent`))e(t);

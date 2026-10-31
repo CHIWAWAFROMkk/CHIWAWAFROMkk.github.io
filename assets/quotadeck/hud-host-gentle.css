@@ -1,0 +1,2 @@
+/* Gentle tier: things fade in and out, nothing travels or scales. */
+*, *::before, *::after { animation: none !important; transition-property: opacity !important; }

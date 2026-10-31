@@ -1,0 +1,2 @@
+/* Motion off (the portfolio's tier): QuotaDeck's HUD keeps every state but moves nothing. */
+*, *::before, *::after { animation: none !important; transition: none !important; }
