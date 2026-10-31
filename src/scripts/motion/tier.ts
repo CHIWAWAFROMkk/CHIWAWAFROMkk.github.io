@@ -45,10 +45,15 @@ export function readChoice(): Choice | null {
   }
 }
 
+/** Fired on document when the tier changes on a page that stays loaded (storage blocked, so no reload): loops that are
+ *  already running check currentTier() each frame and stop at off; this tells them when they may start again. */
+export const MOTION_EVENT = 'motion-tier';
+
 /** Stores the visitor's tier and applies it to this page. Returns false when storage is blocked, so the caller knows a
  *  reload would fall back to the automatic tier. */
 export function saveChoice(c: Choice): boolean {
   document.documentElement.dataset.motion = c;
+  document.dispatchEvent(new CustomEvent(MOTION_EVENT));
   try { localStorage.setItem(MOTION_KEY, c); return true; } catch { return false; }
 }
 

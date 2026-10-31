@@ -94,3 +94,48 @@ test('gentle: once a block is revealed its children keep their own transforms (a
   });
   expect(t).not.toBe('none');
 });
+
+test.describe('storage blocked: choosing off stops animation loops that are already running', () => {
+  test.skip(({ isMobile }) => !!isMobile, 'run once');
+  // Count the draw calls each loop makes every frame (WebGL drawArrays for the prologue, 2D clearRect for the topology),
+  // so the test does not depend on how the bundler names chunks or on GSAP's own ticker.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } });
+      const w = window as unknown as { draws: number };
+      w.draws = 0;
+      const count = (proto: { [k: string]: unknown }, name: string) => {
+        const orig = proto[name] as (...a: unknown[]) => unknown;
+        proto[name] = function (this: unknown, ...a: unknown[]) { w.draws++; return orig.apply(this, a); };
+      };
+      count(WebGL2RenderingContext.prototype as unknown as { [k: string]: unknown }, 'drawArrays');
+      count(CanvasRenderingContext2D.prototype as unknown as { [k: string]: unknown }, 'clearRect');
+    });
+  });
+  const drawsIn = async (page: import('@playwright/test').Page, ms: number) => {
+    const before = await page.evaluate(() => (window as unknown as { draws: number }).draws);
+    await page.waitForTimeout(ms);
+    return (await page.evaluate(() => (window as unknown as { draws: number }).draws)) - before;
+  };
+  // Clicked in place: a normal click would scroll to the footer switch and take the animation off screen, which stops
+  // it for a different reason.
+  const turnOff = async (page: import('@playwright/test').Page) => {
+    await page.locator('[data-motion-switch]').first().getByRole('button', { name: SITE.motion.off.zh }).evaluate(b => (b as HTMLButtonElement).click());
+    await page.waitForTimeout(300);
+  };
+
+  test('HRIS archive topology', async ({ page }) => {
+    await page.goto('/hris/');
+    await expect(page.locator('[data-topology]')).toHaveClass(/is-live/);
+    expect(await drawsIn(page, 600)).toBeGreaterThan(10);
+    await turnOff(page);
+    expect(await drawsIn(page, 800)).toBe(0);
+  });
+
+  test('insights particle prologue', async ({ page }) => {
+    await page.goto('/projects/campus-delivery/insights/');
+    await expect.poll(() => drawsIn(page, 400), { timeout: 15_000 }).toBeGreaterThan(10);
+    await turnOff(page);
+    expect(await drawsIn(page, 800)).toBe(0);
+  });
+});

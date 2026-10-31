@@ -3,7 +3,7 @@ import { cam, stateFromScroll } from './camera';
 import { particleBudget, decideQuality, probeStep, PROBE_START } from './quality';
 import { POINT_VS, POINT_FS, QUAD_VS, BRIGHT_FS, BLUR_FS, COMP_FS } from './shaders';
 import type { Rows } from '../morph';
-import { fullMotion } from '../motion/tier';
+import { currentTier, fullMotion, MOTION_EVENT } from '../motion/tier';
 
 export interface PrologueData { heat: Rows; nets: number[]; label: string }
 interface Prog { p: WebGLProgram; u: (name: string) => WebGLUniformLocation | null }
@@ -153,11 +153,14 @@ async function build(root: HTMLElement, canvas: HTMLCanvasElement, gl: WebGL2Ren
   let probe = PROBE_START, prevMs = 0, frames = 0, last = performance.now();
   const stop = () => { stopped = true; cancelAnimationFrame(raf); };
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); toStatic(root, gl); });
-  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible && !stopped && !raf) raf = requestAnimationFrame(frame); }).observe(root);
+  const resume = () => { if (visible && !stopped && !raf && currentTier() !== 'off') raf = requestAnimationFrame(frame); };
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; resume(); }).observe(root);
+  // Turning motion off without a reload (storage blocked) stops the loop below; turning it back on starts it again.
+  document.addEventListener(MOTION_EVENT, resume);
 
   function frame(nowMs: number) {
     raf = 0;
-    if (stopped || !visible || !T) return;
+    if (stopped || !visible || !T || currentTier() === 'off') return;
     const now = nowMs / 1000;
     state += (target - state) * 0.06;
     mouseOn += (mouseOnTarget - mouseOn) * 0.1;

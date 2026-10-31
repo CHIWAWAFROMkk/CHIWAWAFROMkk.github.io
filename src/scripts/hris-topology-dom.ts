@@ -1,5 +1,5 @@
 import { governedTargets, rawTargets, springStep, repel, nodeCount, mulberry32, type Kind } from './hris-topology';
-import { currentTier } from './motion/tier';
+import { currentTier, MOTION_EVENT } from './motion/tier';
 import { frameCap } from './frame-cap';
 
 /** Runs the HRIS home topology: nodes spring between scattered (before) and grouped (governed) positions; a fine pointer
@@ -51,6 +51,8 @@ export function initTopology(fig: HTMLElement): void {
   }
   let t0 = performance.now(), raf = 0, onScreen = true;
   const draw = (now: number) => {
+    // A visitor whose storage is blocked can turn motion off without a reload: stop on the current frame.
+    if (currentTier() === 'off') { raf = 0; return; }
     raf = requestAnimationFrame(draw);
     if (!cap(now)) return;
     const dt = Math.min(0.05, (now - t0) / 1000); t0 = now;
@@ -69,7 +71,7 @@ export function initTopology(fig: HTMLElement): void {
       }
     }
   };
-  const run = () => { if (!raf && onScreen && document.visibilityState === 'visible') { t0 = performance.now(); raf = requestAnimationFrame(draw); } };
+  const run = () => { if (!raf && onScreen && document.visibilityState === 'visible' && currentTier() !== 'off') { t0 = performance.now(); raf = requestAnimationFrame(draw); } };
   const stop = () => { cancelAnimationFrame(raf); raf = 0; };
   readColours(); layout();
   canvas.hidden = false;
@@ -79,5 +81,6 @@ export function initTopology(fig: HTMLElement): void {
   document.addEventListener('hris-theme', readColours);
   new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) run(); else stop(); }).observe(fig);
   document.addEventListener('visibilitychange', () => (document.visibilityState === 'visible' ? run() : stop()));
+  document.addEventListener(MOTION_EVENT, run);
   run();
 }
