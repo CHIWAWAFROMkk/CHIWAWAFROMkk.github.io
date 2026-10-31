@@ -1,0 +1,1 @@
+import{n as e}from"./text-motion.C3q4FW00.js";import{t}from"./heads.0wRh2IlH.js";var n=[];for(let t of document.querySelectorAll(`.scroll-reveal`)){let r=t.closest(`h2`);r?n.push(r):e(t)}t(n);

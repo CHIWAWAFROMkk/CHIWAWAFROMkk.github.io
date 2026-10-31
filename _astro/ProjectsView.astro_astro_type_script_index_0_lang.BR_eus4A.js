@@ -1,1 +1,0 @@
-import{l as e}from"./text-motion.BspRPUq9.js";import{t}from"./motion-dom.CDuGxLBD.js";var n=document.querySelector(`[data-bgword]`);n&&e()&&t(()=>n.style.setProperty(`--s`,String(Math.round(window.scrollY*.35))));

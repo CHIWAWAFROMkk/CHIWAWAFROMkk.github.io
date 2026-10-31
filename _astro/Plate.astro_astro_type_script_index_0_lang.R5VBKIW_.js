@@ -1,1 +1,0 @@
-import{l as e}from"./text-motion.BspRPUq9.js";function t(t){if(!e()){t.classList.add(`is-drawn`);return}t.classList.add(`is-armed`);let n=new IntersectionObserver(e=>{e.some(e=>e.isIntersecting)&&(n.disconnect(),requestAnimationFrame(()=>t.classList.add(`is-drawn`)))},{threshold:.25});n.observe(t)}document.querySelectorAll(`[data-plate]`).forEach(t);

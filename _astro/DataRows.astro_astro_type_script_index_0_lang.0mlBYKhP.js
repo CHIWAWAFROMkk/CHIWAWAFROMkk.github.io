@@ -1,0 +1,1 @@
+import{u as e}from"./text-motion.C3q4FW00.js";var t=document.querySelector(`[data-rows]`);if(t&&e()){let e=0;addEventListener(`scroll`,()=>{e||=requestAnimationFrame(()=>{e=0,t.style.setProperty(`--s`,String(Math.round(scrollY)))})},{passive:!0})}
