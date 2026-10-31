@@ -89,13 +89,17 @@ export function initFilmDesk(root: HTMLElement): void {
   video.addEventListener('pause', stop);
   video.addEventListener('ended', stop);
 
-  // The first card's clip loads only once the desk is on screen.
-  const io = new IntersectionObserver(entries => {
-    if (!entries.some(en => en.isIntersecting)) return;
-    io.disconnect();
-    select(current);
-  });
-  io.observe(root);
+  // The first card's clip loads only once the desk is on screen; afterwards the card clip pauses whenever the desk
+  // leaves the screen and plays again when it comes back. The film itself is the visitor's to start and stop.
+  let loaded = false;
+  new IntersectionObserver(entries => {
+    const on = entries.some(en => en.isIntersecting);
+    if (on && !loaded) { loaded = true; select(current); return; }
+    const clip = cards.find(c => c.dataset.fdCard === current)?.querySelector('video');
+    if (!clip) return;
+    if (!on) clip.pause();
+    else if (!reduced) void clip.play().catch(() => { /* autoplay refused: the poster stays */ });
+  }).observe(root);
 
   void drawSignals(root);
 }

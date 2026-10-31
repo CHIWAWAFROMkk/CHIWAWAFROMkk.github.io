@@ -5,7 +5,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
  * The cinema: curtains open when it scrolls into view; a pointer near the screen's left or right edge
- * slides the shots that way (faster nearer the edge); clips load and play only while on screen;
+ * slides the shots that way (faster nearer the edge); clips load when they enter the track and play only while they
+ * are in the track's view and the cinema itself is on screen;
  * the toggle pauses all of them. Phones and keyboards use the track's native horizontal scrolling.
  */
 export function initReel(root: HTMLElement): void {
@@ -18,6 +19,8 @@ export function initReel(root: HTMLElement): void {
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const visible = new Set<HTMLVideoElement>();
   let paused = reduced;
+  // The clip observer below is rooted on the track, so it cannot see the whole cinema leave the page: track that here.
+  let onScreen = false;
   let speed = 0;
   let frame = 0;
 
@@ -40,13 +43,17 @@ export function initReel(root: HTMLElement): void {
     if (speed && !frame) frame = requestAnimationFrame(glide);
   };
 
+  const play = (v: HTMLVideoElement) => {
+    if (!paused && onScreen && visible.has(v)) void v.play().catch(() => {});
+  };
+
   const setPaused = (value: boolean) => {
     paused = value;
     toggle?.setAttribute('aria-pressed', String(paused));
     if (toggle) toggle.textContent = paused ? toggle.dataset.play ?? '' : toggle.dataset.pause ?? '';
     for (const v of videos) {
-      if (paused || !visible.has(v)) v.pause();
-      else void v.play().catch(() => {});
+      if (paused || !onScreen || !visible.has(v)) v.pause();
+      else play(v);
     }
   };
 
@@ -57,7 +64,7 @@ export function initReel(root: HTMLElement): void {
         if (e.isIntersecting) {
           visible.add(v);
           if (!v.getAttribute('src')) v.src = v.dataset.src ?? '';
-          if (!paused) void v.play().catch(() => {});
+          play(v);
         } else {
           visible.delete(v);
           v.pause();
@@ -67,6 +74,13 @@ export function initReel(root: HTMLElement): void {
     { root: track, rootMargin: '0px 25% 0px 25%' },
   );
   videos.forEach(v => clips.observe(v));
+  new IntersectionObserver(entries => {
+    onScreen = entries.some(e => e.isIntersecting);
+    for (const v of videos) {
+      if (onScreen) play(v);
+      else v.pause();
+    }
+  }).observe(root);
 
   if (reduced) {
     root.classList.add('is-open');

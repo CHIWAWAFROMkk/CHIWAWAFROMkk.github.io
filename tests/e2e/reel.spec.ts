@@ -43,6 +43,15 @@ test.describe('cinema on desktop', () => {
     await expect(page.locator('[data-reel-count]')).toHaveText(/^\d\d \/ 23$/);
   });
 
+  test('scrolling the cinema off screen pauses its clips; scrolling back resumes them', async ({ page }) => {
+    const playing = () => page.locator(`${reel} video`).evaluateAll(vs => vs.filter(v => !(v as HTMLVideoElement).paused).length);
+    await expect.poll(playing).toBeGreaterThan(0);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(playing).toBe(0);
+    await page.locator(reel).scrollIntoViewIfNeeded();
+    await expect.poll(playing).toBeGreaterThan(0);
+  });
+
   test('clips in view play, and the pause button stops every clip', async ({ page }) => {
     await expect.poll(() => page.locator(`${reel} video`).evaluateAll(vs => vs.filter(v => !(v as HTMLVideoElement).paused).length)).toBeGreaterThan(0);
     await page.locator('[data-reel-toggle]').click();

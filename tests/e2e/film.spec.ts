@@ -51,6 +51,17 @@ test.describe('edit desk', () => {
     await page.locator(desk).scrollIntoViewIfNeeded();
   });
 
+  test('scrolling the desk off screen pauses the card clip; scrolling back resumes it', async ({ page, isMobile }) => {
+    test.skip(!!isMobile, 'run once');
+    const card = page.locator('[data-fd-card]:not([hidden]) video');
+    const isPlaying = () => card.evaluate(v => !(v as HTMLVideoElement).paused);
+    await expect.poll(isPlaying).toBe(true);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(isPlaying).toBe(false);
+    await page.locator(desk).scrollIntoViewIfNeeded();
+    await expect.poll(isPlaying).toBe(true);
+  });
+
   test('22 shots on the track, S02 offered on its own, colour and sound drawn', async ({ page }) => {
     await expect(page.locator('[data-fd-shots] [data-fd-shot]')).toHaveCount(22);
     await expect(page.locator('[data-fd-shots] [data-fd-shot="S02"]')).toHaveCount(0);
